@@ -47,16 +47,9 @@ final class Alert: NSWindow {
             $0.duration = 0.5
             $0.allowsImplicitAnimation = true
             back.alphaValue = 1
-        }) { DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [weak self] in self?.dismiss() } }
+        }) { }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [weak self] in self?.close() } 
     }
     
-    override func mouseDown(with: NSEvent) { dismiss() }
-    
-    private func dismiss() {
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.5
-            $0.allowsImplicitAnimation = true
-            back.alphaValue = 0
-        }) { [weak self] in self?.close() }
-    }
+    override func mouseDown(with: NSEvent) { close() }
 }

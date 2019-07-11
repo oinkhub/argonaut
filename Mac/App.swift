@@ -4,7 +4,7 @@ import UserNotifications
 
 private(set) weak var app: App!
 @NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate {
-    private(set) weak var home: Home!
+    private(set) weak var list: List!
     
     required init?(coder: NSCoder) { return nil }
     override init() {
@@ -27,7 +27,7 @@ private(set) weak var app: App!
     @available(OSX 10.12.2, *) override func makeTouchBar() -> NSTouchBar? {
         let bar = NSTouchBar()
         bar.delegate = self
-        bar.defaultItemIdentifiers = [.init("new")]
+        bar.defaultItemIdentifiers = [.init("New")]
         return bar
     }
     
@@ -35,9 +35,9 @@ private(set) weak var app: App!
         let item = NSCustomTouchBarItem(identifier: makeItemForIdentifier)
         let button = NSButton(title: "", target: nil, action: nil)
         item.view = button
-        button.title = .key("Touch.\(makeItemForIdentifier.rawValue)")
+        button.title = .key(makeItemForIdentifier.rawValue)
         switch makeItemForIdentifier.rawValue {
-        case "new": button.action = #selector(new)
+        case "New": button.action = #selector(new)
         default: break
         }
         return item
@@ -47,9 +47,9 @@ private(set) weak var app: App!
         let menu = NSMenu()
         mainMenu = menu
         
-        let home = Home()
-        home.makeKeyAndOrderFront(nil)
-        self.home = home
+        let list = List()
+        list.makeKeyAndOrderFront(nil)
+        self.list = list
         
         if #available(OSX 10.14, *) {
             UNUserNotificationCenter.current().delegate = self
@@ -81,7 +81,14 @@ private(set) weak var app: App!
         }
     }
     
-    @objc private func new() { }
+    @objc private func new() {
+        if windows.contains(where: { $0 is Map }) {
+            alert(.key("Error"), message: .key("Error.map.visible"))
+        } else {
+            Map().makeKeyAndOrderFront(nil)
+        }
+    }
+    
     @objc private func about() { }
     @objc private func settings() { }
     @objc private func help() { }

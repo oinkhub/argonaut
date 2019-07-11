@@ -1,1 +1,3 @@
-
+New="New";
+Error="Error";
+Error.map.visible="A map is already visible, close it and try again.";
