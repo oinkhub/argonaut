@@ -81,14 +81,7 @@ private(set) weak var app: App!
         }
     }
     
-    @objc private func new() {
-        if windows.contains(where: { $0 is Map }) {
-            alert(.key("Error"), message: .key("Error.map.visible"))
-        } else {
-            Map().makeKeyAndOrderFront(nil)
-        }
-    }
-    
+    @objc private func new() { New().makeKeyAndOrderFront(nil) }
     @objc private func about() { }
     @objc private func settings() { }
     @objc private func help() { }

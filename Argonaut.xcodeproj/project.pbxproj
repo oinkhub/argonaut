@@ -10,7 +10,9 @@
 		CE0038FA22D72D41008A8E88 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038F922D72D41008A8E88 /* Alert.swift */; };
 		CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038FB22D72D68008A8E88 /* Extensions.swift */; };
 		CE0038FE22D72E5B008A8E88 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038FD22D72E5B008A8E88 /* List.swift */; };
-		CEAB0F0822D73C5800320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0722D73C5800320F4F /* Map.swift */; };
+		CEAB0F0822D73C5800320F4F /* New.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0722D73C5800320F4F /* New.swift */; };
+		CEAB0F0A22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
+		CEAB0F0B22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
 		CEDE10FD22D71F2400DD796B /* iOS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10F922D71F2400DD796B /* iOS.storyboard */; };
 		CEDE10FE22D71F2400DD796B /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE10FB22D71F2400DD796B /* App.swift */; };
 		CEDE10FF22D71F2400DD796B /* iOS.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10FC22D71F2400DD796B /* iOS.xcassets */; };
@@ -56,7 +58,8 @@
 		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE58E9BE22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEAB0F0622D7396900320F4F /* Argonaut.sketch */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argonaut.sketch; sourceTree = "<group>"; };
-		CEAB0F0722D73C5800320F4F /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
+		CEAB0F0722D73C5800320F4F /* New.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = New.swift; sourceTree = "<group>"; };
+		CEAB0F0922D742D900320F4F /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		CEDE10F322D71C2D00DD796B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CEDE10F422D71C2D00DD796B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CEDE10F522D71C2D00DD796B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -162,7 +165,7 @@
 				CEDE110322D71F3600DD796B /* App.swift */,
 				CE0038FB22D72D68008A8E88 /* Extensions.swift */,
 				CE0038FD22D72E5B008A8E88 /* List.swift */,
-				CEAB0F0722D73C5800320F4F /* Map.swift */,
+				CEAB0F0722D73C5800320F4F /* New.swift */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -170,6 +173,7 @@
 		CEDE110622D71F5300DD796B /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				CEAB0F0922D742D900320F4F /* Map.swift */,
 				CEDE110722D71F5300DD796B /* Shared.swift */,
 			);
 			path = Shared;
@@ -400,8 +404,9 @@
 				CE0038FA22D72D41008A8E88 /* Alert.swift in Sources */,
 				CEDE110522D71F3600DD796B /* App.swift in Sources */,
 				CE0038FE22D72E5B008A8E88 /* List.swift in Sources */,
+				CEAB0F0A22D742D900320F4F /* Map.swift in Sources */,
 				CEDE110822D71F5300DD796B /* Shared.swift in Sources */,
-				CEAB0F0822D73C5800320F4F /* Map.swift in Sources */,
+				CEAB0F0822D73C5800320F4F /* New.swift in Sources */,
 				CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -411,6 +416,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEDE10FE22D71F2400DD796B /* App.swift in Sources */,
+				CEAB0F0B22D742D900320F4F /* Map.swift in Sources */,
 				CEDE110922D71F5300DD796B /* Shared.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
