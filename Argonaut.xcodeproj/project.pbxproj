@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE0038FA22D72D41008A8E88 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038F922D72D41008A8E88 /* Alert.swift */; };
+		CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038FB22D72D68008A8E88 /* Extensions.swift */; };
+		CE0038FE22D72E5B008A8E88 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038FD22D72E5B008A8E88 /* Home.swift */; };
 		CEDE10FD22D71F2400DD796B /* iOS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10F922D71F2400DD796B /* iOS.storyboard */; };
 		CEDE10FE22D71F2400DD796B /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE10FB22D71F2400DD796B /* App.swift */; };
 		CEDE10FF22D71F2400DD796B /* iOS.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10FC22D71F2400DD796B /* iOS.xcassets */; };
 		CEDE110422D71F3600DD796B /* Mac.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEDE110122D71F3600DD796B /* Mac.xcassets */; };
 		CEDE110522D71F3600DD796B /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE110322D71F3600DD796B /* App.swift */; };
-		CEDE110822D71F5300DD796B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE110722D71F5300DD796B /* Extensions.swift */; };
-		CEDE110922D71F5300DD796B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE110722D71F5300DD796B /* Extensions.swift */; };
+		CEDE110822D71F5300DD796B /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE110722D71F5300DD796B /* Shared.swift */; };
+		CEDE110922D71F5300DD796B /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE110722D71F5300DD796B /* Shared.swift */; };
 		CEDE110C22D71FA300DD796B /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE110B22D71FA300DD796B /* Session.swift */; };
 		CEDE110E22D71FA300DD796B /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE110B22D71FA300DD796B /* Session.swift */; };
 		CEDE111122D71FB200DD796B /* TestSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE111022D71FB200DD796B /* TestSession.swift */; };
@@ -46,8 +49,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		CE58E9BD22D721C500EF2447 /* libMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE58E9BE22D721C500EF2447 /* libiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE0038F922D72D41008A8E88 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		CE0038FB22D72D68008A8E88 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CE0038FD22D72E5B008A8E88 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE58E9BE22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDE10F322D71C2D00DD796B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CEDE10F422D71C2D00DD796B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CEDE10F522D71C2D00DD796B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -60,14 +66,14 @@
 		CEDE110022D71F3600DD796B /* Mac.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Mac.entitlements; sourceTree = "<group>"; };
 		CEDE110122D71F3600DD796B /* Mac.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Mac.xcassets; sourceTree = "<group>"; };
 		CEDE110322D71F3600DD796B /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		CEDE110722D71F5300DD796B /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CEDE110722D71F5300DD796B /* Shared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		CEDE110B22D71FA300DD796B /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		CEDE110D22D71FA300DD796B /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDE111022D71FB200DD796B /* TestSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSession.swift; sourceTree = "<group>"; };
 		CEDE111222D71FD100DD796B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEDE111622D7207800DD796B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		CEDE111922D7209F00DD796B /* MacApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CEDE111A22D720A500DD796B /* iOSApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEDE111922D7209F00DD796B /* Argonaut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argonaut.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEDE111A22D720A500DD796B /* Argonaut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argonaut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,10 +120,10 @@
 			children = (
 				CEDE10F522D71C2D00DD796B /* .gitignore */,
 				CEDE10F322D71C2D00DD796B /* LICENSE */,
-				CE58E9BE22D721C500EF2447 /* libiOS.a */,
-				CE58E9BD22D721C500EF2447 /* libMac.a */,
-				CEDE111A22D720A500DD796B /* iOSApp.app */,
-				CEDE111922D7209F00DD796B /* MacApp.app */,
+				CE58E9BE22D721C500EF2447 /* libArgonaut.a */,
+				CE58E9BD22D721C500EF2447 /* libArgonaut.a */,
+				CEDE111A22D720A500DD796B /* Argonaut.app */,
+				CEDE111922D7209F00DD796B /* Argonaut.app */,
 				CEDE110022D71F3600DD796B /* Mac.entitlements */,
 				CEDE10F422D71C2D00DD796B /* README.md */,
 				CEDE10F622D71CF500DD796B /* iOS.plist */,
@@ -148,7 +154,10 @@
 		CEDE110222D71F3600DD796B /* Mac */ = {
 			isa = PBXGroup;
 			children = (
+				CE0038F922D72D41008A8E88 /* Alert.swift */,
 				CEDE110322D71F3600DD796B /* App.swift */,
+				CE0038FB22D72D68008A8E88 /* Extensions.swift */,
+				CE0038FD22D72E5B008A8E88 /* Home.swift */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -156,7 +165,7 @@
 		CEDE110622D71F5300DD796B /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				CEDE110722D71F5300DD796B /* Extensions.swift */,
+				CEDE110722D71F5300DD796B /* Shared.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -204,7 +213,7 @@
 			);
 			name = Mac;
 			productName = Mac;
-			productReference = CE58E9BD22D721C500EF2447 /* libMac.a */;
+			productReference = CE58E9BD22D721C500EF2447 /* libArgonaut.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		CEDE10B022D7175500DD796B /* iOS */ = {
@@ -221,7 +230,7 @@
 			);
 			name = iOS;
 			productName = iOS;
-			productReference = CE58E9BE22D721C500EF2447 /* libiOS.a */;
+			productReference = CE58E9BE22D721C500EF2447 /* libArgonaut.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		CEDE10BB22D7176F00DD796B /* Tests */ = {
@@ -256,7 +265,7 @@
 			);
 			name = MacApp;
 			productName = MacApp;
-			productReference = CEDE111922D7209F00DD796B /* MacApp.app */;
+			productReference = CEDE111922D7209F00DD796B /* Argonaut.app */;
 			productType = "com.apple.product-type.application";
 		};
 		CEDE10DE22D7179E00DD796B /* iOSApp */ = {
@@ -273,7 +282,7 @@
 			);
 			name = iOSApp;
 			productName = iOSApp;
-			productReference = CEDE111A22D720A500DD796B /* iOSApp.app */;
+			productReference = CEDE111A22D720A500DD796B /* Argonaut.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -383,8 +392,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE0038FA22D72D41008A8E88 /* Alert.swift in Sources */,
 				CEDE110522D71F3600DD796B /* App.swift in Sources */,
-				CEDE110822D71F5300DD796B /* Extensions.swift in Sources */,
+				CE0038FE22D72E5B008A8E88 /* Home.swift in Sources */,
+				CEDE110822D71F5300DD796B /* Shared.swift in Sources */,
+				CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,7 +405,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEDE10FE22D71F2400DD796B /* App.swift in Sources */,
-				CEDE110922D71F5300DD796B /* Extensions.swift in Sources */,
+				CEDE110922D71F5300DD796B /* Shared.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,6 +440,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_NAME = Argonaut;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -443,6 +456,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_NAME = Argonaut;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;
 			};
@@ -501,7 +515,6 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
@@ -554,7 +567,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
@@ -612,7 +624,6 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -666,7 +677,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -735,7 +745,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = argonaut.Tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Tests;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			};
@@ -795,7 +805,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = argonaut.Tests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Tests;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
@@ -864,7 +874,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = argonaut.MacApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = ArgonautMac;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			};
@@ -927,7 +937,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = argonaut.MacApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = ArgonautMac;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
@@ -993,7 +1003,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = iturbide.Argonaut;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = ArgonautiOS;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1054,7 +1064,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = iturbide.Argonaut;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = ArgonautiOS;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				TARGETED_DEVICE_FAMILY = "1,2";
