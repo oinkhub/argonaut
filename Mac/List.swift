@@ -2,7 +2,7 @@ import AppKit
 
 final class List: NSWindow {
     init() {
-        super.init(contentRect: NSRect(x: NSScreen.main!.frame.midX - 300, y: NSScreen.main!.frame.midY - 200, width: 300, height: 400), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
+        super.init(contentRect: .init(x: NSScreen.main!.frame.midX - 300, y: NSScreen.main!.frame.midY - 200, width: 300, height: 400), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black
@@ -10,5 +10,14 @@ final class List: NSWindow {
         isReleasedWhenClosed = false
         toolbar = .init(identifier: "")
         toolbar!.showsBaselineSeparator = false
+        
+        let new = Button.Image(app, action: #selector(app.new))
+        new.image.image = NSImage(named: "new")
+        contentView!.addSubview(new)
+        
+        new.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
+        new.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
+        new.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        new.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
 }

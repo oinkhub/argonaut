@@ -10,6 +10,7 @@
 		CE0038FA22D72D41008A8E88 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038F922D72D41008A8E88 /* Alert.swift */; };
 		CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038FB22D72D68008A8E88 /* Extensions.swift */; };
 		CE0038FE22D72E5B008A8E88 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038FD22D72E5B008A8E88 /* List.swift */; };
+		CE4A547C22D85E1B00125A9C /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A547B22D85E1B00125A9C /* Button.swift */; };
 		CEAB0F0822D73C5800320F4F /* New.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0722D73C5800320F4F /* New.swift */; };
 		CEAB0F0A22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
 		CEAB0F0B22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
@@ -55,6 +56,7 @@
 		CE0038F922D72D41008A8E88 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		CE0038FB22D72D68008A8E88 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CE0038FD22D72E5B008A8E88 /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
+		CE4A547B22D85E1B00125A9C /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE58E9BE22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEAB0F0622D7396900320F4F /* Argonaut.sketch */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argonaut.sketch; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			children = (
 				CE0038F922D72D41008A8E88 /* Alert.swift */,
 				CEDE110322D71F3600DD796B /* App.swift */,
+				CE4A547B22D85E1B00125A9C /* Button.swift */,
 				CE0038FB22D72D68008A8E88 /* Extensions.swift */,
 				CE0038FD22D72E5B008A8E88 /* List.swift */,
 				CEAB0F0722D73C5800320F4F /* New.swift */,
@@ -404,6 +407,7 @@
 				CE0038FA22D72D41008A8E88 /* Alert.swift in Sources */,
 				CEDE110522D71F3600DD796B /* App.swift in Sources */,
 				CE0038FE22D72E5B008A8E88 /* List.swift in Sources */,
+				CE4A547C22D85E1B00125A9C /* Button.swift in Sources */,
 				CEAB0F0A22D742D900320F4F /* Map.swift in Sources */,
 				CEDE110822D71F5300DD796B /* Shared.swift in Sources */,
 				CEAB0F0822D73C5800320F4F /* New.swift in Sources */,
