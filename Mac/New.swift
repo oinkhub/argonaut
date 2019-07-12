@@ -7,11 +7,11 @@ final class New: NSWindow, NSTextFieldDelegate {
     init() {
         let origin: CGPoint
         if let frame = app.windows.filter({ $0 is New }).sorted(by: { $0.frame.minX > $1.frame.minX }).first?.frame {
-            origin = .init(x: frame.minX + 25, y: frame.maxY + 375)
+            origin = .init(x: frame.minX + 25, y: frame.maxY - 625)
         } else {
             origin = .init(x: app.list.frame.maxX + 4, y: app.list.frame.minY)
         }
-        super.init(contentRect: .init(origin: origin, size: NSSize(width: 600, height: 400)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
+        super.init(contentRect: .init(origin: origin, size: NSSize(width: 800, height: 600)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black
