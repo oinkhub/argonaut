@@ -31,6 +31,13 @@ final class New: NSWindow, NSTextFieldDelegate {
         search.layer!.cornerRadius = 6
         contentView!.addSubview(search)
         
+        let bar = NSView()
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        bar.wantsLayer = true
+        bar.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
+        bar.layer!.cornerRadius = 6
+        contentView!.addSubview(bar)
+        
         let field = NSTextField()
         field.translatesAutoresizingMaskIntoConstraints = false
         field.isBezeled = false
