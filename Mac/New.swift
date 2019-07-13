@@ -38,6 +38,10 @@ final class New: NSWindow, NSTextFieldDelegate {
         bar.layer!.cornerRadius = 6
         contentView!.addSubview(bar)
         
+        let centre = Button.Image(self, action: #selector(self.centre))
+        centre.image.image = NSImage(named: "centre")
+        bar.addSubview(centre)
+        
         let field = NSTextField()
         field.translatesAutoresizingMaskIntoConstraints = false
         field.isBezeled = false
@@ -81,6 +85,16 @@ final class New: NSWindow, NSTextFieldDelegate {
         search.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 80).isActive = true
         search.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
         search.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        
+        bar.topAnchor.constraint(equalTo: search.bottomAnchor, constant: 10).isActive = true
+        bar.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
+        bar.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: -10).isActive = true
+        bar.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        
+        centre.centerXAnchor.constraint(equalTo: bar.centerXAnchor).isActive = true
+        centre.topAnchor.constraint(equalTo: bar.topAnchor).isActive = true
+        centre.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        centre.heightAnchor.constraint(equalToConstant: 40).isActive = true
 
         field.centerYAnchor.constraint(equalTo: search.centerYAnchor).isActive = true
         field.leftAnchor.constraint(equalTo: search.leftAnchor, constant: 10).isActive = true
@@ -99,6 +113,10 @@ final class New: NSWindow, NSTextFieldDelegate {
     }
     
     @objc func save() {
+        
+    }
+    
+    @objc private func centre() {
         
     }
 }
