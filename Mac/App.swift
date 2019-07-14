@@ -1,9 +1,11 @@
 import AppKit
 import StoreKit
 import UserNotifications
+import MapKit
 
 private(set) weak var app: App!
-@NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate {
+@NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate, CLLocationManagerDelegate {
+    private let location = CLLocationManager()
     private(set) weak var list: List!
     
     required init?(coder: NSCoder) { return nil }
@@ -41,6 +43,26 @@ private(set) weak var app: App!
         default: break
         }
         return item
+    }
+    
+    func locationManager(_: CLLocationManager, didChangeAuthorization: CLAuthorizationStatus) { status() }
+    func locationManager(_: CLLocationManager, didUpdateLocations: [CLLocation]) { }
+    
+    func locationManager(_: CLLocationManager, didFailWithError: Error) {
+        DispatchQueue.main.async { self.alert(.key("Error"), message: didFailWithError.localizedDescription) }
+    }
+    
+    private func status() {
+        switch CLLocationManager.authorizationStatus() {
+        case .denied: alert(.key("Error"), message: .key("Error.location"))
+        case .notDetermined:
+            if #available(macOS 10.14, *) {
+                location.requestLocation()
+            } else {
+                location.startUpdatingLocation()
+            }
+        default: break
+        }
     }
     
     func applicationWillFinishLaunching(_: Notification) {
@@ -130,6 +152,9 @@ private(set) weak var app: App!
                 }
             }
         }
+        
+        location.delegate = self
+        status()
     }
     
     func alert(_ title: String, message: String) {

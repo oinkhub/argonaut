@@ -22,7 +22,6 @@ final class New: NSWindow, NSTextFieldDelegate {
         toolbar!.showsBaselineSeparator = false
         
         let map = Map()
-        map.error = { app.alert(.key("Error"), message: $0.localizedDescription) }
         contentView!.addSubview(map)
         
         let search = NSView()
