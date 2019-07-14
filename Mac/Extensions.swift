@@ -18,3 +18,8 @@ final class Label: NSTextField {
     
     override func resetCursorRects() { addCursorRect(bounds, cursor: .arrow) }
 }
+
+struct Fail: LocalizedError {
+    var errorDescription: String?
+    init(_ message: String) { errorDescription = message }
+}

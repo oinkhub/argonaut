@@ -2,6 +2,7 @@ import MapKit
 
 final class Map: MKMapView, MKMapViewDelegate, CLLocationManagerDelegate {
     private let location = CLLocationManager()
+    var error: ((Error) -> Void)!
     
     required init?(coder: NSCoder) { return nil }
     init() {
@@ -35,6 +36,11 @@ final class Map: MKMapView, MKMapViewDelegate, CLLocationManagerDelegate {
     }
     
     func locationManager(_: CLLocationManager, didChangeAuthorization: CLAuthorizationStatus) { status() }
+    func locationManager(_: CLLocationManager, didUpdateLocations: [CLLocation]) { }
+    
+    func locationManager(_: CLLocationManager, didFailWithError: Error) {
+        DispatchQueue.main.async { [weak self] in self?.error(didFailWithError) }
+    }
 
     private func status() {
         switch CLLocationManager.authorizationStatus() {
@@ -47,5 +53,9 @@ final class Map: MKMapView, MKMapViewDelegate, CLLocationManagerDelegate {
             }
         default: break
         }
+    }
+    
+    deinit {
+        print("gone")
     }
 }
