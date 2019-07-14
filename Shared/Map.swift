@@ -1,6 +1,6 @@
 import MapKit
 
-final class Map: MKMapView, MKMapViewDelegate, CLLocationManagerDelegate {
+final class Map: MKMapView, MKMapViewDelegate {
     required init?(coder: NSCoder) { return nil }
     init() {
         super.init(frame: .zero)
@@ -23,13 +23,11 @@ final class Map: MKMapView, MKMapViewDelegate, CLLocationManagerDelegate {
         setRegion(region, animated: false)
     }
     
-    func mapView(_: MKMapView, didUpdate: MKUserLocation) {
-        var region = self.region
-        region.center = didUpdate.coordinate
-        setRegion(region, animated: true)
-    }
+    func mapView(_: MKMapView, didUpdate: MKUserLocation) { region(didUpdate.coordinate) }
     
-    deinit {
-        print("gone")
+    func region(_ coordinate: CLLocationCoordinate2D) {
+        var region = self.region
+        region.center = coordinate
+        setRegion(region, animated: true)
     }
 }

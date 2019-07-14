@@ -2,6 +2,7 @@ import AppKit
 import MapKit
 
 final class New: NSWindow, NSTextFieldDelegate {
+    private weak var map: Map!
     private weak var field: NSTextField!
     
     init() {
@@ -20,9 +21,10 @@ final class New: NSWindow, NSTextFieldDelegate {
         minSize = .init(width: 200, height: 200)
         toolbar = .init(identifier: "")
         toolbar!.showsBaselineSeparator = false
-        
+ 
         let map = Map()
         contentView!.addSubview(map)
+        self.map = map
         
         let search = NSView()
         search.translatesAutoresizingMaskIntoConstraints = false
@@ -34,7 +36,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         let bar = NSView()
         bar.translatesAutoresizingMaskIntoConstraints = false
         bar.wantsLayer = true
-        bar.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
+        bar.layer!.backgroundColor = NSColor(white: 0, alpha: 0.7).cgColor
         bar.layer!.cornerRadius = 6
         contentView!.addSubview(bar)
         
@@ -53,6 +55,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         field.maximumNumberOfLines = 1
         field.lineBreakMode = .byTruncatingHead
         field.refusesFirstResponder = true
+        field.delegate = self
         if #available(OSX 10.12.2, *) {
             field.isAutomaticTextCompletionEnabled = false
         }
@@ -89,12 +92,12 @@ final class New: NSWindow, NSTextFieldDelegate {
         bar.topAnchor.constraint(equalTo: search.bottomAnchor, constant: 10).isActive = true
         bar.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
         bar.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: -10).isActive = true
-        bar.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        bar.widthAnchor.constraint(equalToConstant: 40).isActive = true
         
         centre.centerXAnchor.constraint(equalTo: bar.centerXAnchor).isActive = true
         centre.topAnchor.constraint(equalTo: bar.topAnchor).isActive = true
-        centre.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        centre.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        centre.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        centre.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         field.centerYAnchor.constraint(equalTo: search.centerYAnchor).isActive = true
         field.leftAnchor.constraint(equalTo: search.leftAnchor, constant: 10).isActive = true
@@ -112,11 +115,16 @@ final class New: NSWindow, NSTextFieldDelegate {
         return false
     }
     
+    deinit {
+        map.removeFromSuperview()
+        map.delegate = nil
+        map.showsUserLocation = false
+        print("window")
+    }
+    
     @objc func save() {
         
     }
     
-    @objc private func centre() {
-        
-    }
+    @objc private func centre() { map.region(map.userLocation.coordinate) }
 }
