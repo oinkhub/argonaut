@@ -42,7 +42,12 @@ final class New: NSWindow, NSTextFieldDelegate {
         
         let centre = Button.Image(self, action: #selector(self.centre))
         centre.image.image = NSImage(named: "centre")
-        bar.addSubview(centre)
+        
+        let zoomIn = Button.Image(self, action: #selector(self.zoomIn))
+        zoomIn.image.image = NSImage(named: "zoomIn")
+        
+        let zoomOut = Button.Image(self, action: #selector(self.zoomOut))
+        zoomOut.image.image = NSImage(named: "zoomOut")
         
         let field = NSTextField()
         field.translatesAutoresizingMaskIntoConstraints = false
@@ -94,14 +99,20 @@ final class New: NSWindow, NSTextFieldDelegate {
         bar.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: -10).isActive = true
         bar.widthAnchor.constraint(equalToConstant: 40).isActive = true
         
-        centre.centerXAnchor.constraint(equalTo: bar.centerXAnchor).isActive = true
-        centre.topAnchor.constraint(equalTo: bar.topAnchor).isActive = true
-        centre.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        centre.heightAnchor.constraint(equalToConstant: 50).isActive = true
-
         field.centerYAnchor.constraint(equalTo: search.centerYAnchor).isActive = true
         field.leftAnchor.constraint(equalTo: search.leftAnchor, constant: 10).isActive = true
         field.rightAnchor.constraint(equalTo: search.rightAnchor, constant: -10).isActive = true
+        
+        var top = bar.topAnchor
+        [centre, zoomIn, zoomOut].forEach {
+            bar.addSubview($0)
+            
+            $0.topAnchor.constraint(equalTo: top).isActive = true
+            $0.centerXAnchor.constraint(equalTo: bar.centerXAnchor).isActive = true
+            $0.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            top = $0.bottomAnchor
+        }
     }
     
     func control(_ control: NSControl, textView: NSTextView, doCommandBy: Selector) -> Bool {
@@ -127,4 +138,8 @@ final class New: NSWindow, NSTextFieldDelegate {
     }
     
     @objc private func centre() { map.region(map.userLocation.coordinate) }
+    
+    @objc private func zoomIn() { map.region(map.userLocation.coordinate) }
+    
+    @objc private func zoomOut() { map.region(map.userLocation.coordinate) }
 }
