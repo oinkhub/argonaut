@@ -137,9 +137,24 @@ final class New: NSWindow, NSTextFieldDelegate {
         
     }
     
-    @objc private func centre() { map.region(map.userLocation.coordinate) }
+    @objc private func centre() {
+        var region = map.region
+        region.center = map.userLocation.coordinate
+        map.setRegion(region, animated: true)
+    }
     
-    @objc private func zoomIn() { map.region(map.userLocation.coordinate) }
+    @objc private func zoomIn() {
+        var region = map.region
+        region.span.latitudeDelta *= 0.5
+        region.span.longitudeDelta *= 0.5
+        map.setRegion(region, animated: true)
+    }
     
-    @objc private func zoomOut() { map.region(map.userLocation.coordinate) }
+    @objc private func zoomOut() {
+        var region = map.region
+        region.span.latitudeDelta /= 0.5
+        region.span.longitudeDelta /= 0.5
+        guard region.span.latitudeDelta <= 180 && region.span.longitudeDelta <= 180 else { return }
+        map.setRegion(region, animated: true)
+    }
 }

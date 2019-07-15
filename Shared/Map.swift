@@ -23,11 +23,9 @@ final class Map: MKMapView, MKMapViewDelegate {
         setRegion(region, animated: false)
     }
     
-    func mapView(_: MKMapView, didUpdate: MKUserLocation) { region(didUpdate.coordinate) }
-    
-    func region(_ coordinate: CLLocationCoordinate2D) {
+    func mapView(_: MKMapView, didUpdate: MKUserLocation) {
         var region = self.region
-        region.center = coordinate
+        region.center = didUpdate.coordinate
         setRegion(region, animated: true)
     }
 }
