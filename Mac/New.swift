@@ -162,6 +162,9 @@ final class New: NSWindow, NSTextFieldDelegate {
     }
     
     @objc private func dropPin() {
-        
+        map.addAnnotation({
+            $0.coordinate = map.convert(.init(x: contentView!.frame.midX, y: contentView!.frame.midY), toCoordinateFrom: contentView)
+            return $0
+        } (MKPointAnnotation()))
     }
 }
