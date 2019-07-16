@@ -49,6 +49,9 @@ final class New: NSWindow, NSTextFieldDelegate {
         let zoomOut = Button.Image(self, action: #selector(self.zoomOut))
         zoomOut.image.image = NSImage(named: "zoomOut")
         
+        let dropPin = Button.Image(self, action: #selector(self.dropPin))
+        dropPin.image.image = NSImage(named: "dropPin")
+        
         let field = NSTextField()
         field.translatesAutoresizingMaskIntoConstraints = false
         field.isBezeled = false
@@ -104,7 +107,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         field.rightAnchor.constraint(equalTo: search.rightAnchor, constant: -10).isActive = true
         
         var top = bar.topAnchor
-        [centre, zoomIn, zoomOut].forEach {
+        [centre, zoomIn, zoomOut, dropPin].forEach {
             bar.addSubview($0)
             
             $0.topAnchor.constraint(equalTo: top).isActive = true
@@ -156,5 +159,9 @@ final class New: NSWindow, NSTextFieldDelegate {
         region.span.longitudeDelta /= 0.5
         guard region.span.latitudeDelta <= 180 && region.span.longitudeDelta <= 180 else { return }
         map.setRegion(region, animated: true)
+    }
+    
+    @objc private func dropPin() {
+        
     }
 }
