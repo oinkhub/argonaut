@@ -4,6 +4,7 @@ import MapKit
 final class New: NSWindow, NSTextFieldDelegate {
     private weak var map: Map!
     private weak var field: NSTextField!
+    private weak var searchHeight: NSLayoutConstraint!
     
     init() {
         let origin: CGPoint
@@ -33,12 +34,32 @@ final class New: NSWindow, NSTextFieldDelegate {
         search.layer!.cornerRadius = 6
         contentView!.addSubview(search)
         
+        let border = NSView()
+        border.translatesAutoresizingMaskIntoConstraints = false
+        border.wantsLayer = true
+        border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
+        search.addSubview(border)
+        
+        let handle = NSView()
+        handle.translatesAutoresizingMaskIntoConstraints = false
+        handle.wantsLayer = true
+        handle.layer!.backgroundColor = NSColor.halo.cgColor
+        handle.layer!.cornerRadius = 1
+        search.addSubview(handle)
+        
         let bar = NSView()
         bar.translatesAutoresizingMaskIntoConstraints = false
         bar.wantsLayer = true
         bar.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
         bar.layer!.cornerRadius = 6
         contentView!.addSubview(bar)
+        
+        let list = NSView()
+        list.translatesAutoresizingMaskIntoConstraints = false
+        list.wantsLayer = true
+        list.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
+        list.layer!.cornerRadius = 6
+        contentView!.addSubview(list)
         
         let centre = Button.Image(self, action: #selector(self.centre))
         centre.image.image = NSImage(named: "centre")
@@ -98,15 +119,32 @@ final class New: NSWindow, NSTextFieldDelegate {
         
         search.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
         search.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 80).isActive = true
-        search.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
-        search.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        search.rightAnchor.constraint(equalTo: bar.leftAnchor, constant: -10).isActive = true
+        searchHeight = search.heightAnchor.constraint(equalToConstant: 60)
+        searchHeight.isActive = true
         
-        bar.topAnchor.constraint(equalTo: search.bottomAnchor, constant: 10).isActive = true
+        border.leftAnchor.constraint(equalTo: search.leftAnchor).isActive = true
+        border.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
+        border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        border.topAnchor.constraint(equalTo: search.topAnchor, constant: 34).isActive = true
+        
+        handle.bottomAnchor.constraint(equalTo: search.bottomAnchor, constant: -10).isActive = true
+        handle.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        handle.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        handle.centerXAnchor.constraint(equalTo: search.centerXAnchor).isActive = true
+        
+        bar.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
         bar.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
         bar.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: -10).isActive = true
-        bar.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        bar.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        field.centerYAnchor.constraint(equalTo: search.centerYAnchor).isActive = true
+        list.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: -10).isActive = true
+        list.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
+        list.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
+        list.heightAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
+        list.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 10).isActive = true
+        
+        field.centerYAnchor.constraint(equalTo: search.topAnchor, constant: 17).isActive = true
         field.leftAnchor.constraint(equalTo: search.leftAnchor, constant: 10).isActive = true
         field.rightAnchor.constraint(equalTo: search.rightAnchor, constant: -10).isActive = true
         
@@ -116,14 +154,12 @@ final class New: NSWindow, NSTextFieldDelegate {
             
             $0.topAnchor.constraint(equalTo: top).isActive = true
             $0.centerXAnchor.constraint(equalTo: bar.centerXAnchor).isActive = true
-            $0.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            $0.widthAnchor.constraint(equalToConstant: 50).isActive = true
             $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
             top = $0.bottomAnchor
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.map.follow = false
-        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.map.follow = false }
     }
     
     func control(_ control: NSControl, textView: NSTextView, doCommandBy: Selector) -> Bool {
@@ -135,6 +171,14 @@ final class New: NSWindow, NSTextFieldDelegate {
             return true
         }
         return false
+    }
+    
+    override func keyDown(with: NSEvent) {
+        field.refusesFirstResponder = false
+        switch with.keyCode {
+        case 36, 48: makeFirstResponder(field)
+        default: super.keyDown(with: with)
+        }
     }
     
     @objc func save() {
