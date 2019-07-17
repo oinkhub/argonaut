@@ -40,13 +40,6 @@ final class New: NSWindow, NSTextFieldDelegate {
         border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
         search.addSubview(border)
         
-        let handle = NSView()
-        handle.translatesAutoresizingMaskIntoConstraints = false
-        handle.wantsLayer = true
-        handle.layer!.backgroundColor = NSColor.halo.cgColor
-        handle.layer!.cornerRadius = 1
-        search.addSubview(handle)
-        
         let bar = NSView()
         bar.translatesAutoresizingMaskIntoConstraints = false
         bar.wantsLayer = true
@@ -60,6 +53,13 @@ final class New: NSWindow, NSTextFieldDelegate {
         list.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
         list.layer!.cornerRadius = 6
         contentView!.addSubview(list)
+        
+        let handle = NSView()
+        handle.translatesAutoresizingMaskIntoConstraints = false
+        handle.wantsLayer = true
+        handle.layer!.backgroundColor = NSColor.halo.cgColor
+        handle.layer!.cornerRadius = 1
+        list.addSubview(handle)
         
         let centre = Button.Image(self, action: #selector(self.centre))
         centre.image.image = NSImage(named: "centre")
@@ -128,10 +128,10 @@ final class New: NSWindow, NSTextFieldDelegate {
         border.heightAnchor.constraint(equalToConstant: 1).isActive = true
         border.topAnchor.constraint(equalTo: search.topAnchor, constant: 34).isActive = true
         
-        handle.bottomAnchor.constraint(equalTo: search.bottomAnchor, constant: -10).isActive = true
+        handle.topAnchor.constraint(equalTo: list.topAnchor, constant: 10).isActive = true
         handle.heightAnchor.constraint(equalToConstant: 2).isActive = true
         handle.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        handle.centerXAnchor.constraint(equalTo: search.centerXAnchor).isActive = true
+        handle.centerXAnchor.constraint(equalTo: list.centerXAnchor, constant: 10).isActive = true
         
         bar.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
         bar.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
@@ -141,7 +141,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         list.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: -10).isActive = true
         list.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
         list.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
-        list.heightAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
+        list.heightAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
         list.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 10).isActive = true
         
         field.centerYAnchor.constraint(equalTo: search.topAnchor, constant: 17).isActive = true
