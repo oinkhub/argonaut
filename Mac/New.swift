@@ -36,21 +36,21 @@ final class New: NSWindow, NSTextFieldDelegate {
         let bar = NSView()
         bar.translatesAutoresizingMaskIntoConstraints = false
         bar.wantsLayer = true
-        bar.layer!.backgroundColor = NSColor(white: 0, alpha: 0.7).cgColor
+        bar.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
         bar.layer!.cornerRadius = 6
         contentView!.addSubview(bar)
         
         let centre = Button.Image(self, action: #selector(self.centre))
         centre.image.image = NSImage(named: "centre")
         
-        let zoomIn = Button.Image(self, action: #selector(self.zoomIn))
-        zoomIn.image.image = NSImage(named: "zoomIn")
+        let `in` = Button.Image(self, action: #selector(self.in))
+        `in`.image.image = NSImage(named: "in")
         
-        let zoomOut = Button.Image(self, action: #selector(self.zoomOut))
-        zoomOut.image.image = NSImage(named: "zoomOut")
+        let out = Button.Image(self, action: #selector(self.out))
+        out.image.image = NSImage(named: "out")
         
-        let dropPin = Button.Image(self, action: #selector(self.dropPin))
-        dropPin.image.image = NSImage(named: "dropPin")
+        let pin = Button.Image(self, action: #selector(self.pin))
+        pin.image.image = NSImage(named: "pin")
         
         let field = NSTextField()
         field.translatesAutoresizingMaskIntoConstraints = false
@@ -107,7 +107,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         field.rightAnchor.constraint(equalTo: search.rightAnchor, constant: -10).isActive = true
         
         var top = bar.topAnchor
-        [centre, zoomIn, zoomOut, dropPin].forEach {
+        [centre, `in`, out, pin].forEach {
             bar.addSubview($0)
             
             $0.topAnchor.constraint(equalTo: top).isActive = true
@@ -146,14 +146,14 @@ final class New: NSWindow, NSTextFieldDelegate {
         map.setRegion(region, animated: true)
     }
     
-    @objc private func zoomIn() {
+    @objc private func `in`() {
         var region = map.region
         region.span.latitudeDelta *= 0.1
         region.span.longitudeDelta *= 0.1
         map.setRegion(region, animated: true)
     }
     
-    @objc private func zoomOut() {
+    @objc private func out() {
         var region = map.region
         region.span.latitudeDelta /= 0.1
         region.span.longitudeDelta /= 0.1
@@ -166,7 +166,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         map.setRegion(region, animated: true)
     }
     
-    @objc private func dropPin() {
+    @objc private func pin() {
         map.addAnnotation({
             $0.coordinate = map.convert(.init(x: contentView!.frame.midX, y: contentView!.frame.midY), toCoordinateFrom: contentView)
             return $0

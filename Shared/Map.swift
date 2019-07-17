@@ -28,4 +28,18 @@ final class Map: MKMapView, MKMapViewDelegate {
         region.center = didUpdate.coordinate
         setRegion(region, animated: true)
     }
+    
+    func mapView(_: MKMapView, viewFor: MKAnnotation) -> MKAnnotationView? {
+        guard let mark = viewFor as? MKPointAnnotation else { return view(for: viewFor) }
+        guard let marker = dequeueReusableAnnotationView(withIdentifier: "mark")
+        else {
+            let marker = MKPinAnnotationView(annotation: mark, reuseIdentifier: "mark")
+            marker.pinTintColor = .black
+            marker.animatesDrop = true
+            marker.canShowCallout = true
+            return marker
+        }
+        marker.annotation = mark
+        return marker
+    }
 }
