@@ -33,9 +33,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         guard let mark = viewFor as? MKPointAnnotation else { return view(for: viewFor) }
         guard let marker = dequeueReusableAnnotationView(withIdentifier: "mark")
         else {
-            let marker = MKPinAnnotationView(annotation: mark, reuseIdentifier: "mark")
-            marker.pinTintColor = .black
-            marker.animatesDrop = true
+            let marker = MKAnnotationView(annotation: mark, reuseIdentifier: "mark")
+            marker.image = NSImage(named: "annotation")
             marker.canShowCallout = true
             return marker
         }
