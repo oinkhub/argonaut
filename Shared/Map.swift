@@ -1,6 +1,8 @@
 import MapKit
 
 final class Map: MKMapView, MKMapViewDelegate {
+    var follow = true
+    
     required init?(coder: NSCoder) { return nil }
     init() {
         super.init(frame: .zero)
@@ -24,6 +26,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
+        guard follow else { return }
         var region = self.region
         region.center = didUpdate.coordinate
         setRegion(region, animated: true)
@@ -34,7 +37,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         guard let marker = dequeueReusableAnnotationView(withIdentifier: "mark")
         else {
             let marker = MKAnnotationView(annotation: mark, reuseIdentifier: "mark")
-            marker.image = NSImage(named: "annotation")
+            marker.image = NSImage(named: "mark")
             marker.canShowCallout = true
             return marker
         }

@@ -52,6 +52,10 @@ final class New: NSWindow, NSTextFieldDelegate {
         let pin = Button.Image(self, action: #selector(self.pin))
         pin.image.image = NSImage(named: "pin")
         
+        let follow = Button.Check(self, action: #selector(self.follow))
+        follow.on = NSImage(named: "on")
+        follow.off = NSImage(named: "off")
+        
         let field = NSTextField()
         field.translatesAutoresizingMaskIntoConstraints = false
         field.isBezeled = false
@@ -107,7 +111,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         field.rightAnchor.constraint(equalTo: search.rightAnchor, constant: -10).isActive = true
         
         var top = bar.topAnchor
-        [centre, `in`, out, pin].forEach {
+        [centre, `in`, out, pin, follow].forEach {
             bar.addSubview($0)
             
             $0.topAnchor.constraint(equalTo: top).isActive = true
@@ -115,6 +119,10 @@ final class New: NSWindow, NSTextFieldDelegate {
             $0.widthAnchor.constraint(equalToConstant: 40).isActive = true
             $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
             top = $0.bottomAnchor
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.map.follow = false
         }
     }
     
@@ -127,13 +135,6 @@ final class New: NSWindow, NSTextFieldDelegate {
             return true
         }
         return false
-    }
-    
-    deinit {
-        map.removeFromSuperview()
-        map.delegate = nil
-        map.showsUserLocation = false
-        print("window")
     }
     
     @objc func save() {
@@ -171,5 +172,12 @@ final class New: NSWindow, NSTextFieldDelegate {
             $0.coordinate = map.convert(.init(x: contentView!.frame.midX, y: contentView!.frame.midY), toCoordinateFrom: contentView)
             return $0
         } (MKPointAnnotation()))
+    }
+    
+    @objc private func follow() {
+        map.follow.toggle()
+        if map.follow {
+            centre()
+        }
     }
 }
