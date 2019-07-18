@@ -62,6 +62,9 @@ final class New: NSWindow, NSTextFieldDelegate {
         handle.layer!.cornerRadius = 1
         list.addSubview(handle)
         
+        let handler = Button(self, action: #selector(self.handle))
+        list.addSubview(handler)
+        
         let centre = Button.Image(self, action: #selector(self.centre))
         centre.image.image = NSImage(named: "centre")
         
@@ -133,6 +136,11 @@ final class New: NSWindow, NSTextFieldDelegate {
         handle.heightAnchor.constraint(equalToConstant: 2).isActive = true
         handle.widthAnchor.constraint(equalToConstant: 20).isActive = true
         handle.centerXAnchor.constraint(equalTo: list.centerXAnchor).isActive = true
+        
+        handler.topAnchor.constraint(equalTo: list.topAnchor).isActive = true
+        handler.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        handler.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
+        handler.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
         
         bar.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
         bar.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
@@ -228,6 +236,11 @@ final class New: NSWindow, NSTextFieldDelegate {
     }
     
     @objc private func handle() {
-        
+        listHeight.constant = listHeight.constant < 400 ? 400 : 40
+        NSAnimationContext.runAnimationGroup({
+            $0.duration = 0.3
+            $0.allowsImplicitAnimation = true
+            contentView!.layoutSubtreeIfNeeded()
+        }) { }
     }
 }
