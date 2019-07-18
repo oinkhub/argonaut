@@ -2,10 +2,45 @@ import AppKit
 import MapKit
 
 final class New: NSWindow, NSTextFieldDelegate {
+    private final class Item: NSView {
+        required init?(coder: NSCoder) { return nil }
+        init(_ mark: (Int, MKPointAnnotation)) {
+            super.init(frame: .zero)
+            translatesAutoresizingMaskIntoConstraints = false
+            
+            let border = NSView()
+            border.translatesAutoresizingMaskIntoConstraints = false
+            border.wantsLayer = true
+            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.2).cgColor
+            addSubview(border)
+            
+            let title = Label()
+            title.attributedStringValue = {
+                $0.append(NSAttributedString(string: "\(mark.0 + 1) ", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .bold)]))
+                $0.append(NSAttributedString(string: mark.1.title!, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light)]))
+                return $0
+            } (NSMutableAttributedString())
+            title.textColor = .white
+            addSubview(title)
+            
+            heightAnchor.constraint(equalToConstant: 60).isActive = true
+            
+            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+            border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+            
+            title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+        }
+    }
+    
     private weak var map: Map!
     private weak var field: NSTextField!
+    private weak var scroll: NSScrollView!
     private weak var searchHeight: NSLayoutConstraint!
-    private weak var listHeight: NSLayoutConstraint!
+    private weak var scrollHeight: NSLayoutConstraint!
+    private weak var itemsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; itemsBottom.isActive = true } }
     
     init() {
         let origin: CGPoint
@@ -25,6 +60,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         toolbar!.showsBaselineSeparator = false
  
         let map = Map()
+        map.refresh = { [weak self] in self?.refresh() }
         contentView!.addSubview(map)
         self.map = map
         
@@ -54,22 +90,33 @@ final class New: NSWindow, NSTextFieldDelegate {
         bar.layer!.cornerRadius = 6
         contentView!.addSubview(bar)
         
-        let list = NSView()
-        list.translatesAutoresizingMaskIntoConstraints = false
-        list.wantsLayer = true
-        list.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
-        list.layer!.cornerRadius = 6
-        contentView!.addSubview(list)
+        let scroll = NSScrollView()
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.wantsLayer = true
+        scroll.layer!.cornerRadius = 6
+        scroll.backgroundColor = .init(white: 0, alpha: 0.9)
+        scroll.hasVerticalScroller = true
+        scroll.verticalScroller!.controlSize = .mini
+        scroll.horizontalScrollElasticity = .none
+        scroll.verticalScrollElasticity = .allowed
+        scroll.documentView = Flipped()
+        scroll.documentView!.translatesAutoresizingMaskIntoConstraints = false
+        scroll.scrollerInsets.top = 40
+        scroll.scrollerInsets.bottom = 10
+        scroll.documentView!.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
+        scroll.documentView!.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
+        contentView!.addSubview(scroll)
+        self.scroll = scroll
         
         let handle = NSView()
         handle.translatesAutoresizingMaskIntoConstraints = false
         handle.wantsLayer = true
         handle.layer!.backgroundColor = NSColor.halo.cgColor
         handle.layer!.cornerRadius = 1
-        list.addSubview(handle)
+        contentView!.addSubview(handle)
         
         let handler = Button(self, action: #selector(self.handle))
-        list.addSubview(handler)
+        contentView!.addSubview(handler)
         
         let centre = Button.Image(self, action: #selector(self.centre))
         centre.image.image = NSImage(named: "centre")
@@ -143,26 +190,26 @@ final class New: NSWindow, NSTextFieldDelegate {
         border.heightAnchor.constraint(equalToConstant: 1).isActive = true
         border.topAnchor.constraint(equalTo: search.topAnchor, constant: 34).isActive = true
         
-        handle.topAnchor.constraint(equalTo: list.topAnchor, constant: 10).isActive = true
+        handle.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 10).isActive = true
         handle.heightAnchor.constraint(equalToConstant: 2).isActive = true
         handle.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        handle.centerXAnchor.constraint(equalTo: list.centerXAnchor).isActive = true
+        handle.centerXAnchor.constraint(equalTo: scroll.centerXAnchor).isActive = true
         
-        handler.topAnchor.constraint(equalTo: list.topAnchor).isActive = true
+        handler.topAnchor.constraint(equalTo: scroll.topAnchor).isActive = true
         handler.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        handler.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
-        handler.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
+        handler.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
+        handler.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
         
         bar.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
         bar.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
         bar.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        list.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
-        list.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
-        list.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
-        list.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 10).isActive = true
-        listHeight = list.heightAnchor.constraint(lessThanOrEqualToConstant: 40)
-        listHeight.isActive = true
+        scroll.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
+        scroll.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
+        scroll.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
+        scroll.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 10).isActive = true
+        scrollHeight = scroll.heightAnchor.constraint(lessThanOrEqualToConstant: 40)
+        scrollHeight.isActive = true
         
         field.centerYAnchor.constraint(equalTo: search.topAnchor, constant: 17).isActive = true
         field.leftAnchor.constraint(equalTo: search.leftAnchor, constant: 10).isActive = true
@@ -183,7 +230,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.map.follow = false }
     }
     
-    func control(_ control: NSControl, textView: NSTextView, doCommandBy: Selector) -> Bool {
+    func control(_: NSControl, textView: NSTextView, doCommandBy: Selector) -> Bool {
         if doCommandBy == #selector(NSResponder.insertNewline(_:)) {
             makeFirstResponder(nil)
             return true
@@ -200,6 +247,27 @@ final class New: NSWindow, NSTextFieldDelegate {
         case 36, 48: makeFirstResponder(field)
         default: super.keyDown(with: with)
         }
+    }
+    
+    func refresh() {
+        scroll.documentView!.subviews.forEach { $0.removeFromSuperview() }
+        var bottom = scroll.documentView!.topAnchor
+        map.plan.enumerated().forEach {
+            let item = Item($0)
+            scroll.documentView!.addSubview(item)
+            
+            item.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
+            item.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
+            item.topAnchor.constraint(equalTo: bottom, constant: $0.0 == 0 ? 40 : 0).isActive = true
+            bottom = item.bottomAnchor
+        }
+        itemsBottom = scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: bottom, constant: 20)
+        scroll.documentView!.layoutSubtreeIfNeeded()
+        NSAnimationContext.runAnimationGroup({
+            $0.duration = 0.5
+            $0.allowsImplicitAnimation = true
+            scroll.contentView.scrollToVisible(.init(x: 0, y: scroll.documentView!.bounds.height - scroll.bounds.height, width: 1, height: scroll.bounds.height))
+        }) { }
     }
     
     @objc func save() {
@@ -233,10 +301,13 @@ final class New: NSWindow, NSTextFieldDelegate {
     }
     
     @objc private func pin() {
-        let mark = MKPointAnnotation()
-        mark.title = "hello"
-        mark.coordinate = map.convert(.init(x: contentView!.frame.midX, y: contentView!.frame.midY), toCoordinateFrom: contentView)
-        map.addAnnotation(mark)
+        guard !map.geocoder.isGeocoding else { return }
+        let coordinate = map.convert(.init(x: contentView!.frame.midX, y: contentView!.frame.midY), toCoordinateFrom: contentView)
+        if !map.plan.contains(where: { $0.coordinate.latitude == coordinate.latitude && $0.coordinate.longitude == coordinate.longitude }) {
+            let mark = MKPointAnnotation()
+            mark.coordinate = coordinate
+            map.addAnnotation(mark)
+        }
     }
     
     @objc private func follow() {
@@ -247,7 +318,7 @@ final class New: NSWindow, NSTextFieldDelegate {
     }
     
     @objc private func handle() {
-        listHeight.constant = listHeight.constant < 400 ? 400 : 40
+        scrollHeight.constant = scrollHeight.constant < 400 ? 400 : 40
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.3
             $0.allowsImplicitAnimation = true

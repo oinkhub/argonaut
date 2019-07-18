@@ -1,6 +1,6 @@
 New="New";
 New.search="Search";
-New.pin="Mark";
+Map.mark="Mark";
 Menu.argonaut="Argonaut";
 Menu.about="About";
 Menu.preferences="Preferences";
