@@ -35,6 +35,12 @@ final class New: NSWindow, NSTextFieldDelegate {
         search.layer!.cornerRadius = 6
         contentView!.addSubview(search)
         
+        let icon = NSImageView()
+        icon.image = NSImage(named: "search")
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        icon.imageScaling = .scaleNone
+        search.addSubview(icon)
+        
         let border = NSView()
         border.translatesAutoresizingMaskIntoConstraints = false
         border.wantsLayer = true
@@ -124,8 +130,13 @@ final class New: NSWindow, NSTextFieldDelegate {
         search.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
         search.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 80).isActive = true
         search.rightAnchor.constraint(equalTo: bar.leftAnchor, constant: -10).isActive = true
-        searchHeight = search.heightAnchor.constraint(equalToConstant: 60)
+        searchHeight = search.heightAnchor.constraint(equalToConstant: 34)
         searchHeight.isActive = true
+        
+        icon.topAnchor.constraint(equalTo: search.topAnchor).isActive = true
+        icon.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
+        icon.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        icon.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
         border.leftAnchor.constraint(equalTo: search.leftAnchor).isActive = true
         border.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
@@ -222,10 +233,10 @@ final class New: NSWindow, NSTextFieldDelegate {
     }
     
     @objc private func pin() {
-        map.addAnnotation({
-            $0.coordinate = map.convert(.init(x: contentView!.frame.midX, y: contentView!.frame.midY), toCoordinateFrom: contentView)
-            return $0
-        } (MKPointAnnotation()))
+        let mark = MKPointAnnotation()
+        mark.title = "hello"
+        mark.coordinate = map.convert(.init(x: contentView!.frame.midX, y: contentView!.frame.midY), toCoordinateFrom: contentView)
+        map.addAnnotation(mark)
     }
     
     @objc private func follow() {
