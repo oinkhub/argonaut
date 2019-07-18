@@ -5,6 +5,7 @@ final class New: NSWindow, NSTextFieldDelegate {
     private weak var map: Map!
     private weak var field: NSTextField!
     private weak var searchHeight: NSLayoutConstraint!
+    private weak var listHeight: NSLayoutConstraint!
     
     init() {
         let origin: CGPoint
@@ -19,7 +20,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         backgroundColor = .black
         collectionBehavior = .fullScreenNone
         isReleasedWhenClosed = false
-        minSize = .init(width: 200, height: 200)
+        minSize = .init(width: 250, height: 250)
         toolbar = .init(identifier: "")
         toolbar!.showsBaselineSeparator = false
  
@@ -131,18 +132,18 @@ final class New: NSWindow, NSTextFieldDelegate {
         handle.topAnchor.constraint(equalTo: list.topAnchor, constant: 10).isActive = true
         handle.heightAnchor.constraint(equalToConstant: 2).isActive = true
         handle.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        handle.centerXAnchor.constraint(equalTo: list.centerXAnchor, constant: 10).isActive = true
+        handle.centerXAnchor.constraint(equalTo: list.centerXAnchor).isActive = true
         
         bar.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
         bar.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
-        bar.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: -10).isActive = true
         bar.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        list.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: -10).isActive = true
+        list.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
         list.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
         list.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
-        list.heightAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
         list.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 10).isActive = true
+        listHeight = list.heightAnchor.constraint(lessThanOrEqualToConstant: 40)
+        listHeight.isActive = true
         
         field.centerYAnchor.constraint(equalTo: search.topAnchor, constant: 17).isActive = true
         field.leftAnchor.constraint(equalTo: search.leftAnchor, constant: 10).isActive = true
@@ -158,6 +159,7 @@ final class New: NSWindow, NSTextFieldDelegate {
             $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
             top = $0.bottomAnchor
         }
+        bar.bottomAnchor.constraint(equalTo: top).isActive = true
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.map.follow = false }
     }
@@ -223,5 +225,9 @@ final class New: NSWindow, NSTextFieldDelegate {
         if map.follow {
             centre()
         }
+    }
+    
+    @objc private func handle() {
+        
     }
 }
