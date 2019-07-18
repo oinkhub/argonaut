@@ -44,13 +44,12 @@ final class Map: MKMapView, MKMapViewDelegate {
             marker!.canShowCallout = true
             marker!.isDraggable = true
             marker!.leftCalloutAccessoryView = Label()
-            (marker!.leftCalloutAccessoryView as! Label).translatesAutoresizingMaskIntoConstraints = false
-            (marker!.leftCalloutAccessoryView as! Label).frame = .init(x: 0, y: 0, width: 40, height: 30)
             (marker!.leftCalloutAccessoryView as! Label).font = .systemFont(ofSize: 16, weight: .bold)
             (marker!.leftCalloutAccessoryView as! Label).textColor = .white
         } else {
             marker!.annotation = mark
         }
+        (marker!.leftCalloutAccessoryView as! Label).stringValue = "\(plan.firstIndex(of: mark)! + 1)"
         return marker
     }
     
@@ -62,29 +61,17 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func mapView(_: MKMapView, didAdd: [MKAnnotationView]) {
-        didAdd.forEach {
-            if let mark = $0.annotation as? MKPointAnnotation {
-                plan.append(mark)
-                locate(mark)
-                index(mark)
-            }
-        }
-    }
-    
-    func mapView(_: MKMapView, didSelect: MKAnnotationView) {
-        
+    func add(_ mark: MKPointAnnotation) {
+        plan.append(mark)
+        addAnnotation(mark)
+        selectAnnotation(mark, animated: true)
+        locate(mark)
     }
     
     private func locate(_ mark: MKPointAnnotation) {
         geocoder.reverseGeocodeLocation(.init(latitude: mark.coordinate.latitude, longitude: mark.coordinate.longitude)) {
             mark.title = $1 == nil ? $0?.first?.name : .key("Map.mark")
-            DispatchQueue.main.async { [weak self] in
-                self?.refresh()
-                self?.selectAnnotation(mark, animated: true)
-            }
+            DispatchQueue.main.async { [weak self] in self?.refresh() }
         }
     }
-    
-    private func index(_ mark: MKPointAnnotation) { (view(for: mark)?.leftCalloutAccessoryView as! Label).stringValue = "\(plan.firstIndex(of: mark)! + 1)" }
 }

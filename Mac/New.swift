@@ -8,15 +8,9 @@ final class New: NSWindow, NSTextFieldDelegate {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             
-            let border = NSView()
-            border.translatesAutoresizingMaskIntoConstraints = false
-            border.wantsLayer = true
-            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.2).cgColor
-            addSubview(border)
-            
             let title = Label()
             title.attributedStringValue = {
-                $0.append(NSAttributedString(string: "\(mark.0 + 1) ", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .bold)]))
+                $0.append(NSAttributedString(string: "\(mark.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .bold)]))
                 $0.append(NSAttributedString(string: mark.1.title!, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light)]))
                 return $0
             } (NSMutableAttributedString())
@@ -25,10 +19,23 @@ final class New: NSWindow, NSTextFieldDelegate {
             
             heightAnchor.constraint(equalToConstant: 60).isActive = true
             
-            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
-            border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+            title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+        }
+    }
+    
+    private final class Distance: NSView {
+        required init?(coder: NSCoder) { return nil }
+        init(_ distance: NSAttributedString) {
+            super.init(frame: .zero)
+            translatesAutoresizingMaskIntoConstraints = false
+            
+            let title = Label()
+            title.attributedStringValue = distance
+            title.textColor = .white
+            addSubview(title)
+            
+            heightAnchor.constraint(equalToConstant: 60).isActive = true
             
             title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
             title.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
@@ -101,8 +108,9 @@ final class New: NSWindow, NSTextFieldDelegate {
         scroll.verticalScrollElasticity = .allowed
         scroll.documentView = Flipped()
         scroll.documentView!.translatesAutoresizingMaskIntoConstraints = false
-        scroll.scrollerInsets.top = 40
-        scroll.scrollerInsets.bottom = 10
+        scroll.contentInsets.top = 40
+        scroll.contentInsets.bottom = 10
+        scroll.automaticallyAdjustsContentInsets = false
         scroll.documentView!.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
         scroll.documentView!.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
         contentView!.addSubview(scroll)
@@ -258,7 +266,7 @@ final class New: NSWindow, NSTextFieldDelegate {
             
             item.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
             item.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
-            item.topAnchor.constraint(equalTo: bottom, constant: $0.0 == 0 ? 40 : 0).isActive = true
+            item.topAnchor.constraint(equalTo: bottom).isActive = true
             bottom = item.bottomAnchor
         }
         itemsBottom = scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: bottom, constant: 20)
@@ -306,7 +314,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         if !map.plan.contains(where: { $0.coordinate.latitude == coordinate.latitude && $0.coordinate.longitude == coordinate.longitude }) {
             let mark = MKPointAnnotation()
             mark.coordinate = coordinate
-            map.addAnnotation(mark)
+            map.add(mark)
         }
     }
     
