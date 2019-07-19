@@ -1,6 +1,7 @@
 import MapKit
 
-final class Mark: CLLocation, MKAnnotation {
+final class Mark: NSObject, MKAnnotation {
     var name = ""
-    var distance = CLLocationDistance()
+    var location = CLLocation()
+    var coordinate: CLLocationCoordinate2D { get { return location.coordinate } set { location = .init(latitude: newValue.latitude, longitude: newValue.longitude) } }
 }

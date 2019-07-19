@@ -46,6 +46,7 @@ final class Map: MKMapView, MKMapViewDelegate {
             marker = .init(annotation: mark, reuseIdentifier: "mark")
             marker!.image = NSImage(named: "mark")
             marker!.isDraggable = true
+            marker!.centerOffset.y = -28
         } else {
             marker!.annotation = mark
             marker!.subviews.forEach { $0.removeFromSuperview() }
@@ -69,9 +70,6 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func add(_ mark: Mark) {
-        if let last = plan.last {
-            mark.distance = mark.distance(from: last)
-        }
         plan.append(mark)
         addAnnotation(mark)
         selectAnnotation(mark, animated: true)
@@ -79,7 +77,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     private func locate(_ mark: Mark) {
-        geocoder.reverseGeocodeLocation(mark) { found, _ in
+        geocoder.reverseGeocodeLocation(mark.location) { found, _ in
             mark.name = found?.first?.name ?? .key("Map.mark")
             DispatchQueue.main.async { [weak self] in
                 self?.refresh()

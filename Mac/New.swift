@@ -268,6 +268,7 @@ final class New: NSWindow, NSTextFieldDelegate {
     func refresh() {
         scroll.documentView!.subviews.forEach { $0.removeFromSuperview() }
         var previous: Item?
+        var total = CLLocationDistance()
         map.plan.enumerated().forEach {
             let item = Item($0)
             scroll.documentView!.addSubview(item)
@@ -278,16 +279,9 @@ final class New: NSWindow, NSTextFieldDelegate {
             if previous == nil {
                 item.topAnchor.constraint(equalTo: scroll.documentView!.topAnchor).isActive = true
             } else {
-                let distance = Distance({
-                    if #available(OSX 10.12, *) {
-                        let formatter = MeasurementFormatter()
-                        formatter.unitStyle = .long
-                        formatter.unitOptions = .naturalScale
-                        formatter.numberFormatter.maximumFractionDigits = 1
-                        return "+ " + formatter.string(from: Measurement(value: $0, unit: UnitLength.meters))
-                    }
-                    return "+ \(Int($0))" + .key("New.distance")
-                } ($0.1.distance))
+                let separation = $0.1.location.distance(from: previous!.mark.location)
+                total += separation
+                let distance = Distance("+ " + measure(separation))
                 scroll.documentView!.addSubview(distance)
                 
                 distance.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
@@ -297,13 +291,35 @@ final class New: NSWindow, NSTextFieldDelegate {
             }
             previous = item
         }
-        itemsBottom = scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: previous == nil ? scroll.documentView!.topAnchor : previous!.bottomAnchor, constant: 20)
+        
+        let distance = Label()
+        distance.textColor = .halo
+        distance.stringValue = measure(total)
+        distance.font = .systemFont(ofSize: 16, weight: .bold)
+        scroll.documentView!.addSubview(distance)
+        
+        distance.topAnchor.constraint(equalTo: previous == nil ? scroll.documentView!.topAnchor : previous!.bottomAnchor, constant: 10).isActive = true
+        distance.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 20).isActive = true
+        
+        itemsBottom = scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: distance.bottomAnchor, constant: 20)
+        
         scroll.documentView!.layoutSubtreeIfNeeded()
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.5
             $0.allowsImplicitAnimation = true
             scroll.contentView.scrollToVisible(previous == nil ? .zero : previous!.frame)
         }) { }
+    }
+    
+    private func measure(_ distance: CLLocationDistance) -> String {
+        if #available(OSX 10.12, *) {
+            let formatter = MeasurementFormatter()
+            formatter.unitStyle = .long
+            formatter.unitOptions = .naturalScale
+            formatter.numberFormatter.maximumFractionDigits = 1
+            return formatter.string(from: Measurement(value: distance, unit: UnitLength.meters))
+        }
+        return "\(Int(distance))" + .key("New.distance")
     }
     
     @objc func save() {
@@ -340,7 +356,9 @@ final class New: NSWindow, NSTextFieldDelegate {
         guard !map.geocoder.isGeocoding else { return }
         let coordinate = map.convert(.init(x: contentView!.frame.midX, y: contentView!.frame.midY), toCoordinateFrom: contentView)
         if !map.plan.contains(where: { $0.coordinate.latitude == coordinate.latitude && $0.coordinate.longitude == coordinate.longitude }) {
-            map.add(.init(latitude: coordinate.latitude, longitude: coordinate.longitude))
+            let mark = Mark()
+            mark.coordinate = coordinate
+            map.add(mark)
         }
     }
     
