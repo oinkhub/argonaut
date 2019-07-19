@@ -32,7 +32,11 @@ final class Map: MKMapView, MKMapViewDelegate {
         guard follow else { return }
         var region = self.region
         region.center = didUpdate.coordinate
-        setRegion(region, animated: true)
+        setRegion(region, animated: false)
+    }
+    
+    func mapView(_: MKMapView, didAdd: [MKAnnotationView]) {
+        didAdd.first(where: { $0.annotation is MKUserLocation })?.canShowCallout = false
     }
     
     func mapView(_: MKMapView, viewFor: MKAnnotation) -> MKAnnotationView? {
@@ -41,15 +45,11 @@ final class Map: MKMapView, MKMapViewDelegate {
         if marker == nil {
             marker = .init(annotation: mark, reuseIdentifier: "mark")
             marker!.image = NSImage(named: "mark")
-            marker!.canShowCallout = true
             marker!.isDraggable = true
-            marker!.leftCalloutAccessoryView = Label()
-            (marker!.leftCalloutAccessoryView as! Label).font = .systemFont(ofSize: 16, weight: .bold)
-            (marker!.leftCalloutAccessoryView as! Label).textColor = .white
         } else {
             marker!.annotation = mark
+            marker!.subviews.forEach { $0.removeFromSuperview() }
         }
-        (marker!.leftCalloutAccessoryView as! Label).stringValue = "\(plan.firstIndex(of: mark)! + 1)"
         return marker
     }
     
@@ -59,6 +59,13 @@ final class Map: MKMapView, MKMapViewDelegate {
                 locate(mark)
             }
         }
+    }
+    
+    func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.subviews.forEach { $0.removeFromSuperview() } }
+    
+    func mapView(_: MKMapView, didSelect: MKAnnotationView) {
+        guard let mark = didSelect.annotation as? MKPointAnnotation else { return }
+        Callout(didSelect, index: "\(plan.firstIndex(of: mark)! + 1)")
     }
     
     func add(_ mark: MKPointAnnotation) {
@@ -71,7 +78,10 @@ final class Map: MKMapView, MKMapViewDelegate {
     private func locate(_ mark: MKPointAnnotation) {
         geocoder.reverseGeocodeLocation(.init(latitude: mark.coordinate.latitude, longitude: mark.coordinate.longitude)) {
             mark.title = $1 == nil ? $0?.first?.name : .key("Map.mark")
-            DispatchQueue.main.async { [weak self] in self?.refresh() }
+            DispatchQueue.main.async { [weak self] in
+                self?.refresh()
+                self?.view(for: mark)?.subviews.compactMap({ $0 as? Callout }).first?.refresh(mark.title!)
+            }
         }
     }
 }

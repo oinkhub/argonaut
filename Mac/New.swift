@@ -108,6 +108,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         scroll.verticalScrollElasticity = .allowed
         scroll.documentView = Flipped()
         scroll.documentView!.translatesAutoresizingMaskIntoConstraints = false
+        scroll.documentView!.alphaValue = 0
         scroll.contentInsets.top = 40
         scroll.contentInsets.bottom = 10
         scroll.automaticallyAdjustsContentInsets = false
@@ -326,11 +327,20 @@ final class New: NSWindow, NSTextFieldDelegate {
     }
     
     @objc private func handle() {
-        scrollHeight.constant = scrollHeight.constant < 400 ? 400 : 40
+        let alpha: CGFloat
+        if scrollHeight.constant < 400 {
+            scrollHeight.constant = 400
+            alpha = 1
+        } else {
+            scrollHeight.constant = 40
+            alpha = 0
+        }
+        
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.3
             $0.allowsImplicitAnimation = true
             contentView!.layoutSubtreeIfNeeded()
+            scroll.documentView!.alphaValue = alpha
         }) { }
     }
 }
