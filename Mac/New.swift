@@ -3,42 +3,49 @@ import MapKit
 
 final class New: NSWindow, NSTextFieldDelegate {
     private final class Item: NSView {
+        let mark: Mark
+        
         required init?(coder: NSCoder) { return nil }
-        init(_ mark: (Int, MKPointAnnotation)) {
+        init(_ mark: (Int, Mark)) {
+            self.mark = mark.1
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             
             let title = Label()
             title.attributedStringValue = {
-                $0.append(NSAttributedString(string: "\(mark.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .bold)]))
-                $0.append(NSAttributedString(string: mark.1.title!, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light)]))
+                $0.append(NSAttributedString(string: "\(mark.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .bold), .foregroundColor: NSColor.halo]))
+                $0.append(NSAttributedString(string: mark.1.name, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light), .foregroundColor: NSColor.white]))
                 return $0
             } (NSMutableAttributedString())
-            title.textColor = .white
             addSubview(title)
             
-            heightAnchor.constraint(equalToConstant: 60).isActive = true
+            heightAnchor.constraint(equalToConstant: 40).isActive = true
             
             title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         }
     }
     
     private final class Distance: NSView {
         required init?(coder: NSCoder) { return nil }
-        init(_ distance: NSAttributedString) {
+        init(_ distance: String) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
+            wantsLayer = true
+            layer!.backgroundColor = NSColor.halo.cgColor
+            layer!.cornerRadius = 6
             
             let title = Label()
-            title.attributedStringValue = distance
-            title.textColor = .white
+            title.stringValue = distance
+            title.textColor = .black
+            title.font = .systemFont(ofSize: 12, weight: .light)
             addSubview(title)
             
-            heightAnchor.constraint(equalToConstant: 60).isActive = true
+            heightAnchor.constraint(equalToConstant: 28).isActive = true
+            leftAnchor.constraint(equalTo: title.leftAnchor, constant: -10).isActive = true
+            rightAnchor.constraint(equalTo: title.rightAnchor, constant: 10).isActive = true
             
             title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
         }
     }
     
@@ -109,7 +116,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         scroll.documentView = Flipped()
         scroll.documentView!.translatesAutoresizingMaskIntoConstraints = false
         scroll.documentView!.alphaValue = 0
-        scroll.contentInsets.top = 40
+        scroll.contentInsets.top = 20
         scroll.contentInsets.bottom = 10
         scroll.automaticallyAdjustsContentInsets = false
         scroll.documentView!.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
@@ -260,22 +267,42 @@ final class New: NSWindow, NSTextFieldDelegate {
     
     func refresh() {
         scroll.documentView!.subviews.forEach { $0.removeFromSuperview() }
-        var bottom = scroll.documentView!.topAnchor
+        var previous: Item?
         map.plan.enumerated().forEach {
             let item = Item($0)
             scroll.documentView!.addSubview(item)
             
             item.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
             item.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
-            item.topAnchor.constraint(equalTo: bottom).isActive = true
-            bottom = item.bottomAnchor
+            
+            if previous == nil {
+                item.topAnchor.constraint(equalTo: scroll.documentView!.topAnchor).isActive = true
+            } else {
+                let distance = Distance({
+                    if #available(OSX 10.12, *) {
+                        let formatter = MeasurementFormatter()
+                        formatter.unitStyle = .long
+                        formatter.unitOptions = .naturalScale
+                        formatter.numberFormatter.maximumFractionDigits = 1
+                        return "+ " + formatter.string(from: Measurement(value: $0, unit: UnitLength.meters))
+                    }
+                    return "+ \(Int($0))" + .key("New.distance")
+                } ($0.1.distance))
+                scroll.documentView!.addSubview(distance)
+                
+                distance.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
+                distance.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 20).isActive = true
+                
+                item.topAnchor.constraint(equalTo: distance.bottomAnchor).isActive = true
+            }
+            previous = item
         }
-        itemsBottom = scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: bottom, constant: 20)
+        itemsBottom = scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: previous == nil ? scroll.documentView!.topAnchor : previous!.bottomAnchor, constant: 20)
         scroll.documentView!.layoutSubtreeIfNeeded()
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.5
             $0.allowsImplicitAnimation = true
-            scroll.contentView.scrollToVisible(.init(x: 0, y: scroll.documentView!.bounds.height - scroll.bounds.height, width: 1, height: scroll.bounds.height))
+            scroll.contentView.scrollToVisible(previous == nil ? .zero : previous!.frame)
         }) { }
     }
     
@@ -313,9 +340,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         guard !map.geocoder.isGeocoding else { return }
         let coordinate = map.convert(.init(x: contentView!.frame.midX, y: contentView!.frame.midY), toCoordinateFrom: contentView)
         if !map.plan.contains(where: { $0.coordinate.latitude == coordinate.latitude && $0.coordinate.longitude == coordinate.longitude }) {
-            let mark = MKPointAnnotation()
-            mark.coordinate = coordinate
-            map.add(mark)
+            map.add(.init(latitude: coordinate.latitude, longitude: coordinate.longitude))
         }
     }
     
@@ -335,7 +360,6 @@ final class New: NSWindow, NSTextFieldDelegate {
             scrollHeight.constant = 40
             alpha = 0
         }
-        
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.3
             $0.allowsImplicitAnimation = true

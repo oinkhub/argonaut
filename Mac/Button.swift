@@ -91,7 +91,7 @@ class Button: NSView {
     final weak var target: AnyObject?
     final var action: Selector?
     final var enabled = true
-    private var drag = CGFloat(0)
+    private var drag = CGFloat()
     final fileprivate var selected = false {
         didSet {
             alphaValue = selected ? 0.4 : 1

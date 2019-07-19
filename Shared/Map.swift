@@ -3,7 +3,7 @@ import MapKit
 final class Map: MKMapView, MKMapViewDelegate {
     var follow = true
     var refresh: (() -> Void)!
-    private(set) var plan = [MKPointAnnotation]()
+    private(set) var plan = [Mark]()
     let geocoder = CLGeocoder()
     
     required init?(coder: NSCoder) { return nil }
@@ -40,7 +40,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, viewFor: MKAnnotation) -> MKAnnotationView? {
-        guard let mark = viewFor as? MKPointAnnotation else { return view(for: viewFor) }
+        guard let mark = viewFor as? Mark else { return view(for: viewFor) }
         var marker = dequeueReusableAnnotationView(withIdentifier: "mark")
         if marker == nil {
             marker = .init(annotation: mark, reuseIdentifier: "mark")
@@ -55,7 +55,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func mapView(_: MKMapView, annotationView: MKAnnotationView, didChange: MKAnnotationView.DragState, fromOldState: MKAnnotationView.DragState) {
         if didChange == .ending {
-            if let mark = annotationView.annotation as? MKPointAnnotation {
+            if let mark = annotationView.annotation as? Mark {
                 locate(mark)
             }
         }
@@ -64,23 +64,26 @@ final class Map: MKMapView, MKMapViewDelegate {
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.subviews.forEach { $0.removeFromSuperview() } }
     
     func mapView(_: MKMapView, didSelect: MKAnnotationView) {
-        guard let mark = didSelect.annotation as? MKPointAnnotation else { return }
+        guard let mark = didSelect.annotation as? Mark else { return }
         Callout(didSelect, index: "\(plan.firstIndex(of: mark)! + 1)")
     }
     
-    func add(_ mark: MKPointAnnotation) {
+    func add(_ mark: Mark) {
+        if let last = plan.last {
+            mark.distance = mark.distance(from: last)
+        }
         plan.append(mark)
         addAnnotation(mark)
         selectAnnotation(mark, animated: true)
         locate(mark)
     }
     
-    private func locate(_ mark: MKPointAnnotation) {
-        geocoder.reverseGeocodeLocation(.init(latitude: mark.coordinate.latitude, longitude: mark.coordinate.longitude)) {
-            mark.title = $1 == nil ? $0?.first?.name : .key("Map.mark")
+    private func locate(_ mark: Mark) {
+        geocoder.reverseGeocodeLocation(mark) { found, _ in
+            mark.name = found?.first?.name ?? .key("Map.mark")
             DispatchQueue.main.async { [weak self] in
                 self?.refresh()
-                self?.view(for: mark)?.subviews.compactMap({ $0 as? Callout }).first?.refresh(mark.title!)
+                self?.view(for: mark)?.subviews.compactMap({ $0 as? Callout }).first?.refresh(mark.name)
             }
         }
     }
