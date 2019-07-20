@@ -42,7 +42,7 @@ final class New: NSWindow, NSTextFieldDelegate {
             addSubview(title)
             
             heightAnchor.constraint(equalToConstant: 28).isActive = true
-            leftAnchor.constraint(equalTo: title.leftAnchor, constant: -10).isActive = true
+            leftAnchor.constraint(equalTo: title.leftAnchor, constant: -8).isActive = true
             rightAnchor.constraint(equalTo: title.rightAnchor, constant: 10).isActive = true
             
             title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -57,13 +57,7 @@ final class New: NSWindow, NSTextFieldDelegate {
     private weak var itemsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; itemsBottom.isActive = true } }
     
     init() {
-        let origin: CGPoint
-        if let frame = app.windows.filter({ $0 is New }).sorted(by: { $0.frame.minX > $1.frame.minX }).first?.frame {
-            origin = .init(x: frame.minX + 25, y: frame.maxY - 625)
-        } else {
-            origin = .init(x: app.list.frame.maxX + 4, y: app.list.frame.minY)
-        }
-        super.init(contentRect: .init(origin: origin, size: NSSize(width: 800, height: 600)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
+        super.init(contentRect: .init(origin: .init(x: app.list.frame.maxX + 4, y: app.list.frame.minY), size: .init(width: 800, height: 600)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black
@@ -134,19 +128,19 @@ final class New: NSWindow, NSTextFieldDelegate {
         let handler = Button(self, action: #selector(self.handle))
         contentView!.addSubview(handler)
         
-        let centre = Button.Image(self, action: #selector(self.centre))
+        let centre = Button.Image(map, action: #selector(map.centre))
         centre.image.image = NSImage(named: "centre")
         
-        let `in` = Button.Image(self, action: #selector(self.in))
+        let `in` = Button.Image(map, action: #selector(map.in))
         `in`.image.image = NSImage(named: "in")
         
-        let out = Button.Image(self, action: #selector(self.out))
+        let out = Button.Image(map, action: #selector(map.out))
         out.image.image = NSImage(named: "out")
         
-        let pin = Button.Image(self, action: #selector(self.pin))
+        let pin = Button.Image(map, action: #selector(map.pin))
         pin.image.image = NSImage(named: "pin")
         
-        let follow = Button.Check(self, action: #selector(self.follow))
+        let follow = Button.Check(map, action: #selector(map.follow))
         follow.on = NSImage(named: "on")
         follow.off = NSImage(named: "off")
         
@@ -242,8 +236,6 @@ final class New: NSWindow, NSTextFieldDelegate {
             top = $0.bottomAnchor
         }
         bar.bottomAnchor.constraint(equalTo: top).isActive = true
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.map.follow = false }
     }
     
     func control(_: NSControl, textView: NSTextView, doCommandBy: Selector) -> Bool {
@@ -311,6 +303,20 @@ final class New: NSWindow, NSTextFieldDelegate {
         }) { }
     }
     
+    @objc func save() {
+        
+    }
+    
+    @objc func centre() { map.centre() }
+    @objc func follow() { map.follow() }
+    @objc func pin() { map.pin() }
+    @objc func `in`() { map.in() }
+    @objc func out() { map.out() }
+    @objc func up() { map.up() }
+    @objc func down() { map.down() }
+    @objc func left() { map.left() }
+    @objc func right() { map.right() }
+    
     private func measure(_ distance: CLLocationDistance) -> String {
         if #available(OSX 10.12, *) {
             let formatter = MeasurementFormatter()
@@ -320,53 +326,6 @@ final class New: NSWindow, NSTextFieldDelegate {
             return formatter.string(from: Measurement(value: distance, unit: UnitLength.meters))
         }
         return "\(Int(distance))" + .key("New.distance")
-    }
-    
-    @objc func save() {
-        
-    }
-    
-    @objc private func centre() {
-        var region = map.region
-        region.center = map.userLocation.coordinate
-        map.setRegion(region, animated: true)
-    }
-    
-    @objc private func `in`() {
-        var region = map.region
-        region.span.latitudeDelta *= 0.1
-        region.span.longitudeDelta *= 0.1
-        map.setRegion(region, animated: true)
-    }
-    
-    @objc private func out() {
-        var region = map.region
-        region.span.latitudeDelta /= 0.1
-        region.span.longitudeDelta /= 0.1
-        if region.span.latitudeDelta > 180 {
-            region.span.latitudeDelta = 180
-        }
-        if region.span.longitudeDelta > 180 {
-            region.span.longitudeDelta = 180
-        }
-        map.setRegion(region, animated: true)
-    }
-    
-    @objc private func pin() {
-        guard !map.geocoder.isGeocoding else { return }
-        let coordinate = map.convert(.init(x: contentView!.frame.midX, y: contentView!.frame.midY), toCoordinateFrom: contentView)
-        if !map.plan.contains(where: { $0.coordinate.latitude == coordinate.latitude && $0.coordinate.longitude == coordinate.longitude }) {
-            let mark = Mark()
-            mark.coordinate = coordinate
-            map.add(mark)
-        }
-    }
-    
-    @objc private func follow() {
-        map.follow.toggle()
-        if map.follow {
-            centre()
-        }
     }
     
     @objc private func handle() {

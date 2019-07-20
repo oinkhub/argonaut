@@ -85,12 +85,44 @@ private(set) weak var app: App!
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         
         menu.addItem({
-            $0.submenu = NSMenu(title: .key("Menu.map"))
+            $0.submenu = NSMenu(title: .key("Menu.make"))
             $0.submenu!.items = [
                 NSMenuItem(title: .key("Menu.new"), action: #selector(new), keyEquivalent: "n"),
                 NSMenuItem.separator(),
                 NSMenuItem(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s"),
                 NSMenuItem(title: .key("Menu.close"), action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")]
+            return $0
+        } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
+        
+        menu.addItem({
+            $0.submenu = NSMenu(title: .key("Menu.map"))
+            $0.submenu!.items = [
+                { $0.keyEquivalentModifierMask = [.option, .command]
+                    return $0
+                } (NSMenuItem(title: .key("Menu.centre"), action: #selector(New.centre), keyEquivalent: "c")),
+                { $0.keyEquivalentModifierMask = [.option, .command]
+                    return $0
+                } (NSMenuItem(title: .key("Menu.follow"), action: #selector(New.follow), keyEquivalent: "f")),
+                NSMenuItem(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p"),
+                NSMenuItem.separator(),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.in"), action: #selector(New.in), keyEquivalent: "+")),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.out"), action: #selector(New.out), keyEquivalent: "-")),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.up"), action: #selector(New.up), keyEquivalent: String(Character(UnicodeScalar(NSUpArrowFunctionKey)!)))),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.down"), action: #selector(New.down), keyEquivalent: String(Character(UnicodeScalar(NSDownArrowFunctionKey)!)))),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.left"), action: #selector(New.left), keyEquivalent: String(Character(UnicodeScalar(NSLeftArrowFunctionKey)!)))),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.right"), action: #selector(New.right), keyEquivalent: String(Character(UnicodeScalar(NSRightArrowFunctionKey)!))))]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         
@@ -175,7 +207,14 @@ private(set) weak var app: App!
         }
     }
     
-    @objc func new() { New().makeKeyAndOrderFront(nil) }
+    @objc func new() {
+        if let new = windows.first(where: { $0 is New }) {
+            new.orderFront(nil)
+        } else {
+            New().makeKeyAndOrderFront(nil)
+        }
+    }
+    
     @objc private func about() { }
     @objc private func settings() { }
     @objc private func help() { }
