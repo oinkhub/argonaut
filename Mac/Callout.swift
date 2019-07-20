@@ -17,7 +17,7 @@ final class Callout: NSView {
         addSubview(circle)
         
         let label = Label()
-        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.font = .systemFont(ofSize: 14, weight: .bold)
         label.textColor = .black
         label.stringValue = index
         addSubview(label)

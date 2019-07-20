@@ -89,8 +89,10 @@ private(set) weak var app: App!
             $0.submenu!.items = [
                 NSMenuItem(title: .key("Menu.new"), action: #selector(new), keyEquivalent: "n"),
                 NSMenuItem.separator(),
+                NSMenuItem(title: .key("Menu.list"), action: #selector(New.handle), keyEquivalent: "l"),
+                NSMenuItem.separator(),
                 NSMenuItem(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s"),
-                NSMenuItem(title: .key("Menu.close"), action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")]
+                NSMenuItem(title: .key("Menu.discard"), action: #selector(New.discard), keyEquivalent: "w")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         

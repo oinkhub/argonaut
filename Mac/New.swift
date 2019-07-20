@@ -22,11 +22,34 @@ final class New: NSWindow, NSTextFieldDelegate {
             heightAnchor.constraint(equalToConstant: 40).isActive = true
             
             title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
         }
     }
     
     private final class Distance: NSView {
+        required init?(coder: NSCoder) { return nil }
+        init(_ distance: String) {
+            super.init(frame: .zero)
+            translatesAutoresizingMaskIntoConstraints = false
+            wantsLayer = true
+            layer!.backgroundColor = NSColor.halo.withAlphaComponent(0.2).cgColor
+            layer!.cornerRadius = 6
+            
+            let title = Label()
+            title.stringValue = distance
+            title.textColor = .halo
+            title.font = .systemFont(ofSize: 12, weight: .regular)
+            addSubview(title)
+            
+            heightAnchor.constraint(equalToConstant: 28).isActive = true
+            leftAnchor.constraint(equalTo: title.leftAnchor, constant: -8).isActive = true
+            rightAnchor.constraint(equalTo: title.rightAnchor, constant: 10).isActive = true
+            
+            title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        }
+    }
+    
+    private final class Total: NSView {
         required init?(coder: NSCoder) { return nil }
         init(_ distance: String) {
             super.init(frame: .zero)
@@ -38,12 +61,12 @@ final class New: NSWindow, NSTextFieldDelegate {
             let title = Label()
             title.stringValue = distance
             title.textColor = .black
-            title.font = .systemFont(ofSize: 12, weight: .light)
+            title.font = .systemFont(ofSize: 14, weight: .bold)
             addSubview(title)
             
-            heightAnchor.constraint(equalToConstant: 28).isActive = true
-            leftAnchor.constraint(equalTo: title.leftAnchor, constant: -8).isActive = true
-            rightAnchor.constraint(equalTo: title.rightAnchor, constant: 10).isActive = true
+            heightAnchor.constraint(equalToConstant: 38).isActive = true
+            leftAnchor.constraint(equalTo: title.leftAnchor, constant: -10).isActive = true
+            rightAnchor.constraint(equalTo: title.rightAnchor, constant: 12).isActive = true
             
             title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         }
@@ -52,6 +75,7 @@ final class New: NSWindow, NSTextFieldDelegate {
     private weak var map: Map!
     private weak var field: NSTextField!
     private weak var scroll: NSScrollView!
+    private weak var _follow: Button.Check!
     private weak var searchHeight: NSLayoutConstraint!
     private weak var scrollHeight: NSLayoutConstraint!
     private weak var itemsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; itemsBottom.isActive = true } }
@@ -98,24 +122,29 @@ final class New: NSWindow, NSTextFieldDelegate {
         bar.layer!.cornerRadius = 6
         contentView!.addSubview(bar)
         
+        let base = NSView()
+        base.translatesAutoresizingMaskIntoConstraints = false
+        base.wantsLayer = true
+        base.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
+        base.layer!.cornerRadius = 6
+        contentView!.addSubview(base)
+        
         let scroll = NSScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
-        scroll.wantsLayer = true
-        scroll.layer!.cornerRadius = 6
-        scroll.backgroundColor = .init(white: 0, alpha: 0.9)
+        scroll.drawsBackground = false
         scroll.hasVerticalScroller = true
         scroll.verticalScroller!.controlSize = .mini
         scroll.horizontalScrollElasticity = .none
         scroll.verticalScrollElasticity = .allowed
+        scroll.alphaValue = 0
         scroll.documentView = Flipped()
         scroll.documentView!.translatesAutoresizingMaskIntoConstraints = false
-        scroll.documentView!.alphaValue = 0
         scroll.contentInsets.top = 20
         scroll.contentInsets.bottom = 10
         scroll.automaticallyAdjustsContentInsets = false
         scroll.documentView!.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
         scroll.documentView!.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
-        contentView!.addSubview(scroll)
+        base.addSubview(scroll)
         self.scroll = scroll
         
         let handle = NSView()
@@ -140,9 +169,10 @@ final class New: NSWindow, NSTextFieldDelegate {
         let pin = Button.Image(map, action: #selector(map.pin))
         pin.image.image = NSImage(named: "pin")
         
-        let follow = Button.Check(map, action: #selector(map.follow))
-        follow.on = NSImage(named: "on")
-        follow.off = NSImage(named: "off")
+        let _follow = Button.Check(map, action: #selector(map.follow))
+        _follow.on = NSImage(named: "on")
+        _follow.off = NSImage(named: "off")
+        self._follow = _follow
         
         let field = NSTextField()
         field.translatesAutoresizingMaskIntoConstraints = false
@@ -203,7 +233,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         handle.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 10).isActive = true
         handle.heightAnchor.constraint(equalToConstant: 2).isActive = true
         handle.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        handle.centerXAnchor.constraint(equalTo: scroll.centerXAnchor).isActive = true
+        handle.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
         
         handler.topAnchor.constraint(equalTo: scroll.topAnchor).isActive = true
         handler.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -214,10 +244,15 @@ final class New: NSWindow, NSTextFieldDelegate {
         bar.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
         bar.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        scroll.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
-        scroll.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
-        scroll.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
-        scroll.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 10).isActive = true
+        base.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
+        base.widthAnchor.constraint(equalToConstant: 360).isActive = true
+        base.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
+        base.topAnchor.constraint(equalTo: scroll.topAnchor, constant: -2).isActive = true
+        
+        scroll.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
+        scroll.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -2).isActive = true
+        scroll.bottomAnchor.constraint(equalTo: base.bottomAnchor).isActive = true
+        scroll.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 12).isActive = true
         scrollHeight = scroll.heightAnchor.constraint(lessThanOrEqualToConstant: 40)
         scrollHeight.isActive = true
         
@@ -226,7 +261,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         field.rightAnchor.constraint(equalTo: search.rightAnchor, constant: -10).isActive = true
         
         var top = bar.topAnchor
-        [centre, `in`, out, pin, follow].forEach {
+        [centre, `in`, out, pin, _follow].forEach {
             bar.addSubview($0)
             
             $0.topAnchor.constraint(equalTo: top).isActive = true
@@ -277,21 +312,19 @@ final class New: NSWindow, NSTextFieldDelegate {
                 scroll.documentView!.addSubview(distance)
                 
                 distance.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-                distance.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 20).isActive = true
+                distance.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 12).isActive = true
                 
                 item.topAnchor.constraint(equalTo: distance.bottomAnchor).isActive = true
             }
             previous = item
         }
         
-        let distance = Label()
-        distance.textColor = .halo
-        distance.stringValue = measure(total)
-        distance.font = .systemFont(ofSize: 16, weight: .bold)
+        let distance = Total(measure(total))
+        distance.isHidden = map.plan.count < 2
         scroll.documentView!.addSubview(distance)
         
-        distance.topAnchor.constraint(equalTo: previous == nil ? scroll.documentView!.topAnchor : previous!.bottomAnchor, constant: 10).isActive = true
-        distance.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 20).isActive = true
+        distance.topAnchor.constraint(equalTo: previous == nil ? scroll.documentView!.topAnchor : previous!.bottomAnchor).isActive = true
+        distance.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 12).isActive = true
         
         itemsBottom = scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: distance.bottomAnchor, constant: 20)
         
@@ -299,7 +332,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.5
             $0.allowsImplicitAnimation = true
-            scroll.contentView.scrollToVisible(previous == nil ? .zero : previous!.frame)
+            scroll.contentView.scrollToVisible(distance.frame.insetBy(dx: 0, dy: 20))
         }) { }
     }
     
@@ -307,8 +340,24 @@ final class New: NSWindow, NSTextFieldDelegate {
         
     }
     
+    @objc func handle() {
+        let alpha: CGFloat
+        if scrollHeight.constant < 250 {
+            scrollHeight.constant = 250
+            alpha = 1
+        } else {
+            scrollHeight.constant = 40
+            alpha = 0
+        }
+        NSAnimationContext.runAnimationGroup({
+            $0.duration = 0.3
+            $0.allowsImplicitAnimation = true
+            contentView!.layoutSubtreeIfNeeded()
+            scroll.alphaValue = alpha
+        }) { }
+    }
+    
     @objc func centre() { map.centre() }
-    @objc func follow() { map.follow() }
     @objc func pin() { map.pin() }
     @objc func `in`() { map.in() }
     @objc func out() { map.out() }
@@ -316,6 +365,12 @@ final class New: NSWindow, NSTextFieldDelegate {
     @objc func down() { map.down() }
     @objc func left() { map.left() }
     @objc func right() { map.right() }
+    @objc func discard() { close() }
+    
+    @objc func follow() {
+        _follow.checked.toggle()
+        map.follow()
+    }
     
     private func measure(_ distance: CLLocationDistance) -> String {
         if #available(OSX 10.12, *) {
@@ -326,22 +381,5 @@ final class New: NSWindow, NSTextFieldDelegate {
             return formatter.string(from: Measurement(value: distance, unit: UnitLength.meters))
         }
         return "\(Int(distance))" + .key("New.distance")
-    }
-    
-    @objc private func handle() {
-        let alpha: CGFloat
-        if scrollHeight.constant < 400 {
-            scrollHeight.constant = 400
-            alpha = 1
-        } else {
-            scrollHeight.constant = 40
-            alpha = 0
-        }
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.3
-            $0.allowsImplicitAnimation = true
-            contentView!.layoutSubtreeIfNeeded()
-            scroll.documentView!.alphaValue = alpha
-        }) { }
     }
 }
