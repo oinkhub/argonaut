@@ -1,13 +1,11 @@
 import MapKit
 
 final class Route {
-    weak var to: Mark?
-    var drive = [MKRoute]()
-    var walk = [MKRoute]()
-    let from: Mark
+    var path = [MKRoute]()
+    let mark: Mark
     
-    init(_ from: CLLocationCoordinate2D) {
-        self.from = Mark()
-        self.from.coordinate = from
+    init(_ mark: CLLocationCoordinate2D) {
+        self.mark = Mark()
+        self.mark.coordinate = mark
     }
 }

@@ -15,7 +15,7 @@ final class New: NSWindow, NSTextFieldDelegate {
             let title = Label()
             title.attributedStringValue = {
                 $0.append(NSAttributedString(string: "\(route.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .bold), .foregroundColor: NSColor.halo]))
-                $0.append(NSAttributedString(string: route.1.from.name, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light), .foregroundColor: NSColor.white]))
+                $0.append(NSAttributedString(string: route.1.mark.name, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light), .foregroundColor: NSColor.white]))
                 return $0
             } (NSMutableAttributedString())
             addSubview(title)
@@ -331,7 +331,7 @@ final class New: NSWindow, NSTextFieldDelegate {
             if previous == nil {
                 item.topAnchor.constraint(equalTo: scroll.documentView!.topAnchor).isActive = true
             } else {
-                let separation = $0.1.from.location.distance(from: previous!.route!.from.location)
+                let separation = $0.1.mark.location.distance(from: previous!.route!.mark.location)
                 total += separation
                 let distance = Distance("+ " + measure(separation))
                 scroll.documentView!.addSubview(distance)

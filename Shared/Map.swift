@@ -23,8 +23,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         
         var region = MKCoordinateRegion()
         region.center = userLocation.coordinate
-        region.span.latitudeDelta = 0.01
-        region.span.longitudeDelta = 0.01
+        region.span.latitudeDelta = 0.05
+        region.span.longitudeDelta = 0.05
         setRegion(region, animated: false)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in self?._follow = false }
@@ -69,8 +69,8 @@ final class Map: MKMapView, MKMapViewDelegate {
             return MKTileOverlayRenderer(tileOverlay: tiler)
         } else if let polyline = rendererFor as? MKPolyline {
             let renderer = MKPolylineRenderer(polyline: polyline)
-            renderer.lineWidth = 3
-            renderer.strokeColor = .black
+            renderer.lineWidth = 8
+            renderer.strokeColor = NSColor.halo.withAlphaComponent(0.3)
             renderer.lineCap = .round
             return renderer
         } else {
@@ -79,12 +79,23 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.subviews.forEach { $0.removeFromSuperview() } }
-    func mapView(_: MKMapView, didSelect: MKAnnotationView) { Callout(didSelect, index: "\(plan.firstIndex(where: { $0.from === didSelect.annotation as? Mark })! + 1)") }
+    func mapView(_: MKMapView, didSelect: MKAnnotationView) { Callout(didSelect, index: "\(plan.firstIndex(where: { $0.mark === didSelect.annotation as? Mark })! + 1)") }
     
     func remove(_ route: Route) {
         selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
-        plan.removeAll(where: { $0 === route })
-        removeAnnotation(route.from)
+        removeAnnotation(route.mark)
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let self = self, let index = self.plan.firstIndex(where: { $0 === route }) else { return }
+            self.removeOverlays(route.path.map({ $0.polyline }))
+            if index > 0 {
+                if index < self.plan.count - 1 {
+                    self.direction(self.plan[index - 1], destination: self.plan[index + 1].mark)
+                } else {
+                    self.removeOverlays(self.plan[index - 1].path.map({ $0.polyline }))
+                }
+            }
+            self.plan.remove(at: index)
+        }
     }
     
     @objc func centre() {
@@ -134,12 +145,12 @@ final class Map: MKMapView, MKMapViewDelegate {
     @objc func pin() {
         guard !geocoder.isGeocoding else { return }
         let coordinate = convert(.init(x: frame.midX, y: frame.midY), toCoordinateFrom: self)
-        if !plan.contains(where: { $0.from.coordinate.latitude == coordinate.latitude && $0.from.coordinate.longitude == coordinate.longitude }) {
+        if !plan.contains(where: { $0.mark.coordinate.latitude == coordinate.latitude && $0.mark.coordinate.longitude == coordinate.longitude }) {
             let route = Route(coordinate)
             plan.append(route)
-            addAnnotation(route.from)
-            selectAnnotation(route.from, animated: true)
-            locate(route.from)
+            addAnnotation(route.mark)
+            selectAnnotation(route.mark, animated: true)
+            locate(route.mark)
         }
     }
     
@@ -151,11 +162,45 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     private func locate(_ mark: Mark) {
-        geocoder.reverseGeocodeLocation(mark.location) { found, _ in
-            mark.name = found?.first?.name ?? .key("Map.mark")
-            DispatchQueue.main.async { [weak self] in
-                self?.refresh()
-                self?.view(for: mark)?.subviews.compactMap({ $0 as? Callout }).first?.refresh(mark.name)
+        geocoder.reverseGeocodeLocation(mark.location) {
+            if $1 == nil {
+                mark.name = $0?.first?.name ?? .key("Map.mark")
+                DispatchQueue.main.async { [weak self, weak mark] in
+                    guard let self = self, let mark = mark else { return }
+                    self.view(for: mark)?.subviews.compactMap({ $0 as? Callout }).first?.refresh(mark.name)
+                    self.refresh()
+                    DispatchQueue.global(qos: .background).async { [weak self] in
+                        guard let self = self else { return }
+                        if let index = self.plan.firstIndex(where: { $0.mark === mark }) {
+                            if index > 0 {
+                                self.direction(self.plan[index - 1], destination: mark)
+                            }
+                            if index < self.plan.count - 1 {
+                                self.direction(self.plan[index], destination: self.plan[index + 1].mark)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func direction(_ route: Route, destination: Mark) {
+        removeOverlays(route.path.map({ $0.polyline }))
+        route.path = []
+        direction(.walking, route: route, destination: destination)
+        direction(.automobile, route: route, destination: destination)
+    }
+    
+    private func direction(_ transport: MKDirectionsTransportType, route: Route, destination: Mark) {
+        let request = MKDirections.Request()
+        request.transportType = transport
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: route.mark.coordinate, addressDictionary: nil))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: destination.coordinate, addressDictionary: nil))
+        MKDirections(request: request).calculate { [weak self] in
+            if $1 == nil, let paths = $0?.routes {
+                route.path.append(contentsOf: paths)
+                self?.addOverlays(paths.map { $0.polyline }, level: .aboveLabels)
             }
         }
     }
