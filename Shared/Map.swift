@@ -71,6 +71,12 @@ final class Map: MKMapView, MKMapViewDelegate {
         Callout(didSelect, index: "\(plan.firstIndex(of: mark)! + 1)")
     }
     
+    func remove(_ mark: Mark) {
+        selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
+        plan.removeAll(where: { $0 === mark })
+        removeAnnotation(mark)
+    }
+    
     @objc func centre() {
         var region = self.region
         region.center = userLocation.coordinate

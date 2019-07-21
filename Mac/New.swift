@@ -3,6 +3,7 @@ import MapKit
 
 final class New: NSWindow, NSTextFieldDelegate {
     private final class Item: NSView {
+        var delete: ((Mark) -> Void)?
         let mark: Mark
         
         required init?(coder: NSCoder) { return nil }
@@ -19,11 +20,22 @@ final class New: NSWindow, NSTextFieldDelegate {
             } (NSMutableAttributedString())
             addSubview(title)
             
+            let delete = Button.Image(self, action: #selector(remove))
+            delete.image.image = NSImage(named: "delete")
+            addSubview(delete)
+            
             heightAnchor.constraint(equalToConstant: 40).isActive = true
             
             title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
             title.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
+            
+            delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            delete.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            delete.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            delete.widthAnchor.constraint(equalToConstant: 50).isActive = true
         }
+        
+        @objc private func remove() { delete?(mark) }
     }
     
     private final class Distance: NSView {
@@ -295,6 +307,10 @@ final class New: NSWindow, NSTextFieldDelegate {
         var total = CLLocationDistance()
         map.plan.enumerated().forEach {
             let item = Item($0)
+            item.delete = { [weak self] in
+                self?.map.remove($0)
+                self?.refresh()
+            }
             scroll.documentView!.addSubview(item)
             
             item.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
