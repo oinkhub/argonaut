@@ -97,11 +97,18 @@ final class New: NSWindow, NSTextFieldDelegate {
         self.map = map
         
         let search = NSView()
-        search.translatesAutoresizingMaskIntoConstraints = false
-        search.wantsLayer = true
-        search.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
-        search.layer!.cornerRadius = 6
-        contentView!.addSubview(search)
+        let bar = NSView()
+        let base = NSView()
+        
+        [search, bar, base].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.wantsLayer = true
+            $0.layer!.backgroundColor = .black
+            $0.layer!.cornerRadius = 4
+            $0.layer!.borderColor = NSColor.halo.withAlphaComponent(0.4).cgColor
+            $0.layer!.borderWidth = 1
+            contentView!.addSubview($0)
+        }
         
         let icon = NSImageView()
         icon.image = NSImage(named: "search")
@@ -115,20 +122,6 @@ final class New: NSWindow, NSTextFieldDelegate {
         border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
         search.addSubview(border)
         
-        let bar = NSView()
-        bar.translatesAutoresizingMaskIntoConstraints = false
-        bar.wantsLayer = true
-        bar.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
-        bar.layer!.cornerRadius = 6
-        contentView!.addSubview(bar)
-        
-        let base = NSView()
-        base.translatesAutoresizingMaskIntoConstraints = false
-        base.wantsLayer = true
-        base.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
-        base.layer!.cornerRadius = 6
-        contentView!.addSubview(base)
-        
         let scroll = NSScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.drawsBackground = false
@@ -137,11 +130,11 @@ final class New: NSWindow, NSTextFieldDelegate {
         scroll.horizontalScrollElasticity = .none
         scroll.verticalScrollElasticity = .allowed
         scroll.alphaValue = 0
-        scroll.documentView = Flipped()
-        scroll.documentView!.translatesAutoresizingMaskIntoConstraints = false
         scroll.contentInsets.top = 20
         scroll.contentInsets.bottom = 10
         scroll.automaticallyAdjustsContentInsets = false
+        scroll.documentView = Flipped()
+        scroll.documentView!.translatesAutoresizingMaskIntoConstraints = false
         scroll.documentView!.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
         scroll.documentView!.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
         base.addSubview(scroll)
@@ -214,9 +207,11 @@ final class New: NSWindow, NSTextFieldDelegate {
         map.leftAnchor.constraint(equalTo: contentView!.leftAnchor).isActive = true
         map.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
         
+        search.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         search.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
-        search.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 80).isActive = true
-        search.rightAnchor.constraint(equalTo: bar.leftAnchor, constant: -10).isActive = true
+        search.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 80).isActive = true
+        search.rightAnchor.constraint(lessThanOrEqualTo: bar.leftAnchor, constant: -10).isActive = true
+        search.widthAnchor.constraint(equalToConstant: 450).isActive = true
         searchHeight = search.heightAnchor.constraint(equalToConstant: 34)
         searchHeight.isActive = true
         
@@ -245,10 +240,12 @@ final class New: NSWindow, NSTextFieldDelegate {
         bar.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
         base.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
-        base.widthAnchor.constraint(equalToConstant: 360).isActive = true
         base.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
         base.topAnchor.constraint(equalTo: scroll.topAnchor, constant: -2).isActive = true
+        base.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 10).isActive = true
+        base.rightAnchor.constraint(lessThanOrEqualTo: bar.leftAnchor, constant: -10).isActive = true
         
+        scroll.widthAnchor.constraint(equalToConstant: 450).isActive = true
         scroll.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -2).isActive = true
         scroll.bottomAnchor.constraint(equalTo: base.bottomAnchor).isActive = true

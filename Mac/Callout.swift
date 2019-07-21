@@ -20,7 +20,7 @@ final class Callout: NSView {
         label.font = .systemFont(ofSize: 14, weight: .bold)
         label.textColor = .black
         label.stringValue = index
-        addSubview(label)
+        circle.addSubview(label)
         
         let base = NSView()
         base.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +33,7 @@ final class Callout: NSView {
         title.font = .systemFont(ofSize: 12, weight: .light)
         title.textColor = .black
         title.stringValue = (mark.annotation as! Mark).name
-        addSubview(title)
+        base.addSubview(title)
         self.title = title
         
         mark.addSubview(self)
@@ -46,7 +46,7 @@ final class Callout: NSView {
         leftAnchor.constraint(lessThanOrEqualTo: base.leftAnchor).isActive = true
         rightAnchor.constraint(greaterThanOrEqualTo: base.rightAnchor).isActive = true
         
-        circle.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        circle.centerXAnchor.constraint(equalTo: mark.centerXAnchor).isActive = true
         circle.widthAnchor.constraint(equalToConstant: 30).isActive = true
         circle.heightAnchor.constraint(equalToConstant: 30).isActive = true
         let top = circle.topAnchor.constraint(equalTo: topAnchor, constant: 35)
@@ -69,7 +69,7 @@ final class Callout: NSView {
             top.constant = 0
             bottom.constant = 0
             NSAnimationContext.runAnimationGroup({
-                $0.duration = 0.4
+                $0.duration = 0.6
                 $0.allowsImplicitAnimation = true
                 self?.alphaValue = 1
                 self?.layoutSubtreeIfNeeded()
