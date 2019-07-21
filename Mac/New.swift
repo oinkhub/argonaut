@@ -3,19 +3,19 @@ import MapKit
 
 final class New: NSWindow, NSTextFieldDelegate {
     private final class Item: NSView {
-        var delete: ((Mark) -> Void)?
-        let mark: Mark
+        weak var route: Route?
+        var delete: ((Route) -> Void)?
         
         required init?(coder: NSCoder) { return nil }
-        init(_ mark: (Int, Mark)) {
-            self.mark = mark.1
+        init(_ route: (Int, Route)) {
+            self.route = route.1
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             
             let title = Label()
             title.attributedStringValue = {
-                $0.append(NSAttributedString(string: "\(mark.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .bold), .foregroundColor: NSColor.halo]))
-                $0.append(NSAttributedString(string: mark.1.name, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light), .foregroundColor: NSColor.white]))
+                $0.append(NSAttributedString(string: "\(route.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .bold), .foregroundColor: NSColor.halo]))
+                $0.append(NSAttributedString(string: route.1.from.name, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light), .foregroundColor: NSColor.white]))
                 return $0
             } (NSMutableAttributedString())
             addSubview(title)
@@ -35,7 +35,10 @@ final class New: NSWindow, NSTextFieldDelegate {
             delete.widthAnchor.constraint(equalToConstant: 50).isActive = true
         }
         
-        @objc private func remove() { delete?(mark) }
+        @objc private func remove() {
+            guard let route = self.route else { return }
+            delete?(route)
+        }
     }
     
     private final class Distance: NSView {
@@ -84,6 +87,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         }
     }
     
+    private var formatter: Any?
     private weak var map: Map!
     private weak var field: NSTextField!
     private weak var scroll: NSScrollView!
@@ -103,6 +107,14 @@ final class New: NSWindow, NSTextFieldDelegate {
         toolbar = .init(identifier: "")
         toolbar!.showsBaselineSeparator = false
  
+        if #available(OSX 10.12, *) {
+            let formatter = MeasurementFormatter()
+            formatter.unitStyle = .long
+            formatter.unitOptions = .naturalScale
+            formatter.numberFormatter.maximumFractionDigits = 1
+            self.formatter = formatter
+        }
+        
         let map = Map()
         map.refresh = { [weak self] in self?.refresh() }
         contentView!.addSubview(map)
@@ -142,7 +154,7 @@ final class New: NSWindow, NSTextFieldDelegate {
         scroll.horizontalScrollElasticity = .none
         scroll.verticalScrollElasticity = .allowed
         scroll.alphaValue = 0
-        scroll.contentInsets.top = 20
+        scroll.contentInsets.top = 30
         scroll.contentInsets.bottom = 10
         scroll.automaticallyAdjustsContentInsets = false
         scroll.documentView = Flipped()
@@ -319,7 +331,7 @@ final class New: NSWindow, NSTextFieldDelegate {
             if previous == nil {
                 item.topAnchor.constraint(equalTo: scroll.documentView!.topAnchor).isActive = true
             } else {
-                let separation = $0.1.location.distance(from: previous!.mark.location)
+                let separation = $0.1.from.location.distance(from: previous!.route!.from.location)
                 total += separation
                 let distance = Distance("+ " + measure(separation))
                 scroll.documentView!.addSubview(distance)
@@ -387,11 +399,7 @@ final class New: NSWindow, NSTextFieldDelegate {
     
     private func measure(_ distance: CLLocationDistance) -> String {
         if #available(OSX 10.12, *) {
-            let formatter = MeasurementFormatter()
-            formatter.unitStyle = .long
-            formatter.unitOptions = .naturalScale
-            formatter.numberFormatter.maximumFractionDigits = 1
-            return formatter.string(from: Measurement(value: distance, unit: UnitLength.meters))
+            return (formatter as! MeasurementFormatter).string(from: Measurement(value: distance, unit: UnitLength.meters))
         }
         return "\(Int(distance))" + .key("New.distance")
     }

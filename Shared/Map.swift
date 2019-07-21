@@ -2,7 +2,7 @@ import MapKit
 
 final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
-    private(set) var plan = [Mark]()
+    private(set) var plan = [Route]()
     private var _follow = true
     private let geocoder = CLGeocoder()
     
@@ -64,17 +64,27 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.subviews.forEach { $0.removeFromSuperview() } }
-    
-    func mapView(_: MKMapView, didSelect: MKAnnotationView) {
-        guard let mark = didSelect.annotation as? Mark else { return }
-        Callout(didSelect, index: "\(plan.firstIndex(of: mark)! + 1)")
+    func mapView(_: MKMapView, rendererFor: MKOverlay) -> MKOverlayRenderer {
+        if let tiler = rendererFor as? MKTileOverlay {
+            return MKTileOverlayRenderer(tileOverlay: tiler)
+        } else if let polyline = rendererFor as? MKPolyline {
+            let renderer = MKPolylineRenderer(polyline: polyline)
+            renderer.lineWidth = 3
+            renderer.strokeColor = .black
+            renderer.lineCap = .round
+            return renderer
+        } else {
+            return MKOverlayRenderer()
+        }
     }
     
-    func remove(_ mark: Mark) {
+    func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.subviews.forEach { $0.removeFromSuperview() } }
+    func mapView(_: MKMapView, didSelect: MKAnnotationView) { Callout(didSelect, index: "\(plan.firstIndex(where: { $0.from === didSelect.annotation as? Mark })! + 1)") }
+    
+    func remove(_ route: Route) {
         selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
-        plan.removeAll(where: { $0 === mark })
-        removeAnnotation(mark)
+        plan.removeAll(where: { $0 === route })
+        removeAnnotation(route.from)
     }
     
     @objc func centre() {
@@ -124,13 +134,12 @@ final class Map: MKMapView, MKMapViewDelegate {
     @objc func pin() {
         guard !geocoder.isGeocoding else { return }
         let coordinate = convert(.init(x: frame.midX, y: frame.midY), toCoordinateFrom: self)
-        if !plan.contains(where: { $0.coordinate.latitude == coordinate.latitude && $0.coordinate.longitude == coordinate.longitude }) {
-            let mark = Mark()
-            mark.coordinate = coordinate
-            plan.append(mark)
-            addAnnotation(mark)
-            selectAnnotation(mark, animated: true)
-            locate(mark)
+        if !plan.contains(where: { $0.from.coordinate.latitude == coordinate.latitude && $0.from.coordinate.longitude == coordinate.longitude }) {
+            let route = Route(coordinate)
+            plan.append(route)
+            addAnnotation(route.from)
+            selectAnnotation(route.from, animated: true)
+            locate(route.from)
         }
     }
     
