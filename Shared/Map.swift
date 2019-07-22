@@ -51,7 +51,7 @@ final class Map: MKMapView, MKMapViewDelegate {
             marker!.centerOffset.y = -28
         } else {
             marker!.annotation = mark
-            marker!.subviews.forEach { $0.removeFromSuperview() }
+            marker!.subviews.compactMap({ $0 as? Callout }).forEach { $0.remove() }
         }
         return marker
     }
@@ -78,8 +78,15 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.subviews.forEach { $0.removeFromSuperview() } }
-    func mapView(_: MKMapView, didSelect: MKAnnotationView) { Callout(didSelect, index: "\(plan.firstIndex(where: { $0.mark === didSelect.annotation as? Mark })! + 1)") }
+    func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.subviews.compactMap({ $0 as? Callout }).forEach { $0.remove() } }
+    
+    func mapView(_: MKMapView, didSelect: MKAnnotationView) {
+        if didSelect.annotation is MKUserLocation {
+            Callout.User(didSelect)
+        } else {
+            Callout.Item(didSelect, index: "\(plan.firstIndex(where: { $0.mark === didSelect.annotation as! Mark })! + 1)")
+        }
+    }
     
     func remove(_ route: Route) {
         selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
@@ -102,6 +109,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         var region = self.region
         region.center = userLocation.coordinate
         setRegion(region, animated: true)
+        selectAnnotation(userLocation, animated: true)
     }
     
     @objc func `in`() {
@@ -167,7 +175,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 mark.name = $0?.first?.name ?? .key("Map.mark")
                 DispatchQueue.main.async { [weak self, weak mark] in
                     guard let self = self, let mark = mark else { return }
-                    self.view(for: mark)?.subviews.compactMap({ $0 as? Callout }).first?.refresh(mark.name)
+                    self.view(for: mark)?.subviews.compactMap({ $0 as? Callout.Item }).first?.refresh(mark.name)
                     self.refresh()
                     DispatchQueue.global(qos: .background).async { [weak self] in
                         guard let self = self else { return }
