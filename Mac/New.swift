@@ -241,6 +241,8 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         field.lineBreakMode = .byTruncatingHead
         field.refusesFirstResponder = true
         field.delegate = self
+        (field.cell as! NSSearchFieldCell).cancelButtonCell!.target = self
+        (field.cell as! NSSearchFieldCell).cancelButtonCell!.action = #selector(clear)
         if #available(OSX 10.12.2, *) {
             field.isAutomaticTextCompletionEnabled = false
         }
@@ -332,11 +334,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     
     func controlTextDidChange(_: Notification) {
         if #available(OSX 10.11.4, *) {
-            if field.stringValue.isEmpty {
-                (completer as? MKLocalSearchCompleter)?.cancel()
-            } else {
-                (completer as? MKLocalSearchCompleter)?.queryFragment = field.stringValue
-            }
+            (completer as? MKLocalSearchCompleter)?.queryFragment = field.stringValue
         }
     }
     
@@ -482,5 +480,17 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             return (formatter as! MeasurementFormatter).string(from: Measurement(value: distance, unit: UnitLength.meters))
         }
         return "\(Int(distance))" + .key("New.distance")
+    }
+    
+    @objc private func clear() {
+        field.stringValue = ""
+        makeFirstResponder(nil)
+        results.documentView!.subviews.forEach { $0.removeFromSuperview() }
+        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: results.documentView!.topAnchor)
+        NSAnimationContext.runAnimationGroup({
+            $0.duration = 0.3
+            $0.allowsImplicitAnimation = true
+            results.superview!.layoutSubtreeIfNeeded()
+        }) { }
     }
 }

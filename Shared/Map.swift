@@ -197,8 +197,10 @@ final class Map: MKMapView, MKMapViewDelegate {
     private func direction(_ route: Route, destination: Mark) {
         removeOverlays(route.path.map({ $0.polyline }))
         route.path = []
-        direction(.walking, route: route, destination: destination)
-        direction(.automobile, route: route, destination: destination)
+        DispatchQueue.main.async { [weak self] in
+            self?.direction(.walking, route: route, destination: destination)
+            self?.direction(.automobile, route: route, destination: destination)
+        }
     }
     
     private func direction(_ transport: MKDirectionsTransportType, route: Route, destination: Mark) {
