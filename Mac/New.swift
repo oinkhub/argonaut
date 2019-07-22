@@ -1,7 +1,36 @@
 import AppKit
 import MapKit
 
-final class New: NSWindow, NSTextFieldDelegate {
+final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate {
+    private final class Result: NSView {
+        required init?(coder: NSCoder) { return nil }
+        init(_ string: NSAttributedString) {
+            super.init(frame: .zero)
+            translatesAutoresizingMaskIntoConstraints = false
+            
+            let label = Label()
+            label.attributedStringValue = string
+            addSubview(label)
+            
+            let border = NSView()
+            border.translatesAutoresizingMaskIntoConstraints = false
+            border.wantsLayer = true
+            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
+            addSubview(border)
+            
+            heightAnchor.constraint(equalToConstant: 60).isActive = true
+            
+            label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
+            label.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
+            
+            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+            border.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
+            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
+        }
+    }
+    
     private final class Item: NSView {
         weak var route: Route?
         var delete: ((Route) -> Void)?
@@ -87,14 +116,16 @@ final class New: NSWindow, NSTextFieldDelegate {
         }
     }
     
-    private var formatter: Any?
-    private weak var map: Map!
-    private weak var field: NSTextField!
-    private weak var scroll: NSScrollView!
     private weak var _follow: Button.Check!
-    private weak var searchHeight: NSLayoutConstraint!
-    private weak var scrollHeight: NSLayoutConstraint!
+    private weak var map: Map!
+    private weak var field: NSSearchField!
+    private weak var list: NSScrollView!
+    private weak var results: NSScrollView!
+    private weak var listHeight: NSLayoutConstraint!
     private weak var itemsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; itemsBottom.isActive = true } }
+    private weak var resultsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; resultsBottom.isActive = true } }
+    private var completer: Any?
+    private var formatter: Any!
     
     init() {
         super.init(contentRect: .init(origin: .init(x: app.list.frame.maxX + 4, y: app.list.frame.minY), size: .init(width: 800, height: 600)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
@@ -113,6 +144,12 @@ final class New: NSWindow, NSTextFieldDelegate {
             formatter.unitOptions = .naturalScale
             formatter.numberFormatter.maximumFractionDigits = 1
             self.formatter = formatter
+        }
+        
+        if #available(OSX 10.11.4, *) {
+            let completer = MKLocalSearchCompleter()
+            completer.delegate = self
+            self.completer = completer
         }
         
         let map = Map()
@@ -134,35 +171,37 @@ final class New: NSWindow, NSTextFieldDelegate {
             contentView!.addSubview($0)
         }
         
-        let icon = NSImageView()
-        icon.image = NSImage(named: "search")
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.imageScaling = .scaleNone
-        search.addSubview(icon)
+        let results = NSScrollView()
+        results.translatesAutoresizingMaskIntoConstraints = false
+        results.drawsBackground = false
+        results.hasVerticalScroller = true
+        results.verticalScroller!.controlSize = .mini
+        results.horizontalScrollElasticity = .none
+        results.verticalScrollElasticity = .allowed
+        results.documentView = Flipped()
+        results.documentView!.translatesAutoresizingMaskIntoConstraints = false
+        results.documentView!.leftAnchor.constraint(equalTo: results.leftAnchor).isActive = true
+        results.documentView!.rightAnchor.constraint(equalTo: results.rightAnchor).isActive = true
+        search.addSubview(results)
+        self.results = results
         
-        let border = NSView()
-        border.translatesAutoresizingMaskIntoConstraints = false
-        border.wantsLayer = true
-        border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
-        search.addSubview(border)
-        
-        let scroll = NSScrollView()
-        scroll.translatesAutoresizingMaskIntoConstraints = false
-        scroll.drawsBackground = false
-        scroll.hasVerticalScroller = true
-        scroll.verticalScroller!.controlSize = .mini
-        scroll.horizontalScrollElasticity = .none
-        scroll.verticalScrollElasticity = .allowed
-        scroll.alphaValue = 0
-        scroll.contentInsets.top = 30
-        scroll.contentInsets.bottom = 10
-        scroll.automaticallyAdjustsContentInsets = false
-        scroll.documentView = Flipped()
-        scroll.documentView!.translatesAutoresizingMaskIntoConstraints = false
-        scroll.documentView!.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
-        scroll.documentView!.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
-        base.addSubview(scroll)
-        self.scroll = scroll
+        let list = NSScrollView()
+        list.translatesAutoresizingMaskIntoConstraints = false
+        list.drawsBackground = false
+        list.hasVerticalScroller = true
+        list.verticalScroller!.controlSize = .mini
+        list.horizontalScrollElasticity = .none
+        list.verticalScrollElasticity = .allowed
+        list.alphaValue = 0
+        list.contentInsets.top = 30
+        list.contentInsets.bottom = 10
+        list.automaticallyAdjustsContentInsets = false
+        list.documentView = Flipped()
+        list.documentView!.translatesAutoresizingMaskIntoConstraints = false
+        list.documentView!.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
+        list.documentView!.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
+        base.addSubview(list)
+        self.list = list
         
         let handle = NSView()
         handle.translatesAutoresizingMaskIntoConstraints = false
@@ -191,15 +230,14 @@ final class New: NSWindow, NSTextFieldDelegate {
         _follow.off = NSImage(named: "off")
         self._follow = _follow
         
-        let field = NSTextField()
+        let field = NSSearchField()
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.isBezeled = false
-        field.font = .systemFont(ofSize: 16, weight: .regular)
+        field.font = .systemFont(ofSize: 14, weight: .regular)
         field.focusRingType = .none
-        field.placeholderString = .key("New.search")
         field.drawsBackground = false
         field.textColor = .white
         field.maximumNumberOfLines = 1
+        field.placeholderString = ""
         field.lineBreakMode = .byTruncatingHead
         field.refusesFirstResponder = true
         field.delegate = self
@@ -236,28 +274,25 @@ final class New: NSWindow, NSTextFieldDelegate {
         search.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 80).isActive = true
         search.rightAnchor.constraint(lessThanOrEqualTo: bar.leftAnchor, constant: -10).isActive = true
         search.widthAnchor.constraint(equalToConstant: 450).isActive = true
-        searchHeight = search.heightAnchor.constraint(equalToConstant: 34)
-        searchHeight.isActive = true
+        search.bottomAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
         
-        icon.topAnchor.constraint(equalTo: search.topAnchor).isActive = true
-        icon.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
-        icon.widthAnchor.constraint(equalToConstant: 36).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
+        results.leftAnchor.constraint(equalTo: search.leftAnchor).isActive = true
+        results.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
+        results.heightAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
+        results.heightAnchor.constraint(lessThanOrEqualTo: results.documentView!.heightAnchor).isActive = true
+        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: results.documentView!.topAnchor)
+        resultsBottom.isActive = true
         
-        border.leftAnchor.constraint(equalTo: search.leftAnchor).isActive = true
-        border.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
-        border.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        border.topAnchor.constraint(equalTo: search.topAnchor, constant: 34).isActive = true
-        
-        handle.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 10).isActive = true
+        handle.topAnchor.constraint(equalTo: list.topAnchor, constant: 10).isActive = true
         handle.heightAnchor.constraint(equalToConstant: 2).isActive = true
         handle.widthAnchor.constraint(equalToConstant: 20).isActive = true
         handle.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
         
-        handler.topAnchor.constraint(equalTo: scroll.topAnchor).isActive = true
+        handler.topAnchor.constraint(equalTo: list.topAnchor).isActive = true
         handler.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        handler.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
-        handler.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
+        handler.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
+        handler.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
         
         bar.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
         bar.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
@@ -265,21 +300,22 @@ final class New: NSWindow, NSTextFieldDelegate {
         
         base.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         base.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
-        base.topAnchor.constraint(equalTo: scroll.topAnchor, constant: -2).isActive = true
+        base.topAnchor.constraint(equalTo: list.topAnchor, constant: -2).isActive = true
         base.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 10).isActive = true
         base.rightAnchor.constraint(lessThanOrEqualTo: bar.leftAnchor, constant: -10).isActive = true
         
-        scroll.widthAnchor.constraint(equalToConstant: 450).isActive = true
-        scroll.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
-        scroll.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -2).isActive = true
-        scroll.bottomAnchor.constraint(equalTo: base.bottomAnchor).isActive = true
-        scroll.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 12).isActive = true
-        scrollHeight = scroll.heightAnchor.constraint(lessThanOrEqualToConstant: 40)
-        scrollHeight.isActive = true
+        list.widthAnchor.constraint(equalToConstant: 450).isActive = true
+        list.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
+        list.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -2).isActive = true
+        list.bottomAnchor.constraint(equalTo: base.bottomAnchor).isActive = true
+        list.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 12).isActive = true
+        listHeight = list.heightAnchor.constraint(lessThanOrEqualToConstant: 40)
+        listHeight.isActive = true
         
         field.centerYAnchor.constraint(equalTo: search.topAnchor, constant: 17).isActive = true
         field.leftAnchor.constraint(equalTo: search.leftAnchor, constant: 10).isActive = true
         field.rightAnchor.constraint(equalTo: search.rightAnchor, constant: -10).isActive = true
+        field.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
         var top = bar.topAnchor
         [centre, `in`, out, pin, _follow].forEach {
@@ -292,6 +328,53 @@ final class New: NSWindow, NSTextFieldDelegate {
             top = $0.bottomAnchor
         }
         bar.bottomAnchor.constraint(equalTo: top).isActive = true
+    }
+    
+    func controlTextDidChange(_: Notification) {
+        if #available(OSX 10.11.4, *) {
+            if field.stringValue.isEmpty {
+                (completer as? MKLocalSearchCompleter)?.cancel()
+            } else {
+                (completer as? MKLocalSearchCompleter)?.queryFragment = field.stringValue
+            }
+        }
+    }
+    
+    @available(OSX 10.11.4, *) func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        results.documentView!.subviews.forEach { $0.removeFromSuperview() }
+        var top = results.documentView!.topAnchor
+        completer.results.forEach { search in
+            let result = Result({
+                $0.append({ string in
+                    search.titleHighlightRanges.forEach {
+                        string.addAttribute(.font, value: NSFont.systemFont(ofSize: 13, weight: .bold), range: $0 as! NSRange)
+                        string.addAttribute(.foregroundColor, value: NSColor.halo, range: $0 as! NSRange)
+                    }
+                    return string
+                    } (NSMutableAttributedString(string: search.title + (search.subtitle.isEmpty ? "" : "\n"), attributes: [.font: NSFont.systemFont(ofSize: 13, weight: .light), .foregroundColor: NSColor(white: 1, alpha: 0.9)])))
+                $0.append({ string in
+                    search.subtitleHighlightRanges.forEach {
+                        string.addAttribute(.font, value: NSFont.systemFont(ofSize: 13, weight: .bold), range: $0 as! NSRange)
+                        string.addAttribute(.foregroundColor, value: NSColor.halo, range: $0 as! NSRange)
+                    }
+                    return string
+                    } (NSMutableAttributedString(string: search.subtitle, attributes: [.font: NSFont.systemFont(ofSize: 13, weight: .light), .foregroundColor: NSColor(white: 1, alpha: 0.5)])))
+                return $0
+            } (NSMutableAttributedString()))
+            results.documentView!.addSubview(result)
+            
+            result.leftAnchor.constraint(equalTo: results.leftAnchor).isActive = true
+            result.rightAnchor.constraint(equalTo: results.rightAnchor).isActive = true
+            result.topAnchor.constraint(equalTo: top).isActive = true
+            top = result.bottomAnchor
+        }
+        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: top)
+        
+        NSAnimationContext.runAnimationGroup({
+            $0.duration = 0.5
+            $0.allowsImplicitAnimation = true
+            results.superview!.layoutSubtreeIfNeeded()
+        }) { }
     }
     
     func control(_: NSControl, textView: NSTextView, doCommandBy: Selector) -> Bool {
@@ -314,30 +397,27 @@ final class New: NSWindow, NSTextFieldDelegate {
     }
     
     func refresh() {
-        scroll.documentView!.subviews.forEach { $0.removeFromSuperview() }
+        list.documentView!.subviews.forEach { $0.removeFromSuperview() }
         var previous: Item?
         var total = CLLocationDistance()
         map.plan.enumerated().forEach {
             let item = Item($0)
-            item.delete = { [weak self] in
-                self?.map.remove($0)
-                self?.refresh()
-            }
-            scroll.documentView!.addSubview(item)
+            item.delete = { [weak self] in self?.map.remove($0) }
+            list.documentView!.addSubview(item)
             
-            item.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
-            item.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
+            item.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
+            item.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
             
             if previous == nil {
-                item.topAnchor.constraint(equalTo: scroll.documentView!.topAnchor).isActive = true
+                item.topAnchor.constraint(equalTo: list.documentView!.topAnchor).isActive = true
             } else {
                 let separation = $0.1.mark.location.distance(from: previous!.route!.mark.location)
                 total += separation
                 let distance = Distance("+ " + measure(separation))
-                scroll.documentView!.addSubview(distance)
+                list.documentView!.addSubview(distance)
                 
                 distance.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-                distance.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 12).isActive = true
+                distance.leftAnchor.constraint(equalTo: list.leftAnchor, constant: 12).isActive = true
                 
                 item.topAnchor.constraint(equalTo: distance.bottomAnchor).isActive = true
             }
@@ -346,18 +426,18 @@ final class New: NSWindow, NSTextFieldDelegate {
         
         let distance = Total(measure(total))
         distance.isHidden = map.plan.count < 2
-        scroll.documentView!.addSubview(distance)
+        list.documentView!.addSubview(distance)
         
-        distance.topAnchor.constraint(equalTo: previous == nil ? scroll.documentView!.topAnchor : previous!.bottomAnchor).isActive = true
-        distance.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 12).isActive = true
+        distance.topAnchor.constraint(equalTo: previous == nil ? list.documentView!.topAnchor : previous!.bottomAnchor).isActive = true
+        distance.leftAnchor.constraint(equalTo: list.leftAnchor, constant: 12).isActive = true
         
-        itemsBottom = scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: distance.bottomAnchor, constant: 20)
+        itemsBottom = list.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: distance.bottomAnchor, constant: 20)
         
-        scroll.documentView!.layoutSubtreeIfNeeded()
+        list.documentView!.layoutSubtreeIfNeeded()
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.5
             $0.allowsImplicitAnimation = true
-            scroll.contentView.scrollToVisible(distance.frame.insetBy(dx: 0, dy: 20))
+            list.contentView.scrollToVisible(distance.frame.insetBy(dx: 0, dy: 20))
         }) { }
     }
     
@@ -367,18 +447,18 @@ final class New: NSWindow, NSTextFieldDelegate {
     
     @objc func handle() {
         let alpha: CGFloat
-        if scrollHeight.constant < 250 {
-            scrollHeight.constant = 250
+        if listHeight.constant < 250 {
+            listHeight.constant = 250
             alpha = 1
         } else {
-            scrollHeight.constant = 40
+            listHeight.constant = 40
             alpha = 0
         }
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.3
             $0.allowsImplicitAnimation = true
             contentView!.layoutSubtreeIfNeeded()
-            scroll.alphaValue = alpha
+            list.alphaValue = alpha
         }) { }
     }
     

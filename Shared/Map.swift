@@ -102,6 +102,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 }
             }
             self.plan.remove(at: index)
+            DispatchQueue.main.async { [weak self] in self?.refresh() }
         }
     }
     
