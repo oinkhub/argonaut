@@ -3,10 +3,12 @@ import MapKit
 
 final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate {
     private final class Result: NSView {
+        var selected: (() -> Void)?
         required init?(coder: NSCoder) { return nil }
         init(_ string: NSAttributedString) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
+            wantsLayer = true
             
             let label = Label()
             label.attributedStringValue = string
@@ -18,6 +20,9 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
             addSubview(border)
             
+            let button = Button(self, action: #selector(click))
+            addSubview(button)
+            
             heightAnchor.constraint(equalToConstant: 60).isActive = true
             
             label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -28,6 +33,15 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             border.topAnchor.constraint(equalTo: topAnchor).isActive = true
             border.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
             border.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
+            
+            button.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            button.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            button.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        }
+        
+        @objc private func click() {
+            layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
         }
     }
     
