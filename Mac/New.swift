@@ -2,17 +2,38 @@ import AppKit
 import MapKit
 
 final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate {
-    private final class Result: NSView {
-        var selected: (() -> Void)?
+    @available(OSX 10.11.4, *) private final class Result: NSView {
+        var selected: ((CLLocationCoordinate2D) -> Void)?
+        private weak var label: Label!
+        private let search: MKLocalSearchCompletion
+        
         required init?(coder: NSCoder) { return nil }
-        init(_ string: NSAttributedString) {
+        init(_ search: MKLocalSearchCompletion) {
+            self.search = search
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             wantsLayer = true
             
             let label = Label()
-            label.attributedStringValue = string
+            label.attributedStringValue = {
+                $0.append({ string in
+                    search.titleHighlightRanges.forEach {
+                        string.addAttribute(.font, value: NSFont.systemFont(ofSize: 13, weight: .bold), range: $0 as! NSRange)
+                        string.addAttribute(.foregroundColor, value: NSColor.halo, range: $0 as! NSRange)
+                    }
+                    return string
+                    } (NSMutableAttributedString(string: search.title + (search.subtitle.isEmpty ? "" : "\n"), attributes: [.font: NSFont.systemFont(ofSize: 13, weight: .light), .foregroundColor: NSColor(white: 1, alpha: 0.9)])))
+                $0.append({ string in
+                    search.subtitleHighlightRanges.forEach {
+                        string.addAttribute(.font, value: NSFont.systemFont(ofSize: 13, weight: .bold), range: $0 as! NSRange)
+                        string.addAttribute(.foregroundColor, value: NSColor.halo, range: $0 as! NSRange)
+                    }
+                    return string
+                    } (NSMutableAttributedString(string: search.subtitle, attributes: [.font: NSFont.systemFont(ofSize: 13, weight: .light), .foregroundColor: NSColor(white: 1, alpha: 0.5)])))
+                return $0
+            } (NSMutableAttributedString())
             addSubview(label)
+            self.label = label
             
             let border = NSView()
             border.translatesAutoresizingMaskIntoConstraints = false
@@ -41,7 +62,17 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         }
         
         @objc private func click() {
-            layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
+            layer!.backgroundColor = NSColor.halo.cgColor
+            label.attributedStringValue = {
+                $0.append(label.attributedStringValue)
+                $0.addAttribute(.foregroundColor, value: NSColor.white, range: NSMakeRange(0, label.attributedStringValue.string.count))
+                return $0
+            } (NSMutableAttributedString())
+            
+            MKLocalSearch(request: MKLocalSearch.Request(completion: search)).start { [weak self] in
+                guard $1 == nil, let coordinate = $0?.mapItems.first?.placemark.coordinate else { return }
+                self?.selected?(coordinate)
+            }
         }
     }
     
@@ -348,31 +379,26 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     
     func controlTextDidChange(_: Notification) {
         if #available(OSX 10.11.4, *) {
-            (completer as? MKLocalSearchCompleter)?.queryFragment = field.stringValue
+            if field.stringValue.isEmpty {
+                clear()
+            } else {
+                (completer as? MKLocalSearchCompleter)?.queryFragment = field.stringValue
+            }
         }
     }
     
     @available(OSX 10.11.4, *) func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         results.documentView!.subviews.forEach { $0.removeFromSuperview() }
         var top = results.documentView!.topAnchor
-        completer.results.forEach { search in
-            let result = Result({
-                $0.append({ string in
-                    search.titleHighlightRanges.forEach {
-                        string.addAttribute(.font, value: NSFont.systemFont(ofSize: 13, weight: .bold), range: $0 as! NSRange)
-                        string.addAttribute(.foregroundColor, value: NSColor.halo, range: $0 as! NSRange)
-                    }
-                    return string
-                    } (NSMutableAttributedString(string: search.title + (search.subtitle.isEmpty ? "" : "\n"), attributes: [.font: NSFont.systemFont(ofSize: 13, weight: .light), .foregroundColor: NSColor(white: 1, alpha: 0.9)])))
-                $0.append({ string in
-                    search.subtitleHighlightRanges.forEach {
-                        string.addAttribute(.font, value: NSFont.systemFont(ofSize: 13, weight: .bold), range: $0 as! NSRange)
-                        string.addAttribute(.foregroundColor, value: NSColor.halo, range: $0 as! NSRange)
-                    }
-                    return string
-                    } (NSMutableAttributedString(string: search.subtitle, attributes: [.font: NSFont.systemFont(ofSize: 13, weight: .light), .foregroundColor: NSColor(white: 1, alpha: 0.5)])))
-                return $0
-            } (NSMutableAttributedString()))
+        completer.results.forEach {
+            let result = Result($0)
+            result.selected = { [weak self] in
+                self?.map.add($0)
+                self?.map.focus($0)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                    self?.clear()
+                }
+            }
             results.documentView!.addSubview(result)
             
             result.leftAnchor.constraint(equalTo: results.leftAnchor).isActive = true
@@ -380,8 +406,9 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             result.topAnchor.constraint(equalTo: top).isActive = true
             top = result.bottomAnchor
         }
-        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: top)
         
+        results.superview!.layoutSubtreeIfNeeded()
+        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: top)
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.5
             $0.allowsImplicitAnimation = true
@@ -444,7 +471,6 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         distance.leftAnchor.constraint(equalTo: list.leftAnchor, constant: 12).isActive = true
         
         itemsBottom = list.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: distance.bottomAnchor, constant: 20)
-        
         list.documentView!.layoutSubtreeIfNeeded()
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.5

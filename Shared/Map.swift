@@ -88,6 +88,22 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
+    func focus(_ coordinate: CLLocationCoordinate2D) {
+        var region = self.region
+        region.center = coordinate
+        setRegion(region, animated: true)
+    }
+    
+    func add(_ coordinate: CLLocationCoordinate2D) {
+        if !plan.contains(where: { $0.mark.coordinate.latitude == coordinate.latitude && $0.mark.coordinate.longitude == coordinate.longitude }) {
+            let route = Route(coordinate)
+            plan.append(route)
+            addAnnotation(route.mark)
+            selectAnnotation(route.mark, animated: true)
+            locate(route.mark)
+        }
+    }
+    
     func remove(_ route: Route) {
         selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
         removeAnnotation(route.mark)
@@ -107,9 +123,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     @objc func centre() {
-        var region = self.region
-        region.center = userLocation.coordinate
-        setRegion(region, animated: true)
+        focus(userLocation.coordinate)
         selectAnnotation(userLocation, animated: true)
     }
     
@@ -153,14 +167,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     @objc func pin() {
         guard !geocoder.isGeocoding else { return }
-        let coordinate = convert(.init(x: frame.midX, y: frame.midY), toCoordinateFrom: self)
-        if !plan.contains(where: { $0.mark.coordinate.latitude == coordinate.latitude && $0.mark.coordinate.longitude == coordinate.longitude }) {
-            let route = Route(coordinate)
-            plan.append(route)
-            addAnnotation(route.mark)
-            selectAnnotation(route.mark, animated: true)
-            locate(route.mark)
-        }
+        add(convert(.init(x: frame.midX, y: frame.midY), toCoordinateFrom: self))
     }
     
     @objc func follow() {
