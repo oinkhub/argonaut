@@ -1,6 +1,10 @@
 import AppKit
 
-extension NSColor { static let halo = #colorLiteral(red: 0.231372549, green: 0.7215686275, blue: 1, alpha: 1) }
+extension NSColor {
+    static let halo = #colorLiteral(red: 0.231372549, green: 0.7215686275, blue: 1, alpha: 1)
+    static let walking = #colorLiteral(red: 0.802871919, green: 0.7154764525, blue: 1, alpha: 1)
+    static let driving = #colorLiteral(red: 0, green: 0.8377037809, blue: 0.7416605177, alpha: 1)
+}
 
 final class Label: NSTextField {
     override var acceptsFirstResponder: Bool { return false }

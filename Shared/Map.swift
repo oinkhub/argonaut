@@ -3,7 +3,6 @@ import MapKit
 final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
     private(set) var plan = [Route]()
-    private var _follow = true
     private let geocoder = CLGeocoder()
     
     required init?(coder: NSCoder) { return nil }
@@ -26,12 +25,10 @@ final class Map: MKMapView, MKMapViewDelegate {
         region.span.latitudeDelta = 0.05
         region.span.longitudeDelta = 0.05
         setRegion(region, animated: false)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in self?._follow = false }
     }
     
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
-        guard _follow else { return }
+        guard app.follow.state == .on else { return }
         var region = self.region
         region.center = didUpdate.coordinate
         setRegion(region, animated: false)
@@ -70,7 +67,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         } else if let polyline = rendererFor as? MKPolyline {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.lineWidth = 8
-            renderer.strokeColor = NSColor.halo.withAlphaComponent(0.3)
+            renderer.strokeColor = plan.contains(where: { $0.path.first(where: { $0.polyline == polyline })?.transportType == .automobile }) ? .driving : .walking
             renderer.lineCap = .round
             return renderer
         } else {
@@ -122,11 +119,6 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    @objc func centre() {
-        focus(userLocation.coordinate)
-        selectAnnotation(userLocation, animated: true)
-    }
-    
     @objc func `in`() {
         var region = self.region
         region.span.latitudeDelta *= 0.1
@@ -171,9 +163,10 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     @objc func follow() {
-        _follow.toggle()
-        if _follow {
-            centre()
+        app.follow.state = app.follow.state == .on ? .off : .on
+        if app.follow.state == .on {
+            focus(userLocation.coordinate)
+            selectAnnotation(userLocation, animated: true)
         }
     }
     

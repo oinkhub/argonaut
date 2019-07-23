@@ -7,6 +7,7 @@ private(set) weak var app: App!
 @NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate, CLLocationManagerDelegate {
     private let location = CLLocationManager()
     private(set) weak var list: List!
+    private(set) weak var follow: NSMenuItem!
     
     required init?(coder: NSCoder) { return nil }
     override init() {
@@ -100,9 +101,8 @@ private(set) weak var app: App!
             $0.submenu = NSMenu(title: .key("Menu.map"))
             $0.submenu!.items = [
                 { $0.keyEquivalentModifierMask = [.option, .command]
-                    return $0
-                } (NSMenuItem(title: .key("Menu.centre"), action: #selector(New.centre), keyEquivalent: "c")),
-                { $0.keyEquivalentModifierMask = [.option, .command]
+                    follow = $0
+                    follow.state = .on
                     return $0
                 } (NSMenuItem(title: .key("Menu.follow"), action: #selector(New.follow), keyEquivalent: "f")),
                 NSMenuItem(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p"),

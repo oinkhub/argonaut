@@ -161,7 +161,6 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         }
     }
     
-    private weak var _follow: Button.Check!
     private weak var map: Map!
     private weak var field: NSSearchField!
     private weak var list: NSScrollView!
@@ -169,6 +168,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     private weak var listHeight: NSLayoutConstraint!
     private weak var itemsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; itemsBottom.isActive = true } }
     private weak var resultsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; resultsBottom.isActive = true } }
+    private weak var _follow: Button!
     private var completer: Any?
     private var formatter: Any!
     
@@ -203,10 +203,11 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         self.map = map
         
         let search = NSView()
-        let bar = NSView()
+        let right = NSView()
+        let left = NSView()
         let base = NSView()
         
-        [search, bar, base].forEach {
+        [search, right, left, base].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.wantsLayer = true
             $0.layer!.backgroundColor = .black
@@ -258,22 +259,24 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         let handler = Button(self, action: #selector(self.handle))
         contentView!.addSubview(handler)
         
-        let centre = Button.Image(map, action: #selector(map.centre))
-        centre.image.image = NSImage(named: "centre")
-        
-        let `in` = Button.Image(map, action: #selector(map.in))
+        let `in` = Button.Image(self, action: #selector(self.in))
         `in`.image.image = NSImage(named: "in")
         
-        let out = Button.Image(map, action: #selector(map.out))
+        let out = Button.Image(self, action: #selector(self.out))
         out.image.image = NSImage(named: "out")
         
-        let pin = Button.Image(map, action: #selector(map.pin))
+        let pin = Button.Image(self, action: #selector(self.pin))
         pin.image.image = NSImage(named: "pin")
         
-        let _follow = Button.Check(map, action: #selector(map.follow))
-        _follow.on = NSImage(named: "on")
-        _follow.off = NSImage(named: "off")
+        let _follow = Button.Image(map, action: #selector(self.follow))
+        _follow.image.image = NSImage(named: "follow")
         self._follow = _follow
+        
+        let _walking = Button.Image(map, action: #selector(self.follow))
+        _walking.image.image = NSImage(named: "walking")
+        
+        let _driving = Button.Image(map, action: #selector(self.follow))
+        _driving.image.image = NSImage(named: "driving")
         
         let field = NSSearchField()
         field.translatesAutoresizingMaskIntoConstraints = false
@@ -295,7 +298,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         contentView!.addSubview(field)
         self.field = field
         
-        var left = contentView!.leftAnchor
+        var shadows = contentView!.leftAnchor
         (0 ..< 3).forEach {
             let shadow = NSView()
             shadow.translatesAutoresizingMaskIntoConstraints = false
@@ -305,10 +308,10 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             contentView!.addSubview(shadow)
             
             shadow.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 11).isActive = true
-            shadow.leftAnchor.constraint(equalTo: left, constant: $0 == 0 ? 11 : 4).isActive = true
+            shadow.leftAnchor.constraint(equalTo: shadows, constant: $0 == 0 ? 11 : 4).isActive = true
             shadow.widthAnchor.constraint(equalToConstant: 16).isActive = true
             shadow.heightAnchor.constraint(equalToConstant: 16).isActive = true
-            left = shadow.rightAnchor
+            shadows = shadow.rightAnchor
         }
         
         map.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
@@ -319,7 +322,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         search.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         search.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
         search.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 80).isActive = true
-        search.rightAnchor.constraint(lessThanOrEqualTo: bar.leftAnchor, constant: -10).isActive = true
+        search.rightAnchor.constraint(lessThanOrEqualTo: right.leftAnchor, constant: -10).isActive = true
         search.widthAnchor.constraint(equalToConstant: 450).isActive = true
         search.bottomAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
         
@@ -341,15 +344,19 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         handler.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
         handler.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
         
-        bar.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
-        bar.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
-        bar.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        right.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
+        right.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
+        right.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        left.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
+        left.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
+        left.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
         base.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         base.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
         base.topAnchor.constraint(equalTo: list.topAnchor, constant: -2).isActive = true
         base.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 10).isActive = true
-        base.rightAnchor.constraint(lessThanOrEqualTo: bar.leftAnchor, constant: -10).isActive = true
+        base.rightAnchor.constraint(lessThanOrEqualTo: right.leftAnchor, constant: -10).isActive = true
         
         list.widthAnchor.constraint(equalToConstant: 450).isActive = true
         list.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
@@ -364,17 +371,31 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         field.rightAnchor.constraint(equalTo: search.rightAnchor, constant: -10).isActive = true
         field.heightAnchor.constraint(equalToConstant: 34).isActive = true
         
-        var top = bar.topAnchor
-        [centre, `in`, out, pin, _follow].forEach {
-            bar.addSubview($0)
+        var top = right.topAnchor
+        [`in`, out, pin].forEach {
+            right.addSubview($0)
             
             $0.topAnchor.constraint(equalTo: top).isActive = true
-            $0.centerXAnchor.constraint(equalTo: bar.centerXAnchor).isActive = true
+            $0.centerXAnchor.constraint(equalTo: right.centerXAnchor).isActive = true
             $0.widthAnchor.constraint(equalToConstant: 50).isActive = true
             $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
             top = $0.bottomAnchor
         }
-        bar.bottomAnchor.constraint(equalTo: top).isActive = true
+        right.bottomAnchor.constraint(equalTo: top).isActive = true
+        
+        top = left.topAnchor
+        [_follow, _walking, _driving].forEach {
+            left.addSubview($0)
+            
+            $0.topAnchor.constraint(equalTo: top).isActive = true
+            $0.centerXAnchor.constraint(equalTo: left.centerXAnchor).isActive = true
+            $0.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            top = $0.bottomAnchor
+        }
+        left.bottomAnchor.constraint(equalTo: top).isActive = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in self?.follow() }
     }
     
     func controlTextDidChange(_: Notification) {
@@ -500,7 +521,6 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         }) { }
     }
     
-    @objc func centre() { map.centre() }
     @objc func pin() { map.pin() }
     @objc func `in`() { map.in() }
     @objc func out() { map.out() }
@@ -511,8 +531,8 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     @objc func discard() { close() }
     
     @objc func follow() {
-        _follow.checked.toggle()
         map.follow()
+        _follow.alphaValue = app.follow.state == .on ? 1 : 0.6
     }
     
     private func measure(_ distance: CLLocationDistance) -> String {
