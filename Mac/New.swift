@@ -377,20 +377,20 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         save.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         base.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
-        base.bottomAnchor.constraint(equalTo: list.bottomAnchor, constant: 100).isActive = true
         base.topAnchor.constraint(equalTo: list.topAnchor, constant: -2).isActive = true
+        base.heightAnchor.constraint(equalToConstant: 300).isActive = true
         base.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 10).isActive = true
         base.rightAnchor.constraint(lessThanOrEqualTo: right.leftAnchor, constant: -10).isActive = true
 
         total.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
         total.rightAnchor.constraint(equalTo: base.rightAnchor).isActive = true
-        total.bottomAnchor.constraint(equalTo: base.bottomAnchor, constant: -40).isActive = true
+        total.bottomAnchor.constraint(equalTo: base.bottomAnchor, constant: -10).isActive = true
         
         list.widthAnchor.constraint(equalToConstant: 450).isActive = true
         list.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -2).isActive = true
         list.bottomAnchor.constraint(equalTo: total.topAnchor).isActive = true
-        list.heightAnchor.constraint(equalToConstant: 220).isActive = true
+        list.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 10).isActive = true
         listTop = list.topAnchor.constraint(greaterThanOrEqualTo: contentView!.bottomAnchor, constant: -30)
         listTop.isActive = true
         
