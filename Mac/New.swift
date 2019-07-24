@@ -159,36 +159,15 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         }
     }
     
-    private final class Total: NSView {
-        required init?(coder: NSCoder) { return nil }
-        init(_ distance: String) {
-            super.init(frame: .zero)
-            translatesAutoresizingMaskIntoConstraints = false
-            wantsLayer = true
-            layer!.backgroundColor = NSColor.halo.cgColor
-            layer!.cornerRadius = 6
-            
-            let title = Label()
-            title.stringValue = distance
-            title.textColor = .black
-            title.font = .systemFont(ofSize: 14, weight: .bold)
-            addSubview(title)
-            
-            heightAnchor.constraint(equalToConstant: 38).isActive = true
-            leftAnchor.constraint(equalTo: title.leftAnchor, constant: -10).isActive = true
-            rightAnchor.constraint(equalTo: title.rightAnchor, constant: 12).isActive = true
-            
-            title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        }
-    }
-    
     private weak var map: Map!
     private weak var field: NSSearchField!
     private weak var list: NSScrollView!
     private weak var results: NSScrollView!
-    private weak var listHeight: NSLayoutConstraint!
+    private weak var total: NSView!
+    private weak var listTop: NSLayoutConstraint!
     private weak var itemsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; itemsBottom.isActive = true } }
     private weak var resultsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; resultsBottom.isActive = true } }
+    private weak var totalBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; totalBottom.isActive = true } }
     private weak var _follow: Button.Image!
     private weak var _walking: Button.Image!
     private weak var _driving: Button.Image!
@@ -266,7 +245,6 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         list.verticalScrollElasticity = .allowed
         list.alphaValue = 0
         list.contentInsets.top = 30
-        list.contentInsets.bottom = 10
         list.automaticallyAdjustsContentInsets = false
         list.documentView = Flipped()
         list.documentView!.translatesAutoresizingMaskIntoConstraints = false
@@ -274,6 +252,15 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         list.documentView!.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
         base.addSubview(list)
         self.list = list
+        
+        let total = NSView()
+        total.translatesAutoresizingMaskIntoConstraints = false
+        total.alphaValue = 0
+        total.isHidden = true
+        total.wantsLayer = true
+        total.layer!.backgroundColor = NSColor.halo.withAlphaComponent(0.15).cgColor
+        base.addSubview(total)
+        self.total = total
         
         let handle = NSView()
         handle.translatesAutoresizingMaskIntoConstraints = false
@@ -390,18 +377,22 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         save.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         base.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
-        base.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
+        base.bottomAnchor.constraint(equalTo: list.bottomAnchor, constant: 100).isActive = true
         base.topAnchor.constraint(equalTo: list.topAnchor, constant: -2).isActive = true
         base.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 10).isActive = true
         base.rightAnchor.constraint(lessThanOrEqualTo: right.leftAnchor, constant: -10).isActive = true
+
+        total.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
+        total.rightAnchor.constraint(equalTo: base.rightAnchor).isActive = true
+        total.bottomAnchor.constraint(equalTo: base.bottomAnchor, constant: -40).isActive = true
         
         list.widthAnchor.constraint(equalToConstant: 450).isActive = true
         list.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -2).isActive = true
-        list.bottomAnchor.constraint(equalTo: base.bottomAnchor).isActive = true
-        list.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 12).isActive = true
-        listHeight = list.heightAnchor.constraint(lessThanOrEqualToConstant: 40)
-        listHeight.isActive = true
+        list.bottomAnchor.constraint(equalTo: total.topAnchor).isActive = true
+        list.heightAnchor.constraint(equalToConstant: 220).isActive = true
+        listTop = list.topAnchor.constraint(greaterThanOrEqualTo: contentView!.bottomAnchor, constant: -30)
+        listTop.isActive = true
         
         field.centerYAnchor.constraint(equalTo: search.topAnchor, constant: 17).isActive = true
         field.leftAnchor.constraint(equalTo: search.leftAnchor, constant: 10).isActive = true
@@ -496,7 +487,10 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     func refresh() {
         list.documentView!.subviews.forEach { $0.removeFromSuperview() }
         var previous: Item?
-        var total = CLLocationDistance()
+        var walkingDistance = CLLocationDistance()
+        var walkingTime = TimeInterval()
+        var drivingDistance = CLLocationDistance()
+        var drivingTime = TimeInterval()
         map.plan.enumerated().forEach {
             let item = Item($0)
             item.delete = { [weak self] in self?.map.remove($0) }
@@ -504,37 +498,63 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             
             item.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
             item.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
+            item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.documentView!.topAnchor).isActive = true
             
-            
-            if previous == nil {
-                item.topAnchor.constraint(equalTo: list.documentView!.topAnchor).isActive = true
-            } else {
-                let separation = $0.1.mark.location.distance(from: previous!.route!.mark.location)
-                total += separation
+            if previous != nil {
                 if map._walking, let _walking = previous!.route?.path.first(where: { $0.transportType == .walking }) {
+                    walkingDistance += _walking.distance
+                    walkingTime += _walking.expectedTravelTime
                     previous!.walking(measure(_walking.distance) + ": " + dater.string(from: _walking.expectedTravelTime)!)
                 }
                 if map._driving, let _driving = previous!.route?.path.first(where: { $0.transportType == .automobile }) {
+                    drivingDistance += _driving.distance
+                    drivingTime += _driving.expectedTravelTime
                     previous!.driving(measure(_driving.distance) + ": " + dater.string(from: _driving.expectedTravelTime)!)
                 }
-                item.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
             }
             previous = item
         }
         
-        let distance = Total(measure(total))
-        distance.isHidden = map.plan.count < 2
-        list.documentView!.addSubview(distance)
+        total.subviews.forEach { $0.removeFromSuperview() }
+        var items = [(String, String)]()
+        if map.plan.count > 1 {
+            if map._walking { items.append(("walking", measure(walkingDistance) + ": " + dater.string(from: walkingTime)!)) }
+            if map._driving { items.append(("driving", measure(drivingDistance) + ": " + dater.string(from: drivingTime)!)) }
+        }
         
-        distance.topAnchor.constraint(equalTo: previous == nil ? list.documentView!.topAnchor : previous!.bottomAnchor).isActive = true
-        distance.leftAnchor.constraint(equalTo: list.leftAnchor, constant: 12).isActive = true
+        total.isHidden = items.isEmpty
         
-        itemsBottom = list.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: distance.bottomAnchor, constant: 20)
+        var top = total.topAnchor
+        items.forEach {
+            let image = NSImageView()
+            image.translatesAutoresizingMaskIntoConstraints = false
+            image.image = NSImage(named: $0.0)
+            image.imageScaling = .scaleNone
+            total.addSubview(image)
+            
+            let label = Label()
+            label.stringValue = $0.1
+            label.font = .systemFont(ofSize: 14, weight: .medium)
+            label.textColor = .halo
+            total.addSubview(label)
+            
+            image.topAnchor.constraint(equalTo: top, constant: 10).isActive = true
+            image.leftAnchor.constraint(equalTo: total.leftAnchor, constant: 14).isActive = true
+            image.widthAnchor.constraint(equalToConstant: 20).isActive = true
+            image.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            
+            label.leftAnchor.constraint(equalTo: image.rightAnchor, constant: 10).isActive = true
+            label.centerYAnchor.constraint(equalTo: image.centerYAnchor).isActive = true
+            
+            top = image.bottomAnchor
+        }
+        totalBottom = total.bottomAnchor.constraint(equalTo: top, constant: 10)
+        itemsBottom = list.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? list.documentView!.topAnchor, constant: 10)
         list.documentView!.layoutSubtreeIfNeeded()
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.5
             $0.allowsImplicitAnimation = true
-            list.contentView.scrollToVisible(distance.frame.insetBy(dx: 0, dy: 20))
+            list.contentView.scrollToVisible(previous?.frame.insetBy(dx: 0, dy: 20) ?? .zero)
         }) { }
     }
     
@@ -544,11 +564,11 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     
     @objc func handle() {
         let alpha: CGFloat
-        if listHeight.constant < 250 {
-            listHeight.constant = 250
+        if listTop.constant > -290 {
+            listTop.constant = -290
             alpha = 1
         } else {
-            listHeight.constant = 40
+            listTop.constant = -30
             alpha = 0
         }
         NSAnimationContext.runAnimationGroup({
@@ -556,6 +576,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             $0.allowsImplicitAnimation = true
             contentView!.layoutSubtreeIfNeeded()
             list.alphaValue = alpha
+            total.alphaValue = alpha
         }) { }
     }
     
