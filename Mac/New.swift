@@ -79,6 +79,8 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     private final class Item: NSView {
         weak var route: Route?
         var delete: ((Route) -> Void)?
+        private weak var top: NSLayoutYAxisAnchor!
+        private weak var bottom: NSLayoutConstraint! { didSet { oldValue.isActive = false; bottom.isActive = true } }
         
         required init?(coder: NSCoder) { return nil }
         init(_ route: (Int, Route)) {
@@ -88,8 +90,8 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             
             let title = Label()
             title.attributedStringValue = {
-                $0.append(NSAttributedString(string: "\(route.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .bold), .foregroundColor: NSColor.halo]))
-                $0.append(NSAttributedString(string: route.1.mark.name, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light), .foregroundColor: NSColor.white]))
+                $0.append(NSAttributedString(string: "\(route.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .bold), .foregroundColor: NSColor.halo]))
+                $0.append(NSAttributedString(string: route.1.mark.name, attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .medium), .foregroundColor: NSColor.white]))
                 return $0
             } (NSMutableAttributedString())
             addSubview(title)
@@ -98,43 +100,62 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             delete.image.image = NSImage(named: "delete")
             addSubview(delete)
             
-            heightAnchor.constraint(equalToConstant: 40).isActive = true
-            
-            title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            title.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
             title.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
             
             delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            delete.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            delete.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            delete.centerYAnchor.constraint(equalTo: title.centerYAnchor).isActive = true
             delete.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            delete.heightAnchor.constraint(equalToConstant: 35).isActive = true
+            
+            bottom = bottomAnchor.constraint(equalTo: title.bottomAnchor, constant: 10)
+            bottom.isActive = true
+            top = title.bottomAnchor
+        }
+        
+        func walking(_ string: String) { add("walking", color: .walking, string: string) }
+        func driving(_ string: String) { add("driving", color: .driving, string: string) }
+        
+        private func add(_ image: String, color: NSColor, string: String) {
+            let icon = NSImageView()
+            icon.translatesAutoresizingMaskIntoConstraints = false
+            icon.image = NSImage(named: image)
+            icon.imageScaling = .scaleNone
+            addSubview(icon)
+            
+            let label = Label()
+            label.stringValue = string
+            label.textColor = .white
+            label.font = .systemFont(ofSize: 13, weight: .light)
+            addSubview(label)
+            
+            let circle = NSView()
+            circle.translatesAutoresizingMaskIntoConstraints = false
+            circle.wantsLayer = true
+            circle.layer!.backgroundColor = color.cgColor
+            circle.layer!.cornerRadius = 5
+            addSubview(circle)
+            
+            circle.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
+            circle.centerYAnchor.constraint(equalTo: icon.centerYAnchor).isActive = true
+            circle.widthAnchor.constraint(equalToConstant: 10).isActive = true
+            circle.heightAnchor.constraint(equalToConstant: 10).isActive = true
+            
+            icon.topAnchor.constraint(equalTo: top, constant: 14).isActive = true
+            icon.leftAnchor.constraint(equalTo: circle.rightAnchor, constant: 5).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 22).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 22).isActive = true
+            
+            label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 6).isActive = true
+            label.centerYAnchor.constraint(equalTo: icon.centerYAnchor).isActive = true
+            
+            bottom = bottomAnchor.constraint(equalTo: icon.bottomAnchor, constant: 14)
+            top = icon.bottomAnchor
         }
         
         @objc private func remove() {
             guard let route = self.route else { return }
             delete?(route)
-        }
-    }
-    
-    private final class Distance: NSView {
-        required init?(coder: NSCoder) { return nil }
-        init(_ distance: String) {
-            super.init(frame: .zero)
-            translatesAutoresizingMaskIntoConstraints = false
-            wantsLayer = true
-            layer!.backgroundColor = NSColor.halo.withAlphaComponent(0.2).cgColor
-            layer!.cornerRadius = 6
-            
-            let title = Label()
-            title.stringValue = distance
-            title.textColor = .halo
-            title.font = .systemFont(ofSize: 12, weight: .regular)
-            addSubview(title)
-            
-            heightAnchor.constraint(equalToConstant: 28).isActive = true
-            leftAnchor.constraint(equalTo: title.leftAnchor, constant: -8).isActive = true
-            rightAnchor.constraint(equalTo: title.rightAnchor, constant: 10).isActive = true
-            
-            title.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         }
     }
     
@@ -173,6 +194,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     private weak var _driving: Button.Image!
     private var completer: Any?
     private var formatter: Any!
+    private let dater = DateComponentsFormatter()
     
     init() {
         super.init(contentRect: .init(origin: .init(x: app.list.frame.maxX + 4, y: app.list.frame.minY), size: .init(width: 800, height: 600)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
@@ -184,6 +206,8 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         minSize = .init(width: 250, height: 250)
         toolbar = .init(identifier: "")
         toolbar!.showsBaselineSeparator = false
+        dater.unitsStyle = .full
+        dater.allowedUnits = [.minute, .hour]
  
         if #available(OSX 10.12, *) {
             let formatter = MeasurementFormatter()
@@ -282,6 +306,10 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         _driving.image.image = NSImage(named: "driving")
         self._driving = _driving
         
+        let save = Button.Image(self, action: #selector(self.save))
+        save.image.image = NSImage(named: "save")
+        contentView!.addSubview(save)
+        
         let field = NSSearchField()
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = .systemFont(ofSize: 14, weight: .regular)
@@ -355,6 +383,11 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         left.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
         left.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
         left.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        save.topAnchor.constraint(equalTo: right.bottomAnchor, constant: 10).isActive = true
+        save.centerXAnchor.constraint(equalTo: right.centerXAnchor).isActive = true
+        save.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        save.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         base.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         base.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: 10).isActive = true
@@ -472,18 +505,19 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             item.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
             item.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
             
+            
             if previous == nil {
                 item.topAnchor.constraint(equalTo: list.documentView!.topAnchor).isActive = true
             } else {
                 let separation = $0.1.mark.location.distance(from: previous!.route!.mark.location)
                 total += separation
-                let distance = Distance("+ " + measure(separation))
-                list.documentView!.addSubview(distance)
-                
-                distance.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-                distance.leftAnchor.constraint(equalTo: list.leftAnchor, constant: 12).isActive = true
-                
-                item.topAnchor.constraint(equalTo: distance.bottomAnchor).isActive = true
+                if map._walking, let _walking = previous!.route?.path.first(where: { $0.transportType == .walking }) {
+                    previous!.walking(measure(_walking.distance) + ": " + dater.string(from: _walking.expectedTravelTime)!)
+                }
+                if map._driving, let _driving = previous!.route?.path.first(where: { $0.transportType == .automobile }) {
+                    previous!.driving(measure(_driving.distance) + ": " + dater.string(from: _driving.expectedTravelTime)!)
+                }
+                item.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
             }
             previous = item
         }
@@ -544,12 +578,14 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         map.walking()
         app.walking.state = map._walking ? .on : .off
         _walking.image.alphaValue = map._walking ? 1 : 0.6
+        refresh()
     }
     
     @objc func driving() {
         map.driving()
         app.driving.state = map._driving ? .on : .off
         _driving.image.alphaValue = map._driving ? 1 : 0.6
+        refresh()
     }
     
     private func measure(_ distance: CLLocationDistance) -> String {

@@ -224,6 +224,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         MKDirections(request: request).calculate { [weak self] in
             if $1 == nil, let paths = $0?.routes {
                 route.path.append(contentsOf: paths)
+                self?.refresh()
                 if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
                     self?.addOverlays(paths.map { $0.polyline }, level: .aboveLabels)
                 }
@@ -242,6 +243,5 @@ final class Map: MKMapView, MKMapViewDelegate {
                 }
             }).forEach({ addOverlay($0.polyline, level: .aboveLabels) })
         }
-//        self?.addOverlays(paths.map { $0.polyline }, level: .aboveLabels)
     }
 }
