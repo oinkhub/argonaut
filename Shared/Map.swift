@@ -3,6 +3,9 @@ import MapKit
 final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
     private(set) var plan = [Route]()
+    private(set) var _follow = true
+    private(set) var _walking = true
+    private(set) var _driving = true
     private let geocoder = CLGeocoder()
     
     required init?(coder: NSCoder) { return nil }
@@ -28,7 +31,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
-        guard app.follow.state == .on else { return }
+        guard _follow else { return }
         var region = self.region
         region.center = didUpdate.coordinate
         setRegion(region, animated: false)
@@ -163,11 +166,21 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     @objc func follow() {
-        app.follow.state = app.follow.state == .on ? .off : .on
-        if app.follow.state == .on {
+        _follow.toggle()
+        if _follow {
             focus(userLocation.coordinate)
             selectAnnotation(userLocation, animated: true)
         }
+    }
+    
+    @objc func walking() {
+        _walking.toggle()
+        filter()
+    }
+    
+    @objc func driving() {
+        _driving.toggle()
+        filter()
     }
     
     private func locate(_ mark: Mark) {
@@ -211,8 +224,24 @@ final class Map: MKMapView, MKMapViewDelegate {
         MKDirections(request: request).calculate { [weak self] in
             if $1 == nil, let paths = $0?.routes {
                 route.path.append(contentsOf: paths)
-                self?.addOverlays(paths.map { $0.polyline }, level: .aboveLabels)
+                if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
+                    self?.addOverlays(paths.map { $0.polyline }, level: .aboveLabels)
+                }
             }
         }
+    }
+    
+    private func filter() {
+        removeOverlays(overlays)
+        plan.forEach {
+            $0.path.filter({
+                switch $0.transportType {
+                case .automobile: return _driving
+                case .walking: return _walking
+                default: return false
+                }
+            }).forEach({ addOverlay($0.polyline, level: .aboveLabels) })
+        }
+//        self?.addOverlays(paths.map { $0.polyline }, level: .aboveLabels)
     }
 }

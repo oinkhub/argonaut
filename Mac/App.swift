@@ -8,6 +8,8 @@ private(set) weak var app: App!
     private let location = CLLocationManager()
     private(set) weak var list: List!
     private(set) weak var follow: NSMenuItem!
+    private(set) weak var walking: NSMenuItem!
+    private(set) weak var driving: NSMenuItem!
     
     required init?(coder: NSCoder) { return nil }
     override init() {
@@ -100,12 +102,23 @@ private(set) weak var app: App!
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.map"))
             $0.submenu!.items = [
+                NSMenuItem(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p"),
+                NSMenuItem.separator(),
                 { $0.keyEquivalentModifierMask = [.option, .command]
                     follow = $0
                     follow.state = .on
                     return $0
                 } (NSMenuItem(title: .key("Menu.follow"), action: #selector(New.follow), keyEquivalent: "f")),
-                NSMenuItem(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p"),
+                { $0.keyEquivalentModifierMask = [.option, .command]
+                    walking = $0
+                    walking.state = .on
+                    return $0
+                } (NSMenuItem(title: .key("Menu.walking"), action: #selector(New.walking), keyEquivalent: "w")),
+                { $0.keyEquivalentModifierMask = [.option, .command]
+                    driving = $0
+                    driving.state = .on
+                    return $0
+                } (NSMenuItem(title: .key("Menu.driving"), action: #selector(New.driving), keyEquivalent: "d")),
                 NSMenuItem.separator(),
                 { $0.keyEquivalentModifierMask = []
                     return $0

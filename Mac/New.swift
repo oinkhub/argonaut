@@ -168,7 +168,9 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     private weak var listHeight: NSLayoutConstraint!
     private weak var itemsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; itemsBottom.isActive = true } }
     private weak var resultsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; resultsBottom.isActive = true } }
-    private weak var _follow: Button!
+    private weak var _follow: Button.Image!
+    private weak var _walking: Button.Image!
+    private weak var _driving: Button.Image!
     private var completer: Any?
     private var formatter: Any!
     
@@ -268,15 +270,17 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         let pin = Button.Image(self, action: #selector(self.pin))
         pin.image.image = NSImage(named: "pin")
         
-        let _follow = Button.Image(map, action: #selector(self.follow))
+        let _follow = Button.Image(self, action: #selector(follow))
         _follow.image.image = NSImage(named: "follow")
         self._follow = _follow
         
-        let _walking = Button.Image(map, action: #selector(self.follow))
+        let _walking = Button.Image(self, action: #selector(walking))
         _walking.image.image = NSImage(named: "walking")
+        self._walking = _walking
         
-        let _driving = Button.Image(map, action: #selector(self.follow))
+        let _driving = Button.Image(self, action: #selector(driving))
         _driving.image.image = NSImage(named: "driving")
+        self._driving = _driving
         
         let field = NSSearchField()
         field.translatesAutoresizingMaskIntoConstraints = false
@@ -532,7 +536,20 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     
     @objc func follow() {
         map.follow()
-        _follow.alphaValue = app.follow.state == .on ? 1 : 0.6
+        app.follow.state = map._follow ? .on : .off
+        _follow.image.alphaValue = map._follow ? 1 : 0.6
+    }
+    
+    @objc func walking() {
+        map.walking()
+        app.walking.state = map._walking ? .on : .off
+        _walking.image.alphaValue = map._walking ? 1 : 0.6
+    }
+    
+    @objc func driving() {
+        map.driving()
+        app.driving.state = map._driving ? .on : .off
+        _driving.image.alphaValue = map._driving ? 1 : 0.6
     }
     
     private func measure(_ distance: CLLocationDistance) -> String {
