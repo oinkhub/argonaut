@@ -1,7 +1,7 @@
 import AppKit
 import MapKit
 
-final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate {
+final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     @available(OSX 10.11.4, *) private final class Result: NSView {
         var selected: ((CLLocationCoordinate2D) -> Void)?
         private weak var label: Label!
@@ -38,7 +38,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             let border = NSView()
             border.translatesAutoresizingMaskIntoConstraints = false
             border.wantsLayer = true
-            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
+            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.2).cgColor
             addSubview(border)
             
             let button = Button(self, action: #selector(click))
@@ -100,7 +100,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             delete.image.image = NSImage(named: "delete")
             addSubview(delete)
             
-            title.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+            title.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
             title.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
             
             delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -113,16 +113,10 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             top = title.bottomAnchor
         }
         
-        func walking(_ string: String) { add("walking", color: .walking, string: string) }
-        func driving(_ string: String) { add("driving", color: .driving, string: string) }
+        func walking(_ string: String) { add(.walking, string: string) }
+        func driving(_ string: String) { add(.driving, string: string) }
         
-        private func add(_ image: String, color: NSColor, string: String) {
-            let icon = NSImageView()
-            icon.translatesAutoresizingMaskIntoConstraints = false
-            icon.image = NSImage(named: image)
-            icon.imageScaling = .scaleNone
-            addSubview(icon)
-            
+        private func add(_ color: NSColor, string: String) {
             let label = Label()
             label.stringValue = string
             label.textColor = .white
@@ -136,21 +130,16 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             circle.layer!.cornerRadius = 5
             addSubview(circle)
             
-            circle.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
-            circle.centerYAnchor.constraint(equalTo: icon.centerYAnchor).isActive = true
+            circle.leftAnchor.constraint(equalTo: leftAnchor, constant: 32).isActive = true
+            circle.topAnchor.constraint(equalTo: top, constant: 14).isActive = true
             circle.widthAnchor.constraint(equalToConstant: 10).isActive = true
             circle.heightAnchor.constraint(equalToConstant: 10).isActive = true
             
-            icon.topAnchor.constraint(equalTo: top, constant: 14).isActive = true
-            icon.leftAnchor.constraint(equalTo: circle.rightAnchor, constant: 5).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 22).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 22).isActive = true
+            label.leftAnchor.constraint(equalTo: circle.rightAnchor, constant: 6).isActive = true
+            label.centerYAnchor.constraint(equalTo: circle.centerYAnchor).isActive = true
             
-            label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 6).isActive = true
-            label.centerYAnchor.constraint(equalTo: icon.centerYAnchor).isActive = true
-            
-            bottom = bottomAnchor.constraint(equalTo: icon.bottomAnchor, constant: 14)
-            top = icon.bottomAnchor
+            bottom = bottomAnchor.constraint(equalTo: circle.bottomAnchor, constant: 14)
+            top = circle.bottomAnchor
         }
         
         @objc private func remove() {
@@ -160,7 +149,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     }
     
     private weak var map: Map!
-    private weak var field: NSSearchField!
+    private weak var field: Field!
     private weak var list: NSScrollView!
     private weak var results: NSScrollView!
     private weak var total: NSView!
@@ -217,8 +206,6 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             $0.wantsLayer = true
             $0.layer!.backgroundColor = .black
             $0.layer!.cornerRadius = 4
-            $0.layer!.borderColor = NSColor.halo.withAlphaComponent(0.4).cgColor
-            $0.layer!.borderWidth = 1
             contentView!.addSubview($0)
         }
         
@@ -256,11 +243,14 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         let total = NSView()
         total.translatesAutoresizingMaskIntoConstraints = false
         total.alphaValue = 0
-        total.isHidden = true
-        total.wantsLayer = true
-        total.layer!.backgroundColor = NSColor.halo.withAlphaComponent(0.15).cgColor
         base.addSubview(total)
         self.total = total
+        
+        let border = NSView()
+        border.translatesAutoresizingMaskIntoConstraints = false
+        border.wantsLayer = true
+        border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.2).cgColor
+        base.addSubview(border)
         
         let handle = NSView()
         handle.translatesAutoresizingMaskIntoConstraints = false
@@ -297,23 +287,8 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         save.image.image = NSImage(named: "save")
         contentView!.addSubview(save)
         
-        let field = NSSearchField()
-        field.translatesAutoresizingMaskIntoConstraints = false
-        field.font = .systemFont(ofSize: 14, weight: .regular)
-        field.focusRingType = .none
-        field.drawsBackground = false
-        field.textColor = .white
-        field.maximumNumberOfLines = 1
-        field.placeholderString = ""
-        field.lineBreakMode = .byTruncatingHead
-        field.refusesFirstResponder = true
+        let field = Field()
         field.delegate = self
-        (field.cell as! NSSearchFieldCell).cancelButtonCell!.target = self
-        (field.cell as! NSSearchFieldCell).cancelButtonCell!.action = #selector(clear)
-        if #available(OSX 10.12.2, *) {
-            field.isAutomaticTextCompletionEnabled = false
-        }
-        (fieldEditor(true, for: field) as? NSTextView)?.insertionPointColor = .halo
         contentView!.addSubview(field)
         self.field = field
         
@@ -339,7 +314,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         map.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
         
         search.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
-        search.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
+        search.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
         search.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 80).isActive = true
         search.rightAnchor.constraint(lessThanOrEqualTo: right.leftAnchor, constant: -10).isActive = true
         search.widthAnchor.constraint(equalToConstant: 450).isActive = true
@@ -363,7 +338,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         handler.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
         handler.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
         
-        right.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 10).isActive = true
+        right.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
         right.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
         right.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
@@ -386,6 +361,11 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         total.rightAnchor.constraint(equalTo: base.rightAnchor).isActive = true
         total.bottomAnchor.constraint(equalTo: base.bottomAnchor, constant: -10).isActive = true
         
+        border.topAnchor.constraint(equalTo: total.topAnchor).isActive = true
+        border.leftAnchor.constraint(equalTo: total.leftAnchor).isActive = true
+        border.rightAnchor.constraint(equalTo: total.rightAnchor).isActive = true
+        border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
         list.widthAnchor.constraint(equalToConstant: 450).isActive = true
         list.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -2).isActive = true
@@ -394,10 +374,10 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         listTop = list.topAnchor.constraint(greaterThanOrEqualTo: contentView!.bottomAnchor, constant: -30)
         listTop.isActive = true
         
-        field.centerYAnchor.constraint(equalTo: search.topAnchor, constant: 17).isActive = true
-        field.leftAnchor.constraint(equalTo: search.leftAnchor, constant: 10).isActive = true
-        field.rightAnchor.constraint(equalTo: search.rightAnchor, constant: -10).isActive = true
-        field.heightAnchor.constraint(equalToConstant: 34).isActive = true
+        field.topAnchor.constraint(equalTo: search.topAnchor).isActive = true
+        field.leftAnchor.constraint(equalTo: search.leftAnchor).isActive = true
+        field.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
+        field.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         var top = right.topAnchor
         [`in`, out, pin].forEach {
@@ -426,13 +406,21 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in self?.follow() }
     }
     
-    func controlTextDidChange(_: Notification) {
+    func textDidChange(_: Notification) {
         if #available(OSX 10.11.4, *) {
-            if field.stringValue.isEmpty {
+            (completer as? MKLocalSearchCompleter)?.cancel()
+            if field.string.isEmpty {
                 clear()
             } else {
-                (completer as? MKLocalSearchCompleter)?.queryFragment = field.stringValue
+                (completer as? MKLocalSearchCompleter)?.queryFragment = field.string
             }
+        }
+    }
+    
+    func textDidEndEditing(_: Notification) {
+        field._cancel.isHidden = field.string.isEmpty
+        if field.string.isEmpty {
+            clear()
         }
     }
     
@@ -465,19 +453,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         }) { }
     }
     
-    func control(_: NSControl, textView: NSTextView, doCommandBy: Selector) -> Bool {
-        if doCommandBy == #selector(NSResponder.insertNewline(_:)) {
-            makeFirstResponder(nil)
-            return true
-        } else if doCommandBy == #selector(NSResponder.insertTab(_:)) || doCommandBy == #selector(NSResponder.insertBacktab(_:)) || doCommandBy == #selector(NSResponder.cancelOperation(_:)) {
-            makeFirstResponder(nil)
-            return true
-        }
-        return false
-    }
-    
     override func keyDown(with: NSEvent) {
-        field.refusesFirstResponder = false
         switch with.keyCode {
         case 36, 48: makeFirstResponder(field)
         default: super.keyDown(with: with)
@@ -516,13 +492,11 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
         }
         
         total.subviews.forEach { $0.removeFromSuperview() }
-        var items = [(String, String)]()
+        var items = [(String, String, NSColor)]()
         if map.plan.count > 1 {
-            if map._walking { items.append(("walking", measure(walkingDistance) + ": " + dater.string(from: walkingTime)!)) }
-            if map._driving { items.append(("driving", measure(drivingDistance) + ": " + dater.string(from: drivingTime)!)) }
+            if map._walking { items.append(("walking", measure(walkingDistance) + ": " + dater.string(from: walkingTime)!, .walking)) }
+            if map._driving { items.append(("driving", measure(drivingDistance) + ": " + dater.string(from: drivingTime)!, .driving)) }
         }
-        
-        total.isHidden = items.isEmpty
         
         var top = total.topAnchor
         items.forEach {
@@ -532,16 +506,28 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
             image.imageScaling = .scaleNone
             total.addSubview(image)
             
+            let circle = NSView()
+            circle.translatesAutoresizingMaskIntoConstraints = false
+            circle.wantsLayer = true
+            circle.layer!.backgroundColor = $0.2.cgColor
+            circle.layer!.cornerRadius = 8
+            total.addSubview(circle)
+            
             let label = Label()
             label.stringValue = $0.1
             label.font = .systemFont(ofSize: 14, weight: .medium)
-            label.textColor = .halo
+            label.textColor = .white
             total.addSubview(label)
             
-            image.topAnchor.constraint(equalTo: top, constant: 10).isActive = true
-            image.leftAnchor.constraint(equalTo: total.leftAnchor, constant: 14).isActive = true
+            image.topAnchor.constraint(equalTo: top, constant: 14).isActive = true
+            image.leftAnchor.constraint(equalTo: circle.rightAnchor, constant: 10).isActive = true
             image.widthAnchor.constraint(equalToConstant: 20).isActive = true
             image.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            
+            circle.centerYAnchor.constraint(equalTo: image.centerYAnchor).isActive = true
+            circle.widthAnchor.constraint(equalToConstant: 16).isActive = true
+            circle.heightAnchor.constraint(equalToConstant: 16).isActive = true
+            circle.leftAnchor.constraint(equalTo: total.leftAnchor, constant: 14).isActive = true
             
             label.leftAnchor.constraint(equalTo: image.rightAnchor, constant: 10).isActive = true
             label.centerYAnchor.constraint(equalTo: image.centerYAnchor).isActive = true
@@ -617,7 +603,7 @@ final class New: NSWindow, NSSearchFieldDelegate, MKLocalSearchCompleterDelegate
     }
     
     @objc private func clear() {
-        field.stringValue = ""
+        field.string = ""
         makeFirstResponder(nil)
         results.documentView!.subviews.forEach { $0.removeFromSuperview() }
         resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: results.documentView!.topAnchor)
