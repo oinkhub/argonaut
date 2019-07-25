@@ -1,4 +1,5 @@
 New="New";
+New.save="Save";
 New.distance=" metres";
 Map.mark="Mark";
 Menu.argonaut="Argonaut";

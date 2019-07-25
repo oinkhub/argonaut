@@ -165,7 +165,7 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     private let dater = DateComponentsFormatter()
     
     init() {
-        super.init(contentRect: .init(origin: .init(x: app.list.frame.maxX + 4, y: app.list.frame.minY), size: .init(width: 800, height: 600)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
+        super.init(contentRect: .init(origin: .init(x: app.list.frame.maxX + 4, y: app.list.frame.minY), size: .init(width: 1000, height: 800)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black
@@ -283,8 +283,8 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         _driving.image.image = NSImage(named: "driving")
         self._driving = _driving
         
-        let save = Button.Image(self, action: #selector(self.save))
-        save.image.image = NSImage(named: "save")
+        let save = Button.Yes(self, action: #selector(self.save))
+        save.label.stringValue = .key("New.save")
         contentView!.addSubview(save)
         
         let field = Field()
@@ -346,10 +346,8 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         left.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
         left.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        save.topAnchor.constraint(equalTo: right.bottomAnchor, constant: 10).isActive = true
-        save.centerXAnchor.constraint(equalTo: right.centerXAnchor).isActive = true
-        save.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        save.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        save.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 5).isActive = true
+        save.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
         
         base.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         base.topAnchor.constraint(equalTo: list.topAnchor, constant: -2).isActive = true

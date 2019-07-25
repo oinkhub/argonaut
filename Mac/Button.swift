@@ -63,11 +63,11 @@ class Button: NSView {
             layer!.cornerRadius = 3
             layer!.backgroundColor = NSColor.halo.cgColor
             label.alignment = .center
-            label.font = .systemFont(ofSize: 11, weight: .medium)
+            label.font = .systemFont(ofSize: 14, weight: .bold)
             label.textColor = .black
             
-            heightAnchor.constraint(equalToConstant: 20).isActive = true
-            width = widthAnchor.constraint(equalToConstant: 62)
+            heightAnchor.constraint(equalToConstant: 28).isActive = true
+            width = widthAnchor.constraint(equalToConstant: 74)
             width.isActive = true
         }
     }
@@ -94,7 +94,7 @@ class Button: NSView {
     private var drag = CGFloat()
     final fileprivate var selected = false {
         didSet {
-            alphaValue = selected ? 0.4 : 1
+            alphaValue = selected ? 0.5 : 1
         }
     }
     
