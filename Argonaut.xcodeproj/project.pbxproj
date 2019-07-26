@@ -11,15 +11,22 @@
 		CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038FB22D72D68008A8E88 /* Extensions.swift */; };
 		CE0038FE22D72E5B008A8E88 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0038FD22D72E5B008A8E88 /* List.swift */; };
 		CE02CB5622E992D1009F7323 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE02CB5522E992D1009F7323 /* Field.swift */; };
-		CE0356E222E479C900FB51E4 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0356E122E479C900FB51E4 /* Route.swift */; };
-		CE0356E322E479C900FB51E4 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0356E122E479C900FB51E4 /* Route.swift */; };
+		CE3CECC222EB224E00425567 /* MockRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3CECC122EB224E00425567 /* MockRoute.swift */; };
 		CE4A547C22D85E1B00125A9C /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A547B22D85E1B00125A9C /* Button.swift */; };
 		CE7EACE322E1B9A40082D91C /* Callout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE222E1B9A40082D91C /* Callout.swift */; };
-		CE7EACE522E1E1620082D91C /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE422E1E1620082D91C /* Mark.swift */; };
-		CE7EACE622E1E1620082D91C /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE422E1E1620082D91C /* Mark.swift */; };
 		CEAB0F0822D73C5800320F4F /* New.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0722D73C5800320F4F /* New.swift */; };
 		CEAB0F0A22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
 		CEAB0F0B22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
+		CEC5A3C222EAFADF00CE3B07 /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE422E1E1620082D91C /* Mark.swift */; };
+		CEC5A3C322EAFADF00CE3B07 /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE422E1E1620082D91C /* Mark.swift */; };
+		CEC5A3C422EAFADF00CE3B07 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0356E122E479C900FB51E4 /* Route.swift */; };
+		CEC5A3C522EAFADF00CE3B07 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0356E122E479C900FB51E4 /* Route.swift */; };
+		CEC5A3C722EAFD9600CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BD22D721C500EF2447 /* libArgonaut.a */; };
+		CEC5A3C822EAFD9D00CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BE22D721C500EF2447 /* libArgonaut.a */; };
+		CEC5A3CA22EAFE3200CE3B07 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5A3C922EAFE3200CE3B07 /* Factory.swift */; };
+		CEC5A3CB22EAFE3200CE3B07 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5A3C922EAFE3200CE3B07 /* Factory.swift */; };
+		CEC5A3CD22EAFF7900CE3B07 /* TestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */; };
+		CEC5A3CE22EAFFAB00CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BD22D721C500EF2447 /* libArgonaut.a */; };
 		CEDE10FD22D71F2400DD796B /* iOS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10F922D71F2400DD796B /* iOS.storyboard */; };
 		CEDE10FE22D71F2400DD796B /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE10FB22D71F2400DD796B /* App.swift */; };
 		CEDE10FF22D71F2400DD796B /* iOS.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10FC22D71F2400DD796B /* iOS.xcassets */; };
@@ -65,6 +72,7 @@
 		CE0038FD22D72E5B008A8E88 /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		CE02CB5522E992D1009F7323 /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		CE0356E122E479C900FB51E4 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		CE3CECC122EB224E00425567 /* MockRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRoute.swift; sourceTree = "<group>"; };
 		CE4A547B22D85E1B00125A9C /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE58E9BE22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +81,8 @@
 		CEAB0F0622D7396900320F4F /* Argonaut.sketch */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argonaut.sketch; sourceTree = "<group>"; };
 		CEAB0F0722D73C5800320F4F /* New.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = New.swift; sourceTree = "<group>"; };
 		CEAB0F0922D742D900320F4F /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
+		CEC5A3C922EAFE3200CE3B07 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
+		CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFactory.swift; sourceTree = "<group>"; };
 		CEDE10F322D71C2D00DD796B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CEDE10F422D71C2D00DD796B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CEDE10F522D71C2D00DD796B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -115,6 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC5A3CE22EAFFAB00CE3B07 /* libArgonaut.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,6 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC5A3C722EAFD9600CE3B07 /* libArgonaut.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,12 +141,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC5A3C822EAFD9D00CE3B07 /* libArgonaut.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CEC5A3C622EAFD9600CE3B07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CEDE109822D714E100DD796B = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +181,7 @@
 				CEDE110622D71F5300DD796B /* Shared */,
 				CEDE110A22D71FA300DD796B /* Source */,
 				CEDE110F22D71FB200DD796B /* Tests */,
+				CEC5A3C622EAFD9600CE3B07 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -191,9 +212,8 @@
 		CEDE110622D71F5300DD796B /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				CEC5A3C922EAFE3200CE3B07 /* Factory.swift */,
 				CEAB0F0922D742D900320F4F /* Map.swift */,
-				CE7EACE422E1E1620082D91C /* Mark.swift */,
-				CE0356E122E479C900FB51E4 /* Route.swift */,
 				CEDE110722D71F5300DD796B /* Shared.swift */,
 			);
 			path = Shared;
@@ -202,6 +222,8 @@
 		CEDE110A22D71FA300DD796B /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				CE7EACE422E1E1620082D91C /* Mark.swift */,
+				CE0356E122E479C900FB51E4 /* Route.swift */,
 				CEDE110B22D71FA300DD796B /* Session.swift */,
 			);
 			path = Source;
@@ -210,7 +232,9 @@
 		CEDE110F22D71FB200DD796B /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */,
 				CEDE111022D71FB200DD796B /* TestSession.swift */,
+				CE3CECC122EB224E00425567 /* MockRoute.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -397,6 +421,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC5A3CA22EAFE3200CE3B07 /* Factory.swift in Sources */,
+				CEC5A3C422EAFADF00CE3B07 /* Route.swift in Sources */,
+				CEC5A3C222EAFADF00CE3B07 /* Mark.swift in Sources */,
 				CEDE110C22D71FA300DD796B /* Session.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -405,6 +432,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC5A3CB22EAFE3200CE3B07 /* Factory.swift in Sources */,
+				CEC5A3C522EAFADF00CE3B07 /* Route.swift in Sources */,
+				CEC5A3C322EAFADF00CE3B07 /* Mark.swift in Sources */,
 				CEDE110E22D71FA300DD796B /* Session.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,7 +443,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC5A3CD22EAFF7900CE3B07 /* TestFactory.swift in Sources */,
 				CEDE111122D71FB200DD796B /* TestSession.swift in Sources */,
+				CE3CECC222EB224E00425567 /* MockRoute.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,10 +456,8 @@
 				CE7EACE322E1B9A40082D91C /* Callout.swift in Sources */,
 				CE0038FA22D72D41008A8E88 /* Alert.swift in Sources */,
 				CE02CB5622E992D1009F7323 /* Field.swift in Sources */,
-				CE0356E222E479C900FB51E4 /* Route.swift in Sources */,
 				CEDE110522D71F3600DD796B /* App.swift in Sources */,
 				CE0038FE22D72E5B008A8E88 /* List.swift in Sources */,
-				CE7EACE522E1E1620082D91C /* Mark.swift in Sources */,
 				CE4A547C22D85E1B00125A9C /* Button.swift in Sources */,
 				CEAB0F0A22D742D900320F4F /* Map.swift in Sources */,
 				CEDE110822D71F5300DD796B /* Shared.swift in Sources */,
@@ -441,10 +471,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE7EACE622E1E1620082D91C /* Mark.swift in Sources */,
 				CEDE10FE22D71F2400DD796B /* App.swift in Sources */,
 				CEAB0F0B22D742D900320F4F /* Map.swift in Sources */,
-				CE0356E322E479C900FB51E4 /* Route.swift in Sources */,
 				CEDE110922D71F5300DD796B /* Shared.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

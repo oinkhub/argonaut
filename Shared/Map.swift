@@ -1,3 +1,4 @@
+import Argonaut
 import MapKit
 
 final class Map: MKMapView, MKMapViewDelegate {

@@ -1,3 +1,4 @@
+import Argonaut
 import MapKit
 
 class Callout: NSView {
