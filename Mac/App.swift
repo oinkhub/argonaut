@@ -42,7 +42,7 @@ private(set) weak var app: App!
         item.view = button
         button.title = .key(makeItemForIdentifier.rawValue)
         switch makeItemForIdentifier.rawValue {
-        case "New": button.action = #selector(new)
+        case "New": button.action = #selector(list.new)
         default: break
         }
         return item
@@ -88,14 +88,14 @@ private(set) weak var app: App!
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         
         menu.addItem({
-            $0.submenu = NSMenu(title: .key("Menu.make"))
+            $0.submenu = NSMenu(title: .key("Menu.project"))
             $0.submenu!.items = [
-                NSMenuItem(title: .key("Menu.new"), action: #selector(new), keyEquivalent: "n"),
+                NSMenuItem(title: .key("Menu.new"), action: #selector(List.new), keyEquivalent: "n"),
                 NSMenuItem.separator(),
                 NSMenuItem(title: .key("Menu.list"), action: #selector(New.handle), keyEquivalent: "l"),
+                NSMenuItem(title: .key("Menu.search"), action: #selector(New.search), keyEquivalent: "f"),
                 NSMenuItem.separator(),
-                NSMenuItem(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s"),
-                NSMenuItem(title: .key("Menu.discard"), action: #selector(New.discard), keyEquivalent: "w")]
+                NSMenuItem(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         
@@ -174,7 +174,9 @@ private(set) weak var app: App!
                 NSMenuItem(title: .key("Menu.minimize"), action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m"),
                 NSMenuItem(title: .key("Menu.zoom"), action: #selector(NSWindow.performZoom(_:)), keyEquivalent: "p"),
                 NSMenuItem.separator(),
-                NSMenuItem(title: .key("Menu.bringAllToFront"), action: #selector(arrangeInFront(_:)), keyEquivalent: "")]
+                NSMenuItem(title: .key("Menu.bringAllToFront"), action: #selector(arrangeInFront(_:)), keyEquivalent: ""),
+                NSMenuItem.separator(),
+                NSMenuItem(title: .key("Menu.close"), action: #selector(NSWindow.close), keyEquivalent: "w")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         
@@ -219,14 +221,6 @@ private(set) weak var app: App!
             }
         } else {
             DispatchQueue.main.async { Alert(title, message: message).makeKeyAndOrderFront(nil) }
-        }
-    }
-    
-    @objc func new() {
-        if let new = windows.first(where: { $0 is New }) {
-            new.orderFront(nil)
-        } else {
-            New().makeKeyAndOrderFront(nil)
         }
     }
     

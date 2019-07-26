@@ -22,7 +22,9 @@ final class Field: NSTextView {
         }
     }
     
+    var accepts = false
     private(set) weak var _cancel: Button.Image!
+    override var acceptsFirstResponder: Bool { return accepts }
     
     required init?(coder: NSCoder) { return nil }
     init() {
@@ -80,7 +82,10 @@ final class Field: NSTextView {
     
     override func keyDown(with: NSEvent) {
         switch with.keyCode {
-        case 36, 48, 53: window?.makeFirstResponder(nil)
+        case 36:
+            window!.makeFirstResponder(nil)
+            (window as! New).choose()
+        case 48, 53: window!.makeFirstResponder(nil)
         default: super.keyDown(with: with)
         }
     }
@@ -90,7 +95,7 @@ final class Field: NSTextView {
         _cancel.isHidden = string.isEmpty
     }
     
-    @objc private func search() { window?.makeFirstResponder(self) }
+    @objc private func search() { window!.makeFirstResponder(self) }
     
     @objc private func cancel() {
         window?.makeFirstResponder(self)

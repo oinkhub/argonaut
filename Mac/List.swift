@@ -11,7 +11,7 @@ final class List: NSWindow {
         toolbar = .init(identifier: "")
         toolbar!.showsBaselineSeparator = false
         
-        let new = Button.Image(app, action: #selector(app.new))
+        let new = Button.Image(self, action: #selector(self.new))
         new.image.image = NSImage(named: "new")
         contentView!.addSubview(new)
         
@@ -19,5 +19,18 @@ final class List: NSWindow {
         new.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
         new.widthAnchor.constraint(equalToConstant: 50).isActive = true
         new.heightAnchor.constraint(equalToConstant: 40).isActive = true
+    }
+    
+    override func close() {
+        super.close()
+        app.terminate(nil)
+    }
+    
+    @objc func new() {
+        if let new = app.windows.first(where: { $0 is New }) {
+            new.orderFront(nil)
+        } else {
+            New().makeKeyAndOrderFront(nil)
+        }
     }
 }

@@ -4,6 +4,7 @@ import MapKit
 final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     @available(OSX 10.11.4, *) private final class Result: NSView {
         var selected: ((CLLocationCoordinate2D) -> Void)?
+        var highlighted = false { didSet { layer!.backgroundColor = highlighted ? NSColor.halo.withAlphaComponent(0.4).cgColor : .clear }}
         private weak var label: Label!
         private let search: MKLocalSearchCompletion
         
@@ -61,7 +62,7 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
         
-        @objc private func click() {
+        @objc func click() {
             layer!.backgroundColor = NSColor.halo.cgColor
             label.attributedStringValue = {
                 $0.append(label.attributedStringValue)
@@ -401,15 +402,16 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }
         left.bottomAnchor.constraint(equalTo: top).isActive = true
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in self?.follow() }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.follow()
+            self?.field.accepts = true
+        }
     }
     
     func textDidChange(_: Notification) {
         if #available(OSX 10.11.4, *) {
             (completer as? MKLocalSearchCompleter)?.cancel()
-            if field.string.isEmpty {
-                clear()
-            } else {
+            if !field.string.isEmpty {
                 (completer as? MKLocalSearchCompleter)?.queryFragment = field.string
             }
         }
@@ -453,7 +455,7 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     
     override func keyDown(with: NSEvent) {
         switch with.keyCode {
-        case 36, 48: makeFirstResponder(field)
+        case 36, 48: search()
         default: super.keyDown(with: with)
         }
     }
@@ -542,6 +544,12 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }) { }
     }
     
+    func choose() {
+        if #available(OSX 10.11.4, *) {
+            results.documentView!.subviews.map({ $0 as! Result }).first(where: { $0.highlighted })?.click()
+        }
+    }
+    
     @objc func save() {
         
     }
@@ -564,11 +572,34 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }) { }
     }
     
+    @objc func up() {
+        if #available(OSX 10.11.4, *), firstResponder === field {
+            var index = results.documentView!.subviews.count - 1
+            if let highlighted = results.documentView!.subviews.firstIndex(where: { ($0 as! Result).highlighted }), highlighted > 0 {
+                index = highlighted - 1
+            }
+            results.documentView!.subviews.enumerated().forEach({ ($0.1 as! Result).highlighted = $0.0 == index })
+        } else {
+            map.up()
+        }
+    }
+    
+    @objc func down() {
+        if #available(OSX 10.11.4, *), firstResponder === field {
+            var index = 0
+            if let highlighted = results.documentView!.subviews.firstIndex(where: { ($0 as! Result).highlighted }), highlighted < results.documentView!.subviews.count - 1 {
+                index = highlighted + 1
+            }
+            results.documentView!.subviews.enumerated().forEach({ ($0.1 as! Result).highlighted = $0.0 == index })
+        } else {
+            map.down()
+        }
+    }
+    
+    @objc func search() { makeFirstResponder(field) }
     @objc func pin() { map.pin() }
     @objc func `in`() { map.in() }
     @objc func out() { map.out() }
-    @objc func up() { map.up() }
-    @objc func down() { map.down() }
     @objc func left() { map.left() }
     @objc func right() { map.right() }
     @objc func discard() { close() }

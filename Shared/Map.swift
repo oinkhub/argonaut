@@ -184,7 +184,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     private func locate(_ mark: Mark) {
-        geocoder.reverseGeocodeLocation(mark.location) {
+        geocoder.reverseGeocodeLocation(.init(latitude: mark.coordinate.latitude, longitude: mark.coordinate.longitude)) {
             if $1 == nil {
                 mark.name = $0?.first?.name ?? .key("Map.mark")
                 DispatchQueue.main.async { [weak self, weak mark] in
