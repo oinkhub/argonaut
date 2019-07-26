@@ -347,7 +347,7 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         left.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
         left.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        save.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 5).isActive = true
+        save.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: -10).isActive = true
         save.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
         
         base.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
@@ -551,7 +551,8 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     @objc func save() {
-        
+        Create(map.plan).makeKeyAndOrderFront(nil)
+        close()
     }
     
     @objc func handle() {

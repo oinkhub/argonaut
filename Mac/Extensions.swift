@@ -14,13 +14,11 @@ final class Label: NSTextField {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .clear
+        stringValue = string
         isBezeled = false
         isEditable = false
         isSelectable = false
-        stringValue = string
     }
-    
-    override func resetCursorRects() { addCursorRect(bounds, cursor: .arrow) }
 }
 
 final class Scroll: NSScrollView {
