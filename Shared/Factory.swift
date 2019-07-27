@@ -21,10 +21,12 @@ public final class Factory {
         range.map({ ceil(1 / (Double(1 << $0) / 1048575)) * 512 }).forEach { tile in
             let w = Int(ceil(rect.width / tile))
             let h = Int(ceil(rect.height / tile))
-            let x = max(0, Int(rect.minX / tile) - max(0, ((10 - w) / 2)))
-            let y = max(0, Int(rect.minY / tile) - max(0, ((10 - h) / 2)))
-            stride(from: x, to: x + w, by: 10).forEach { x in
-                stride(from: y, to: y + h, by: 10).forEach { y in
+            ({
+                stride(from: $0, to: $0 + w, by: 10)
+            } (max(0, Int(rect.minX / tile) - max(0, ((10 - w) / 2))))).forEach { x in
+                ({
+                    stride(from: $0, to: $0 + h, by: 10)
+                } (max(0, Int(rect.minY / tile) - max(0, ((10 - h) / 2))))).forEach { y in
                     shots.append({
                         $0.size = .init(width: 5120, height: 5120)
                         $0.mapRect = .init(x: Double(x) * tile, y: Double(y) * tile, width: tile * 10, height: tile * 10)
@@ -32,7 +34,6 @@ public final class Factory {
                     } (MKMapSnapshotter.Options()))
                 }
             }
-            
         }
     }
 }
