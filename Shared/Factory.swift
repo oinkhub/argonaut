@@ -4,16 +4,11 @@ public final class Factory {
     public var plan = [Route]()
     public let id = UUID().uuidString
     private(set) var rect = MKMapRect()
-    private let margin = 0.01
+    private let margin = Double(7456.540482312441)
     
     public init() { }
     
     public func measure() {
-        plan.flatMap({ $0.path.reduce(into: [CLLocationCoordinate2D]()) {
-            var points = [CLLocationCoordinate2D](repeating: .init(), count: $1.polyline.pointCount)
-            $1.polyline.getCoordinates(&points, range: .init(location: 0, length: $1.polyline.pointCount))
-            $0.append(contentsOf: points) }}).forEach {
-                rect.origin = MKMapPoint(.init(latitude: rect.minY == 0 || rect.minY < $0.latitude ? $0.latitude - margin: rect.minY, longitude: rect.minX == 0 || rect.minX < $0.longitude ? $0.longitude - margin: rect.minX))
-        }
+        rect = {{{ .init(x: $0.x, y: $0.y, width: $1.x - $0.x, height: $1.y - $0.y)} (MKMapPoint(.init(latitude: $0.first!.latitude, longitude: $1.first!.longitude)), MKMapPoint(.init(latitude: $0.last!.latitude, longitude: $1.last!.longitude)))} ($0.sorted(by: { $0.latitude < $1.latitude }), $0.sorted(by: { $0.longitude < $1.longitude }))} (plan.flatMap({ $0.path.flatMap({ UnsafeBufferPointer(start: $0.polyline.points(), count: $0.polyline.pointCount).map { $0.coordinate }})}))
     }
 }
