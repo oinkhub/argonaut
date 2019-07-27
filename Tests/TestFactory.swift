@@ -18,4 +18,11 @@ final class TestFactory: XCTestCase {
         XCTAssertEqual(60.01, MKMapPoint(x: factory.rect.maxX, y: 0).coordinate.longitude, accuracy: 0.00001)
         XCTAssertEqual(82.01, MKMapPoint(x: 0, y: factory.rect.maxY).coordinate.latitude, accuracy: 0.00001)
     }
+    
+    func testDivide() {
+        factory.rect.size.width = 1
+        factory.rect.size.height = 1
+        factory.divide()
+        XCTAssertEqual(22, factory.shots.count)
+    }
 }
