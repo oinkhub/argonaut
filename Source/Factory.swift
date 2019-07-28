@@ -6,7 +6,7 @@ public final class Factory {
     public let id = UUID().uuidString
     var rect = MKMapRect()
     var shots = [MKMapSnapshotter.Options]()
-    var range = (11 ... 21)
+    var range = (8 ... 21)
     private var shooter: MKMapSnapshotter?
     private let margin = 0.002
     private let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
@@ -35,18 +35,18 @@ public final class Factory {
             let w = Int(ceil(rect.width / tile))
             let h = Int(ceil(rect.height / tile))
             ({
-                stride(from: $0, to: $0 + w, by: 19)
-            } (max(0, Int(rect.minX / tile) - max(0, ((19 - w) / 2))))).forEach { x in
+                stride(from: $0, to: $0 + w, by: 10)
+            } (max(0, Int(rect.minX / tile) - max(0, ((10 - w) / 2))))).forEach { x in
                 ({
-                    stride(from: $0, to: $0 + h, by: 19)
-                } (max(0, Int(rect.minY / tile) - max(0, ((19 - h) / 2))))).forEach { y in
+                    stride(from: $0, to: $0 + h, by: 10)
+                } (max(0, Int(rect.minY / tile) - max(0, ((10 - h) / 2))))).forEach { y in
                     shots.append({
                         if #available(OSX 10.14, *) {
                             $0.appearance = NSAppearance(named: .darkAqua)
                         }
                         $0.mapType = .standard
-                        $0.size = .init(width: 4864, height: 4864)
-                        $0.mapRect = .init(x: Double(x) * tile, y: Double(y) * tile, width: tile * 19, height: tile * 19)
+                        $0.size = .init(width: 2560, height: 2560)
+                        $0.mapRect = .init(x: Double(x) * tile, y: Double(y) * tile, width: tile * 10, height: tile * 10)
                         return $0
                     } (MKMapSnapshotter.Options()))
                 }
@@ -61,7 +61,8 @@ public final class Factory {
                 print("finished")
                 return
             }
-            self.timer.schedule(deadline: .now() + 30)
+            print(shot.mapRect)
+            self.timer.schedule(deadline: .now() + 20)
             self.shooter = MKMapSnapshotter(options: shot)
             self.shooter!.start(with: self.queue) { [weak self] in
                 self?.timer.schedule(deadline: .distantFuture)
