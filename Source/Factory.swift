@@ -6,7 +6,7 @@ public final class Factory {
     public let id = UUID().uuidString
     var rect = MKMapRect()
     var shots = [MKMapSnapshotter.Options]()
-    var range = (12 ... 20)
+    var range = (13 ... 20)
     private weak var shooter: MKMapSnapshotter?
     private let margin = 0.002
     private let response = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))

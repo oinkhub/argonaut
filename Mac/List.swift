@@ -17,7 +17,7 @@ final class List: NSWindow {
         
         new.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
         new.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
-        new.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        new.widthAnchor.constraint(equalToConstant: 40).isActive = true
         new.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
