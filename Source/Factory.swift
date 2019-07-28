@@ -6,10 +6,11 @@ public final class Factory {
     public let id = UUID().uuidString
     var rect = MKMapRect()
     var shots = [MKMapSnapshotter.Options]()
-    var range = (7 ... 21)
+    var range = (12 ... 20)
     private weak var shooter: MKMapSnapshotter?
     private let margin = 0.002
-    private let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
+    private let response = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
+    private let crop = DispatchQueue(label: "", qos: .default, target: .global(qos: .default))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
     
     public init() {
@@ -54,7 +55,8 @@ public final class Factory {
     }
     
     public func shoot() {
-        queue.async { [weak self] in
+        print("\(shots.count)")
+        DispatchQueue.main.async { [weak self] in
             guard let self = self, let shot = self.shots.last
             else {
                 print("finished")
@@ -64,15 +66,17 @@ public final class Factory {
             self.timer.schedule(deadline: .now() + 30)
             let shooter = MKMapSnapshotter(options: shot)
             self.shooter = shooter
-            shooter.start(with: self.queue) { [weak self] in
+            shooter.start(with: self.response) { [weak self] in
                 self?.timer.schedule(deadline: .distantFuture)
                 do {
                     if let error = $1 {
                         throw error
-                    } else if let image = $0?.image {
-                        let url = URL(fileURLWithPath: NSTemporaryDirectory() + UUID().uuidString + ".png")
-                        try! NSBitmapImageRep(data: image.tiffRepresentation!)!.representation(using: .png, properties: [:])!.write(to: url)
-                        print(url)
+                    } else if let result = $0 {
+                        self?.crop.async {
+                            let url = URL(fileURLWithPath: NSTemporaryDirectory() + UUID().uuidString + ".png")
+                            try! NSBitmapImageRep(cgImage: result.image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!.write(to: url)
+                            print(url)
+                        }
                         self?.shots.removeLast()
                         self?.shoot()
                     } else {
