@@ -41,8 +41,3 @@ final class Scroll: NSScrollView {
 }
 
 final class Flipped: NSView { override var isFlipped: Bool { return true } }
-
-struct Fail: LocalizedError {
-    var errorDescription: String?
-    init(_ message: String) { errorDescription = message }
-}
