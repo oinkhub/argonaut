@@ -9,6 +9,7 @@ public final class Factory {
     var shots = [MKMapSnapshotter.Options]()
     var range = (13 ... 20)
     private weak var shooter: MKMapSnapshotter?
+    private var total = Float()
     private let margin = 0.002
     private let response = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
     private let crop = DispatchQueue(label: "", qos: .default, target: .global(qos: .default))
@@ -36,27 +37,27 @@ public final class Factory {
             let w = Int(ceil(rect.width / tile))
             let h = Int(ceil(rect.height / tile))
             ({
-                stride(from: $0, to: $0 + w, by: 5)
-            } (max(0, Int(rect.minX / tile) - max(0, ((5 - w) / 2))))).forEach { x in
+                stride(from: $0, to: $0 + w, by: 10)
+            } (max(0, Int(rect.minX / tile) - max(0, ((10 - w) / 2))))).forEach { x in
                 ({
-                    stride(from: $0, to: $0 + h, by: 5)
-                } (max(0, Int(rect.minY / tile) - max(0, ((5 - h) / 2))))).forEach { y in
+                    stride(from: $0, to: $0 + h, by: 10)
+                } (max(0, Int(rect.minY / tile) - max(0, ((10 - h) / 2))))).forEach { y in
                     shots.append({
                         if #available(OSX 10.14, *) {
                             $0.appearance = NSAppearance(named: .darkAqua)
                         }
                         $0.mapType = .standard
-                        $0.size = .init(width: 1280, height: 1280)
-                        $0.mapRect = .init(x: Double(x) * tile, y: Double(y) * tile, width: tile * 5, height: tile * 5)
+                        $0.size = .init(width: 2560, height: 2560)
+                        $0.mapRect = .init(x: Double(x) * tile, y: Double(y) * tile, width: tile * 10, height: tile * 10)
                         return $0
                     } (MKMapSnapshotter.Options()))
                 }
             }
         }
+        total = Float(shots.count)
     }
     
     public func shoot() {
-        print("\(shots.count)")
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let shot = self.shots.last
             else {
@@ -64,7 +65,8 @@ public final class Factory {
                 return
             }
             print(shot.mapRect)
-            self.timer.schedule(deadline: .now() + 30)
+            self.progress?((self.total - Float(self.shots.count)) / self.total)
+            self.timer.schedule(deadline: .now() + 6)
             let shooter = MKMapSnapshotter(options: shot)
             self.shooter = shooter
             shooter.start(with: self.response) { [weak self] in

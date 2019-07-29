@@ -1,6 +1,7 @@
 New="New";
 New.save="Save";
 New.distance=" metres";
+Create.retry="Retry";
 Map.mark="Mark";
 Menu.argonaut="Argonaut";
 Menu.about="About";
