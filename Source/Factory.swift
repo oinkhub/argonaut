@@ -3,6 +3,7 @@ import MapKit
 public final class Factory {
     public var plan = [Route]()
     public var error: ((Error) -> Void)?
+    public var progress: ((Float) -> Void)?
     public let id = UUID().uuidString
     var rect = MKMapRect()
     var shots = [MKMapSnapshotter.Options]()
