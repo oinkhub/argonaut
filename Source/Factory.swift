@@ -1,13 +1,20 @@
 import MapKit
 
 public final class Factory {
+    struct Shot {
+        var options = MKMapSnapshotter.Options()
+        var tile = 0
+        var x = 0
+        var y = 0
+    }
+    
     public var plan = [Route]()
     public var error: ((Error) -> Void)?
     public var progress: ((Float) -> Void)?
     public var complete: ((String) -> Void)?
     var rect = MKMapRect()
-    var shots = [MKMapSnapshotter.Options]()
     var range = (13 ... 20)
+    private(set) var shots = [Shot]()
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
     private let margin = 0.002
@@ -20,7 +27,6 @@ public final class Factory {
         timer.resume()
         timer.schedule(deadline: .distantFuture)
         timer.setEventHandler { [weak self] in
-            print("timeout")
             self?.shooter?.cancel()
             DispatchQueue.main.async { [weak self] in self?.error?(Fail("Mapping timed out.")) }
         }
@@ -43,15 +49,17 @@ public final class Factory {
                 ({
                     stride(from: $0, to: $0 + h, by: 10)
                 } (max(0, Int(rect.minY / tile) - max(0, ((10 - h) / 2))))).forEach { y in
-                    shots.append({
-                        if #available(OSX 10.14, *) {
-                            $0.appearance = NSAppearance(named: .darkAqua)
-                        }
-                        $0.mapType = .standard
-                        $0.size = .init(width: 2560, height: 2560)
-                        $0.mapRect = .init(x: Double(x) * tile, y: Double(y) * tile, width: tile * 10, height: tile * 10)
-                        return $0
-                    } (MKMapSnapshotter.Options()))
+                    var shot = Shot()
+                    shot.tile = Int(tile)
+                    shot.x = x
+                    shot.y = y
+                    if #available(OSX 10.14, *) {
+                        shot.options.appearance = NSAppearance(named: .darkAqua)
+                    }
+                    shot.options.mapType = .standard
+                    shot.options.size = .init(width: 2560, height: 2560)
+                    shot.options.mapRect = .init(x: Double(x) * tile, y: Double(y) * tile, width: tile * 10, height: tile * 10)
+                    shots.append(shot)
                 }
             }
         }
@@ -66,10 +74,9 @@ public final class Factory {
                 self.complete?(self.id)
                 return
             }
-            print(shot.mapRect)
             self.progress?((self.total - Float(self.shots.count)) / self.total)
             self.timer.schedule(deadline: .now() + 6)
-            let shooter = MKMapSnapshotter(options: shot)
+            let shooter = MKMapSnapshotter(options: shot.options)
             self.shooter = shooter
             shooter.start(with: self.response) { [weak self] in
                 self?.timer.schedule(deadline: .distantFuture)
@@ -80,7 +87,6 @@ public final class Factory {
                         self?.crop.async {
                             let url = URL(fileURLWithPath: NSTemporaryDirectory() + UUID().uuidString + ".png")
                             try! NSBitmapImageRep(cgImage: result.image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!.write(to: url)
-                            print(url)
                         }
                         self?.shots.removeLast()
                         self?.shoot()
@@ -88,7 +94,6 @@ public final class Factory {
                         throw Fail("Couldn't create map")
                     }
                 } catch let error {
-                    print(error)
                     DispatchQueue.main.async { [weak self] in self?.error?(error) }
                 }
             }
