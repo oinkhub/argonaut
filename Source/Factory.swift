@@ -4,13 +4,14 @@ public final class Factory {
     public var plan = [Route]()
     public var error: ((Error) -> Void)?
     public var progress: ((Float) -> Void)?
-    public let id = UUID().uuidString
+    public var complete: ((String) -> Void)?
     var rect = MKMapRect()
     var shots = [MKMapSnapshotter.Options]()
     var range = (13 ... 20)
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
     private let margin = 0.002
+    private let id = UUID().uuidString
     private let response = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
     private let crop = DispatchQueue(label: "", qos: .default, target: .global(qos: .default))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
@@ -59,9 +60,10 @@ public final class Factory {
     
     public func shoot() {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self, let shot = self.shots.last
+            guard let self = self else { return }
+            guard let shot = self.shots.last
             else {
-                print("finished")
+                self.complete?(self.id)
                 return
             }
             print(shot.mapRect)

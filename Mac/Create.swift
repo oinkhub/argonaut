@@ -64,13 +64,12 @@ final class Create: NSWindow {
             app.alert(.key("Error"), message: $0.localizedDescription)
             self?.button.isHidden = false
         }
+        factory.complete = { Navigate($0).makeKeyAndOrderFront(nil) }
         factory.progress = { [weak self] in self?.progress.constant = CGFloat(398 * $0) }
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.factory.measure()
             self?.factory.divide()
-            DispatchQueue.main.async { [weak self] in
-                self?.retry()
-            }
+            DispatchQueue.main.async { [weak self] in self?.retry() }
         }
     }
     

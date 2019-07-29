@@ -1,5 +1,4 @@
 import Argonaut
-import AppKit
 import MapKit
 
 final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
@@ -604,7 +603,6 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     @objc func out() { map.out() }
     @objc func left() { map.left() }
     @objc func right() { map.right() }
-    @objc func discard() { close() }
     
     @objc func follow() {
         map.follow()
