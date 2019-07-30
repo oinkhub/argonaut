@@ -91,7 +91,12 @@ private(set) weak var app: App!
             $0.submenu!.items = [
                 NSMenuItem(title: .key("Menu.new"), action: #selector(List.new), keyEquivalent: "n"),
                 NSMenuItem.separator(),
-                NSMenuItem(title: .key("Menu.list"), action: #selector(New.handle), keyEquivalent: "l"),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p")),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.list"), action: #selector(New.handle), keyEquivalent: "l")),
                 NSMenuItem(title: .key("Menu.search"), action: #selector(New.search), keyEquivalent: "f"),
                 NSMenuItem.separator(),
                 NSMenuItem(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s")]
@@ -101,8 +106,6 @@ private(set) weak var app: App!
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.map"))
             $0.submenu!.items = [
-                NSMenuItem(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p"),
-                NSMenuItem.separator(),
                 { $0.keyEquivalentModifierMask = [.option, .command]
                     follow = $0
                     follow.state = .on

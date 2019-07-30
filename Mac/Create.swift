@@ -53,8 +53,8 @@ final class Create: NSWindow {
         
         image.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         image.centerYAnchor.constraint(equalTo: contentView!.centerYAnchor).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
         button.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         button.bottomAnchor.constraint(equalTo: base.topAnchor, constant: -10).isActive = true
@@ -64,7 +64,10 @@ final class Create: NSWindow {
             app.alert(.key("Error"), message: $0.localizedDescription)
             self?.button.isHidden = false
         }
-        factory.complete = { Navigate($0).makeKeyAndOrderFront(nil) }
+        factory.complete = {
+            Navigate($0).makeKeyAndOrderFront(nil)
+            
+        }
         factory.progress = { [weak self] in self?.progress.constant = CGFloat(398 * $0) }
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.factory.prepare()

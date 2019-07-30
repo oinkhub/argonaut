@@ -5,12 +5,13 @@ final class Tiler: MKTileOverlay {
     
     init(_ id: String) {
         url = URL(fileURLWithPath: NSTemporaryDirectory() + id)
-        super.init(urlTemplate: "{z}:{x}.{y}")
+        super.init(urlTemplate: "{z}-{x}.{y}")
         canReplaceMapContent = true
-        tileSize = .init(width: 256, height: 256)
+        tileSize = .init(width: 512, height: 512)
     }
     
     override func loadTile(at: MKTileOverlayPath, result: @escaping(Data?, Error?) -> Void) {
+        print(url(forTilePath: at).path)
         result(try? Data(contentsOf: url.appendingPathComponent("\(url(forTilePath: at).path).png")), nil)
     }
 }

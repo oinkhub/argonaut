@@ -14,11 +14,11 @@ public final class Factory {
     public var complete: ((String) -> Void)?
     var rect = MKMapRect()
 //    var range = (13 ... 20)
-    var range = (17 ... 17)
+    var range = [5,10]
     private(set) var shots = [Shot]()
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
-    private let margin = 0.002
+    private let margin = 0.003
     private let id = UUID().uuidString
     private let response = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
     private let crop = DispatchQueue(label: "", qos: .default, target: .global(qos: .default))
@@ -40,23 +40,17 @@ public final class Factory {
     
     public func measure() {
         rect = {{
-            let rect = { .init(x: $0.x, y: $0.y, width: $1.x - $0.x, height: $0.y - $1.y)} (MKMapPoint(.init(latitude: $0.first!.latitude - margin, longitude: $1.first!.longitude - margin)), MKMapPoint(.init(latitude: $0.last!.latitude + margin, longitude: $1.last!.longitude + margin))) as MKMapRect
+            let rect = { .init(x: $0.x, y: $0.y, width: $1.x - $0.x, height: $1.y - $0.y) } (MKMapPoint(.init(latitude: $0.first!.latitude + margin, longitude: $1.first!.longitude - margin)), MKMapPoint(.init(latitude: $0.last!.latitude - margin, longitude: $1.last!.longitude + margin))) as MKMapRect
             return rect
-        } ($0.sorted(by: { $0.latitude < $1.latitude }), $0.sorted(by: { $0.longitude < $1.longitude }))} (plan.flatMap({ $0.path.flatMap({ UnsafeBufferPointer(start: $0.polyline.points(), count: $0.polyline.pointCount).map { $0.coordinate }})}))
+        } ($0.sorted(by: { $0.latitude > $1.latitude }), $0.sorted(by: { $0.longitude < $1.longitude }))} (plan.flatMap({ $0.path.flatMap({ UnsafeBufferPointer(start: $0.polyline.points(), count: $0.polyline.pointCount).map { $0.coordinate }})}))
     }
     
     public func divide() {
-        range.map({ ceil(1 / (Double(1 << $0) / 1048575)) * 256 }).forEach { tile in
-            let w = Int(ceil(rect.width / tile))
-            let h = Int(ceil(rect.height / tile))
-            ({
-                stride(from: $0, to: $0 + w, by: 10)
-            } (max(0, Int(rect.minX / tile) - max(0, ((10 - w) / 2))))).forEach { x in
-                ({
-                    stride(from: $0, to: $0 + h, by: 10)
-                } (max(0, Int(rect.minY / tile) - max(0, ((10 - h) / 2))))).forEach { y in
+        range.map({ ($0, ceil(1 / (Double(1 << $0) / 1048575)) * 256) }).forEach { tile in
+            stride(tile.1, start: rect.minX, length: rect.width).forEach { x in
+                stride(tile.1, start: rect.minY, length: rect.height).forEach { y in
                     var shot = Shot()
-                    shot.tile = Int(tile)
+                    shot.tile = Int(tile.0)
                     shot.x = x
                     shot.y = y
                     if #available(OSX 10.14, *) {
@@ -64,7 +58,7 @@ public final class Factory {
                     }
                     shot.options.mapType = .standard
                     shot.options.size = .init(width: 2560, height: 2560)
-                    shot.options.mapRect = .init(x: Double(x) * tile, y: Double(y) * tile, width: tile * 10, height: tile * 10)
+                    shot.options.mapRect = .init(x: Double(x) * tile.1, y: Double(y) * tile.1, width: tile.1 * 10, height: tile.1 * 10)
                     shots.append(shot)
                 }
             }
@@ -108,10 +102,19 @@ public final class Factory {
             (0 ..< 10).forEach { y in
                 let image = NSImage(size: .init(width: 256, height: 256))
                 image.lockFocus()
-                result.image.draw(in: .init(x: -256 * x, y: -256 * y, width: 256, height: 256))
+                result.image.draw(in: .init(x: 0, y: 0, width: 256, height: 256), from: .init(x: 256 * x, y: 256 * y, width: 256, height: 256), operation: .copy, fraction: 1)
                 image.unlockFocus()
-                try! NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!.write(to: .init(fileURLWithPath: NSTemporaryDirectory() + id + "/\(shot.tile):\(shot.x + x).\(shot.y + y).png"))
+                try! NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!.write(to: .init(fileURLWithPath: NSTemporaryDirectory() + id + "/\(shot.tile)-\(shot.x + x).\(shot.y + 9 - y).png"))
             }
         }
+    }
+    
+    private func stride(_ tile: Double, start: Double, length: Double) -> StrideTo<Int> {
+        return {
+            {
+                let result = Swift.stride(from: max($1 - $2, 0), to: $0 + $1 + $2, by: 10)
+                return result
+            } ($0, Int(start / tile), max(0, ((10 - $0) / 2)))
+        } (Int(ceil(length / tile)))
     }
 }
