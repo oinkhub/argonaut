@@ -13,7 +13,8 @@ public final class Factory {
     public var progress: ((Float) -> Void)?
     public var complete: ((String) -> Void)?
     var rect = MKMapRect()
-    var range = (13 ... 20)
+//    var range = (13 ... 20)
+    var range = (17 ... 17)
     private(set) var shots = [Shot]()
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
@@ -30,6 +31,11 @@ public final class Factory {
             self?.shooter?.cancel()
             DispatchQueue.main.async { [weak self] in self?.error?(Fail("Mapping timed out.")) }
         }
+    }
+    
+    public func prepare() {
+        print(URL(fileURLWithPath: NSTemporaryDirectory() + id))
+        try! FileManager.default.createDirectory(at: URL(fileURLWithPath: NSTemporaryDirectory() + id), withIntermediateDirectories: true)
     }
     
     public func measure() {
@@ -84,10 +90,7 @@ public final class Factory {
                     if let error = $1 {
                         throw error
                     } else if let result = $0 {
-                        self?.crop.async {
-                            let url = URL(fileURLWithPath: NSTemporaryDirectory() + UUID().uuidString + ".png")
-                            try! NSBitmapImageRep(cgImage: result.image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!.write(to: url)
-                        }
+                        self?.crop.async { [weak self] in self?.result(result, shot: shot) }
                         self?.shots.removeLast()
                         self?.shoot()
                     } else {
@@ -96,6 +99,18 @@ public final class Factory {
                 } catch let error {
                     DispatchQueue.main.async { [weak self] in self?.error?(error) }
                 }
+            }
+        }
+    }
+    
+    private func result(_ result: MKMapSnapshotter.Snapshot, shot: Shot) {
+        (0 ..< 10).forEach { x in
+            (0 ..< 10).forEach { y in
+                let image = NSImage(size: .init(width: 256, height: 256))
+                image.lockFocus()
+                result.image.draw(in: .init(x: -256 * x, y: -256 * y, width: 256, height: 256))
+                image.unlockFocus()
+                try! NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!.write(to: .init(fileURLWithPath: NSTemporaryDirectory() + id + "/\(shot.tile):\(shot.x + x).\(shot.y + y).png"))
             }
         }
     }

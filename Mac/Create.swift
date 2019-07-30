@@ -67,6 +67,7 @@ final class Create: NSWindow {
         factory.complete = { Navigate($0).makeKeyAndOrderFront(nil) }
         factory.progress = { [weak self] in self?.progress.constant = CGFloat(398 * $0) }
         DispatchQueue.global(qos: .background).async { [weak self] in
+            self?.factory.prepare()
             self?.factory.measure()
             self?.factory.divide()
             DispatchQueue.main.async { [weak self] in self?.retry() }
