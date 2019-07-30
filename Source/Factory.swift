@@ -14,14 +14,13 @@ public final class Factory {
     public var complete: ((String) -> Void)?
     var rect = MKMapRect()
 //    var range = (13 ... 20)
-    var range = [5,10]
+    var range = [14, 17, 20]
     private(set) var shots = [Shot]()
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
-    private let margin = 0.003
+    private let margin = 0.002
     private let id = UUID().uuidString
-    private let response = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
-    private let crop = DispatchQueue(label: "", qos: .default, target: .global(qos: .default))
+    private let queue = DispatchQueue(label: "", qos: .default, target: .global(qos: .default))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
     
     public init() {
@@ -75,16 +74,26 @@ public final class Factory {
                 return
             }
             self.progress?((self.total - Float(self.shots.count)) / self.total)
-            self.timer.schedule(deadline: .now() + 6)
+            self.timer.schedule(deadline: .now() + 30)
             let shooter = MKMapSnapshotter(options: shot.options)
             self.shooter = shooter
-            shooter.start(with: self.response) { [weak self] in
+            let active = NSApp.isActive
+            print(active)
+            shooter.start(with: active ? self.queue : .main) { [weak self] in
                 self?.timer.schedule(deadline: .distantFuture)
                 do {
                     if let error = $1 {
                         throw error
                     } else if let result = $0 {
-                        self?.crop.async { [weak self] in self?.result(result, shot: shot) }
+                        if active {
+                            self?.queue.async { [weak self] in
+                                self?.result(result, shot: shot)
+                            }
+                        } else {
+                            DispatchQueue.main.async { [weak self] in
+                                self?.result(result, shot: shot)
+                            }
+                        }
                         self?.shots.removeLast()
                         self?.shoot()
                     } else {
@@ -111,10 +120,7 @@ public final class Factory {
     
     private func stride(_ tile: Double, start: Double, length: Double) -> StrideTo<Int> {
         return {
-            {
-                let result = Swift.stride(from: max($1 - $2, 0), to: $0 + $1 + $2, by: 10)
-                return result
-            } ($0, Int(start / tile), max(0, ((10 - $0) / 2)))
-        } (Int(ceil(length / tile)))
+            Swift.stride(from: $0, to: $0 + $1, by: 10)
+        } (Int(start / tile), Int(ceil(length / tile)))
     }
 }

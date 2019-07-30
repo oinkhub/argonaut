@@ -163,7 +163,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     @objc func pin() {
         guard !geocoder.isGeocoding else { return }
-        add(convert(.init(x: frame.midX, y: frame.midY), toCoordinateFrom: self))
+        add(convert(.init(x: bounds.midX, y: bounds.midY + 18.5), toCoordinateFrom: self))
     }
     
     @objc func follow() {
