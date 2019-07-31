@@ -15,11 +15,11 @@ public final class Factory {
     public var complete: ((String) -> Void)?
     var rect = MKMapRect()
     var range = [13, 16, 19]
+    private(set) var data = Data()
     private(set) var shots = [Shot]()
     private(set) var chunks = 0
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
-    private var data = Data()
     private let group = DispatchGroup()
     private let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
     private let margin = 0.001
@@ -110,6 +110,7 @@ public final class Factory {
     }
     
     func chunk(_ bits: Data, tile: Int, x: Int, y: Int) {
+//        withUnsafeBytes(of: UInt8(tile)) { info.append(contentsOf: $0.reversed()) }
         chunks += 1
     }
     
@@ -124,8 +125,13 @@ public final class Factory {
                 image.lockFocus()
                 result.image.draw(in: .init(x: 0, y: 0, width: 256, height: 256), from: .init(x: 256 * x, y: 256 * y, width: 256, height: 256), operation: .copy, fraction: 1)
                 image.unlockFocus()
-                let chunk = NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!
+                
+                /*
+ 
+                let chunk =
                 var info = Data()
+                chunk(NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x + x, y: shot.y + 4 - y)
+                
                 withUnsafeBytes(of: UInt8(shot.tile)) { info.append(contentsOf: $0.reversed()) }
                 withUnsafeBytes(of: UInt32(shot.x + x)) { info.append(contentsOf: $0.reversed()) }
                 withUnsafeBytes(of: UInt32(shot.y + 4 - y)) { info.append(contentsOf: $0.reversed()) }
@@ -133,6 +139,7 @@ public final class Factory {
                 withUnsafeBytes(of: UInt32(chunk.count)) { info.append(contentsOf: $0.reversed()) }
                 data += chunk
                 data.insert(contentsOf: info, at: 0)
+ */
             }
         }
         group.leave()
