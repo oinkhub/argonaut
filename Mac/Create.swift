@@ -75,9 +75,9 @@ final class Create: NSWindow {
             app.alert(.key("Error"), message: $0.localizedDescription)
             self?.button.isHidden = false
         }
-        factory.complete = {
+        factory.complete = { [weak self] in
+            self?.close()
             Navigate($0).makeKeyAndOrderFront(nil)
-            
         }
         factory.progress = { [weak self] in
             self?.progress.constant = CGFloat(230 * $0)

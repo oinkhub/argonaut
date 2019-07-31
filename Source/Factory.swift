@@ -1,4 +1,5 @@
 import MapKit
+import Compression
 
 public final class Factory {
     struct Shot {
@@ -16,8 +17,10 @@ public final class Factory {
     var range = [13, 16, 19]
     private(set) var shots = [Shot]()
     private weak var shooter: MKMapSnapshotter?
+    private var chunks = 0
     private var total = Float()
     private var data = Data()
+    private let group = DispatchGroup()
     private let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
     private let margin = 0.001
     private let id = UUID().uuidString
@@ -29,6 +32,7 @@ public final class Factory {
         timer.schedule(deadline: .distantFuture)
         timer.setEventHandler { [weak self] in
             self?.shooter?.cancel()
+            self?.group.leave()
             DispatchQueue.main.async { [weak self] in self?.error?(Fail("Mapping timed out.")) }
         }
     }
@@ -71,12 +75,13 @@ public final class Factory {
     
     public func shoot() {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            guard let shot = self.shots.last
-            else {
-                self.complete?(self.id)
-                return
+            guard let self = self, let shot = self.shots.last else { return }
+            
+            self.group.enter()
+            if self.shots.count == Int(self.total) {
+                self.group.notify(queue: .global(qos: .background)) { [weak self] in self?.finish() }
             }
+            
             self.progress?((self.total - Float(self.shots.count)) / self.total)
             self.timer.schedule(deadline: .now() + 15)
             let shooter = MKMapSnapshotter(options: shot.options)
@@ -87,6 +92,7 @@ public final class Factory {
                     if let error = $1 {
                         throw error
                     } else if let result = $0 {
+                        self?.group.enter()
                         self?.queue.async { [weak self] in
                             self?.result(result, shot: shot)
                         }
@@ -98,6 +104,7 @@ public final class Factory {
                 } catch let error {
                     DispatchQueue.main.async { [weak self] in self?.error?(error) }
                 }
+                self?.group.leave()
             }
         }
     }
@@ -109,8 +116,39 @@ public final class Factory {
                 image.lockFocus()
                 result.image.draw(in: .init(x: 0, y: 0, width: 256, height: 256), from: .init(x: 256 * x, y: 256 * y, width: 256, height: 256), operation: .copy, fraction: 1)
                 image.unlockFocus()
-                try! NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!.write(to: .init(fileURLWithPath: NSTemporaryDirectory() + id + "/\(shot.tile)-\(shot.x + x).\(shot.y + 4 - y).png"))
+                let chunk = NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!
+                var info = Data()
+                withUnsafeBytes(of: UInt8(shot.tile)) { info.append(contentsOf: $0.reversed()) }
+                withUnsafeBytes(of: UInt32(shot.x + x)) { info.append(contentsOf: $0.reversed()) }
+                withUnsafeBytes(of: UInt32(shot.y + 4 - y)) { info.append(contentsOf: $0.reversed()) }
+                withUnsafeBytes(of: UInt32(data.count)) { info.append(contentsOf: $0.reversed()) }
+                withUnsafeBytes(of: UInt32(chunk.count)) { info.append(contentsOf: $0.reversed()) }
+                data += chunk
+                data.insert(contentsOf: info, at: 0)
+                chunks += 1
             }
+        }
+        group.leave()
+    }
+    
+    private func finish() {
+        print("count: \(chunks)")
+        withUnsafeBytes(of: UInt32(chunks)) { data.insert(contentsOf: $0.reversed(), at: 0) }
+        try! pressed().write(to: url.appendingPathComponent(id + ".argonaut"), options: .atomic)
+        DispatchQueue.main.async { [weak self] in
+            guard let id = self?.id else { return }
+            self?.complete?(id)
+        }
+    }
+    
+    private func pressed() -> Data {
+        return data.withUnsafeBytes {
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
+            let wrote = compression_encode_buffer(buffer, data.count * 10, $0.baseAddress!.bindMemory(to: UInt8.self, capacity: 1),
+                                                  data.count, nil, COMPRESSION_ZLIB)
+            let result = Data(bytes: buffer, count: wrote)
+            buffer.deallocate()
+            return result
         }
     }
     
