@@ -132,7 +132,6 @@ public final class Factory {
     }
     
     private func finish() {
-        print("count: \(chunks)")
         withUnsafeBytes(of: UInt32(chunks)) { data.insert(contentsOf: $0.reversed(), at: 0) }
         try! pressed().write(to: url.appendingPathComponent(id + ".argonaut"), options: .atomic)
         DispatchQueue.main.async { [weak self] in

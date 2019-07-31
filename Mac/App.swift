@@ -110,36 +110,36 @@ private(set) weak var app: App!
                     follow = $0
                     follow.state = .on
                     return $0
-                } (NSMenuItem(title: .key("Menu.follow"), action: #selector(New.follow), keyEquivalent: "f")),
+                } (NSMenuItem(title: .key("Menu.follow"), action: #selector(World.follow), keyEquivalent: "f")),
                 { $0.keyEquivalentModifierMask = [.option, .command]
                     walking = $0
                     walking.state = .on
                     return $0
-                } (NSMenuItem(title: .key("Menu.walking"), action: #selector(New.walking), keyEquivalent: "w")),
+                } (NSMenuItem(title: .key("Menu.walking"), action: #selector(World.walking), keyEquivalent: "w")),
                 { $0.keyEquivalentModifierMask = [.option, .command]
                     driving = $0
                     driving.state = .on
                     return $0
-                } (NSMenuItem(title: .key("Menu.driving"), action: #selector(New.driving), keyEquivalent: "d")),
+                } (NSMenuItem(title: .key("Menu.driving"), action: #selector(World.driving), keyEquivalent: "d")),
                 NSMenuItem.separator(),
                 { $0.keyEquivalentModifierMask = []
                     return $0
-                } (NSMenuItem(title: .key("Menu.in"), action: #selector(New.in), keyEquivalent: "+")),
+                } (NSMenuItem(title: .key("Menu.in"), action: #selector(World.in), keyEquivalent: "+")),
                 { $0.keyEquivalentModifierMask = []
                     return $0
-                } (NSMenuItem(title: .key("Menu.out"), action: #selector(New.out), keyEquivalent: "-")),
+                } (NSMenuItem(title: .key("Menu.out"), action: #selector(World.out), keyEquivalent: "-")),
                 { $0.keyEquivalentModifierMask = []
                     return $0
-                } (NSMenuItem(title: .key("Menu.up"), action: #selector(New.up), keyEquivalent: String(Character(UnicodeScalar(NSUpArrowFunctionKey)!)))),
+                } (NSMenuItem(title: .key("Menu.up"), action: #selector(World.up), keyEquivalent: String(Character(UnicodeScalar(NSUpArrowFunctionKey)!)))),
                 { $0.keyEquivalentModifierMask = []
                     return $0
-                } (NSMenuItem(title: .key("Menu.down"), action: #selector(New.down), keyEquivalent: String(Character(UnicodeScalar(NSDownArrowFunctionKey)!)))),
+                } (NSMenuItem(title: .key("Menu.down"), action: #selector(World.down), keyEquivalent: String(Character(UnicodeScalar(NSDownArrowFunctionKey)!)))),
                 { $0.keyEquivalentModifierMask = []
                     return $0
-                } (NSMenuItem(title: .key("Menu.left"), action: #selector(New.left), keyEquivalent: String(Character(UnicodeScalar(NSLeftArrowFunctionKey)!)))),
+                } (NSMenuItem(title: .key("Menu.left"), action: #selector(World.left), keyEquivalent: String(Character(UnicodeScalar(NSLeftArrowFunctionKey)!)))),
                 { $0.keyEquivalentModifierMask = []
                     return $0
-                } (NSMenuItem(title: .key("Menu.right"), action: #selector(New.right), keyEquivalent: String(Character(UnicodeScalar(NSRightArrowFunctionKey)!))))]
+                } (NSMenuItem(title: .key("Menu.right"), action: #selector(World.right), keyEquivalent: String(Character(UnicodeScalar(NSRightArrowFunctionKey)!))))]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         

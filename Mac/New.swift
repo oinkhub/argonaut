@@ -1,7 +1,7 @@
 import Argonaut
 import MapKit
 
-final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
+final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     @available(OSX 10.11.4, *) private final class Result: NSView {
         var selected: ((CLLocationCoordinate2D) -> Void)?
         var highlighted = false { didSet { layer!.backgroundColor = highlighted ? NSColor.halo.withAlphaComponent(0.4).cgColor : .clear }}
@@ -149,7 +149,6 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    private weak var map: Map!
     private weak var field: Field!
     private weak var list: NSScrollView!
     private weak var results: NSScrollView!
@@ -158,33 +157,10 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var itemsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; itemsBottom.isActive = true } }
     private weak var resultsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; resultsBottom.isActive = true } }
     private weak var totalBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; totalBottom.isActive = true } }
-    private weak var _follow: Button.Image!
-    private weak var _walking: Button.Image!
-    private weak var _driving: Button.Image!
     private var completer: Any?
-    private var formatter: Any!
-    private let dater = DateComponentsFormatter()
     
-    init() {
-        super.init(contentRect: .init(origin: .init(x: app.list.frame.maxX + 4, y: app.list.frame.minY), size: .init(width: 1000, height: 800)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
-        titlebarAppearsTransparent = true
-        titleVisibility = .hidden
-        backgroundColor = .black
-        collectionBehavior = .fullScreenNone
-        isReleasedWhenClosed = false
-        minSize = .init(width: 250, height: 250)
-        toolbar = .init(identifier: "")
-        toolbar!.showsBaselineSeparator = false
-        dater.unitsStyle = .full
-        dater.allowedUnits = [.minute, .hour]
- 
-        if #available(OSX 10.12, *) {
-            let formatter = MeasurementFormatter()
-            formatter.unitStyle = .long
-            formatter.unitOptions = .naturalScale
-            formatter.numberFormatter.maximumFractionDigits = 1
-            self.formatter = formatter
-        }
+    override init() {
+        super.init()
         
         if #available(OSX 10.11.4, *) {
             let completer = MKLocalSearchCompleter()
@@ -192,23 +168,11 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             self.completer = completer
         }
         
-        let map = Map()
-        map.refresh = { [weak self] in self?.refresh() }
-        contentView!.addSubview(map)
-        self.map = map
-        
         let search = NSView()
-        let right = NSView()
-        let left = NSView()
-        let base = NSView()
+        over(search)
         
-        [search, right, left, base].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.wantsLayer = true
-            $0.layer!.backgroundColor = .black
-            $0.layer!.cornerRadius = 4
-            contentView!.addSubview($0)
-        }
+        let base = NSView()
+        over(base)
         
         let results = NSScrollView()
         results.translatesAutoresizingMaskIntoConstraints = false
@@ -263,26 +227,8 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         let handler = Button(self, action: #selector(self.handle))
         contentView!.addSubview(handler)
         
-        let `in` = Button.Image(self, action: #selector(self.in))
-        `in`.image.image = NSImage(named: "in")
-        
-        let out = Button.Image(self, action: #selector(self.out))
-        out.image.image = NSImage(named: "out")
-        
         let pin = Button.Image(self, action: #selector(self.pin))
         pin.image.image = NSImage(named: "pin")
-        
-        let _follow = Button.Image(self, action: #selector(follow))
-        _follow.image.image = NSImage(named: "follow")
-        self._follow = _follow
-        
-        let _walking = Button.Image(self, action: #selector(walking))
-        _walking.image.image = NSImage(named: "walking")
-        self._walking = _walking
-        
-        let _driving = Button.Image(self, action: #selector(driving))
-        _driving.image.image = NSImage(named: "driving")
-        self._driving = _driving
         
         let save = Button.Yes(self, action: #selector(self.save))
         save.label.stringValue = .key("New.save")
@@ -293,31 +239,10 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         contentView!.addSubview(field)
         self.field = field
         
-        var shadows = contentView!.leftAnchor
-        (0 ..< 3).forEach {
-            let shadow = NSView()
-            shadow.translatesAutoresizingMaskIntoConstraints = false
-            shadow.wantsLayer = true
-            shadow.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
-            shadow.layer!.cornerRadius = 8
-            contentView!.addSubview(shadow)
-            
-            shadow.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 11).isActive = true
-            shadow.leftAnchor.constraint(equalTo: shadows, constant: $0 == 0 ? 11 : 4).isActive = true
-            shadow.widthAnchor.constraint(equalToConstant: 16).isActive = true
-            shadow.heightAnchor.constraint(equalToConstant: 16).isActive = true
-            shadows = shadow.rightAnchor
-        }
-        
-        map.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
-        map.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor).isActive = true
-        map.leftAnchor.constraint(equalTo: contentView!.leftAnchor).isActive = true
-        map.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
-        
         search.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         search.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
         search.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 80).isActive = true
-        search.rightAnchor.constraint(lessThanOrEqualTo: right.leftAnchor, constant: -10).isActive = true
+        search.rightAnchor.constraint(lessThanOrEqualTo: tools.leftAnchor, constant: -10).isActive = true
         search.widthAnchor.constraint(equalToConstant: 450).isActive = true
         search.bottomAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
         
@@ -339,14 +264,6 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         handler.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
         handler.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
         
-        right.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
-        right.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
-        right.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        left.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
-        left.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
-        left.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
         save.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: -10).isActive = true
         save.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
         
@@ -354,7 +271,7 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         base.topAnchor.constraint(equalTo: list.topAnchor, constant: -2).isActive = true
         base.heightAnchor.constraint(equalToConstant: 300).isActive = true
         base.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 10).isActive = true
-        base.rightAnchor.constraint(lessThanOrEqualTo: right.leftAnchor, constant: -10).isActive = true
+        base.rightAnchor.constraint(lessThanOrEqualTo: tools.leftAnchor, constant: -10).isActive = true
 
         total.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
         total.rightAnchor.constraint(equalTo: base.rightAnchor).isActive = true
@@ -378,32 +295,10 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         field.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
         field.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
-        var top = right.topAnchor
-        [`in`, out, pin].forEach {
-            right.addSubview($0)
-            
-            $0.topAnchor.constraint(equalTo: top).isActive = true
-            $0.centerXAnchor.constraint(equalTo: right.centerXAnchor).isActive = true
-            $0.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            top = $0.bottomAnchor
-        }
-        right.bottomAnchor.constraint(equalTo: top).isActive = true
-        
-        top = left.topAnchor
-        [_follow, _walking, _driving].forEach {
-            left.addSubview($0)
-            
-            $0.topAnchor.constraint(equalTo: top).isActive = true
-            $0.centerXAnchor.constraint(equalTo: left.centerXAnchor).isActive = true
-            $0.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            top = $0.bottomAnchor
-        }
-        left.bottomAnchor.constraint(equalTo: top).isActive = true
+        tool(pin, top: _out.bottomAnchor)
+        tools.bottomAnchor.constraint(equalTo: pin.bottomAnchor).isActive = true
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.follow()
             self?.field.accepts = true
         }
     }
@@ -460,7 +355,7 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    func refresh() {
+    override func refresh() {
         list.documentView!.subviews.forEach { $0.removeFromSuperview() }
         var previous: Item?
         var walkingDistance = CLLocationDistance()
@@ -544,6 +439,30 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }) { }
     }
     
+    override func up() {
+        if #available(OSX 10.11.4, *), firstResponder === field {
+            var index = results.documentView!.subviews.count - 1
+            if let highlighted = results.documentView!.subviews.firstIndex(where: { ($0 as! Result).highlighted }), highlighted > 0 {
+                index = highlighted - 1
+            }
+            results.documentView!.subviews.enumerated().forEach({ ($0.1 as! Result).highlighted = $0.0 == index })
+        } else {
+            super.up()
+        }
+    }
+    
+    override func down() {
+        if #available(OSX 10.11.4, *), firstResponder === field {
+            var index = 0
+            if let highlighted = results.documentView!.subviews.firstIndex(where: { ($0 as! Result).highlighted }), highlighted < results.documentView!.subviews.count - 1 {
+                index = highlighted + 1
+            }
+            results.documentView!.subviews.enumerated().forEach({ ($0.1 as! Result).highlighted = $0.0 == index })
+        } else {
+            super.down()
+        }
+    }
+    
     func choose() {
         if #available(OSX 10.11.4, *) {
             results.documentView!.subviews.map({ $0 as! Result }).first(where: { $0.highlighted })?.click()
@@ -573,63 +492,8 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }) { }
     }
     
-    @objc func up() {
-        if #available(OSX 10.11.4, *), firstResponder === field {
-            var index = results.documentView!.subviews.count - 1
-            if let highlighted = results.documentView!.subviews.firstIndex(where: { ($0 as! Result).highlighted }), highlighted > 0 {
-                index = highlighted - 1
-            }
-            results.documentView!.subviews.enumerated().forEach({ ($0.1 as! Result).highlighted = $0.0 == index })
-        } else {
-            map.up()
-        }
-    }
-    
-    @objc func down() {
-        if #available(OSX 10.11.4, *), firstResponder === field {
-            var index = 0
-            if let highlighted = results.documentView!.subviews.firstIndex(where: { ($0 as! Result).highlighted }), highlighted < results.documentView!.subviews.count - 1 {
-                index = highlighted + 1
-            }
-            results.documentView!.subviews.enumerated().forEach({ ($0.1 as! Result).highlighted = $0.0 == index })
-        } else {
-            map.down()
-        }
-    }
-    
     @objc func search() { makeFirstResponder(field) }
     @objc func pin() { map.pin() }
-    @objc func `in`() { map.in() }
-    @objc func out() { map.out() }
-    @objc func left() { map.left() }
-    @objc func right() { map.right() }
-    
-    @objc func follow() {
-        map.follow()
-        app.follow.state = map._follow ? .on : .off
-        _follow.image.alphaValue = map._follow ? 1 : 0.6
-    }
-    
-    @objc func walking() {
-        map.walking()
-        app.walking.state = map._walking ? .on : .off
-        _walking.image.alphaValue = map._walking ? 1 : 0.6
-        refresh()
-    }
-    
-    @objc func driving() {
-        map.driving()
-        app.driving.state = map._driving ? .on : .off
-        _driving.image.alphaValue = map._driving ? 1 : 0.6
-        refresh()
-    }
-    
-    private func measure(_ distance: CLLocationDistance) -> String {
-        if #available(OSX 10.12, *) {
-            return (formatter as! MeasurementFormatter).string(from: Measurement(value: distance, unit: UnitLength.meters))
-        }
-        return "\(Int(distance))" + .key("New.distance")
-    }
     
     @objc private func clear() {
         field.string = ""

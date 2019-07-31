@@ -13,6 +13,7 @@
 		CE02CB5622E992D1009F7323 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE02CB5522E992D1009F7323 /* Field.swift */; };
 		CE3CECC222EB224E00425567 /* MockRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3CECC122EB224E00425567 /* MockRoute.swift */; };
 		CE4A547C22D85E1B00125A9C /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A547B22D85E1B00125A9C /* Button.swift */; };
+		CE734F7C22F1A2F7009799BE /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7B22F1A2F7009799BE /* World.swift */; };
 		CE7EACE322E1B9A40082D91C /* Callout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE222E1B9A40082D91C /* Callout.swift */; };
 		CE9301D922EEF9C000EACBD4 /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301D822EEF9C000EACBD4 /* Navigate.swift */; };
 		CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301DA22EF09AF00EACBD4 /* Tiler.swift */; };
@@ -81,6 +82,7 @@
 		CE4A547B22D85E1B00125A9C /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE58E9BE22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE734F7B22F1A2F7009799BE /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
 		CE7EACE222E1B9A40082D91C /* Callout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Callout.swift; sourceTree = "<group>"; };
 		CE7EACE422E1E1620082D91C /* Mark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mark.swift; sourceTree = "<group>"; };
 		CE9301D822EEF9C000EACBD4 /* Navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 				CE0038FD22D72E5B008A8E88 /* List.swift */,
 				CE9301D822EEF9C000EACBD4 /* Navigate.swift */,
 				CEAB0F0722D73C5800320F4F /* New.swift */,
+				CE734F7B22F1A2F7009799BE /* World.swift */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -478,6 +481,7 @@
 				CEAB0F0822D73C5800320F4F /* New.swift in Sources */,
 				CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */,
 				CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */,
+				CE734F7C22F1A2F7009799BE /* World.swift in Sources */,
 				CEE2BF9922EAF5400080C111 /* Create.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
