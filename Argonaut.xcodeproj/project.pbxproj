@@ -14,6 +14,9 @@
 		CE3CECC222EB224E00425567 /* MockRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3CECC122EB224E00425567 /* MockRoute.swift */; };
 		CE4A547C22D85E1B00125A9C /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A547B22D85E1B00125A9C /* Button.swift */; };
 		CE734F7C22F1A2F7009799BE /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7B22F1A2F7009799BE /* World.swift */; };
+		CE734F7E22F1BDAF009799BE /* Blueprint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Blueprint.swift */; };
+		CE734F7F22F1BDAF009799BE /* Blueprint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Blueprint.swift */; };
+		CE734F8122F1BE24009799BE /* TestChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F8022F1BE24009799BE /* TestChunk.swift */; };
 		CE7EACE322E1B9A40082D91C /* Callout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE222E1B9A40082D91C /* Callout.swift */; };
 		CE9301D922EEF9C000EACBD4 /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301D822EEF9C000EACBD4 /* Navigate.swift */; };
 		CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301DA22EF09AF00EACBD4 /* Tiler.swift */; };
@@ -83,6 +86,8 @@
 		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE58E9BE22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE734F7B22F1A2F7009799BE /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
+		CE734F7D22F1BDAF009799BE /* Blueprint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blueprint.swift; sourceTree = "<group>"; };
+		CE734F8022F1BE24009799BE /* TestChunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestChunk.swift; sourceTree = "<group>"; };
 		CE7EACE222E1B9A40082D91C /* Callout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Callout.swift; sourceTree = "<group>"; };
 		CE7EACE422E1E1620082D91C /* Mark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mark.swift; sourceTree = "<group>"; };
 		CE9301D822EEF9C000EACBD4 /* Navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
@@ -234,6 +239,7 @@
 		CEDE110A22D71FA300DD796B /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				CE734F7D22F1BDAF009799BE /* Blueprint.swift */,
 				CEABFA3622ED9401000ABB7E /* Extensions.swift */,
 				CEC5A3C922EAFE3200CE3B07 /* Factory.swift */,
 				CE7EACE422E1E1620082D91C /* Mark.swift */,
@@ -246,9 +252,10 @@
 		CEDE110F22D71FB200DD796B /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				CE3CECC122EB224E00425567 /* MockRoute.swift */,
+				CE734F8022F1BE24009799BE /* TestChunk.swift */,
 				CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */,
 				CEDE111022D71FB200DD796B /* TestSession.swift */,
-				CE3CECC122EB224E00425567 /* MockRoute.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -436,6 +443,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEABFA3722ED9401000ABB7E /* Extensions.swift in Sources */,
+				CE734F7E22F1BDAF009799BE /* Blueprint.swift in Sources */,
 				CEC5A3CA22EAFE3200CE3B07 /* Factory.swift in Sources */,
 				CEC5A3C422EAFADF00CE3B07 /* Route.swift in Sources */,
 				CEC5A3C222EAFADF00CE3B07 /* Mark.swift in Sources */,
@@ -448,6 +456,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEABFA3822ED9401000ABB7E /* Extensions.swift in Sources */,
+				CE734F7F22F1BDAF009799BE /* Blueprint.swift in Sources */,
 				CEC5A3CB22EAFE3200CE3B07 /* Factory.swift in Sources */,
 				CEC5A3C522EAFADF00CE3B07 /* Route.swift in Sources */,
 				CEC5A3C322EAFADF00CE3B07 /* Mark.swift in Sources */,
@@ -459,6 +468,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE734F8122F1BE24009799BE /* TestChunk.swift in Sources */,
 				CEC5A3CD22EAFF7900CE3B07 /* TestFactory.swift in Sources */,
 				CEDE111122D71FB200DD796B /* TestSession.swift in Sources */,
 				CE3CECC222EB224E00425567 /* MockRoute.swift in Sources */,

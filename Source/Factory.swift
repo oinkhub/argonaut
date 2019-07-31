@@ -16,8 +16,8 @@ public final class Factory {
     var rect = MKMapRect()
     var range = [13, 16, 19]
     private(set) var shots = [Shot]()
+    private(set) var chunks = 0
     private weak var shooter: MKMapSnapshotter?
-    private var chunks = 0
     private var total = Float()
     private var data = Data()
     private let group = DispatchGroup()
@@ -109,6 +109,14 @@ public final class Factory {
         }
     }
     
+    func chunk(_ bits: Data, tile: Int, x: Int, y: Int) {
+        chunks += 1
+    }
+    
+    func wrap() {
+        
+    }
+    
     private func result(_ result: MKMapSnapshotter.Snapshot, shot: Shot) {
         (0 ..< 5).forEach { x in
             (0 ..< 5).forEach { y in
@@ -125,7 +133,6 @@ public final class Factory {
                 withUnsafeBytes(of: UInt32(chunk.count)) { info.append(contentsOf: $0.reversed()) }
                 data += chunk
                 data.insert(contentsOf: info, at: 0)
-                chunks += 1
             }
         }
         group.leave()
@@ -134,6 +141,8 @@ public final class Factory {
     private func finish() {
         withUnsafeBytes(of: UInt32(chunks)) { data.insert(contentsOf: $0.reversed(), at: 0) }
         try! pressed().write(to: url.appendingPathComponent(id + ".argonaut"), options: .atomic)
+//        JSONEncoder().encode(plan)
+        
         DispatchQueue.main.async { [weak self] in
             guard let id = self?.id else { return }
             self?.complete?(id)
