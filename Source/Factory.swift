@@ -77,22 +77,14 @@ public final class Factory {
             self.timer.schedule(deadline: .now() + 30)
             let shooter = MKMapSnapshotter(options: shot.options)
             self.shooter = shooter
-            let active = NSApp.isActive
-            print(active)
-            shooter.start(with: active ? self.queue : .main) { [weak self] in
+            shooter.start(with: self.queue) { [weak self] in
                 self?.timer.schedule(deadline: .distantFuture)
                 do {
                     if let error = $1 {
                         throw error
                     } else if let result = $0 {
-                        if active {
-                            self?.queue.async { [weak self] in
-                                self?.result(result, shot: shot)
-                            }
-                        } else {
-                            DispatchQueue.main.async { [weak self] in
-                                self?.result(result, shot: shot)
-                            }
+                        self?.queue.async { [weak self] in
+                            self?.result(result, shot: shot)
                         }
                         self?.shots.removeLast()
                         self?.shoot()

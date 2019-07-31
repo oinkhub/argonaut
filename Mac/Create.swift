@@ -4,15 +4,17 @@ import AppKit
 final class Create: NSWindow {
     private weak var progress: NSLayoutConstraint!
     private weak var button: Button.Yes!
+    private weak var label: Label!
     private let factory = Factory()
     
     init(_ plan: [Route]) {
-        super.init(contentRect: .init(origin: .init(x: app.list.frame.maxX + 4, y: app.list.frame.minY + 400), size: .init(width: 400, height: 400)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar], backing: .buffered, defer: false)
+        super.init(contentRect: .init(origin: .init(x: NSScreen.main!.frame.maxX - 230, y: NSScreen.main!.frame.maxY - 123), size: .init(width: 230, height: 100)), styleMask: [.closable, .docModalWindow, .fullSizeContentView, .titled], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black
         collectionBehavior = .fullScreenNone
         isReleasedWhenClosed = false
+        level = .floating
         toolbar = .init(identifier: "")
         toolbar!.showsBaselineSeparator = false
         
@@ -40,6 +42,12 @@ final class Create: NSWindow {
         contentView!.addSubview(button)
         self.button = button
         
+        let label = Label()
+        label.font = .systemFont(ofSize: 25, weight: .bold)
+        label.textColor = .halo
+        contentView!.addSubview(label)
+        self.label = label
+        
         base.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor).isActive = true
         base.leftAnchor.constraint(equalTo: contentView!.leftAnchor).isActive = true
         base.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
@@ -51,13 +59,16 @@ final class Create: NSWindow {
         self.progress = progress.widthAnchor.constraint(equalToConstant: 0)
         self.progress.isActive = true
         
-        image.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
-        image.centerYAnchor.constraint(equalTo: contentView!.centerYAnchor).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        image.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 16).isActive = true
+        image.bottomAnchor.constraint(equalTo: base.topAnchor, constant: -15).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-        button.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
-        button.bottomAnchor.constraint(equalTo: base.topAnchor, constant: -10).isActive = true
+        button.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -20).isActive = true
+        button.bottomAnchor.constraint(equalTo: base.topAnchor, constant: -14).isActive = true
+        
+        label.centerYAnchor.constraint(equalTo: image.centerYAnchor, constant: 1).isActive = true
+        label.leftAnchor.constraint(equalTo: image.rightAnchor, constant: 10).isActive = true
         
         factory.plan = plan
         factory.error = { [weak self] in
@@ -68,7 +79,11 @@ final class Create: NSWindow {
             Navigate($0).makeKeyAndOrderFront(nil)
             
         }
-        factory.progress = { [weak self] in self?.progress.constant = CGFloat(398 * $0) }
+        factory.progress = { [weak self] in
+            self?.progress.constant = CGFloat(398 * $0)
+            self?.label.stringValue = "\(Int(100 * $0))%"
+        }
+        
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.factory.prepare()
             self?.factory.measure()

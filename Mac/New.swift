@@ -551,8 +551,8 @@ final class New: NSWindow, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     @objc func save() {
-        Create(map.plan).makeKeyAndOrderFront(nil)
         close()
+        Create(map.plan).makeKeyAndOrderFront(nil)
     }
     
     @objc func handle() {
