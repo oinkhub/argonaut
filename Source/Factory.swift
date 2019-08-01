@@ -110,7 +110,14 @@ public final class Factory {
     }
     
     func chunk(_ bits: Data, tile: Int, x: Int, y: Int) {
-//        withUnsafeBytes(of: UInt8(tile)) { info.append(contentsOf: $0.reversed()) }
+        var info = Data()
+        withUnsafeBytes(of: UInt8(tile)) { info += $0 }
+        withUnsafeBytes(of: UInt32(x)) { info += $0 }
+        withUnsafeBytes(of: UInt32(y)) { info += $0 }
+        withUnsafeBytes(of: UInt32(data.count)) { info += $0 }
+        withUnsafeBytes(of: UInt32(bits.count)) { info += $0 }
+        data += bits
+        data.insert(contentsOf: info, at: 0)
         chunks += 1
     }
     
@@ -125,7 +132,7 @@ public final class Factory {
                 image.lockFocus()
                 result.image.draw(in: .init(x: 0, y: 0, width: 256, height: 256), from: .init(x: 256 * x, y: 256 * y, width: 256, height: 256), operation: .copy, fraction: 1)
                 image.unlockFocus()
-                
+                chunk(NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x + x, y: shot.y + 4 - y)
                 /*
  
                 let chunk =
