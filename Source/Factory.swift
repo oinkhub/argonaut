@@ -123,14 +123,7 @@ public final class Factory {
     
     func wrap() -> Data {
         withUnsafeBytes(of: UInt32(chunks)) { data.insert(contentsOf: $0, at: 0) }
-        return data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
-            let wrote = compression_encode_buffer(buffer, data.count * 10, $0.baseAddress!.bindMemory(to: UInt8.self, capacity: 1),
-                                                  data.count, nil, COMPRESSION_ZLIB)
-            let result = Data(bytes: buffer, count: wrote)
-            buffer.deallocate()
-            return result
-        }
+        return Press().code(data)
     }
     
     private func result(_ result: MKMapSnapshotter.Snapshot, shot: Shot) {
