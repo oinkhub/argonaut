@@ -362,7 +362,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         var walkingTime = TimeInterval()
         var drivingDistance = CLLocationDistance()
         var drivingTime = TimeInterval()
-        map.plan.enumerated().forEach {
+        map.plan.route.enumerated().forEach {
             let item = Item($0)
             item.delete = { [weak self] in self?.map.remove($0) }
             list.documentView!.addSubview(item)
@@ -388,7 +388,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         
         total.subviews.forEach { $0.removeFromSuperview() }
         var items = [(String, String, NSColor)]()
-        if map.plan.count > 1 {
+        if map.plan.route.count > 1 {
             if map._walking { items.append(("walking", measure(walkingDistance) + ": " + dater.string(from: walkingTime)!, .walking)) }
             if map._driving { items.append(("driving", measure(drivingDistance) + ": " + dater.string(from: drivingTime)!, .driving)) }
         }

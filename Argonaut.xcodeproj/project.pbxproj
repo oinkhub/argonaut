@@ -14,8 +14,8 @@
 		CE3CECC222EB224E00425567 /* MockRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3CECC122EB224E00425567 /* MockRoute.swift */; };
 		CE4A547C22D85E1B00125A9C /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A547B22D85E1B00125A9C /* Button.swift */; };
 		CE734F7C22F1A2F7009799BE /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7B22F1A2F7009799BE /* World.swift */; };
-		CE734F7E22F1BDAF009799BE /* Blueprint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Blueprint.swift */; };
-		CE734F7F22F1BDAF009799BE /* Blueprint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Blueprint.swift */; };
+		CE734F7E22F1BDAF009799BE /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Plan.swift */; };
+		CE734F7F22F1BDAF009799BE /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Plan.swift */; };
 		CE734F8122F1BE24009799BE /* TestChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F8022F1BE24009799BE /* TestChunk.swift */; };
 		CE7EACE322E1B9A40082D91C /* Callout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE222E1B9A40082D91C /* Callout.swift */; };
 		CE9301D922EEF9C000EACBD4 /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301D822EEF9C000EACBD4 /* Navigate.swift */; };
@@ -53,6 +53,7 @@
 		CEDE111722D7207800DD796B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEDE111522D7207800DD796B /* Localizable.strings */; };
 		CEDE111822D7207800DD796B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEDE111522D7207800DD796B /* Localizable.strings */; };
 		CEE2BF9922EAF5400080C111 /* Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE2BF9822EAF5400080C111 /* Create.swift */; };
+		CEF5514922F2F3D900A16265 /* TestPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5514822F2F3D900A16265 /* TestPlan.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,7 +89,7 @@
 		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE58E9BE22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE734F7B22F1A2F7009799BE /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
-		CE734F7D22F1BDAF009799BE /* Blueprint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blueprint.swift; sourceTree = "<group>"; };
+		CE734F7D22F1BDAF009799BE /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		CE734F8022F1BE24009799BE /* TestChunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestChunk.swift; sourceTree = "<group>"; };
 		CE7EACE222E1B9A40082D91C /* Callout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Callout.swift; sourceTree = "<group>"; };
 		CE7EACE422E1E1620082D91C /* Mark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mark.swift; sourceTree = "<group>"; };
@@ -122,6 +123,7 @@
 		CEDE111922D7209F00DD796B /* Argonaut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argonaut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDE111A22D720A500DD796B /* Argonaut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argonaut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE2BF9822EAF5400080C111 /* Create.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Create.swift; sourceTree = "<group>"; };
+		CEF5514822F2F3D900A16265 /* TestPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPlan.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,10 +244,10 @@
 		CEDE110A22D71FA300DD796B /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				CE734F7D22F1BDAF009799BE /* Blueprint.swift */,
 				CEABFA3622ED9401000ABB7E /* Extensions.swift */,
 				CEC5A3C922EAFE3200CE3B07 /* Factory.swift */,
 				CE7EACE422E1E1620082D91C /* Mark.swift */,
+				CE734F7D22F1BDAF009799BE /* Plan.swift */,
 				CEA1887A22F2C5A000A6F9D4 /* Press.swift */,
 				CE0356E122E479C900FB51E4 /* Route.swift */,
 				CEDE110B22D71FA300DD796B /* Session.swift */,
@@ -259,6 +261,7 @@
 				CE3CECC122EB224E00425567 /* MockRoute.swift */,
 				CE734F8022F1BE24009799BE /* TestChunk.swift */,
 				CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */,
+				CEF5514822F2F3D900A16265 /* TestPlan.swift */,
 				CEDE111022D71FB200DD796B /* TestSession.swift */,
 			);
 			path = Tests;
@@ -447,7 +450,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEABFA3722ED9401000ABB7E /* Extensions.swift in Sources */,
-				CE734F7E22F1BDAF009799BE /* Blueprint.swift in Sources */,
+				CE734F7E22F1BDAF009799BE /* Plan.swift in Sources */,
 				CEA1887B22F2C5A000A6F9D4 /* Press.swift in Sources */,
 				CEC5A3CA22EAFE3200CE3B07 /* Factory.swift in Sources */,
 				CEC5A3C422EAFADF00CE3B07 /* Route.swift in Sources */,
@@ -461,7 +464,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEABFA3822ED9401000ABB7E /* Extensions.swift in Sources */,
-				CE734F7F22F1BDAF009799BE /* Blueprint.swift in Sources */,
+				CE734F7F22F1BDAF009799BE /* Plan.swift in Sources */,
 				CEA1887C22F2C5A000A6F9D4 /* Press.swift in Sources */,
 				CEC5A3CB22EAFE3200CE3B07 /* Factory.swift in Sources */,
 				CEC5A3C522EAFADF00CE3B07 /* Route.swift in Sources */,
@@ -477,6 +480,7 @@
 				CE734F8122F1BE24009799BE /* TestChunk.swift in Sources */,
 				CEC5A3CD22EAFF7900CE3B07 /* TestFactory.swift in Sources */,
 				CEDE111122D71FB200DD796B /* TestSession.swift in Sources */,
+				CEF5514922F2F3D900A16265 /* TestPlan.swift in Sources */,
 				CE3CECC222EB224E00425567 /* MockRoute.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

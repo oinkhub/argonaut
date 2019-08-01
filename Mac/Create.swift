@@ -5,9 +5,10 @@ final class Create: NSWindow {
     private weak var progress: NSLayoutConstraint!
     private weak var button: Button.Yes!
     private weak var label: Label!
-    private let factory = Factory()
+    private let factory: Factory
     
-    init(_ plan: [Route]) {
+    init(_ plan: Plan) {
+        factory = .init(plan)
         super.init(contentRect: .init(origin: .init(x: NSScreen.main!.frame.maxX - 230, y: NSScreen.main!.frame.maxY - 123), size: .init(width: 230, height: 100)), styleMask: [.closable, .docModalWindow, .fullSizeContentView, .titled], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
@@ -70,7 +71,6 @@ final class Create: NSWindow {
         label.centerYAnchor.constraint(equalTo: image.centerYAnchor, constant: 1).isActive = true
         label.leftAnchor.constraint(equalTo: image.rightAnchor, constant: 10).isActive = true
         
-        factory.plan = plan
         factory.error = { [weak self] in
             app.alert(.key("Error"), message: $0.localizedDescription)
             self?.button.isHidden = false

@@ -6,7 +6,7 @@ final class TestChunk: XCTestCase {
     private var factory: Factory!
     
     override func setUp() {
-        factory = Factory()
+        factory = .init(.init())
     }
     
     func testAdd() {
@@ -46,8 +46,7 @@ final class TestChunk: XCTestCase {
             buffer.deallocate()
             return result
         } as Data
-        XCTAssertEqual(1, unwrapped.subdata(in: 0 ..< 4).withUnsafeBytes({
-            $0.baseAddress!.bindMemory(to: UInt32.self, capacity: 1).pointee }))
+        XCTAssertEqual(1, unwrapped.subdata(in: 0 ..< 4).withUnsafeBytes({ $0.baseAddress!.bindMemory(to: UInt32.self, capacity: 1).pointee }))
         XCTAssertEqual(99, unwrapped[4])
     }
 }

@@ -1,5 +1,4 @@
 import MapKit
-import Compression
 
 public final class Factory {
     struct Shot {
@@ -9,10 +8,10 @@ public final class Factory {
         var y = 0
     }
     
-    public var plan = [Route]()
     public var error: ((Error) -> Void)?
     public var progress: ((Float) -> Void)?
     public var complete: ((String) -> Void)?
+    public let plan: Plan
     var rect = MKMapRect()
     var range = [13, 16, 19]
     private(set) var data = Data()
@@ -27,7 +26,8 @@ public final class Factory {
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
     
-    public init() {
+    public init(_ plan: Plan) {
+        self.plan = plan
         timer.resume()
         timer.schedule(deadline: .distantFuture)
         timer.setEventHandler { [weak self] in
@@ -49,7 +49,7 @@ public final class Factory {
         rect = {{
             let rect = { .init(x: $0.x, y: $0.y, width: $1.x - $0.x, height: $1.y - $0.y) } (MKMapPoint(.init(latitude: $0.first!.latitude + margin, longitude: $1.first!.longitude - margin)), MKMapPoint(.init(latitude: $0.last!.latitude - margin, longitude: $1.last!.longitude + margin))) as MKMapRect
             return rect
-        } ($0.sorted(by: { $0.latitude > $1.latitude }), $0.sorted(by: { $0.longitude < $1.longitude }))} (plan.flatMap({ $0.path.flatMap({ UnsafeBufferPointer(start: $0.polyline.points(), count: $0.polyline.pointCount).map { $0.coordinate }})}))
+        } ($0.sorted(by: { $0.latitude > $1.latitude }), $0.sorted(by: { $0.longitude < $1.longitude }))} (plan.route.flatMap({ $0.path.flatMap({ UnsafeBufferPointer(start: $0.polyline.points(), count: $0.polyline.pointCount).map { $0.coordinate }})}))
     }
     
     public func divide() {

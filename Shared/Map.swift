@@ -3,10 +3,10 @@ import MapKit
 
 final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
-    private(set) var plan = [Route]()
     private(set) var _follow = true
     private(set) var _walking = true
     private(set) var _driving = true
+    let plan = Plan()
     private let geocoder = CLGeocoder()
     
     required init?(coder: NSCoder) { return nil }
@@ -71,7 +71,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         } else if let polyline = rendererFor as? MKPolyline {
             let renderer = MKPolylineRenderer(polyline: polyline)
             renderer.lineWidth = 8
-            renderer.strokeColor = plan.contains(where: { $0.path.first(where: { $0.polyline == polyline })?.transportType == .automobile }) ? .driving : .walking
+            renderer.strokeColor = plan.route.contains(where: { $0.path.first(where: { $0.polyline == polyline })?.transportType == .automobile }) ? .driving : .walking
             renderer.lineCap = .round
             return renderer
         } else {
@@ -85,7 +85,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         if didSelect.annotation is MKUserLocation {
             Callout.User(didSelect)
         } else {
-            Callout.Item(didSelect, index: "\(plan.firstIndex(where: { $0.mark === didSelect.annotation as! Mark })! + 1)")
+            Callout.Item(didSelect, index: "\(plan.route.firstIndex(where: { $0.mark === didSelect.annotation as! Mark })! + 1)")
         }
     }
     
@@ -96,9 +96,9 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func add(_ coordinate: CLLocationCoordinate2D) {
-        if !plan.contains(where: { $0.mark.coordinate.latitude == coordinate.latitude && $0.mark.coordinate.longitude == coordinate.longitude }) {
+        if !plan.route.contains(where: { $0.mark.coordinate.latitude == coordinate.latitude && $0.mark.coordinate.longitude == coordinate.longitude }) {
             let route = Route(coordinate)
-            plan.append(route)
+            plan.route.append(route)
             addAnnotation(route.mark)
             selectAnnotation(route.mark, animated: true)
             locate(route.mark)
@@ -109,16 +109,16 @@ final class Map: MKMapView, MKMapViewDelegate {
         selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
         removeAnnotation(route.mark)
         DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let self = self, let index = self.plan.firstIndex(where: { $0 === route }) else { return }
+            guard let self = self, let index = self.plan.route.firstIndex(where: { $0 === route }) else { return }
             self.removeOverlays(route.path.map({ $0.polyline }))
             if index > 0 {
-                if index < self.plan.count - 1 {
-                    self.direction(self.plan[index - 1], destination: self.plan[index + 1].mark)
+                if index < self.plan.route.count - 1 {
+                    self.direction(self.plan.route[index - 1], destination: self.plan.route[index + 1].mark)
                 } else {
-                    self.removeOverlays(self.plan[index - 1].path.map({ $0.polyline }))
+                    self.removeOverlays(self.plan.route[index - 1].path.map({ $0.polyline }))
                 }
             }
-            self.plan.remove(at: index)
+            self.plan.route.remove(at: index)
             DispatchQueue.main.async { [weak self] in self?.refresh() }
         }
     }
@@ -194,12 +194,12 @@ final class Map: MKMapView, MKMapViewDelegate {
                     self.refresh()
                     DispatchQueue.global(qos: .background).async { [weak self] in
                         guard let self = self else { return }
-                        if let index = self.plan.firstIndex(where: { $0.mark === mark }) {
+                        if let index = self.plan.route.firstIndex(where: { $0.mark === mark }) {
                             if index > 0 {
-                                self.direction(self.plan[index - 1], destination: mark)
+                                self.direction(self.plan.route[index - 1], destination: mark)
                             }
-                            if index < self.plan.count - 1 {
-                                self.direction(self.plan[index], destination: self.plan[index + 1].mark)
+                            if index < self.plan.route.count - 1 {
+                                self.direction(self.plan.route[index], destination: self.plan.route[index + 1].mark)
                             }
                         }
                     }
@@ -235,7 +235,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     private func filter() {
         removeOverlays(overlays)
-        plan.forEach {
+        plan.route.forEach {
             $0.path.filter({
                 switch $0.transportType {
                 case .automobile: return _driving
