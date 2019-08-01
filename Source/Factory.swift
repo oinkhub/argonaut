@@ -121,8 +121,16 @@ public final class Factory {
         chunks += 1
     }
     
-    func wrap() {
-        
+    func wrap() -> Data {
+        withUnsafeBytes(of: UInt32(chunks)) { data.insert(contentsOf: $0, at: 0) }
+        return data.withUnsafeBytes {
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
+            let wrote = compression_encode_buffer(buffer, data.count * 10, $0.baseAddress!.bindMemory(to: UInt8.self, capacity: 1),
+                                                  data.count, nil, COMPRESSION_ZLIB)
+            let result = Data(bytes: buffer, count: wrote)
+            buffer.deallocate()
+            return result
+        }
     }
     
     private func result(_ result: MKMapSnapshotter.Snapshot, shot: Shot) {
@@ -133,44 +141,18 @@ public final class Factory {
                 result.image.draw(in: .init(x: 0, y: 0, width: 256, height: 256), from: .init(x: 256 * x, y: 256 * y, width: 256, height: 256), operation: .copy, fraction: 1)
                 image.unlockFocus()
                 chunk(NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x + x, y: shot.y + 4 - y)
-                /*
- 
-                let chunk =
-                var info = Data()
-                chunk(NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x + x, y: shot.y + 4 - y)
-                
-                withUnsafeBytes(of: UInt8(shot.tile)) { info.append(contentsOf: $0.reversed()) }
-                withUnsafeBytes(of: UInt32(shot.x + x)) { info.append(contentsOf: $0.reversed()) }
-                withUnsafeBytes(of: UInt32(shot.y + 4 - y)) { info.append(contentsOf: $0.reversed()) }
-                withUnsafeBytes(of: UInt32(data.count)) { info.append(contentsOf: $0.reversed()) }
-                withUnsafeBytes(of: UInt32(chunk.count)) { info.append(contentsOf: $0.reversed()) }
-                data += chunk
-                data.insert(contentsOf: info, at: 0)
- */
             }
         }
         group.leave()
     }
     
     private func finish() {
-        withUnsafeBytes(of: UInt32(chunks)) { data.insert(contentsOf: $0.reversed(), at: 0) }
-        try! pressed().write(to: url.appendingPathComponent(id + ".argonaut"), options: .atomic)
+        try! wrap().write(to: url.appendingPathComponent(id + ".argonaut"), options: .atomic)
 //        JSONEncoder().encode(plan)
         
         DispatchQueue.main.async { [weak self] in
             guard let id = self?.id else { return }
             self?.complete?(id)
-        }
-    }
-    
-    private func pressed() -> Data {
-        return data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
-            let wrote = compression_encode_buffer(buffer, data.count * 10, $0.baseAddress!.bindMemory(to: UInt8.self, capacity: 1),
-                                                  data.count, nil, COMPRESSION_ZLIB)
-            let result = Data(bytes: buffer, count: wrote)
-            buffer.deallocate()
-            return result
         }
     }
     
