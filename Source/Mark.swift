@@ -1,6 +1,6 @@
 import MapKit
 
 public final class Mark: NSObject, MKAnnotation {
-    public var name = ""
-    public var coordinate = CLLocationCoordinate2D()
+    public weak var path: Plan.Path!
+    public var coordinate: CLLocationCoordinate2D { get { .init(latitude: path.latitude, longitude: path.longitude) } }
 }

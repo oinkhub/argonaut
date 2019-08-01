@@ -105,7 +105,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func remove(_ route: Route) {
+    func remove(_ path: Plan.Path) {
         selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
         removeAnnotation(route.mark)
         DispatchQueue.global(qos: .background).async { [weak self] in
@@ -194,7 +194,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                     self.refresh()
                     DispatchQueue.global(qos: .background).async { [weak self] in
                         guard let self = self else { return }
-                        if let index = self.plan.route.firstIndex(where: { $0.mark === mark }) {
+                        if let index = self.plan.path.firstIndex(where: { $0 === mark.path }) {
                             if index > 0 {
                                 self.direction(self.plan.route[index - 1], destination: mark)
                             }
@@ -235,14 +235,14 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     private func filter() {
         removeOverlays(overlays)
-        plan.route.forEach {
-            $0.path.filter({
-                switch $0.transportType {
-                case .automobile: return _driving
+        plan.path.forEach {
+            $0.options.filter({
+                switch $0.mode {
+                case .driving: return _driving
                 case .walking: return _walking
                 default: return false
                 }
-            }).forEach({ addOverlay($0.polyline, level: .aboveLabels) })
+            }).forEach({ addOverlay(MKPolyline(coordinates: $0.points.map({ CLLocationCoordinate2D(latitude: $0.0, longitude: $0.1) }), count: $0.points.count), level: .aboveLabels) })
         }
     }
 }

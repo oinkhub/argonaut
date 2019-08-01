@@ -78,21 +78,21 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     private final class Item: NSView {
-        weak var route: Route?
-        var delete: ((Route) -> Void)?
+        weak var path: Plan.Path?
+        var delete: ((Plan.Path) -> Void)?
         private weak var top: NSLayoutYAxisAnchor!
         private weak var bottom: NSLayoutConstraint! { didSet { oldValue.isActive = false; bottom.isActive = true } }
         
         required init?(coder: NSCoder) { return nil }
-        init(_ route: (Int, Route)) {
-            self.route = route.1
+        init(_ path: (Int, Plan.Path)) {
+            self.path = path.1
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             
             let title = Label()
             title.attributedStringValue = {
-                $0.append(NSAttributedString(string: "\(route.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .bold), .foregroundColor: NSColor.halo]))
-                $0.append(NSAttributedString(string: route.1.mark.name, attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .medium), .foregroundColor: NSColor.white]))
+                $0.append(NSAttributedString(string: "\(path.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .bold), .foregroundColor: NSColor.halo]))
+                $0.append(NSAttributedString(string: path.1.name, attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .medium), .foregroundColor: NSColor.white]))
                 return $0
             } (NSMutableAttributedString())
             addSubview(title)
@@ -144,8 +144,8 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }
         
         @objc private func remove() {
-            guard let route = self.route else { return }
-            delete?(route)
+            guard let path = self.path else { return }
+            delete?(path)
         }
     }
     
@@ -362,7 +362,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         var walkingTime = TimeInterval()
         var drivingDistance = CLLocationDistance()
         var drivingTime = TimeInterval()
-        map.plan.route.enumerated().forEach {
+        map.plan.path.enumerated().forEach {
             let item = Item($0)
             item.delete = { [weak self] in self?.map.remove($0) }
             list.documentView!.addSubview(item)
@@ -372,15 +372,15 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.documentView!.topAnchor).isActive = true
             
             if previous != nil {
-                if map._walking, let _walking = previous!.route?.path.first(where: { $0.transportType == .walking }) {
+                if map._walking, let _walking = previous!.path?.options.first(where: { $0.mode == .walking }) {
                     walkingDistance += _walking.distance
-                    walkingTime += _walking.expectedTravelTime
-                    previous!.walking(measure(_walking.distance) + ": " + dater.string(from: _walking.expectedTravelTime)!)
+                    walkingTime += _walking.duration
+                    previous!.walking(measure(_walking.distance) + ": " + dater.string(from: _walking.duration)!)
                 }
-                if map._driving, let _driving = previous!.route?.path.first(where: { $0.transportType == .automobile }) {
+                if map._driving, let _driving = previous!.path?.options.first(where: { $0.mode == .driving }) {
                     drivingDistance += _driving.distance
-                    drivingTime += _driving.expectedTravelTime
-                    previous!.driving(measure(_driving.distance) + ": " + dater.string(from: _driving.expectedTravelTime)!)
+                    drivingTime += _driving.duration
+                    previous!.driving(measure(_driving.distance) + ": " + dater.string(from: _driving.duration)!)
                 }
             }
             previous = item
@@ -388,7 +388,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         
         total.subviews.forEach { $0.removeFromSuperview() }
         var items = [(String, String, NSColor)]()
-        if map.plan.route.count > 1 {
+        if map.plan.path.count > 1 {
             if map._walking { items.append(("walking", measure(walkingDistance) + ": " + dater.string(from: walkingTime)!, .walking)) }
             if map._driving { items.append(("driving", measure(drivingDistance) + ": " + dater.string(from: drivingTime)!, .driving)) }
         }

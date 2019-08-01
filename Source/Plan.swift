@@ -13,7 +13,7 @@ public final class Plan {
         public var points = [(Double, Double)]()
     }
     
-    public struct Path {
+    public final class Path {
         public var name = ""
         public var latitude = 0.0
         public var longitude = 0.0
@@ -21,7 +21,6 @@ public final class Plan {
     }
     
     public var path = [Path]()
-    public var route = [Route]()
     
     public init() { }
     
