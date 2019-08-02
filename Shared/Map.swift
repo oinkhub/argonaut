@@ -69,7 +69,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         if let tiler = rendererFor as? MKTileOverlay {
             return MKTileOverlayRenderer(tileOverlay: tiler)
         } else if let line = rendererFor as? Line {
-            let renderer = MKPolylineRenderer(overlay: line)
+            let renderer = MKOverlayPathRenderer(overlay: line)
             renderer.lineWidth = 8
             renderer.strokeColor = line.option.mode == .walking ? .walking : .driving
             renderer.lineCap = .round

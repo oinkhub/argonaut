@@ -38,6 +38,8 @@
 		CEC5A3CB22EAFE3200CE3B07 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5A3C922EAFE3200CE3B07 /* Factory.swift */; };
 		CEC5A3CD22EAFF7900CE3B07 /* TestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */; };
 		CEC5A3CE22EAFFAB00CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BD22D721C500EF2447 /* libArgonaut.a */; };
+		CECECD7C22F469F2006AE0C8 /* Liner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECECD7B22F469F2006AE0C8 /* Liner.swift */; };
+		CECECD7D22F469F2006AE0C8 /* Liner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECECD7B22F469F2006AE0C8 /* Liner.swift */; };
 		CEDE10FD22D71F2400DD796B /* iOS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10F922D71F2400DD796B /* iOS.storyboard */; };
 		CEDE10FE22D71F2400DD796B /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE10FB22D71F2400DD796B /* App.swift */; };
 		CEDE10FF22D71F2400DD796B /* iOS.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10FC22D71F2400DD796B /* iOS.xcassets */; };
@@ -102,6 +104,7 @@
 		CEABFA3622ED9401000ABB7E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CEC5A3C922EAFE3200CE3B07 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFactory.swift; sourceTree = "<group>"; };
+		CECECD7B22F469F2006AE0C8 /* Liner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Liner.swift; sourceTree = "<group>"; };
 		CEDE10F322D71C2D00DD796B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CEDE10F422D71C2D00DD796B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CEDE10F522D71C2D00DD796B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -239,6 +242,7 @@
 				CE7EACE422E1E1620082D91C /* Mark.swift */,
 				CEDE110722D71F5300DD796B /* Shared.swift */,
 				CE9301DA22EF09AF00EACBD4 /* Tiler.swift */,
+				CECECD7B22F469F2006AE0C8 /* Liner.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -497,6 +501,7 @@
 				CEAB0F0822D73C5800320F4F /* New.swift in Sources */,
 				CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */,
 				CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */,
+				CECECD7C22F469F2006AE0C8 /* Liner.swift in Sources */,
 				CE734F7C22F1A2F7009799BE /* World.swift in Sources */,
 				CE26CE0622F4679C0007441D /* Line.swift in Sources */,
 				CEE2BF9922EAF5400080C111 /* Create.swift in Sources */,
@@ -512,6 +517,7 @@
 				CEAB0F0B22D742D900320F4F /* Map.swift in Sources */,
 				CE9301DC22EF09AF00EACBD4 /* Tiler.swift in Sources */,
 				CE26CE0822F467AA0007441D /* Line.swift in Sources */,
+				CECECD7D22F469F2006AE0C8 /* Liner.swift in Sources */,
 				CEDE110922D71F5300DD796B /* Shared.swift in Sources */,
 				CE26CE0722F467A40007441D /* Mark.swift in Sources */,
 			);
