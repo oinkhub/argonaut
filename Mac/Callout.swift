@@ -30,7 +30,7 @@ class Callout: NSView {
             let title = Label()
             title.font = .systemFont(ofSize: 12, weight: .light)
             title.textColor = .black
-            title.stringValue = (view.annotation as! Mark).name
+            title.stringValue = (view.annotation as! Mark).path.name
             base.addSubview(title)
             self.title = title
             
