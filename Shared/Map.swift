@@ -69,7 +69,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         if let tiler = rendererFor as? MKTileOverlay {
             return MKTileOverlayRenderer(tileOverlay: tiler)
         } else if let line = rendererFor as? Line {
-            let renderer = MKPolylineRenderer(polyline: line)
+            let renderer = MKPolylineRenderer(overlay: line)
             renderer.lineWidth = 8
             renderer.strokeColor = line.option.mode == .walking ? .walking : .driving
             renderer.lineCap = .round
@@ -238,6 +238,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 self?.refresh()
                 if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
                     self?.addOverlays(path.options.map { Line(path, option: $0) }, level: .aboveLabels)
+                    print(self?.overlays.count)
                 }
             }
         }
