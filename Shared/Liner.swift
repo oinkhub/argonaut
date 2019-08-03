@@ -7,16 +7,17 @@ final class Liner: MKOverlayRenderer {
     init(_ line: Line) {
         color = line.option.mode == .walking ? .walking : .driving
         super.init(overlay: line)
-        path.move(to: point(for: .init(line.coordinate)))
         path.addLines(between: line.point.map(point(for:)))
     }
     
-    override func draw(_: MKMapRect, zoomScale: MKZoomScale, in: CGContext) {
-        `in`.setLineWidth(MKRoadWidthAtZoomScale(zoomScale) * 2)
-        `in`.setStrokeColor(color.cgColor)
-        `in`.setLineCap(.round)
-        `in`.setLineJoin(.round)
-        `in`.addPath(path)
-        `in`.drawPath(using: .stroke)
+    override func draw(_: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
+        let size = MKRoadWidthAtZoomScale(zoomScale)
+        context.setLineWidth(size * 2)
+        context.setStrokeColor(color.cgColor)
+        context.setLineCap(.round)
+        context.setLineJoin(.round)
+        context.setShadow(offset: .init(width: size, height: size), blur: size)
+        context.addPath(path)
+        context.drawPath(using: .stroke)
     }
 }
