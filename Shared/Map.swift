@@ -69,11 +69,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         if let tiler = rendererFor as? MKTileOverlay {
             return MKTileOverlayRenderer(tileOverlay: tiler)
         } else if let line = rendererFor as? Line {
-            let renderer = MKOverlayPathRenderer(overlay: line)
-            renderer.lineWidth = 8
-            renderer.strokeColor = line.option.mode == .walking ? .walking : .driving
-            renderer.lineCap = .round
-            return renderer
+            return Liner(line)
         } else {
             return MKOverlayRenderer()
         }
@@ -237,8 +233,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 }
                 self?.refresh()
                 if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
-                    self?.addOverlays(path.options.map { Line(path, option: $0) }, level: .aboveLabels)
-                    print(self?.overlays.count)
+                    self?.addOverlays(path.options.map { Line(path, option: $0) }, level: .aboveRoads)
                 }
             }
         }
@@ -246,7 +241,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     private func filter() {
         removeOverlays(overlays)
-        addOverlays(plan.path.flatMap { path in path.options.compactMap { $0.mode == .walking && _walking || $0.mode == .driving && _driving ? Line(path, option: $0) : nil } }, level: .aboveLabels)
+        addOverlays(plan.path.flatMap { path in path.options.compactMap { $0.mode == .walking && _walking || $0.mode == .driving && _driving ? Line(path, option: $0) : nil } }, level: .aboveRoads)
     }
     
     private func remove(overlays: Plan.Path) {

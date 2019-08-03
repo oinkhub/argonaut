@@ -238,11 +238,11 @@
 			isa = PBXGroup;
 			children = (
 				CE26CDF822F4039F0007441D /* Line.swift */,
+				CECECD7B22F469F2006AE0C8 /* Liner.swift */,
 				CEAB0F0922D742D900320F4F /* Map.swift */,
 				CE7EACE422E1E1620082D91C /* Mark.swift */,
 				CEDE110722D71F5300DD796B /* Shared.swift */,
 				CE9301DA22EF09AF00EACBD4 /* Tiler.swift */,
-				CECECD7B22F469F2006AE0C8 /* Liner.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
