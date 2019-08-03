@@ -7,11 +7,12 @@ final class TestFactory: XCTestCase {
     
     override func setUp() {
         factory = .init(.init())
-        factory.plan.route = [.init(.init())]
     }
     
     func testMeasure() {
-        factory.plan.route[0].path = [MockRoute([(-50, 60), (70, -80), (-30, 20), (82, -40)])]
+        factory.plan.path = [.init()]
+        factory.plan.path[0].options = [.init()]
+        factory.plan.path[0].options[0].points = [(-50, 60), (70, -80), (-30, 20), (82, -40)]
         factory.measure()
         XCTAssertEqual(-80.001, factory.rect.origin.coordinate.longitude, accuracy: 0.00001)
         XCTAssertEqual(82.001, factory.rect.origin.coordinate.latitude, accuracy: 0.00001)

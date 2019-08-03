@@ -4,7 +4,7 @@ final class Tiler: MKTileOverlay {
     private let url: URL
     
     init(_ id: String) {
-        url = URL(fileURLWithPath: NSTemporaryDirectory() + id)
+        url = .init(fileURLWithPath: NSTemporaryDirectory() + id)
         super.init(urlTemplate: "{z}-{x}.{y}")
         canReplaceMapContent = true
         tileSize = .init(width: 512, height: 512)

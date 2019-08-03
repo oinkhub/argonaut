@@ -17,7 +17,6 @@
 		CE26CE0822F467AA0007441D /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE26CDF822F4039F0007441D /* Line.swift */; };
 		CE3978A022F5B1E60045E1D7 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE39789F22F5B1E60045E1D7 /* Marker.swift */; };
 		CE3978A122F5B1E60045E1D7 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE39789F22F5B1E60045E1D7 /* Marker.swift */; };
-		CE3CECC222EB224E00425567 /* MockRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3CECC122EB224E00425567 /* MockRoute.swift */; };
 		CE4A547C22D85E1B00125A9C /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A547B22D85E1B00125A9C /* Button.swift */; };
 		CE734F7C22F1A2F7009799BE /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7B22F1A2F7009799BE /* World.swift */; };
 		CE734F7E22F1BDAF009799BE /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Plan.swift */; };
@@ -89,7 +88,6 @@
 		CE02CB5522E992D1009F7323 /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		CE26CDF822F4039F0007441D /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		CE39789F22F5B1E60045E1D7 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
-		CE3CECC122EB224E00425567 /* MockRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRoute.swift; sourceTree = "<group>"; };
 		CE4A547B22D85E1B00125A9C /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE58E9BE22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -266,7 +264,6 @@
 		CEDE110F22D71FB200DD796B /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				CE3CECC122EB224E00425567 /* MockRoute.swift */,
 				CE734F8022F1BE24009799BE /* TestChunk.swift */,
 				CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */,
 				CEF5514822F2F3D900A16265 /* TestPlan.swift */,
@@ -485,7 +482,6 @@
 				CEC5A3CD22EAFF7900CE3B07 /* TestFactory.swift in Sources */,
 				CEDE111122D71FB200DD796B /* TestSession.swift in Sources */,
 				CEF5514922F2F3D900A16265 /* TestPlan.swift in Sources */,
-				CE3CECC222EB224E00425567 /* MockRoute.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
