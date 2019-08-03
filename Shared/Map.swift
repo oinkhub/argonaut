@@ -223,7 +223,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         request.destination = MKMapItem(placemark: MKPlacemark(coordinate: .init(latitude: destination.latitude, longitude: destination.longitude), addressDictionary: nil))
         MKDirections(request: request).calculate { [weak self] in
             if $1 == nil, let paths = $0?.routes {
-                path.options = paths.map {
+                path.options += paths.map {
                     let option = Plan.Option()
                     option.mode = $0.transportType == .walking ? .walking : .driving
                     option.distance = $0.distance
@@ -241,7 +241,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     private func filter() {
         removeOverlays(overlays)
-        addOverlays(plan.path.flatMap { path in path.options.compactMap { $0.mode == .walking && _walking || $0.mode == .driving && _driving ? Line(path, option: $0) : nil } }, level: .aboveRoads)
+        addOverlays(plan.path.flatMap { path in path.options.compactMap { ($0.mode == .walking && _walking) || ($0.mode == .driving && _driving) ? Line(path, option: $0) : nil } }, level: .aboveRoads)
     }
     
     private func remove(overlays: Plan.Path) {
