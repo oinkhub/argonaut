@@ -46,14 +46,19 @@ public final class Factory {
     }
     
     public func measure() {
-        rect = {{
-            let rect = { .init(x: $0.x, y: $0.y, width: $1.x - $0.x, height: $1.y - $0.y) } (MKMapPoint(.init(latitude: $0.first!.0 + margin, longitude: $1.first!.1 - margin)), MKMapPoint(.init(latitude: $0.last!.0 - margin, longitude: $1.last!.1 + margin))) as MKMapRect
-            return rect
-            } ($0.sorted(by: { $0.0 > $1.0 }), $0.sorted(by: { $0.1 < $1.1 }))} (plan.path.flatMap({ $0.options.flatMap({ $0.points }) }))
+        rect = {
+            {
+                let rect = {
+                    .init(x: $0.x, y: $0.y, width: $1.x - $0.x, height: $1.y - $0.y)
+                } (MKMapPoint(.init(latitude: $0.first!.0 + margin, longitude: $1.first!.1 - margin)),
+                   MKMapPoint(.init(latitude: $0.last!.0 - margin, longitude: $1.last!.1 + margin))) as MKMapRect
+                return rect
+            } ($0.sorted { $0.0 > $1.0 }, $0.sorted { $0.1 < $1.1 })
+        } (plan.path.flatMap { $0.options.flatMap { $0.points } })
     }
     
     public func divide() {
-        range.map({ ($0, ceil(1 / (Double(1 << $0) / 1048575)) * 256) }).forEach { tile in
+        range.map { ($0, ceil(1 / (Double(1 << $0) / 1048575)) * 256) }.forEach { tile in
             stride(tile.1, start: rect.minX, length: rect.width).forEach { x in
                 stride(tile.1, start: rect.minY, length: rect.height).forEach { y in
                     var shot = Shot()

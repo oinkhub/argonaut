@@ -11,7 +11,6 @@ final class Tiler: MKTileOverlay {
     }
     
     override func loadTile(at: MKTileOverlayPath, result: @escaping(Data?, Error?) -> Void) {
-        print(url(forTilePath: at).path)
         result(try? Data(contentsOf: url.appendingPathComponent("\(url(forTilePath: at).path).png")), nil)
     }
 }

@@ -23,9 +23,8 @@ private(set) weak var app: App!
     @available(OSX 10.14, *) func userNotificationCenter(_: UNUserNotificationCenter, willPresent:
         UNNotification, withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         withCompletionHandler([.alert])
-        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 15) {
-            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [willPresent.request.identifier])
-        }
+        UNUserNotificationCenter.current().getDeliveredNotifications { UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: $0.map { $0.request.identifier
+        }.filter { $0 != willPresent.request.identifier }) }
     }
     
     @available(OSX 10.12.2, *) override func makeTouchBar() -> NSTouchBar? {

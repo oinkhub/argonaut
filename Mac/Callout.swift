@@ -1,4 +1,3 @@
-import Argonaut
 import MapKit
 
 class Callout: NSView {
@@ -108,7 +107,6 @@ class Callout: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         alphaValue = 0
-        
         view.addSubview(self)
         
         centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true

@@ -445,7 +445,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             if let highlighted = results.documentView!.subviews.firstIndex(where: { ($0 as! Result).highlighted }), highlighted > 0 {
                 index = highlighted - 1
             }
-            results.documentView!.subviews.enumerated().forEach({ ($0.1 as! Result).highlighted = $0.0 == index })
+            results.documentView!.subviews.enumerated().forEach { ($0.1 as! Result).highlighted = $0.0 == index }
         } else {
             super.up()
         }
@@ -457,7 +457,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             if let highlighted = results.documentView!.subviews.firstIndex(where: { ($0 as! Result).highlighted }), highlighted < results.documentView!.subviews.count - 1 {
                 index = highlighted + 1
             }
-            results.documentView!.subviews.enumerated().forEach({ ($0.1 as! Result).highlighted = $0.0 == index })
+            results.documentView!.subviews.enumerated().forEach { ($0.1 as! Result).highlighted = $0.0 == index }
         } else {
             super.down()
         }
@@ -465,7 +465,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     
     func choose() {
         if #available(OSX 10.11.4, *) {
-            results.documentView!.subviews.map({ $0 as! Result }).first(where: { $0.highlighted })?.click()
+            results.documentView!.subviews.map { $0 as! Result }.first(where: { $0.highlighted })?.click()
         }
     }
     
