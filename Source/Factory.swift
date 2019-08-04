@@ -14,7 +14,8 @@ public final class Factory {
     public let plan: Plan
     var rect = MKMapRect()
     var range = [13, 16, 19]
-    private(set) var data = Data()
+    private(set) var content = Data()
+    private(set) var info = Data()
     private(set) var shots = [Shot]()
     private(set) var chunks = 0
     private weak var shooter: MKMapSnapshotter?
@@ -115,20 +116,18 @@ public final class Factory {
     }
     
     func chunk(_ bits: Data, tile: Int, x: Int, y: Int) {
-        var info = Data()
         withUnsafeBytes(of: UInt8(tile)) { info += $0 }
         withUnsafeBytes(of: UInt32(x)) { info += $0 }
         withUnsafeBytes(of: UInt32(y)) { info += $0 }
-        withUnsafeBytes(of: UInt32(data.count)) { info += $0 }
+        withUnsafeBytes(of: UInt32(content.count)) { info += $0 }
         withUnsafeBytes(of: UInt32(bits.count)) { info += $0 }
-        data += bits
-        data.insert(contentsOf: info, at: 0)
+        content += bits
         chunks += 1
     }
     
     func wrap() -> Data {
-        withUnsafeBytes(of: UInt32(chunks)) { data.insert(contentsOf: $0, at: 0) }
-        return Press().code(data)
+        withUnsafeBytes(of: UInt32(chunks)) { info.insert(contentsOf: $0, at: 0) }
+        return Press().code(info + content)
     }
     
     private func result(_ result: MKMapSnapshotter.Snapshot, shot: Shot) {

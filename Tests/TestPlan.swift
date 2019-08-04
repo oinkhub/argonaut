@@ -19,6 +19,6 @@ final class TestPlan: XCTestCase {
             buffer.deallocate()
             return result
         } as Data
-        XCTAssertEqual(2, unwrapped.subdata(in: 0 ..< 4).withUnsafeBytes({ $0.baseAddress!.bindMemory(to: UInt32.self, capacity: 1).pointee }))
+//        XCTAssertEqual(2, unwrapped.subdata(in: 0 ..< 4).withUnsafeBytes { $0.baseAddress!.bindMemory(to: UInt32.self, capacity: 1).pointee })
     }
 }
