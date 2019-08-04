@@ -10,7 +10,7 @@ final class TestChunk: XCTestCase {
     }
     
     func testAdd() {
-        factory.chunk(Data("hello world".utf8), tile: 99, x: 87, y: 76)
+        factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
         XCTAssertEqual(1, factory.chunks)
         XCTAssertEqual(99, factory.data.first)
         XCTAssertEqual(87, factory.data.subdata(in: 1 ..< 5).withUnsafeBytes({
@@ -23,7 +23,7 @@ final class TestChunk: XCTestCase {
             $0.baseAddress!.bindMemory(to: UInt32.self, capacity: 1).pointee }))
         XCTAssertEqual("hello world", String(decoding: factory.data.subdata(in: 17 ..< 28), as: UTF8.self))
         
-        factory.chunk(Data("lorem ipsum".utf8), tile: 42, x: 21, y: 67)
+        factory.chunk(.init("lorem ipsum".utf8), tile: 42, x: 21, y: 67)
         XCTAssertEqual(2, factory.chunks)
         XCTAssertEqual(42, factory.data.first)
         XCTAssertEqual(21, factory.data.subdata(in: 1 ..< 5).withUnsafeBytes({
@@ -38,7 +38,7 @@ final class TestChunk: XCTestCase {
     }
     
     func testWrap() {
-        factory.chunk(Data("hello world".utf8), tile: 99, x: 87, y: 76)
+        factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
         let wrapped = factory.wrap()
         let unwrapped = wrapped.withUnsafeBytes {
             let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024)
