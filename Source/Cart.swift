@@ -14,7 +14,6 @@ public final class Cart {
             let y = data.subdata(in: stride + 5 ..< stride + 9).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] }
             let start = Int(data.subdata(in: stride + 9 ..< stride + 13).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
             let position = content + start
-            print("start \(start) position: \(position) total: \(data.count) content: \(content) length: \(Int(data.subdata(in: stride + 13 ..< stride + 17).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] }))")
             $0["\(tile)-\(x).\(y)"] = data.subdata(in: position ..< position + Int(data.subdata(in: stride + 13 ..< stride + 17).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] }))
         }
     }
