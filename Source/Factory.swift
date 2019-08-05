@@ -60,8 +60,8 @@ public final class Factory {
     public func divide() {
         range.forEach { tile in
             let proportion = MKMapRect.world.width / pow(2, Double(tile))
-            (Int(rect.minX / proportion) ... Int(ceil(rect.maxX / proportion))).forEach { x in
-                (Int(rect.minY / proportion) ... Int(ceil(rect.maxY / proportion))).forEach { y in
+            (Int(rect.minX / proportion) ..< Int(ceil(rect.maxX / proportion))).forEach { x in
+                (Int(rect.minY / proportion) ..< Int(ceil(rect.maxY / proportion))).forEach { y in
                     var shot = Shot()
                     shot.tile = tile
                     shot.x = x
