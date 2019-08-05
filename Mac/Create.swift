@@ -75,9 +75,14 @@ final class Create: NSWindow {
             app.alert(.key("Error"), message: $0.localizedDescription)
             self?.button.isHidden = false
         }
-        factory.complete = { [weak self] in
+        factory.complete = { [weak self] id in
             self?.close()
-            Navigate($0).makeKeyAndOrderFront(nil)
+            DispatchQueue.global(qos: .background).async {
+                let cart = Cart(id)
+                DispatchQueue.main.async {
+                    Navigate(cart).makeKeyAndOrderFront(nil)
+                }
+            }
         }
         factory.progress = { [weak self] in
             self?.progress.constant = CGFloat(230 * $0)

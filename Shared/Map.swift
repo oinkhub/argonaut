@@ -57,7 +57,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, rendererFor: MKOverlay) -> MKOverlayRenderer {
-        if let tiler = rendererFor as? MKTileOverlay {
+        if let tiler = rendererFor as? Tiler {
             return MKTileOverlayRenderer(tileOverlay: tiler)
         } else if let line = rendererFor as? Line {
             return Liner(line)

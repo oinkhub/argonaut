@@ -1,10 +1,10 @@
 import Foundation
 
 public final class Cart {
-    private let map: [String: Data]
+    public let map: [String: Data]
     
-    public init(_ data: Data) {
-        let data = Press().decode(data)
+    public init(_ id: String) {
+        let data = Press().decode(try! Data(contentsOf: Argonaut.url.appendingPathComponent(id + ".argonaut")))
         let count = Int(data.subdata(in: 0 ..< 4).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
         let content = 4 + (17 * count)
         map = (0 ..< count).reduce(into: [:]) {
@@ -17,9 +17,5 @@ public final class Cart {
             print("start \(start) position: \(position) total: \(data.count) content: \(content) length: \(Int(data.subdata(in: stride + 13 ..< stride + 17).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] }))")
             $0["\(tile)-\(x).\(y)"] = data.subdata(in: position ..< position + Int(data.subdata(in: stride + 13 ..< stride + 17).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] }))
         }
-    }
-    
-    public func tile(_ zoom: Int, x: Int, y: Int) -> Data? {
-        return map["\(zoom)-\(x).\(y)"]
     }
 }

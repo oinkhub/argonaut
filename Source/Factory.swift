@@ -21,7 +21,6 @@ public final class Factory {
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
     private let group = DispatchGroup()
-    private let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
     private let margin = 0.001
     private let id = UUID().uuidString
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
@@ -39,7 +38,7 @@ public final class Factory {
     }
     
     public func prepare() {
-        var url = self.url
+        var url = Argonaut.url
         try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
         var resources = URLResourceValues()
         resources.isExcludedFromBackup = true
@@ -144,7 +143,7 @@ public final class Factory {
     }
     
     private func finish() {
-        try! wrap().write(to: url.appendingPathComponent(id + ".argonaut"), options: .atomic)
+        try! wrap().write(to: Argonaut.url.appendingPathComponent(id + ".argonaut"), options: .atomic)
 //        JSONEncoder().encode(plan)
         
         DispatchQueue.main.async { [weak self] in

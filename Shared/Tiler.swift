@@ -1,16 +1,17 @@
+import Argonaut
 import MapKit
 
 final class Tiler: MKTileOverlay {
-    private let url: URL
+    private let cart: Cart
     
-    init(_ id: String) {
-        url = .init(fileURLWithPath: NSTemporaryDirectory() + id)
+    init(_ cart: Cart) {
+        self.cart = cart
         super.init(urlTemplate: "{z}-{x}.{y}")
         canReplaceMapContent = true
         tileSize = .init(width: 512, height: 512)
     }
     
     override func loadTile(at: MKTileOverlayPath, result: @escaping(Data?, Error?) -> Void) {
-        result(try? Data(contentsOf: url.appendingPathComponent("\(url(forTilePath: at).path).png")), nil)
+        result(cart.map[url(forTilePath: at).path], nil)
     }
 }
