@@ -13,7 +13,7 @@ public final class Factory {
     public var complete: ((String) -> Void)?
     public let plan: Plan
     var rect = MKMapRect()
-    var range = [13, 16, 19]
+    var range = [12, 14, 16, 18]
     private(set) var content = Data()
     private(set) var info = Data()
     private(set) var shots = [Shot]()
@@ -21,7 +21,7 @@ public final class Factory {
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
     private let group = DispatchGroup()
-    private let margin = 0.001
+    private let margin = 0.003
     private let id = UUID().uuidString
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
@@ -58,19 +58,20 @@ public final class Factory {
     }
     
     public func divide() {
-        range.map { ($0, ceil(1 / (Double(1 << $0) / 1048575)) * 256) }.forEach { tile in
-            stride(tile.1, start: rect.minX, length: rect.width).forEach { x in
-                stride(tile.1, start: rect.minY, length: rect.height).forEach { y in
+        range.forEach { tile in
+            let proportion = MKMapRect.world.width / pow(2, Double(tile))
+            (Int(rect.minX / proportion) ... Int(ceil(rect.maxX / proportion))).forEach { x in
+                (Int(rect.minY / proportion) ... Int(ceil(rect.maxY / proportion))).forEach { y in
                     var shot = Shot()
-                    shot.tile = Int(tile.0)
+                    shot.tile = tile
                     shot.x = x
                     shot.y = y
                     if #available(OSX 10.14, *) {
                         shot.options.appearance = NSAppearance(named: .darkAqua)
                     }
                     shot.options.mapType = .standard
-                    shot.options.size = .init(width: 1280, height: 1280)
-                    shot.options.mapRect = .init(x: Double(x) * tile.1, y: Double(y) * tile.1, width: tile.1 * 5, height: tile.1 * 5)
+                    shot.options.size = .init(width: Argonaut.tile, height: Argonaut.tile)
+                    shot.options.mapRect = .init(x: Double(x) * proportion, y: Double(y) * proportion, width: proportion, height: proportion)
                     shots.append(shot)
                 }
             }
@@ -130,15 +131,17 @@ public final class Factory {
     }
     
     private func result(_ result: MKMapSnapshotter.Snapshot, shot: Shot) {
-        (0 ..< 5).forEach { x in
-            (0 ..< 5).forEach { y in
-                let image = NSImage(size: .init(width: 256, height: 256))
-                image.lockFocus()
-                result.image.draw(in: .init(x: 0, y: 0, width: 256, height: 256), from: .init(x: 256 * x, y: 256 * y, width: 256, height: 256), operation: .copy, fraction: 1)
-                image.unlockFocus()
-                chunk(NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x + x, y: shot.y + 4 - y)
-            }
-        }
+//        (0 ..< 5).forEach { x in
+//            (0 ..< 5).forEach { y in
+//                let image = NSImage(size: .init(width: 256, height: 256))
+//                image.lockFocus()
+//                result.image.draw(in: .init(x: 0, y: 0, width: 256, height: 256), from: .init(x: 256 * x, y: 256 * y, width: 256, height: 256), operation: .copy, fraction: 1)
+//                image.unlockFocus()
+//                chunk(NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x + x, y: shot.y + 4 - y)
+//            }
+//        }
+//        print("saved: \(shot.tile)-\(shot.x).\(shot.y)")
+        chunk(NSBitmapImageRep(cgImage: result.image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x, y: shot.y)
         group.leave()
     }
     

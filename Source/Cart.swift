@@ -1,7 +1,7 @@
 import Foundation
 
 public final class Cart {
-    public let map: [String: Data]
+    private let map: [String: Data]
     
     public init(_ id: String) {
         let data = Press().decode(try! Data(contentsOf: Argonaut.url.appendingPathComponent(id + ".argonaut")))
@@ -16,5 +16,9 @@ public final class Cart {
             let position = content + start
             $0["\(tile)-\(x).\(y)"] = data.subdata(in: position ..< position + Int(data.subdata(in: stride + 13 ..< stride + 17).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] }))
         }
+    }
+    
+    public func tile(_ zoom: Int, x: Int, y: Int) -> Data? {
+        return map["\(zoom)-\(x).\(y)"]
     }
 }
