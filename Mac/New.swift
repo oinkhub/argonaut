@@ -439,6 +439,22 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }) { }
     }
     
+    override func left() {
+        if firstResponder === field {
+            field.setSelectedRange(.init(location: max(0, field.selectedRange().location - 1), length: 0))
+        } else {
+            super.left()
+        }
+    }
+    
+    override func right() {
+        if firstResponder === field {
+            field.setSelectedRange(.init(location: field.selectedRange().location + 1, length: 0))
+        } else {
+            super.right()
+        }
+    }
+    
     override func up() {
         if #available(OSX 10.11.4, *), firstResponder === field {
             var index = results.documentView!.subviews.count - 1

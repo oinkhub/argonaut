@@ -12,7 +12,6 @@ final class Tiler: MKTileOverlay {
     }
     
     override func loadTile(at: MKTileOverlayPath, result: @escaping(Data?, Error?) -> Void) {
-        print("\(at.z)-\(at.x).\(at.y)")
         result(cart.tile(at.z, x: at.x, y: at.y), nil)
     }
 }

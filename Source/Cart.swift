@@ -19,6 +19,6 @@ public final class Cart {
     }
     
     public func tile(_ zoom: Int, x: Int, y: Int) -> Data? {
-        return map["\(zoom)-\(x).\(y)"]
+        return map["\(zoom)-\(x).\(y)"] ?? (zoom >= 12 ? Data() : nil)
     }
 }

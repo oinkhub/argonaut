@@ -1,6 +1,12 @@
 import MapKit
 
 public final class Factory {
+    public enum Process {
+        case prepare
+        case map
+        case save
+    }
+    
     struct Shot {
         var options = MKMapSnapshotter.Options()
         var tile = 0
@@ -9,19 +15,18 @@ public final class Factory {
     }
     
     public var error: ((Error) -> Void)!
-    public var progress: ((Float) -> Void)!
+    public var progress: ((Process, Float) -> Void)!
     public var complete: ((String) -> Void)!
     public let plan: Plan
     var rect = MKMapRect()
-    var range = [12, 14, 16, 18]
+    var range = (12 ... 19)
     private(set) var content = Data()
     private(set) var info = Data()
     private(set) var shots = [Shot]()
     private(set) var chunks = 0
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
-    private let group = DispatchGroup()
-    private let margin = 0.001
+    private let margin = 0.003
     private let id = UUID().uuidString
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
@@ -32,7 +37,6 @@ public final class Factory {
         timer.schedule(deadline: .distantFuture)
         timer.setEventHandler { [weak self] in
             self?.shooter?.cancel()
-            self?.group.leave()
             DispatchQueue.main.async { [weak self] in self?.error(Fail("Mapping timed out.")) }
         }
     }
@@ -82,35 +86,32 @@ public final class Factory {
     public func shoot() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let shot = self.shots.last else { return }
-            
-            self.group.enter()
-            if self.shots.count == Int(self.total) {
-                self.group.notify(queue: .global(qos: .background)) { [weak self] in self?.finish() }
-            }
-            
-            self.progress((self.total - Float(self.shots.count)) / self.total)
+            self.progress(.map, (self.total - Float(self.shots.count)) / self.total)
             self.timer.schedule(deadline: .now() + 9)
             let shooter = MKMapSnapshotter(options: shot.options)
             self.shooter = shooter
             shooter.start(with: self.queue) { [weak self] in
-                self?.timer.schedule(deadline: .distantFuture)
+                guard let self = self else { return }
+                self.timer.schedule(deadline: .distantFuture)
                 do {
                     if let error = $1 {
                         throw error
                     } else if let result = $0 {
-                        self?.group.enter()
-                        self?.queue.async { [weak self] in
-                            self?.result(result, shot: shot)
+                        self.shots.removeLast()
+                        self.shoot()
+                        self.chunk(NSBitmapImageRep(cgImage: result.image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x, y: shot.y)
+                        
+                        if self.shots.isEmpty {
+                            try! self.wrap().write(to: Argonaut.url.appendingPathComponent(self.id + ".argonaut"), options: .atomic)
+                            let id = self.id
+                            DispatchQueue.main.async { [weak self] in self?.complete(id) }
                         }
-                        self?.shots.removeLast()
-                        self?.shoot()
                     } else {
                         throw Fail("Couldn't create map")
                     }
                 } catch let error {
                     DispatchQueue.main.async { [weak self] in self?.error?(error) }
                 }
-                self?.group.leave()
             }
         }
     }
@@ -128,36 +129,5 @@ public final class Factory {
     func wrap() -> Data {
         withUnsafeBytes(of: UInt32(chunks)) { info.insert(contentsOf: $0, at: 0) }
         return Press().code(info + content)
-    }
-    
-    private func result(_ result: MKMapSnapshotter.Snapshot, shot: Shot) {
-//        (0 ..< 5).forEach { x in
-//            (0 ..< 5).forEach { y in
-//                let image = NSImage(size: .init(width: 256, height: 256))
-//                image.lockFocus()
-//                result.image.draw(in: .init(x: 0, y: 0, width: 256, height: 256), from: .init(x: 256 * x, y: 256 * y, width: 256, height: 256), operation: .copy, fraction: 1)
-//                image.unlockFocus()
-//                chunk(NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x + x, y: shot.y + 4 - y)
-//            }
-//        }
-//        print("saved: \(shot.tile)-\(shot.x).\(shot.y)")
-        chunk(NSBitmapImageRep(cgImage: result.image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x, y: shot.y)
-        group.leave()
-    }
-    
-    private func finish() {
-        try! wrap().write(to: Argonaut.url.appendingPathComponent(id + ".argonaut"), options: .atomic)
-//        JSONEncoder().encode(plan)
-        
-        DispatchQueue.main.async { [weak self] in
-            guard let id = self?.id else { return }
-            self?.complete(id)
-        }
-    }
-    
-    private func stride(_ tile: Double, start: Double, length: Double) -> StrideTo<Int> {
-        return {
-            Swift.stride(from: $0, to: $0 + $1, by: 5)
-        } (Int(start / tile), Int(ceil(length / tile)))
     }
 }

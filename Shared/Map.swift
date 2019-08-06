@@ -61,7 +61,6 @@ final class Map: MKMapView, MKMapViewDelegate {
         zoom?(log2(visibleMapRect.width / Double(bounds.width / 100) ) < 14)
     }
     
-    
     func mapView(_: MKMapView, rendererFor: MKOverlay) -> MKOverlayRenderer {
         if let tiler = rendererFor as? Tiler {
             return MKTileOverlayRenderer(tileOverlay: tiler)
