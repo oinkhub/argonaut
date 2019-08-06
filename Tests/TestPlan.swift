@@ -7,11 +7,6 @@ final class TestPlan: XCTestCase {
         let plan = Plan()
         plan.path = [.init(), .init()]
         plan.path[0].name = "hello world"
-        plan.path[0].options = [.init()]
-        plan.path[0].options[0].points = [(1, 2), (3, 4), (5, 6)]
-        plan.path[1].name = "lorem ipsum"
-        plan.path[1].options = [.init()]
-        plan.path[1].options[0].points = [(99, 88)]
         let coded = plan.code()
         let unwrapped = coded.withUnsafeBytes {
             let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024)
@@ -19,6 +14,29 @@ final class TestPlan: XCTestCase {
             buffer.deallocate()
             return result
         } as Data
-//        XCTAssertEqual(2, unwrapped.subdata(in: 0 ..< 4).withUnsafeBytes { $0.baseAddress!.bindMemory(to: UInt32.self, capacity: 1).pointee })
+        XCTAssertEqual(2, unwrapped[0])
+        XCTAssertEqual(11, unwrapped[1])
+        XCTAssertEqual("hello world", String(decoding: unwrapped.subdata(in: 2 ..< 13), as: UTF8.self))
+    }
+    
+    func testDecode() {
+        let old = Plan()
+        old.path = [.init(), .init()]
+        old.path[0].name = "hello world"
+        old.path[0].latitude = 33.5
+        old.path[0].longitude = 23.5
+        old.path[0].options = [.init()]
+        old.path[0].options[0].points = [(1, 2), (3, 4), (5, 6)]
+        old.path[1].name = "lorem ipsum"
+        old.path[1].options = [.init()]
+        old.path[1].options[0].points = [(99, 88)]
+        
+        let new = Plan()
+        new.decode(old.code())
+        XCTAssertEqual(2, new.path.count)
+        XCTAssertEqual("hello world", new.path[0].name)
+        XCTAssertEqual(33.5, new.path[0].latitude)
+        XCTAssertEqual(23.5, new.path[0].longitude)
+        XCTAssertEqual("lorem ipsum", new.path[1].name)
     }
 }

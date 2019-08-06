@@ -20,7 +20,7 @@ public final class Factory {
     private(set) var chunks = 0
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
-    private let margin = 0.003
+    private let margin = 0.002
     private let id = UUID().uuidString
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
@@ -121,7 +121,6 @@ public final class Factory {
     }
     
     func wrap() -> Data {
-        withUnsafeBytes(of: UInt32(chunks)) { info.insert(contentsOf: $0, at: 0) }
-        return Press().code(info + content)
+        return Press().code(withUnsafeBytes(of: UInt32(chunks)) { Data($0) } + info + content)
     }
 }

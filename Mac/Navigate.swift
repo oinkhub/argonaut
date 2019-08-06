@@ -11,7 +11,7 @@ final class Navigate: World {
         
         map.zoom = { [weak self] valid in
             NSAnimationContext.runAnimationGroup({
-                $0.duration = 0.2
+                $0.duration = 0.3
                 $0.allowsImplicitAnimation = true
                 self?.zoom.alphaValue = valid ? 0 : 0.7
             }) { }

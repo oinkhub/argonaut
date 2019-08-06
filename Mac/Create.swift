@@ -75,7 +75,7 @@ final class Create: NSWindow {
             }
         }
         factory.progress = { [weak self] in
-            self?.progress.constant = CGFloat(230 * $0)
+            self?.progress.constant = CGFloat(160 * $0)
             self?.label.stringValue = "\(Int(100 * $0))%"
         }
         
