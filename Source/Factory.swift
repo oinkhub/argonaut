@@ -1,12 +1,6 @@
 import MapKit
 
 public final class Factory {
-    public enum Process {
-        case prepare
-        case map
-        case save
-    }
-    
     struct Shot {
         var options = MKMapSnapshotter.Options()
         var tile = 0
@@ -15,7 +9,7 @@ public final class Factory {
     }
     
     public var error: ((Error) -> Void)!
-    public var progress: ((Process, Float) -> Void)!
+    public var progress: ((Float) -> Void)!
     public var complete: ((String) -> Void)!
     public let plan: Plan
     var rect = MKMapRect()
@@ -86,7 +80,7 @@ public final class Factory {
     public func shoot() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let shot = self.shots.last else { return }
-            self.progress(.map, (self.total - Float(self.shots.count)) / self.total)
+            self.progress((self.total - Float(self.shots.count)) / self.total)
             self.timer.schedule(deadline: .now() + 9)
             let shooter = MKMapSnapshotter(options: shot.options)
             self.shooter = shooter
