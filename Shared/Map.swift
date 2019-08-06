@@ -3,6 +3,7 @@ import MapKit
 
 final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
+    var zoom: ((Bool) -> Void)?
     private(set) var _follow = true
     private(set) var _walking = true
     private(set) var _driving = true
@@ -55,6 +56,11 @@ final class Map: MKMapView, MKMapViewDelegate {
             }
         }
     }
+    
+    func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
+        zoom?(log2(visibleMapRect.width / Double(bounds.width / 100) ) < 14)
+    }
+    
     
     func mapView(_: MKMapView, rendererFor: MKOverlay) -> MKOverlayRenderer {
         if let tiler = rendererFor as? Tiler {

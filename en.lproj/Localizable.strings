@@ -3,6 +3,7 @@ New.save="Save";
 New.distance=" metres";
 Create.retry="Retry";
 Map.mark="Mark";
+Navigate.zoom="Zoom not supported";
 Menu.argonaut="Argonaut";
 Menu.about="About";
 Menu.preferences="Preferences";

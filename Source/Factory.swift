@@ -8,12 +8,12 @@ public final class Factory {
         var y = 0
     }
     
-    public var error: ((Error) -> Void)?
-    public var progress: ((Float) -> Void)?
-    public var complete: ((String) -> Void)?
+    public var error: ((Error) -> Void)!
+    public var progress: ((Float) -> Void)!
+    public var complete: ((String) -> Void)!
     public let plan: Plan
     var rect = MKMapRect()
-    var range = [14, 16, 18]
+    var range = [12, 14, 16, 18]
     private(set) var content = Data()
     private(set) var info = Data()
     private(set) var shots = [Shot]()
@@ -33,7 +33,7 @@ public final class Factory {
         timer.setEventHandler { [weak self] in
             self?.shooter?.cancel()
             self?.group.leave()
-            DispatchQueue.main.async { [weak self] in self?.error?(Fail("Mapping timed out.")) }
+            DispatchQueue.main.async { [weak self] in self?.error(Fail("Mapping timed out.")) }
         }
     }
     
@@ -88,7 +88,7 @@ public final class Factory {
                 self.group.notify(queue: .global(qos: .background)) { [weak self] in self?.finish() }
             }
             
-            self.progress?((self.total - Float(self.shots.count)) / self.total)
+            self.progress((self.total - Float(self.shots.count)) / self.total)
             self.timer.schedule(deadline: .now() + 9)
             let shooter = MKMapSnapshotter(options: shot.options)
             self.shooter = shooter
@@ -151,7 +151,7 @@ public final class Factory {
         
         DispatchQueue.main.async { [weak self] in
             guard let id = self?.id else { return }
-            self?.complete?(id)
+            self?.complete(id)
         }
     }
     

@@ -23,15 +23,15 @@ final class TestFactory: XCTestCase {
     func testDivide1() {
         factory.rect.size.width = 5120
         factory.rect.size.height = 5120
-        factory.range = [21]
+        factory.range = [18]
         factory.divide()
-        XCTAssertEqual(16, factory.shots.count)
+        XCTAssertEqual(25, factory.shots.count)
         XCTAssertEqual(0, factory.shots.first?.options.mapRect.minX)
         XCTAssertEqual(0, factory.shots.first?.options.mapRect.minY)
-        XCTAssertEqual(1280, factory.shots.first?.options.mapRect.maxX)
-        XCTAssertEqual(1280, factory.shots.first?.options.mapRect.maxY)
-        XCTAssertEqual(1280, factory.shots.first?.options.size.width)
-        XCTAssertEqual(1280, factory.shots.first?.options.size.height)
+        XCTAssertEqual(1024, factory.shots.first?.options.mapRect.maxX)
+        XCTAssertEqual(1024, factory.shots.first?.options.mapRect.maxY)
+        XCTAssertEqual(512, factory.shots.first?.options.size.width)
+        XCTAssertEqual(512, factory.shots.first?.options.size.height)
     }
     
     func testDivideMin() {
@@ -47,9 +47,9 @@ final class TestFactory: XCTestCase {
     func testDivide4() {
         factory.rect.size.width = 5121
         factory.rect.size.height = 5121
-        factory.range = [21]
+        factory.range = [18]
         factory.divide()
-        XCTAssertEqual(25, factory.shots.count)
+        XCTAssertEqual(36, factory.shots.count)
     }
     
     func testDivideCentred() {
@@ -57,12 +57,12 @@ final class TestFactory: XCTestCase {
         factory.rect.origin.y = 2559
         factory.rect.size.width = 1
         factory.rect.size.height = 1
-        factory.range = [21]
+        factory.range = [18]
         factory.divide()
         XCTAssertEqual(1, factory.shots.count)
-        XCTAssertEqual(2304, factory.shots.first?.options.mapRect.minX)
-        XCTAssertEqual(2304, factory.shots.first?.options.mapRect.minY)
-        XCTAssertEqual(3584, factory.shots.first?.options.mapRect.maxX)
-        XCTAssertEqual(3584, factory.shots.first?.options.mapRect.maxY)
+        XCTAssertEqual(2048, factory.shots.first?.options.mapRect.minX)
+        XCTAssertEqual(2048, factory.shots.first?.options.mapRect.minY)
+        XCTAssertEqual(3072, factory.shots.first?.options.mapRect.maxX)
+        XCTAssertEqual(3072, factory.shots.first?.options.mapRect.maxY)
     }
 }

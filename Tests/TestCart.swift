@@ -23,15 +23,4 @@ final class TestCart: XCTestCase {
         XCTAssertEqual("hello world", String(decoding: cart.tile(99, x: 87, y: 76)!, as: UTF8.self))
         XCTAssertEqual("lorem ipsum", String(decoding: cart.tile(34, x: 45, y: 12)!, as: UTF8.self))
     }
-    
-    func testAlternate() {
-        factory.chunk(.init("hello world".utf8), tile: 16, x: 160, y: 280)
-        try! factory.wrap().write(to: Argonaut.url.appendingPathComponent("test.argonaut"), options: .atomic)
-        cart = .init("test")
-        let alternative = cart.tile(17, x: 320, y: 560)
-        XCTAssertNotNil(alternative)
-        if alternative != nil {
-            XCTAssertEqual("hello world", String(decoding: alternative!, as: UTF8.self))
-        }
-    }
 }
