@@ -3,10 +3,12 @@ import MapKit
 
 final class Navigate: World {
     private weak var zoom: NSView!
+    private let plan: Plan
     
-    init(_ cart: Cart) {
+    init(_ project: (Plan, Cart)) {
+        plan = project.0
         super.init()
-        map.addOverlay(Tiler(cart), level: .aboveLabels)
+        map.addOverlay(Tiler(project.1), level: .aboveLabels)
         tools.bottomAnchor.constraint(equalTo: _out.bottomAnchor).isActive = true
         
         map.zoom = { [weak self] valid in

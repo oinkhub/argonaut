@@ -94,11 +94,12 @@ public final class Factory {
                         self.shots.removeLast()
                         self.shoot()
                         self.chunk(NSBitmapImageRep(cgImage: result.image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x, y: shot.y)
-                        
                         if self.shots.isEmpty {
-                            try! self.wrap().write(to: Argonaut.url.appendingPathComponent(self.id + ".argonaut"), options: .atomic)
-                            let id = self.id
-                            DispatchQueue.main.async { [weak self] in self?.complete(id) }
+                            Argonaut.save(self.id, data: self.wrap())
+                            DispatchQueue.main.async { [weak self] in
+                                guard let id = self?.id else { return }
+                                self?.complete(id)
+                            }
                         }
                     } else {
                         throw Fail("Couldn't create map")
@@ -120,7 +121,5 @@ public final class Factory {
         chunks += 1
     }
     
-    func wrap() -> Data {
-        return Press().code(withUnsafeBytes(of: UInt32(chunks)) { Data($0) } + info + content)
-    }
+    func wrap() -> Data { return plan.code() + withUnsafeBytes(of: UInt32(chunks)) { Data($0) } + info + content }
 }

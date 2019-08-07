@@ -1,6 +1,5 @@
 @testable import Argonaut
 import XCTest
-import Compression
 
 final class TestChunk: XCTestCase {
     private var factory: Factory!
@@ -33,13 +32,7 @@ final class TestChunk: XCTestCase {
         factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
         factory.chunk(.init("lorem ipsum".utf8), tile: 23, x: 34, y: 12)
         let wrapped = factory.wrap()
-        let unwrapped = wrapped.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1024)
-            let result = Data(bytes: buffer, count: compression_decode_buffer(buffer, 1024, $0.bindMemory(to: UInt8.self).baseAddress!, wrapped.count, nil, COMPRESSION_ZLIB))
-            buffer.deallocate()
-            return result
-        } as Data
-        XCTAssertEqual(2, unwrapped.subdata(in: 0 ..< 4).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(99, unwrapped[4])
+        XCTAssertEqual(2, wrapped.subdata(in: 1 ..< 5).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
+        XCTAssertEqual(99, wrapped[5])
     }
 }

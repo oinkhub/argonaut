@@ -68,9 +68,9 @@ final class Create: NSWindow {
         factory.complete = { [weak self] id in
             self?.close()
             DispatchQueue.global(qos: .background).async {
-                let cart = Cart(id)
+                let project = Argonaut.load(id)
                 DispatchQueue.main.async {
-                    Navigate(cart).makeKeyAndOrderFront(nil)
+                    Navigate(project).makeKeyAndOrderFront(nil)
                 }
             }
         }

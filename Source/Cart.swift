@@ -3,8 +3,7 @@ import Foundation
 public final class Cart {
     private let map: [String: Data]
     
-    public init(_ id: String) {
-        let data = Press().decode(try! Data(contentsOf: Argonaut.url.appendingPathComponent(id + ".argonaut")))
+    public init(_ data: Data) {
         let count = Int(data.subdata(in: 0 ..< 4).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
         let content = 4 + (17 * count)
         map = (0 ..< count).reduce(into: [:]) {
