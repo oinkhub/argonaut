@@ -2,6 +2,55 @@ import Argonaut
 import AppKit
 
 final class List: NSWindow {
+    private final class Travel: NSView {
+        private let dater = DateComponentsFormatter()
+        
+        required init?(coder: NSCoder) { return nil }
+        init(_ image: String, value: Session.Travel) {
+            super.init(frame: .zero)
+            translatesAutoresizingMaskIntoConstraints = false
+            
+            dater.unitsStyle = .full
+            dater.allowedUnits = [.minute, .hour]
+            
+            let icon = NSImageView()
+            icon.translatesAutoresizingMaskIntoConstraints = false
+            icon.image = NSImage(named: image)
+            icon.imageScaling = .scaleNone
+            addSubview(icon)
+            
+            let label = Label()
+            label.textColor = .halo
+            label.font = .systemFont(ofSize: 13, weight: .medium)
+            label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            
+            if #available(OSX 10.12, *) {
+                let formatter = MeasurementFormatter()
+                formatter.unitStyle = .long
+                formatter.unitOptions = .naturalScale
+                formatter.numberFormatter.maximumFractionDigits = 1
+                label.stringValue += formatter.string(from: Measurement(value: value.distance, unit: UnitLength.meters))
+            } else {
+                label.stringValue += "\(Int(value.distance))" + .key("List.distance")
+            }
+            
+            label.stringValue += ": " + dater.string(from: value.duration)!
+            
+            addSubview(label)
+            
+            bottomAnchor.constraint(greaterThanOrEqualTo: label.bottomAnchor, constant: 5).isActive = true
+            
+            icon.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
+            icon.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 24).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 24).isActive = true
+            
+            label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 5).isActive = true
+            label.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
+            label.rightAnchor.constraint(equalTo: rightAnchor, constant: -5).isActive = true
+        }
+    }
+    
     private final class Item: NSView {
         let item: Session.Item
         
@@ -11,30 +60,78 @@ final class List: NSWindow {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             
-            let label = Label()
-            label.attributedStringValue = {
-                $0.append(NSAttributedString(string: item.origin + "\n", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .regular), .foregroundColor: NSColor.white]))
-                $0.append(NSAttributedString(string: item.destination, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .regular), .foregroundColor: NSColor.white]))
-                return $0
-            } (NSMutableAttributedString())
-            label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-            addSubview(label)
+            let origin = Label()
+            origin.stringValue = item.origin
+            origin.font = .systemFont(ofSize: 15, weight: .regular)
+            origin.textColor = .white
+            origin.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            addSubview(origin)
+            
+            let walking = Travel("walking", value: item.walking)
+            addSubview(walking)
+            
+            let driving = Travel("driving", value: item.driving)
+            addSubview(driving)
+            
+            let destination = Label()
+            destination.stringValue = item.destination
+            destination.font = .systemFont(ofSize: 14, weight: .regular)
+            destination.textColor = .white
+            destination.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            addSubview(destination)
+            
+            let delete = Button.Image(nil, action: nil)
+            delete.image.image = NSImage(named: "delete")
+            addSubview(delete)
+            
+            let share = Button.Image(nil, action: nil)
+            share.image.image = NSImage(named: "share")
+            addSubview(share)
+            
+            let view = Button.Yes(nil, action: nil)
+            view.label.stringValue = .key("List.view")
+            addSubview(view)
             
             let border = NSView()
             border.translatesAutoresizingMaskIntoConstraints = false
             border.wantsLayer = true
-            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
+            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.2).cgColor
             addSubview(border)
             
-            bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 15).isActive = true
+            bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
             
-            label.topAnchor.constraint(equalTo: topAnchor, constant: 15).isActive = true
-            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-            label.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+            origin.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+            origin.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+            origin.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+            
+            walking.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 10).isActive = true
+            walking.leftAnchor.constraint(equalTo: origin.leftAnchor).isActive = true
+            walking.rightAnchor.constraint(equalTo: origin.rightAnchor).isActive = true
+            
+            driving.topAnchor.constraint(equalTo: walking.bottomAnchor, constant: 10).isActive = true
+            driving.leftAnchor.constraint(equalTo: origin.leftAnchor).isActive = true
+            driving.rightAnchor.constraint(equalTo: origin.rightAnchor).isActive = true
+            
+            destination.topAnchor.constraint(equalTo: driving.bottomAnchor, constant: 15).isActive = true
+            destination.leftAnchor.constraint(equalTo: origin.leftAnchor).isActive = true
+            destination.rightAnchor.constraint(equalTo: origin.rightAnchor).isActive = true
+            
+            delete.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            delete.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            delete.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+            delete.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            
+            share.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            share.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            share.leftAnchor.constraint(equalTo: delete.rightAnchor, constant: 10).isActive = true
+            share.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            
+            view.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
+            view.leftAnchor.constraint(equalTo: share.rightAnchor, constant: 20).isActive = true
             
             border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 2).isActive = true
-            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -2).isActive = true
+            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 5).isActive = true
+            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -5).isActive = true
             border.heightAnchor.constraint(equalToConstant: 1).isActive = true
         }
     }
@@ -62,7 +159,6 @@ final class List: NSWindow {
         scroll.horizontalScrollElasticity = .none
         scroll.verticalScrollElasticity = .allowed
         scroll.contentInsets.top = 40
-        scroll.contentInsets.bottom = 20
         scroll.automaticallyAdjustsContentInsets = false
         scroll.documentView = Flipped()
         scroll.documentView!.translatesAutoresizingMaskIntoConstraints = false
@@ -74,6 +170,22 @@ final class List: NSWindow {
         let new = Button.Image(self, action: #selector(self.new))
         new.image.image = NSImage(named: "new")
         contentView!.addSubview(new)
+        
+        var shadows = contentView!.leftAnchor
+        (0 ..< 3).forEach {
+            let shadow = NSView()
+            shadow.translatesAutoresizingMaskIntoConstraints = false
+            shadow.wantsLayer = true
+            shadow.layer!.backgroundColor = NSColor(white: 0, alpha: 0.9).cgColor
+            shadow.layer!.cornerRadius = 8
+            contentView!.addSubview(shadow)
+            
+            shadow.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 11).isActive = true
+            shadow.leftAnchor.constraint(equalTo: shadows, constant: $0 == 0 ? 11 : 4).isActive = true
+            shadow.widthAnchor.constraint(equalToConstant: 16).isActive = true
+            shadow.heightAnchor.constraint(equalToConstant: 16).isActive = true
+            shadows = shadow.rightAnchor
+        }
         
         scroll.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 1).isActive = true
         scroll.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 1).isActive = true
@@ -116,6 +228,13 @@ final class List: NSWindow {
             item.topAnchor.constraint(equalTo: top).isActive = true
             top = item.bottomAnchor
         }
-        bottom = scroll.documentView!.bottomAnchor.constraint(equalTo: top)
+        bottom = scroll.documentView!.bottomAnchor.constraint(equalTo: top, constant: 20)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            NSAnimationContext.runAnimationGroup({
+                $0.duration = 0.4
+                $0.allowsImplicitAnimation = true
+                self.scroll.documentView!.scrollToVisible(.init(x: 0, y: 0, width: 1, height: 1))
+            }) { }
+        }
     }
 }
