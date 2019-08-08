@@ -1,6 +1,9 @@
+import Argonaut
 import AppKit
 
 final class List: NSWindow {
+    var session: Session! { didSet { refresh() } }
+    
     init() {
         super.init(contentRect: .init(x: NSScreen.main!.frame.midX - 600, y: NSScreen.main!.frame.midY - 400, width: 300, height: 800), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
@@ -19,6 +22,9 @@ final class List: NSWindow {
         new.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
         new.widthAnchor.constraint(equalToConstant: 40).isActive = true
         new.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        Session.load {
+            self.session = $0
+        }
     }
     
     override func close() {
@@ -32,5 +38,9 @@ final class List: NSWindow {
         } else {
             New().makeKeyAndOrderFront(nil)
         }
+    }
+    
+    private func refresh() {
+        
     }
 }

@@ -5,6 +5,7 @@ final class Create: NSWindow {
     private weak var progress: NSLayoutConstraint!
     private weak var button: Button.Yes!
     private weak var label: Label!
+    private var item = Session.Item()
     private let factory: Factory
     
     init(_ plan: Plan) {
@@ -65,25 +66,44 @@ final class Create: NSWindow {
             app.alert(.key("Error"), message: $0.localizedDescription)
             self?.button.isHidden = false
         }
-        factory.complete = { [weak self] id in
-            self?.close()
-            DispatchQueue.global(qos: .background).async {
-                let project = Argonaut.load(id)
-                DispatchQueue.main.async {
-                    Navigate(project).makeKeyAndOrderFront(nil)
-                }
-            }
-        }
+        factory.complete = { [weak self] in self?.complete($0) }
         factory.progress = { [weak self] in
             self?.progress.constant = CGFloat(160 * $0)
             self?.label.stringValue = "\(Int(100 * $0))%"
         }
+        DispatchQueue.global(qos: .background).async { [weak self] in self?.start(plan) }
+    }
+    
+    private func start(_ plan: Plan) {
+        factory.prepare()
+        factory.measure()
+        factory.divide()
+        DispatchQueue.main.async { [weak self] in self?.retry() }
         
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            self?.factory.prepare()
-            self?.factory.measure()
-            self?.factory.divide()
-            DispatchQueue.main.async { [weak self] in self?.retry() }
+        item.origin = plan.path.first!.name
+        item.destination = plan.path.last!.name
+        plan.path.forEach {
+            $0.options.forEach {
+                if $0.mode == .walking {
+                    item.walking.duration += $0.duration
+                    item.walking.distance += $0.distance
+                } else {
+                    item.driving.duration += $0.duration
+                    item.driving.distance += $0.distance
+                }
+            }
+        }
+    }
+    
+    private func complete(_ id: String) {
+        item.id = id
+        app.list.session.items.append(item)
+        close()
+        DispatchQueue.global(qos: .background).async {
+            let project = Argonaut.load(id)
+            DispatchQueue.main.async {
+                Navigate(project).makeKeyAndOrderFront(nil)
+            }
         }
     }
     

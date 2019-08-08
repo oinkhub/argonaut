@@ -34,11 +34,9 @@ final class TestSession: XCTestCase {
         let date = Date()
         var session = Session()
         session.rating = date
-        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.01) {
-            Session.load {
-                XCTAssertEqual(date, $0.rating)
-                expect.fulfill()
-            }
+        Session.load {
+            XCTAssertEqual(date, $0.rating)
+            expect.fulfill()
         }
         waitForExpectations(timeout: 1)
     }
@@ -48,12 +46,10 @@ final class TestSession: XCTestCase {
         var session = Session()
         session.items = [.init()]
         session.items[0].id = "hello"
-        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.01) {
-            Session.load {
-                XCTAssertEqual("hello", $0.items[0].id)
-                expect.fulfill()
-            }
+        Session.load {
+            XCTAssertEqual("hello", $0.items[0].id)
+            expect.fulfill()
         }
-        waitForExpectations(timeout: 1)
+        waitForExpectations(timeout: 5)
     }
 }
