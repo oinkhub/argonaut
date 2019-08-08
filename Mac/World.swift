@@ -11,13 +11,13 @@ class World: NSWindow {
     private var formatter: Any!
     
     init() {
-        super.init(contentRect: .init(origin: .init(x: app.list.frame.maxX + 4, y: app.list.frame.minY), size: .init(width: 1000, height: 800)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
+        super.init(contentRect: .init(origin: .init(x: app.list.frame.maxX + 4, y: app.list.frame.maxY - 800), size: .init(width: 1000, height: 800)), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black
         collectionBehavior = .fullScreenNone
         isReleasedWhenClosed = false
-        minSize = .init(width: 250, height: 250)
+        minSize = .init(width: 200, height: 200)
         toolbar = .init(identifier: "")
         toolbar!.showsBaselineSeparator = false
         dater.unitsStyle = .full
