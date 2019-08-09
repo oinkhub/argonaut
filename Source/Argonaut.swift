@@ -6,15 +6,23 @@ public final class Argonaut {
     static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
     
     public static func save(_ id: String, data: Data) {
-        try! code(data).write(to: url.appendingPathComponent(id + ".argonaut"), options: .atomic)
+        try! code(data).write(to: url(id), options: .atomic)
     }
     
     public static func load(_ id: String) -> (Plan, Cart) {
-        let data = decode(try! Data(contentsOf: url.appendingPathComponent(id + ".argonaut")))
+        let data = decode(try! Data(contentsOf: url(id)))
         let plan = Plan()
         let cart = Cart(data.subdata(in: plan.decode(data) ..< data.count))
         return (plan, cart)
     }
+    
+    public static func delete(_ id: String) {
+        DispatchQueue.global(qos: .background).async {
+            try? FileManager.default.removeItem(at: url(id))
+        }
+    }
+    
+    private static func url(_ id: String) -> URL { return url.appendingPathComponent(id + ".argonaut") }
     
     private static func code(_ data: Data) -> Data {
         return data.withUnsafeBytes {

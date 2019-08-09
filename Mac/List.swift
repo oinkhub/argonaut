@@ -17,11 +17,12 @@ final class List: NSWindow {
             icon.translatesAutoresizingMaskIntoConstraints = false
             icon.image = NSImage(named: image)
             icon.imageScaling = .scaleNone
+            icon.alphaValue = 0.7
             addSubview(icon)
             
             let label = Label()
-            label.textColor = .halo
-            label.font = .systemFont(ofSize: 13, weight: .medium)
+            label.textColor = NSColor(white: 1, alpha: 0.6)
+            label.font = .systemFont(ofSize: 12, weight: .regular)
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             
             if #available(OSX 10.12, *) {
@@ -38,21 +39,22 @@ final class List: NSWindow {
             
             addSubview(label)
             
-            bottomAnchor.constraint(greaterThanOrEqualTo: label.bottomAnchor, constant: 5).isActive = true
+            bottomAnchor.constraint(greaterThanOrEqualTo: label.bottomAnchor, constant: 1).isActive = true
             
             icon.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
             icon.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             icon.widthAnchor.constraint(equalToConstant: 24).isActive = true
             icon.heightAnchor.constraint(equalToConstant: 24).isActive = true
             
-            label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 5).isActive = true
-            label.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
+            label.leftAnchor.constraint(equalTo: icon.rightAnchor).isActive = true
+            label.topAnchor.constraint(equalTo: topAnchor).isActive = true
             label.rightAnchor.constraint(equalTo: rightAnchor, constant: -5).isActive = true
         }
     }
     
     private final class Item: NSView {
-        let item: Session.Item
+        private weak var over: NSView!
+        private let item: Session.Item
         
         required init?(coder: NSCoder) { return nil }
         init(_ item: Session.Item) {
@@ -67,10 +69,10 @@ final class List: NSWindow {
             origin.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             addSubview(origin)
             
-            let walking = Travel("walking", value: item.walking)
+            let walking = Travel("walk", value: item.walking)
             addSubview(walking)
             
-            let driving = Travel("driving", value: item.driving)
+            let driving = Travel("drive", value: item.driving)
             addSubview(driving)
             
             let destination = Label()
@@ -80,7 +82,7 @@ final class List: NSWindow {
             destination.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             addSubview(destination)
             
-            let delete = Button.Image(nil, action: nil)
+            let delete = Button.Image(self, action: #selector(self.delete))
             delete.image.image = NSImage(named: "delete")
             addSubview(delete)
             
@@ -90,29 +92,56 @@ final class List: NSWindow {
             
             let view = Button.Yes(nil, action: nil)
             view.label.stringValue = .key("List.view")
+            view.label.font = .systemFont(ofSize: 12, weight: .bold)
             addSubview(view)
             
             let border = NSView()
             border.translatesAutoresizingMaskIntoConstraints = false
             border.wantsLayer = true
-            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.2).cgColor
+            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
             addSubview(border)
+            
+            let over = NSView()
+            over.translatesAutoresizingMaskIntoConstraints = false
+            over.wantsLayer = true
+            over.layer!.backgroundColor = .black
+            over.alphaValue = 0
+            over.isHidden = true
+            addSubview(over)
+            self.over = over
+            
+            let warning = Label()
+            warning.font = .systemFont(ofSize: 18, weight: .regular)
+            warning.textColor = .white
+            warning.stringValue = .key("List.warning")
+            over.addSubview(warning)
+            
+            let cancel = Button.Text(self, action: #selector(self.cancel))
+            cancel.label.textColor = .white
+            cancel.label.stringValue = .key("List.cancel")
+            cancel.label.font = .systemFont(ofSize: 14, weight: .medium)
+            over.addSubview(cancel)
+            
+            let confirm = Button.Yes(self, action: #selector(self.confirm))
+            confirm.layer!.backgroundColor = NSColor(red: 1, green: 0, blue: 0, alpha: 0.9).cgColor
+            confirm.label.stringValue = .key("List.confirm")
+            over.addSubview(confirm)
             
             bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
             
-            origin.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+            origin.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
             origin.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
             origin.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
             
-            walking.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 10).isActive = true
+            walking.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 5).isActive = true
             walking.leftAnchor.constraint(equalTo: origin.leftAnchor).isActive = true
             walking.rightAnchor.constraint(equalTo: origin.rightAnchor).isActive = true
             
-            driving.topAnchor.constraint(equalTo: walking.bottomAnchor, constant: 10).isActive = true
+            driving.topAnchor.constraint(equalTo: walking.bottomAnchor, constant: 5).isActive = true
             driving.leftAnchor.constraint(equalTo: origin.leftAnchor).isActive = true
             driving.rightAnchor.constraint(equalTo: origin.rightAnchor).isActive = true
             
-            destination.topAnchor.constraint(equalTo: driving.bottomAnchor, constant: 15).isActive = true
+            destination.topAnchor.constraint(equalTo: driving.bottomAnchor, constant: 5).isActive = true
             destination.leftAnchor.constraint(equalTo: origin.leftAnchor).isActive = true
             destination.rightAnchor.constraint(equalTo: origin.rightAnchor).isActive = true
             
@@ -126,13 +155,54 @@ final class List: NSWindow {
             share.leftAnchor.constraint(equalTo: delete.rightAnchor, constant: 10).isActive = true
             share.widthAnchor.constraint(equalToConstant: 40).isActive = true
             
-            view.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
-            view.leftAnchor.constraint(equalTo: share.rightAnchor, constant: 20).isActive = true
+            view.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 20).isActive = true
+            view.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
             
-            border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 5).isActive = true
-            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -5).isActive = true
+            border.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
             border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+            
+            over.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            over.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            over.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            over.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            
+            warning.centerXAnchor.constraint(equalTo: over.centerXAnchor).isActive = true
+            warning.bottomAnchor.constraint(lessThanOrEqualTo: confirm.topAnchor, constant: -40).isActive = true
+            
+            confirm.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
+            confirm.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
+            
+            cancel.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
+            cancel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
+            cancel.widthAnchor.constraint(equalTo: confirm.widthAnchor).isActive = true
+            cancel.heightAnchor.constraint(equalTo: confirm.heightAnchor).isActive = true
+        }
+        
+        @objc private func delete() {
+            NSAnimationContext.runAnimationGroup({
+                $0.duration = 0.35
+                $0.allowsImplicitAnimation = true
+                over.alphaValue = 1
+                over.isHidden = false
+            }) { }
+        }
+        
+        @objc private func cancel() {
+            NSAnimationContext.runAnimationGroup({
+                $0.duration = 0.35
+                $0.allowsImplicitAnimation = true
+                over.alphaValue = 0
+            }) { }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+                self?.over.isHidden = true
+            }
+        }
+        
+        @objc private func confirm() {
+            
+            app.list.session.items.removeAll(where: { $0.id == item.id })
         }
     }
     
@@ -141,13 +211,13 @@ final class List: NSWindow {
     private weak var bottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; bottom.isActive = true } }
     
     init() {
-        super.init(contentRect: .init(x: NSScreen.main!.frame.midX - 600, y: NSScreen.main!.frame.midY - 200, width: 240, height: 400), styleMask: [.closable, .resizable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
+        super.init(contentRect: .init(x: NSScreen.main!.frame.midX - 600, y: NSScreen.main!.frame.midY, width: 240, height: 400), styleMask: [.closable, .resizable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black
         collectionBehavior = .fullScreenNone
         isReleasedWhenClosed = false
-        minSize = .init(width: 100, height: 100)
+        minSize = .init(width: 180, height: 120)
         toolbar = .init(identifier: "")
         toolbar!.showsBaselineSeparator = false
         
@@ -228,13 +298,6 @@ final class List: NSWindow {
             item.topAnchor.constraint(equalTo: top).isActive = true
             top = item.bottomAnchor
         }
-        bottom = scroll.documentView!.bottomAnchor.constraint(equalTo: top, constant: 20)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            NSAnimationContext.runAnimationGroup({
-                $0.duration = 0.4
-                $0.allowsImplicitAnimation = true
-                self.scroll.documentView!.scrollToVisible(.init(x: 0, y: 0, width: 1, height: 1))
-            }) { }
-        }
+        bottom = scroll.documentView!.bottomAnchor.constraint(equalTo: top)
     }
 }
