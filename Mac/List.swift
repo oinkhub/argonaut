@@ -90,7 +90,7 @@ final class List: NSWindow {
             share.image.image = NSImage(named: "share")
             addSubview(share)
             
-            let view = Button.Yes(nil, action: nil)
+            let view = Button.Yes(self, action: #selector(self.view))
             view.label.stringValue = .key("List.view")
             view.label.font = .systemFont(ofSize: 12, weight: .bold)
             addSubview(view)
@@ -180,6 +180,10 @@ final class List: NSWindow {
             cancel.heightAnchor.constraint(equalTo: confirm.heightAnchor).isActive = true
         }
         
+        @objc private func view() {
+            Load(item.id).makeKeyAndOrderFront(nil)
+        }
+        
         @objc private func delete() {
             NSAnimationContext.runAnimationGroup({
                 $0.duration = 0.35
@@ -201,8 +205,8 @@ final class List: NSWindow {
         }
         
         @objc private func confirm() {
-            
             app.list.session.items.removeAll(where: { $0.id == item.id })
+            Argonaut.delete(item.id)
         }
     }
     

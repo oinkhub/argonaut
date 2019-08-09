@@ -8,6 +8,7 @@ public struct Session: Codable {
     
     public struct Item: Codable {
         public var id = ""
+        public var title = ""
         public var origin = ""
         public var destination = ""
         public var walking = Travel()

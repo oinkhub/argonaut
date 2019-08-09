@@ -21,6 +21,7 @@
 		CE3978A122F5B1E60045E1D7 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE39789F22F5B1E60045E1D7 /* Marker.swift */; };
 		CE4A547C22D85E1B00125A9C /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A547B22D85E1B00125A9C /* Button.swift */; };
 		CE633A2122FD525E00846455 /* TestArgonaut.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE633A2022FD525E00846455 /* TestArgonaut.swift */; };
+		CE633A2322FD791C00846455 /* Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE633A2222FD791C00846455 /* Load.swift */; };
 		CE6AE1F922F6BE5C0040B205 /* Cart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6AE1F822F6BE5C0040B205 /* Cart.swift */; };
 		CE6AE1FA22F6BE5C0040B205 /* Cart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6AE1F822F6BE5C0040B205 /* Cart.swift */; };
 		CE6AE1FC22F6BEAE0040B205 /* TestCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6AE1FB22F6BEAE0040B205 /* TestCart.swift */; };
@@ -97,6 +98,7 @@
 		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE58E9BE22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE633A2022FD525E00846455 /* TestArgonaut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestArgonaut.swift; sourceTree = "<group>"; };
+		CE633A2222FD791C00846455 /* Load.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Load.swift; sourceTree = "<group>"; };
 		CE6AE1F822F6BE5C0040B205 /* Cart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cart.swift; sourceTree = "<group>"; };
 		CE6AE1FB22F6BEAE0040B205 /* TestCart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCart.swift; sourceTree = "<group>"; };
 		CE734F7B22F1A2F7009799BE /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				CE0038FB22D72D68008A8E88 /* Extensions.swift */,
 				CE02CB5522E992D1009F7323 /* Field.swift */,
 				CE0038FD22D72E5B008A8E88 /* List.swift */,
+				CE633A2222FD791C00846455 /* Load.swift */,
 				CE9301D822EEF9C000EACBD4 /* Navigate.swift */,
 				CEAB0F0722D73C5800320F4F /* New.swift */,
 				CE734F7B22F1A2F7009799BE /* World.swift */,
@@ -505,6 +508,7 @@
 			files = (
 				CE9301D922EEF9C000EACBD4 /* Navigate.swift in Sources */,
 				CE7EACE322E1B9A40082D91C /* Callout.swift in Sources */,
+				CE633A2322FD791C00846455 /* Load.swift in Sources */,
 				CE0038FA22D72D41008A8E88 /* Alert.swift in Sources */,
 				CE02CB5622E992D1009F7323 /* Field.swift in Sources */,
 				CEDE110522D71F3600DD796B /* App.swift in Sources */,

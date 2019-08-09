@@ -99,12 +99,7 @@ final class Create: NSWindow {
         item.id = id
         app.list.session.items.append(item)
         close()
-        DispatchQueue.global(qos: .background).async {
-            let project = Argonaut.load(id)
-            DispatchQueue.main.async {
-                Navigate(project).makeKeyAndOrderFront(nil)
-            }
-        }
+        Load(id).makeKeyAndOrderFront(nil)
     }
     
     @objc private func retry() {
