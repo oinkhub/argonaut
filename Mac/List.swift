@@ -52,8 +52,9 @@ final class List: NSWindow {
         }
     }
     
-    private final class Item: NSView {
+    private final class Item: NSView, NSTextViewDelegate {
         private weak var over: NSView!
+        private weak var field: Field!
         private let item: Session.Item
         
         required init?(coder: NSCoder) { return nil }
@@ -61,6 +62,11 @@ final class List: NSWindow {
             self.item = item
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
+            
+            let field = Field()
+            field.delegate = self
+            addSubview(field)
+            self.field = field
             
             let origin = Label()
             origin.stringValue = item.origin
@@ -127,9 +133,14 @@ final class List: NSWindow {
             confirm.label.stringValue = .key("List.confirm")
             over.addSubview(confirm)
             
+            field.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            field.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            
             bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
             
-            origin.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+            origin.topAnchor.constraint(equalTo: field.bottomAnchor, constant: 1das0).isActive = true
             origin.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
             origin.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
             
