@@ -149,7 +149,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    private weak var field: Field!
+    private weak var field: Field.Search!
     private weak var list: NSScrollView!
     private weak var results: NSScrollView!
     private weak var total: NSView!
@@ -234,7 +234,10 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         save.label.stringValue = .key("New.save")
         contentView!.addSubview(save)
         
-        let field = Field()
+        let field = Field.Search()
+        field.textContainerInset.height = 9
+        field.textContainerInset.width = 40
+        field.font = .systemFont(ofSize: 16, weight: .regular)
         field.delegate = self
         contentView!.addSubview(field)
         self.field = field

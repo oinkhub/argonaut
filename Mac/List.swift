@@ -55,6 +55,7 @@ final class List: NSWindow {
     private final class Item: NSView, NSTextViewDelegate {
         private weak var over: NSView!
         private weak var field: Field!
+        private weak var height: NSLayoutConstraint!
         private let item: Session.Item
         
         required init?(coder: NSCoder) { return nil }
@@ -64,6 +65,10 @@ final class List: NSWindow {
             translatesAutoresizingMaskIntoConstraints = false
             
             let field = Field()
+            field.font = .systemFont(ofSize: 16, weight: .medium)
+            field.textContainerInset.height = 15
+            field.textContainerInset.width = 10
+            field.accepts = true
             field.delegate = self
             addSubview(field)
             self.field = field
@@ -136,13 +141,14 @@ final class List: NSWindow {
             field.topAnchor.constraint(equalTo: topAnchor).isActive = true
             field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            field.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            height = field.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
+            height.isActive = true
             
             bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
             
-            origin.topAnchor.constraint(equalTo: field.bottomAnchor, constant: 1das0).isActive = true
-            origin.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-            origin.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+            origin.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
+            origin.leftAnchor.constraint(equalTo: leftAnchor, constant: 13).isActive = true
+            origin.rightAnchor.constraint(equalTo: rightAnchor, constant: -13).isActive = true
             
             walking.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 5).isActive = true
             walking.leftAnchor.constraint(equalTo: origin.leftAnchor).isActive = true
@@ -158,7 +164,7 @@ final class List: NSWindow {
             
             delete.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
             delete.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-            delete.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+            delete.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
             delete.widthAnchor.constraint(equalToConstant: 40).isActive = true
             
             share.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -167,11 +173,11 @@ final class List: NSWindow {
             share.widthAnchor.constraint(equalToConstant: 40).isActive = true
             
             view.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 20).isActive = true
-            view.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
+            view.rightAnchor.constraint(equalTo: rightAnchor, constant: -14).isActive = true
             
             border.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
+            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
             border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             
             over.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -189,6 +195,21 @@ final class List: NSWindow {
             cancel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
             cancel.widthAnchor.constraint(equalTo: confirm.widthAnchor).isActive = true
             cancel.heightAnchor.constraint(equalTo: confirm.heightAnchor).isActive = true
+        }
+        
+        override func viewDidEndLiveResize() {
+            super.viewDidEndLiveResize()
+            adjust()
+        }
+        
+        func textDidChange(_: Notification) {
+            adjust()
+        }
+        
+        private func adjust() {
+            field.textContainer!.size.width = frame.width - (field.textContainerInset.width * 2) - 20
+            field.layoutManager!.ensureLayout(for: field.textContainer!)
+            height.constant = field.layoutManager!.usedRect(for: field.textContainer!).size.height + 30
         }
         
         @objc private func view() {
