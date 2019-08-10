@@ -94,7 +94,7 @@ final class List: NSWindow {
             delete.image.image = NSImage(named: "delete")
             addSubview(delete)
             
-            let share = Button.Image(nil, action: nil)
+            let share = Button.Image(self, action: #selector(self.share))
             share.image.image = NSImage(named: "share")
             addSubview(share)
             
@@ -217,6 +217,10 @@ final class List: NSWindow {
             app.list.session.items.removeAll(where: { $0.id == item.id })
             app.list.refresh()
             Argonaut.delete(item.id)
+        }
+        
+        @objc private func share() {
+            try! NSSharingServicePicker(items: [JSONEncoder().encode(item)]).show(relativeTo: frame, of: self, preferredEdge: .maxY)
         }
     }
     
