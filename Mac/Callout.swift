@@ -13,10 +13,9 @@ class Callout: NSView {
             circle.layer!.cornerRadius = 15
             addSubview(circle)
             
-            let label = Label()
+            let label = Label(index)
             label.font = .systemFont(ofSize: 14, weight: .bold)
             label.textColor = .black
-            label.stringValue = index
             circle.addSubview(label)
             
             let base = NSView()

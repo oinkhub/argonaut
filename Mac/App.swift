@@ -228,5 +228,5 @@ private(set) weak var app: App!
     private func order<W: NSWindow>(_ type: W.Type) { (windows.first(where: { $0 is W }) ?? W()).makeKeyAndOrderFront(nil) }
     @objc private func about() { order(About.self) }
     @objc private func privacy() { order(Privacy.self) }
-    @objc private func help() { }
+    @objc private func help() { order(Help.self) }
 }

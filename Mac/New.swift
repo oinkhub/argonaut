@@ -118,8 +118,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         func driving(_ string: String) { add(.driving, string: string) }
         
         private func add(_ color: NSColor, string: String) {
-            let label = Label()
-            label.stringValue = string
+            let label = Label(string)
             label.textColor = .white
             label.font = .systemFont(ofSize: 13, weight: .light)
             addSubview(label)
@@ -408,8 +407,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             circle.layer!.cornerRadius = 8
             total.addSubview(circle)
             
-            let label = Label()
-            label.stringValue = $0.1
+            let label = Label($0.1)
             label.font = .systemFont(ofSize: 14, weight: .medium)
             label.textColor = .white
             total.addSubview(label)

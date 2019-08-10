@@ -13,6 +13,7 @@
 		CE02CB5622E992D1009F7323 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE02CB5522E992D1009F7323 /* Field.swift */; };
 		CE088B8322FED9120001BEE4 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE088B8222FED9120001BEE4 /* About.swift */; };
 		CE088B8522FEDE810001BEE4 /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE088B8422FEDE810001BEE4 /* Privacy.swift */; };
+		CE088B8722FEE7A80001BEE4 /* Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE088B8622FEE7A80001BEE4 /* Help.swift */; };
 		CE26CE0522F4679C0007441D /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE422E1E1620082D91C /* Mark.swift */; };
 		CE26CE0622F4679C0007441D /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE26CDF822F4039F0007441D /* Line.swift */; };
 		CE26CE0722F467A40007441D /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE422E1E1620082D91C /* Mark.swift */; };
@@ -95,6 +96,7 @@
 		CE02CB5522E992D1009F7323 /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		CE088B8222FED9120001BEE4 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		CE088B8422FEDE810001BEE4 /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
+		CE088B8622FEE7A80001BEE4 /* Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
 		CE26CDF822F4039F0007441D /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		CE2A863C22F7F7C000AC8190 /* Argonaut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Argonaut.swift; sourceTree = "<group>"; };
 		CE39789F22F5B1E60045E1D7 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 				CEE2BF9822EAF5400080C111 /* Create.swift */,
 				CE0038FB22D72D68008A8E88 /* Extensions.swift */,
 				CE02CB5522E992D1009F7323 /* Field.swift */,
+				CE088B8622FEE7A80001BEE4 /* Help.swift */,
 				CE0038FD22D72E5B008A8E88 /* List.swift */,
 				CE633A2222FD791C00846455 /* Load.swift */,
 				CE9301D822EEF9C000EACBD4 /* Navigate.swift */,
@@ -528,6 +531,7 @@
 				CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */,
 				CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */,
 				CECECD7C22F469F2006AE0C8 /* Liner.swift in Sources */,
+				CE088B8722FEE7A80001BEE4 /* Help.swift in Sources */,
 				CE734F7C22F1A2F7009799BE /* World.swift in Sources */,
 				CE26CE0622F4679C0007441D /* Line.swift in Sources */,
 				CEE2BF9922EAF5400080C111 /* Create.swift in Sources */,

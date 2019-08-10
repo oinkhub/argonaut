@@ -11,8 +11,7 @@ final class Load: NSWindow {
         isReleasedWhenClosed = false
         level = .floating
         
-        let label = Label()
-        label.stringValue = .key("Load.label")
+        let label = Label(.key("Load.label"))
         label.textColor = .halo
         label.font = .systemFont(ofSize: 20, weight: .bold)
         contentView!.addSubview(label)
