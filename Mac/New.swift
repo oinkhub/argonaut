@@ -235,9 +235,6 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         contentView!.addSubview(save)
         
         let field = Field.Search()
-        field.textContainerInset.height = 9
-        field.textContainerInset.width = 40
-        field.font = .systemFont(ofSize: 16, weight: .regular)
         field.delegate = self
         contentView!.addSubview(field)
         self.field = field

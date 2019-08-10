@@ -17,11 +17,11 @@ final class List: NSWindow {
             icon.translatesAutoresizingMaskIntoConstraints = false
             icon.image = NSImage(named: image)
             icon.imageScaling = .scaleNone
-            icon.alphaValue = 0.7
+            icon.alphaValue = 0.5
             addSubview(icon)
             
             let label = Label()
-            label.textColor = NSColor(white: 1, alpha: 0.6)
+            label.textColor = NSColor(white: 1, alpha: 0.5)
             label.font = .systemFont(ofSize: 12, weight: .regular)
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             
@@ -36,7 +36,6 @@ final class List: NSWindow {
             }
             
             label.stringValue += ": " + dater.string(from: value.duration)!
-            
             addSubview(label)
             
             bottomAnchor.constraint(greaterThanOrEqualTo: label.bottomAnchor, constant: 1).isActive = true
@@ -54,8 +53,7 @@ final class List: NSWindow {
     
     private final class Item: NSView, NSTextViewDelegate {
         private weak var over: NSView!
-        private weak var field: Field!
-        private weak var height: NSLayoutConstraint!
+        private weak var field: Field.Name!
         private let item: Session.Item
         
         required init?(coder: NSCoder) { return nil }
@@ -64,21 +62,11 @@ final class List: NSWindow {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             
-            let field = Field()
-            field.font = .systemFont(ofSize: 16, weight: .medium)
-            field.textContainerInset.height = 15
-            field.textContainerInset.width = 10
-            field.accepts = true
+            let field = Field.Name()
+            field.string = item.title.isEmpty ? .key("List.field") : item.title
             field.delegate = self
             addSubview(field)
             self.field = field
-            
-            let origin = Label()
-            origin.stringValue = item.origin
-            origin.font = .systemFont(ofSize: 15, weight: .regular)
-            origin.textColor = .white
-            origin.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-            addSubview(origin)
             
             let walking = Travel("walk", value: item.walking)
             addSubview(walking)
@@ -86,12 +74,21 @@ final class List: NSWindow {
             let driving = Travel("drive", value: item.driving)
             addSubview(driving)
             
+            let origin = Label()
+            origin.stringValue = item.origin
+            
             let destination = Label()
             destination.stringValue = item.destination
-            destination.font = .systemFont(ofSize: 14, weight: .regular)
-            destination.textColor = .white
-            destination.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-            addSubview(destination)
+            
+            [origin, destination].forEach {
+                $0.font = .systemFont(ofSize: 14, weight: .regular)
+                $0.textColor = NSColor(white: 1, alpha: 0.7)
+                $0.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+                addSubview($0)
+                
+                $0.leftAnchor.constraint(equalTo: leftAnchor, constant: 13).isActive = true
+                $0.rightAnchor.constraint(equalTo: rightAnchor, constant: -13).isActive = true
+            }
             
             let delete = Button.Image(self, action: #selector(self.delete))
             delete.image.image = NSImage(named: "delete")
@@ -105,12 +102,6 @@ final class List: NSWindow {
             view.label.stringValue = .key("List.view")
             view.label.font = .systemFont(ofSize: 12, weight: .bold)
             addSubview(view)
-            
-            let border = NSView()
-            border.translatesAutoresizingMaskIntoConstraints = false
-            border.wantsLayer = true
-            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.3).cgColor
-            addSubview(border)
             
             let over = NSView()
             over.translatesAutoresizingMaskIntoConstraints = false
@@ -138,17 +129,13 @@ final class List: NSWindow {
             confirm.label.stringValue = .key("List.confirm")
             over.addSubview(confirm)
             
-            field.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            field.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
             field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            height = field.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
-            height.isActive = true
             
             bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 20).isActive = true
             
             origin.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
-            origin.leftAnchor.constraint(equalTo: leftAnchor, constant: 13).isActive = true
-            origin.rightAnchor.constraint(equalTo: rightAnchor, constant: -13).isActive = true
             
             walking.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 5).isActive = true
             walking.leftAnchor.constraint(equalTo: origin.leftAnchor).isActive = true
@@ -159,26 +146,19 @@ final class List: NSWindow {
             driving.rightAnchor.constraint(equalTo: origin.rightAnchor).isActive = true
             
             destination.topAnchor.constraint(equalTo: driving.bottomAnchor, constant: 5).isActive = true
-            destination.leftAnchor.constraint(equalTo: origin.leftAnchor).isActive = true
-            destination.rightAnchor.constraint(equalTo: origin.rightAnchor).isActive = true
             
             delete.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
             delete.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-            delete.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
-            delete.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            delete.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+            delete.widthAnchor.constraint(equalToConstant: 30).isActive = true
             
             share.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
             share.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-            share.leftAnchor.constraint(equalTo: delete.rightAnchor, constant: 10).isActive = true
-            share.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            share.leftAnchor.constraint(equalTo: delete.rightAnchor).isActive = true
+            share.widthAnchor.constraint(equalToConstant: 30).isActive = true
             
             view.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 20).isActive = true
             view.rightAnchor.constraint(equalTo: rightAnchor, constant: -14).isActive = true
-            
-            border.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
-            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
-            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             
             over.topAnchor.constraint(equalTo: topAnchor).isActive = true
             over.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -199,17 +179,14 @@ final class List: NSWindow {
         
         override func viewDidEndLiveResize() {
             super.viewDidEndLiveResize()
-            adjust()
+            field.adjust()
         }
         
-        func textDidChange(_: Notification) {
-            adjust()
-        }
+        func textDidChange(_: Notification) { field.adjust() }
         
-        private func adjust() {
-            field.textContainer!.size.width = frame.width - (field.textContainerInset.width * 2) - 20
-            field.layoutManager!.ensureLayout(for: field.textContainer!)
-            height.constant = field.layoutManager!.usedRect(for: field.textContainer!).size.height + 30
+        func textDidEndEditing(_: Notification) {
+            item.title = field.string
+            app.list.session.save()
         }
         
         @objc private func view() {
@@ -242,7 +219,7 @@ final class List: NSWindow {
         }
     }
     
-    var session: Session! { didSet { refresh() } }
+    var session: Session!
     private weak var scroll: NSScrollView!
     private weak var bottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; bottom.isActive = true } }
     
@@ -306,6 +283,7 @@ final class List: NSWindow {
         
         Session.load {
             self.session = $0
+            self.refresh()
         }
     }
     
@@ -314,20 +292,25 @@ final class List: NSWindow {
         app.terminate(nil)
     }
     
-    @objc func new() {
-        if let new = app.windows.first(where: { $0 is New }) {
-            new.orderFront(nil)
-        } else {
-            New().makeKeyAndOrderFront(nil)
-        }
-    }
-    
-    private func refresh() {
+    func refresh() {
         scroll.documentView!.subviews.forEach { $0.removeFromSuperview() }
         var top = scroll.documentView!.topAnchor
-        session.items.forEach {
-            let item = Item($0)
-            scroll.documentView?.addSubview(item)
+        session.items.enumerated().forEach {
+            let item = Item($0.1)
+            scroll.documentView!.addSubview(item)
+            
+            if $0.0 != 0 {
+                let border = NSView()
+                border.translatesAutoresizingMaskIntoConstraints = false
+                border.wantsLayer = true
+                border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.4).cgColor
+                scroll.documentView!.addSubview(border)
+                
+                border.topAnchor.constraint(equalTo: item.topAnchor).isActive = true
+                border.leftAnchor.constraint(equalTo: scroll.documentView!.leftAnchor, constant: 16).isActive = true
+                border.rightAnchor.constraint(equalTo: scroll.documentView!.rightAnchor, constant: -16).isActive = true
+                border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+            }
             
             item.leftAnchor.constraint(equalTo: scroll.documentView!.leftAnchor).isActive = true
             item.rightAnchor.constraint(equalTo: scroll.documentView!.rightAnchor).isActive = true
@@ -335,5 +318,13 @@ final class List: NSWindow {
             top = item.bottomAnchor
         }
         bottom = scroll.documentView!.bottomAnchor.constraint(equalTo: top)
+    }
+    
+    @objc func new() {
+        if let new = app.windows.first(where: { $0 is New }) {
+            new.orderFront(nil)
+        } else {
+            New().makeKeyAndOrderFront(nil)
+        }
     }
 }

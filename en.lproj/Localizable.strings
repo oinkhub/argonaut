@@ -9,6 +9,7 @@ List.view="Navigate";
 List.warning="Delete this map?";
 List.cancel="Cancel";
 List.confirm="Delete";
+List.field="Map";
 Load.label="Loading...";
 Menu.argonaut="Argonaut";
 Menu.about="About";

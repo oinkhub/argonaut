@@ -1,12 +1,12 @@
 import Foundation
 
-public struct Session: Codable {
+public class Session: Codable {
     public struct Travel: Codable {
         public var duration = 0.0
         public var distance = 0.0
     }
     
-    public struct Item: Codable {
+    public class Item: Codable {
         public var id = ""
         public var title = ""
         public var origin = ""
@@ -34,7 +34,7 @@ public struct Session: Codable {
         return d
     } (), to: Date())! { didSet { save() } }
     
-    private func save() {
+    public func save() {
         Session.queue.async {
             UserDefaults.standard.set(try! JSONEncoder().encode(self), forKey: "session")
         }

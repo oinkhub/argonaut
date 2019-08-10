@@ -30,6 +30,9 @@ class Field: NSTextView {
             super.init()
             textContainer!.size.height = 35
             textContainer!.size.width = 370
+            textContainerInset.height = 9
+            textContainerInset.width = 40
+            font = .systemFont(ofSize: 16, weight: .regular)
             layoutManager!.ensureLayout(for: textContainer!)
             
             let icon = Button.Image(self, action: #selector(search))
@@ -76,11 +79,40 @@ class Field: NSTextView {
         }
     }
     
+    final class Name: Field {
+        private weak var height: NSLayoutConstraint!
+        
+        required init?(coder: NSCoder) { return nil }
+        override init() {
+            super.init()
+            font = .systemFont(ofSize: 14, weight: .bold)
+            textContainerInset.height = 7
+            textContainerInset.width = 10
+            accepts = true
+            
+            height = heightAnchor.constraint(greaterThanOrEqualToConstant: 40)
+            height.isActive = true
+        }
+        
+        override func keyDown(with: NSEvent) {
+            switch with.keyCode {
+            case 36, 48, 53: window!.makeFirstResponder(nil)
+            default: super.keyDown(with: with)
+            }
+        }
+        
+        func adjust() {
+            textContainer!.size.width = frame.width - (textContainerInset.width * 2) - 20
+            layoutManager!.ensureLayout(for: textContainer!)
+            height.constant = layoutManager!.usedRect(for: textContainer!).size.height + 14
+        }
+    }
+    
     var accepts = false
     override var acceptsFirstResponder: Bool { return accepts }
     
     required init?(coder: NSCoder) { return nil }
-    init() {
+    private init() {
         let storage = NSTextStorage()
         super.init(frame: .zero, textContainer: {
             $1.delegate = $1

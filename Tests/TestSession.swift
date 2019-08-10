@@ -32,7 +32,7 @@ final class TestSession: XCTestCase {
     func testRating() {
         let expect = expectation(description: "")
         let date = Date()
-        var session = Session()
+        let session = Session()
         session.rating = date
         Session.load {
             XCTAssertEqual(date, $0.rating)
@@ -43,7 +43,7 @@ final class TestSession: XCTestCase {
     
     func testItems() {
         let expect = expectation(description: "")
-        var session = Session()
+        let session = Session()
         session.items = [.init()]
         session.items[0].id = "hello"
         Session.load {
