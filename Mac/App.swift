@@ -73,7 +73,7 @@ private(set) weak var app: App!
             $0.submenu!.items = [
                 NSMenuItem(title: .key("Menu.about"), action: #selector(about), keyEquivalent: ""),
                 NSMenuItem.separator(),
-                NSMenuItem(title: .key("Menu.preferences"), action: #selector(settings), keyEquivalent: ","),
+                NSMenuItem(title: .key("Menu.privacy"), action: #selector(privacy), keyEquivalent: ","),
                 NSMenuItem.separator(),
                 NSMenuItem(title: .key("Menu.hide"), action: #selector(hide(_:)), keyEquivalent: "h"),
                 { $0.keyEquivalentModifierMask = [.option, .command]
@@ -105,17 +105,17 @@ private(set) weak var app: App!
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.map"))
             $0.submenu!.items = [
-                { $0.keyEquivalentModifierMask = [.option, .command]
+                { $0.keyEquivalentModifierMask = []
                     follow = $0
                     follow.state = .on
                     return $0
                 } (NSMenuItem(title: .key("Menu.follow"), action: #selector(World.follow), keyEquivalent: "f")),
-                { $0.keyEquivalentModifierMask = [.option, .command]
+                { $0.keyEquivalentModifierMask = []
                     walking = $0
                     walking.state = .on
                     return $0
                 } (NSMenuItem(title: .key("Menu.walking"), action: #selector(World.walking), keyEquivalent: "w")),
-                { $0.keyEquivalentModifierMask = [.option, .command]
+                { $0.keyEquivalentModifierMask = []
                     driving = $0
                     driving.state = .on
                     return $0
@@ -225,7 +225,8 @@ private(set) weak var app: App!
         }
     }
     
-    @objc private func about() { }
-    @objc private func settings() { }
+    private func order<W: NSWindow>(_ type: W.Type) { (windows.first(where: { $0 is W }) ?? W()).makeKeyAndOrderFront(nil) }
+    @objc private func about() { order(About.self) }
+    @objc private func privacy() { order(Privacy.self) }
     @objc private func help() { }
 }

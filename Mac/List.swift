@@ -215,6 +215,7 @@ final class List: NSWindow {
         
         @objc private func confirm() {
             app.list.session.items.removeAll(where: { $0.id == item.id })
+            app.list.refresh()
             Argonaut.delete(item.id)
         }
     }
