@@ -118,6 +118,12 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
+    func merge(_ plan: Plan) {
+        self.plan.path.append(contentsOf: plan.path)
+        addAnnotations(plan.path.map { Mark($0) })
+        filter()
+    }
+    
     @objc func `in`() {
         var region = self.region
         region.span.latitudeDelta *= 0.1
@@ -236,7 +242,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     private func filter() {
-        removeOverlays(overlays)
+        removeOverlays(overlays.filter { $0 is Line })
         addOverlays(plan.path.flatMap { path in path.options.filter { ($0.mode == .walking && _walking) || ($0.mode == .driving && _driving) }.map { Line(path, option: $0) } }, level: .aboveRoads)
     }
 }
