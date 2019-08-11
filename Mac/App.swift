@@ -1,12 +1,10 @@
 import Argonaut
 import StoreKit
 import UserNotifications
-import MapKit
 
 private(set) weak var app: App!
-@NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate, CLLocationManagerDelegate {
+@NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate {
     var session: Session!
-    private let location = CLLocationManager()
     private(set) weak var list: List!
     private(set) weak var follow: NSMenuItem!
     private(set) weak var walking: NSMenuItem!
@@ -56,31 +54,11 @@ private(set) weak var app: App!
         return item
     }
     
-    func locationManager(_: CLLocationManager, didChangeAuthorization: CLAuthorizationStatus) { status() }
-    func locationManager(_: CLLocationManager, didUpdateLocations: [CLLocation]) { }
-    
-    func locationManager(_: CLLocationManager, didFailWithError: Error) {
-        DispatchQueue.main.async { self.alert(.key("Error"), message: didFailWithError.localizedDescription) }
-    }
-    
     func receive(_ url: URL) {
         Argonaut.receive(url) {
             self.session.update($0)
             self.session.save()
             self.list.refresh()
-        }
-    }
-    
-    private func status() {
-        switch CLLocationManager.authorizationStatus() {
-        case .denied: alert(.key("Error"), message: .key("Error.location"))
-        case .notDetermined:
-            if #available(macOS 10.14, *) {
-                location.requestLocation()
-            } else {
-                location.startUpdatingLocation()
-            }
-        default: break
         }
     }
     
@@ -236,11 +214,6 @@ private(set) weak var app: App!
                 $0.save()
                 if #available(OSX 10.14, *) { SKStoreReviewController.requestReview() }
             }
-        }
-        
-        location.delegate = self
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.status()
         }
     }
     
