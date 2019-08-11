@@ -97,7 +97,8 @@ final class Create: NSWindow {
     
     private func complete(_ id: String) {
         item.id = id
-        app.list.session.items.append(item)
+        app.session.items.append(item)
+        app.session.save()
         app.list.refresh()
         close()
         Load(id).makeKeyAndOrderFront(nil)

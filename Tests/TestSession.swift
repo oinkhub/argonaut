@@ -34,6 +34,7 @@ final class TestSession: XCTestCase {
         let date = Date()
         let session = Session()
         session.rating = date
+        session.save()
         Session.load {
             XCTAssertEqual(date, $0.rating)
             expect.fulfill()
@@ -46,6 +47,7 @@ final class TestSession: XCTestCase {
         let session = Session()
         session.items = [.init()]
         session.items[0].id = "hello"
+        session.save()
         Session.load {
             XCTAssertEqual("hello", $0.items[0].id)
             expect.fulfill()

@@ -16,11 +16,6 @@ final class Map: MKMapView, MKMapViewDelegate {
         translatesAutoresizingMaskIntoConstraints = false
         isRotateEnabled = false
         isPitchEnabled = false
-        showsBuildings = true
-        showsPointsOfInterest = true
-        showsCompass = true
-        showsScale = false
-        showsTraffic = false
         showsUserLocation = true
         mapType = .standard
         delegate = self
@@ -235,7 +230,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 }
                 self?.refresh()
                 if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
-                    self?.addOverlays(path.options.map { Line(path, option: $0) }, level: .aboveRoads)
+                    self?.addOverlays(path.options.map { Line(path, option: $0) }, level: .aboveLabels)
                 }
             }
         }
@@ -243,6 +238,6 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     private func filter() {
         removeOverlays(overlays.filter { $0 is Line })
-        addOverlays(plan.path.flatMap { path in path.options.filter { ($0.mode == .walking && _walking) || ($0.mode == .driving && _driving) }.map { Line(path, option: $0) } }, level: .aboveRoads)
+        addOverlays(plan.path.flatMap { path in path.options.filter { ($0.mode == .walking && _walking) || ($0.mode == .driving && _driving) }.map { Line(path, option: $0) } }, level: .aboveLabels)
     }
 }

@@ -27,12 +27,12 @@ public class Session: Codable {
     }
     
     private static let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
-    public var items = [Item]() { didSet { save() } }
+    public var items = [Item]()
     public var rating = Calendar.current.date(byAdding: {
         var d = DateComponents()
         d.day = 3
         return d
-    } (), to: Date())! { didSet { save() } }
+    } (), to: Date())!
     
     public func save() {
         Session.queue.async {

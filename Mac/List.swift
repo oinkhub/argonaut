@@ -186,7 +186,7 @@ final class List: NSWindow {
         
         func textDidEndEditing(_: Notification) {
             item.title = field.string
-            app.list.session.save()
+            app.session.save()
         }
         
         @objc private func view() {
@@ -214,7 +214,8 @@ final class List: NSWindow {
         }
         
         @objc private func confirm() {
-            app.list.session.items.removeAll(where: { $0.id == item.id })
+            app.session.items.removeAll(where: { $0.id == item.id })
+            app.session.save()
             app.list.refresh()
             Argonaut.delete(item.id)
         }
@@ -224,7 +225,6 @@ final class List: NSWindow {
         }
     }
     
-    var session: Session!
     private weak var scroll: NSScrollView!
     private weak var bottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; bottom.isActive = true } }
     
@@ -285,11 +285,6 @@ final class List: NSWindow {
         new.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
         new.widthAnchor.constraint(equalToConstant: 40).isActive = true
         new.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        Session.load {
-            self.session = $0
-            self.refresh()
-        }
     }
     
     override func close() {
@@ -300,7 +295,7 @@ final class List: NSWindow {
     func refresh() {
         scroll.documentView!.subviews.forEach { $0.removeFromSuperview() }
         var top = scroll.documentView!.topAnchor
-        session.items.enumerated().forEach {
+        app.session.items.enumerated().forEach {
             let item = Item($0.1)
             scroll.documentView!.addSubview(item)
             

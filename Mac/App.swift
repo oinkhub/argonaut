@@ -1,9 +1,11 @@
+import Argonaut
 import StoreKit
 import UserNotifications
 import MapKit
 
 private(set) weak var app: App!
 @NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate, CLLocationManagerDelegate {
+    var session: Session!
     private let location = CLLocationManager()
     private(set) weak var list: List!
     private(set) weak var follow: NSMenuItem!
@@ -203,8 +205,23 @@ private(set) weak var app: App!
             }
         }
         
+        Session.load {
+            self.session = $0
+            list.refresh()
+            
+            if Date() >= $0.rating {
+                var components = DateComponents()
+                components.month = 4
+                $0.rating = Calendar.current.date(byAdding: components, to: Date())!
+                $0.save()
+                if #available(OSX 10.14, *) { SKStoreReviewController.requestReview() }
+            }
+        }
+        
         location.delegate = self
-        status()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.status()
+        }
     }
     
     func alert(_ title: String, message: String) {
