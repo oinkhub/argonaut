@@ -54,4 +54,18 @@ final class TestSession: XCTestCase {
         }
         waitForExpectations(timeout: 1)
     }
+    
+    func testUpdate() {
+        let a = Session.Item()
+        a.id = "lorem ipsum"
+        let b = Session.Item()
+        b.id = "lorem ipsum"
+        let session = Session()
+        session.items = [a]
+        session.update(b)
+        XCTAssertEqual(1, session.items.count)
+        session.items = []
+        session.update(b)
+        XCTAssertEqual(1, session.items.count)
+    }
 }

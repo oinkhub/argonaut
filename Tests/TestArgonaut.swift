@@ -33,16 +33,15 @@ final class TestArgonaut: XCTestCase {
         item.destination = "beta"
         item.walking.distance = 8.8
         item.walking.duration = 7.5
-        Argonaut.share(item) {
+        Argonaut.share(item) { shared in
             XCTAssertTrue(FileManager.default.fileExists(atPath: url.path))
             try! FileManager.default.removeItem(at: url)
             XCTAssertFalse(FileManager.default.fileExists(atPath: url.path))
             
             XCTAssertEqual(.main, Thread.current)
-            XCTAssertTrue(FileManager.default.fileExists(atPath: $0.path))
-            let data = try! Data(contentsOf: $0)
+            XCTAssertTrue(FileManager.default.fileExists(atPath: shared.path))
             DispatchQueue.global(qos: .background).async {
-                Argonaut.receive(data) {
+                Argonaut.receive(shared) {
                     XCTAssertEqual(.main, Thread.current)
                     XCTAssertEqual(item.id, $0.id)
                     XCTAssertEqual(item.title, $0.title)

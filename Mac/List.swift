@@ -227,7 +227,48 @@ final class List: NSWindow {
         }
     }
     
-    private weak var scroll: NSScrollView!
+    private final class Scroll: NSScrollView {
+        required init?(coder: NSCoder) { return nil }
+        init() {
+            super.init(frame: .zero)
+            translatesAutoresizingMaskIntoConstraints = false
+            drawsBackground = false
+            hasVerticalScroller = true
+            verticalScroller!.controlSize = .mini
+            horizontalScrollElasticity = .none
+            verticalScrollElasticity = .allowed
+            contentInsets.top = 40
+            automaticallyAdjustsContentInsets = false
+            backgroundColor = .clear
+            documentView = Flipped()
+            documentView!.translatesAutoresizingMaskIntoConstraints = false
+            documentView!.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            documentView!.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            
+            if #available(OSX 10.13, *) {
+                registerForDraggedTypes([.fileURL])
+            } else {
+                registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeFileURL as String)])
+            }
+        }
+        
+        override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+            window!.backgroundColor = .halo
+            if let url = (sender.draggingPasteboard.propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray)?[0] as? String {
+                Argonaut.receive(URL(fileURLWithPath: url)) {
+                    app.session.update($0)
+                    app.session.save()
+                    app.list.refresh()
+                }
+            }
+            return super.draggingEntered(sender)
+        }
+        
+        override func draggingEnded(_: NSDraggingInfo) { window!.backgroundColor = .black }
+        override func draggingExited(_: NSDraggingInfo?) { window!.backgroundColor = .black }
+    }
+    
+    private weak var scroll: Scroll!
     private weak var bottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; bottom.isActive = true } }
     
     init() {
@@ -241,19 +282,7 @@ final class List: NSWindow {
         toolbar = .init(identifier: "")
         toolbar!.showsBaselineSeparator = false
         
-        let scroll = NSScrollView()
-        scroll.translatesAutoresizingMaskIntoConstraints = false
-        scroll.drawsBackground = false
-        scroll.hasVerticalScroller = true
-        scroll.verticalScroller!.controlSize = .mini
-        scroll.horizontalScrollElasticity = .none
-        scroll.verticalScrollElasticity = .allowed
-        scroll.contentInsets.top = 40
-        scroll.automaticallyAdjustsContentInsets = false
-        scroll.documentView = Flipped()
-        scroll.documentView!.translatesAutoresizingMaskIntoConstraints = false
-        scroll.documentView!.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
-        scroll.documentView!.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
+        let scroll = Scroll()
         contentView!.addSubview(scroll)
         self.scroll = scroll
         

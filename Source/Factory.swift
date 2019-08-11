@@ -35,14 +35,6 @@ public final class Factory {
         }
     }
     
-    public func prepare() {
-        var url = Argonaut.url
-        try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-        var resources = URLResourceValues()
-        resources.isExcludedFromBackup = true
-        try! url.setResourceValues(resources)
-    }
-    
     public func measure() {
         rect = {
             {

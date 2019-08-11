@@ -7,6 +7,7 @@ public final class Argonaut {
     private static let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("map.argonaut")
     
     public static func save(_ id: String, data: Data) {
+        prepare()
         try! code(data).write(to: url(id), options: .atomic)
     }
     
@@ -37,8 +38,11 @@ public final class Argonaut {
         }
     }
     
-    public static func receive(_ data: Data, result: @escaping((Session.Item) -> Void)) {
+    public static func receive(_ map: URL, result: @escaping((Session.Item) -> Void)) {
         DispatchQueue.global(qos: .background).async {
+            guard map.pathExtension == "argonaut" else { return }
+            prepare()
+            let data = try! Data(contentsOf: map)
             let count = Int(data.subdata(in: 0 ..< 2).withUnsafeBytes { $0.bindMemory(to: UInt16.self)[0] })
             let item = try! JSONDecoder().decode(Session.Item.self, from: decode(data.subdata(in: 2 ..< count + 2)))
             try! data.subdata(in: 2 + count ..< data.count).write(to: url(item.id), options: .atomic)
@@ -46,6 +50,14 @@ public final class Argonaut {
                 result(item)
             }
         }
+    }
+    
+    private static func prepare() {
+        var url = self.url
+        try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        var resources = URLResourceValues()
+        resources.isExcludedFromBackup = true
+        try! url.setResourceValues(resources)
     }
     
     private static func url(_ id: String) -> URL { return url.appendingPathComponent(id + ".argonaut") }

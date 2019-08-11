@@ -75,7 +75,6 @@ final class Create: NSWindow {
     }
     
     private func start(_ plan: Plan) {
-        factory.prepare()
         factory.measure()
         factory.divide()
         DispatchQueue.main.async { [weak self] in self?.retry() }

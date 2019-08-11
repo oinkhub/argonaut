@@ -39,4 +39,9 @@ public class Session: Codable {
             UserDefaults.standard.set(try! JSONEncoder().encode(self), forKey: "session")
         }
     }
+    
+    public func update(_ item: Item) {
+        items.removeAll { $0.id == item.id }
+        items.append(item)
+    }
 }

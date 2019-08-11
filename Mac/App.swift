@@ -21,6 +21,7 @@ private(set) weak var app: App!
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool { return true }
+    func application(_: NSApplication, open: [URL]) { DispatchQueue.main.async { open.forEach { print($0) } } }
     
     @available(OSX 10.14, *) func userNotificationCenter(_: UNUserNotificationCenter, willPresent:
         UNNotification, withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
