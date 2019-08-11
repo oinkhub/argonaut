@@ -221,7 +221,9 @@ final class List: NSWindow {
         }
         
         @objc private func share() {
-            try! NSSharingServicePicker(items: [JSONEncoder().encode(item)]).show(relativeTo: frame, of: self, preferredEdge: .maxY)
+            Argonaut.share(item) {
+                NSSharingService(named: NSSharingService.Name.sendViaAirDrop)?.perform(withItems: [$0])
+            }
         }
     }
     
