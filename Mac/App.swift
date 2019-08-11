@@ -1,4 +1,5 @@
 import Argonaut
+import AppKit
 import StoreKit
 import UserNotifications
 
