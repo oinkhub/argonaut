@@ -21,7 +21,14 @@ private(set) weak var app: App!
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool { return true }
-    func application(_: NSApplication, open: [URL]) { DispatchQueue.main.async { open.forEach { print($0) } } }
+    
+    func application(_: NSApplication, open: [URL]) {
+        DispatchQueue.main.async {
+            if let url = open.first {
+                self.receive(url)
+            }
+        }
+    }
     
     @available(OSX 10.14, *) func userNotificationCenter(_: UNUserNotificationCenter, willPresent:
         UNNotification, withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -54,6 +61,14 @@ private(set) weak var app: App!
     
     func locationManager(_: CLLocationManager, didFailWithError: Error) {
         DispatchQueue.main.async { self.alert(.key("Error"), message: didFailWithError.localizedDescription) }
+    }
+    
+    func receive(_ url: URL) {
+        Argonaut.receive(url) {
+            self.session.update($0)
+            self.session.save()
+            self.list.refresh()
+        }
     }
     
     private func status() {

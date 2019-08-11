@@ -255,11 +255,7 @@ final class List: NSWindow {
         override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
             window!.backgroundColor = .halo
             if let url = (sender.draggingPasteboard.propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray)?[0] as? String {
-                Argonaut.receive(URL(fileURLWithPath: url)) {
-                    app.session.update($0)
-                    app.session.save()
-                    app.list.refresh()
-                }
+                app.receive(URL(fileURLWithPath: url))
             }
             return super.draggingEntered(sender)
         }

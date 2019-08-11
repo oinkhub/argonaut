@@ -36,6 +36,7 @@
 		CE9301D922EEF9C000EACBD4 /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301D822EEF9C000EACBD4 /* Navigate.swift */; };
 		CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301DA22EF09AF00EACBD4 /* Tiler.swift */; };
 		CE9301DC22EF09AF00EACBD4 /* Tiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301DA22EF09AF00EACBD4 /* Tiler.swift */; };
+		CEA0D91023002B4B001FD8B8 /* icons.icns in Resources */ = {isa = PBXBuildFile; fileRef = CEA0D90F23002B4B001FD8B8 /* icons.icns */; };
 		CEAB0F0822D73C5800320F4F /* New.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0722D73C5800320F4F /* New.swift */; };
 		CEAB0F0A22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
 		CEAB0F0B22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
@@ -114,6 +115,7 @@
 		CE7EACE422E1E1620082D91C /* Mark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mark.swift; sourceTree = "<group>"; };
 		CE9301D822EEF9C000EACBD4 /* Navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
 		CE9301DA22EF09AF00EACBD4 /* Tiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tiler.swift; sourceTree = "<group>"; };
+		CEA0D90F23002B4B001FD8B8 /* icons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icons.icns; sourceTree = "<group>"; };
 		CEAB0F0622D7396900320F4F /* Argonaut.sketch */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argonaut.sketch; sourceTree = "<group>"; };
 		CEAB0F0722D73C5800320F4F /* New.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = New.swift; sourceTree = "<group>"; };
 		CEAB0F0922D742D900320F4F /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				CEDE111A22D720A500DD796B /* Argonaut.app */,
 				CEDE111922D7209F00DD796B /* Argonaut.app */,
 				CEDE110022D71F3600DD796B /* Mac.entitlements */,
+				CEA0D90F23002B4B001FD8B8 /* icons.icns */,
 				CEDE10F422D71C2D00DD796B /* README.md */,
 				CEDE10F622D71CF500DD796B /* iOS.plist */,
 				CEDE10F722D71CF500DD796B /* Mac.plist */,
@@ -214,13 +217,13 @@
 				CEDE10FC22D71F2400DD796B /* iOS.xcassets */,
 				CEDE110122D71F3600DD796B /* Mac.xcassets */,
 				CEDE110D22D71FA300DD796B /* Tests.xctest */,
+				CEC5A3C622EAFD9600CE3B07 /* Frameworks */,
 				CEDE10FA22D71F2400DD796B /* iOS */,
 				CEDE111522D7207800DD796B /* Localizable.strings */,
 				CEDE110222D71F3600DD796B /* Mac */,
 				CEDE110622D71F5300DD796B /* Shared */,
 				CEDE110A22D71FA300DD796B /* Source */,
 				CEDE110F22D71FB200DD796B /* Tests */,
-				CEC5A3C622EAFD9600CE3B07 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -455,6 +458,7 @@
 				CEDE111322D71FD100DD796B /* Assets.xcassets in Resources */,
 				CEDE111722D7207800DD796B /* Localizable.strings in Resources */,
 				CEDE110422D71F3600DD796B /* Mac.xcassets in Resources */,
+				CEA0D91023002B4B001FD8B8 /* icons.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

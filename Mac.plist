@@ -7,6 +7,8 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>icons</string>
 			<key>CFBundleTypeName</key>
 			<string>Map</string>
 			<key>CFBundleTypeRole</key>
@@ -54,6 +56,8 @@
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Argonaut map</string>
+			<key>UTTypeIconFile</key>
+			<string>icons</string>
 			<key>UTTypeIdentifier</key>
 			<string>iturbide.argonaut</string>
 			<key>UTTypeTagSpecification</key>
