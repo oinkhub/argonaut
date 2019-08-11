@@ -4,6 +4,7 @@ import Compression
 public final class Argonaut {
     public static let tile = 512.0
     static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
+    private static let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("map.argonaut")
     
     public static func save(_ id: String, data: Data) {
         try! code(data).write(to: url(id), options: .atomic)
@@ -19,6 +20,31 @@ public final class Argonaut {
     public static func delete(_ id: String) {
         DispatchQueue.global(qos: .background).async {
             try? FileManager.default.removeItem(at: url(id))
+        }
+    }
+    
+    public static func share(_ item: Session.Item, result: @escaping((URL) -> Void)) {
+        DispatchQueue.global(qos: .background).async {
+            let coded = code(try! JSONEncoder().encode(item))
+            var data = Data()
+            withUnsafeBytes(of: UInt16(coded.count)) { data += $0 }
+            data += coded
+            data += try! Data(contentsOf: url(item.id))
+            try! data.write(to: temporal, options: .atomic)
+            DispatchQueue.main.async {
+                result(temporal)
+            }
+        }
+    }
+    
+    public static func receive(_ data: Data, result: @escaping((Session.Item) -> Void)) {
+        DispatchQueue.global(qos: .background).async {
+            let count = Int(data.subdata(in: 0 ..< 2).withUnsafeBytes { $0.bindMemory(to: UInt16.self)[0] })
+            let item = try! JSONDecoder().decode(Session.Item.self, from: decode(data.subdata(in: 2 ..< count + 2)))
+            try! data.subdata(in: 2 + count ..< data.count).write(to: url(item.id), options: .atomic)
+            DispatchQueue.main.async {
+                result(item)
+            }
         }
     }
     

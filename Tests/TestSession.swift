@@ -52,6 +52,6 @@ final class TestSession: XCTestCase {
             XCTAssertEqual("hello", $0.items[0].id)
             expect.fulfill()
         }
-        waitForExpectations(timeout: 5)
+        waitForExpectations(timeout: 1)
     }
 }

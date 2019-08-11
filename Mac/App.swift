@@ -209,6 +209,10 @@ private(set) weak var app: App!
             self.session = $0
             list.refresh()
             
+            if $0.items.isEmpty {
+                self.help()
+            }
+            
             if Date() >= $0.rating {
                 var components = DateComponents()
                 components.month = 4
