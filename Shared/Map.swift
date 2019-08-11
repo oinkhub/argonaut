@@ -220,17 +220,18 @@ final class Map: MKMapView, MKMapViewDelegate {
         request.destination = .init(placemark: .init(coordinate: .init(latitude: destination.latitude, longitude: destination.longitude), addressDictionary: nil))
         MKDirections(request: request).calculate { [weak self] in
             if $1 == nil, let paths = $0?.routes {
-                path.options += paths.map {
+                let options = paths.map {
                     let option = Plan.Option()
                     option.mode = $0.transportType == .walking ? .walking : .driving
                     option.distance = $0.distance
                     option.duration = $0.expectedTravelTime
                     option.points = UnsafeBufferPointer(start: $0.polyline.points(), count: $0.polyline.pointCount).map { ($0.coordinate.latitude, $0.coordinate.longitude) }
                     return option
-                }
+                } as [Plan.Option]
+                path.options += options
                 self?.refresh()
                 if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
-                    self?.addOverlays(path.options.map { Line(path, option: $0) }, level: .aboveLabels)
+                    self?.addOverlays(options.map { Line(path, option: $0) }, level: .aboveLabels)
                 }
             }
         }
