@@ -99,7 +99,7 @@ final class TestFactory: XCTestCase {
         XCTAssertFalse(factory.valid)
         factory.rect = .init(x: 0, y: 0, width: 0, height: 328132)
         XCTAssertFalse(factory.valid)
-        factory.rect = .init(x: 0, y: 0, width: 250000, height: 250000)
+        factory.rect = .init(x: 0, y: 0, width: 140000, height: 120000)
         XCTAssertTrue(factory.valid)
     }
 }
