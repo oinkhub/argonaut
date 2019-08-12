@@ -78,9 +78,16 @@ final class Create: NSWindow {
     
     private func start() {
         factory.measure()
-        factory.divide()
-        factory.register()
-        DispatchQueue.main.async { [weak self] in self?.retry() }
+        if factory.valid {
+            factory.divide()
+            factory.register()
+            DispatchQueue.main.async { [weak self] in self?.retry() }
+        } else {
+            app.alert(.key("Error"), message: .key("Error.max"))
+            DispatchQueue.main.async { [weak self] in
+                self?.close()
+            }
+        }
     }
     
     private func complete(_ item: Session.Item) {

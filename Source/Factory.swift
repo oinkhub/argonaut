@@ -13,6 +13,7 @@ public final class Factory {
     public var complete: ((Session.Item) -> Void)!
     public var plan = Plan()
     public var rect = MKMapRect()
+    public var valid: Bool { return rect.width < max && rect.height < max }
     var range = (12 ... 19)
     private(set) var item = Session.Item()
     private(set) var content = Data()
@@ -23,6 +24,7 @@ public final class Factory {
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
     private let margin = 0.002
+    private let max = 150000.0
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
     
