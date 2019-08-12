@@ -5,7 +5,7 @@ final class TestChunk: XCTestCase {
     private var factory: Factory!
     
     override func setUp() {
-        factory = .init(.init())
+        factory = .init()
     }
     
     func testAdd() {

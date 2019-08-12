@@ -484,8 +484,8 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     @objc func save() {
+        Create(map.plan, rect: map.visibleMapRect).makeKeyAndOrderFront(nil)
         close()
-        Create(map.plan).makeKeyAndOrderFront(nil)
     }
     
     @objc func handle() {

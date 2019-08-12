@@ -1,15 +1,16 @@
 import Argonaut
-import AppKit
+import MapKit
 
 final class Create: NSWindow {
     private weak var progress: NSLayoutConstraint!
     private weak var button: Button.Yes!
     private weak var label: Label!
-    private var item = Session.Item()
     private let factory: Factory
     
-    init(_ plan: Plan) {
-        factory = .init(plan)
+    init(_ plan: Plan, rect: MKMapRect) {
+        factory = .init()
+        factory.plan = plan
+        factory.rect = rect
         super.init(contentRect: .init(origin: .init(x: NSScreen.main!.frame.maxX - 160, y: NSScreen.main!.frame.maxY - 123), size: .init(width: 160, height: 100)), styleMask: [.closable, .docModalWindow, .fullSizeContentView, .titled], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
@@ -42,6 +43,7 @@ final class Create: NSWindow {
         label.font = .systemFont(ofSize: 25, weight: .bold)
         label.textColor = .halo
         label.alignment = .right
+        label.stringValue = "0%"
         contentView!.addSubview(label)
         self.label = label
         
@@ -71,36 +73,22 @@ final class Create: NSWindow {
             self?.progress.constant = CGFloat(160 * $0)
             self?.label.stringValue = "\(Int(100 * $0))%"
         }
-        DispatchQueue.global(qos: .background).async { [weak self] in self?.start(plan) }
+        DispatchQueue.global(qos: .background).async { [weak self] in self?.start() }
     }
     
-    private func start(_ plan: Plan) {
+    private func start() {
         factory.measure()
         factory.divide()
+        factory.register()
         DispatchQueue.main.async { [weak self] in self?.retry() }
-        
-        item.origin = plan.path.first!.name
-        item.destination = plan.path.last!.name
-        plan.path.forEach {
-            $0.options.forEach {
-                if $0.mode == .walking {
-                    item.walking.duration += $0.duration
-                    item.walking.distance += $0.distance
-                } else {
-                    item.driving.duration += $0.duration
-                    item.driving.distance += $0.distance
-                }
-            }
-        }
     }
     
-    private func complete(_ id: String) {
-        item.id = id
+    private func complete(_ item: Session.Item) {
         app.session.items.append(item)
         app.session.save()
         app.list.refresh()
         close()
-        Load(id).makeKeyAndOrderFront(nil)
+        Load(item.id).makeKeyAndOrderFront(nil)
     }
     
     @objc private func retry() {

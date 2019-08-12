@@ -10,23 +10,23 @@ public final class Factory {
     
     public var error: ((Error) -> Void)!
     public var progress: ((Float) -> Void)!
-    public var complete: ((String) -> Void)!
-    public let plan: Plan
-    var rect = MKMapRect()
+    public var complete: ((Session.Item) -> Void)!
+    public var plan = Plan()
+    public var rect = MKMapRect()
     var range = (12 ... 19)
+    private(set) var item = Session.Item()
     private(set) var content = Data()
     private(set) var info = Data()
     private(set) var shots = [Shot]()
     private(set) var chunks = 0
+    let id = UUID().uuidString
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
     private let margin = 0.002
-    private let id = UUID().uuidString
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
     
-    public init(_ plan: Plan) {
-        self.plan = plan
+    public init() {
         timer.resume()
         timer.schedule(deadline: .distantFuture)
         timer.setEventHandler { [weak self] in
@@ -38,6 +38,7 @@ public final class Factory {
     public func measure() {
         rect = {
             {
+                if $0.isEmpty { return rect }
                 let rect = {
                     .init(x: $0.x, y: $0.y, width: $1.x - $0.x, height: $1.y - $0.y)
                 } (MKMapPoint(.init(latitude: $0.first!.0 + margin, longitude: $1.first!.1 - margin)),
@@ -69,6 +70,23 @@ public final class Factory {
         total = Float(shots.count)
     }
     
+    public func register() {
+        item.id = id
+        item.origin = plan.path.first?.name ?? ""
+        item.destination = plan.path.last?.name ?? ""
+        plan.path.forEach {
+            $0.options.forEach {
+                if $0.mode == .walking {
+                    item.walking.duration += $0.duration
+                    item.walking.distance += $0.distance
+                } else {
+                    item.driving.duration += $0.duration
+                    item.driving.distance += $0.distance
+                }
+            }
+        }
+    }
+    
     public func shoot() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let shot = self.shots.last else { return }
@@ -89,8 +107,8 @@ public final class Factory {
                         if self.shots.isEmpty {
                             Argonaut.save(self.id, data: self.wrap())
                             DispatchQueue.main.async { [weak self] in
-                                guard let id = self?.id else { return }
-                                self?.complete(id)
+                                guard let item = self?.item else { return }
+                                self?.complete(item)
                             }
                         }
                     } else {

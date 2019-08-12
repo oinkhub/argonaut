@@ -7,7 +7,7 @@ final class TestCart: XCTestCase {
     
     override func setUp() {
         try! FileManager.default.createDirectory(at: Argonaut.url, withIntermediateDirectories: true)
-        factory = .init(.init())
+        factory = .init()
     }
     
     override func tearDown() {

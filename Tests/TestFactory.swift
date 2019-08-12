@@ -6,7 +6,11 @@ final class TestFactory: XCTestCase {
     private var factory: Factory!
     
     override func setUp() {
-        factory = .init(.init())
+        factory = .init()
+    }
+    
+    func testEmptyPlan() {
+        factory.measure()
     }
     
     func testMeasure() {
@@ -64,5 +68,29 @@ final class TestFactory: XCTestCase {
         XCTAssertEqual(2048, factory.shots.first?.options.mapRect.minY)
         XCTAssertEqual(3072, factory.shots.first?.options.mapRect.maxX)
         XCTAssertEqual(3072, factory.shots.first?.options.mapRect.maxY)
+    }
+    
+    func testRegister() {
+        factory.plan.path = [.init(), .init()]
+        factory.plan.path[0].name = "hello"
+        factory.plan.path[0].options = [.init()]
+        factory.plan.path[0].options[0].duration = 1
+        factory.plan.path[0].options[0].distance = 2
+        factory.plan.path[1].name = "world"
+        factory.plan.path[1].options = [.init()]
+        factory.plan.path[1].options[0].duration = 1
+        factory.plan.path[1].options[0].distance = 2
+        factory.register()
+        XCTAssertEqual(factory.item.id, factory.id)
+        XCTAssertEqual("hello", factory.item.origin)
+        XCTAssertEqual("world", factory.item.destination)
+        XCTAssertEqual(2, factory.item.walking.duration)
+        XCTAssertEqual(4, factory.item.walking.distance)
+    }
+    
+    func testRegisterEmpty() {
+        factory.register()
+        XCTAssertEqual("", factory.item.origin)
+        XCTAssertEqual("", factory.item.destination)
     }
 }
