@@ -1,18 +1,52 @@
 import Argonaut
 import UIKit
-import UserNotifications
 import StoreKit
+import UserNotifications
+import CoreLocation
 
 private(set) weak var app: App!
-@UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+@UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UNUserNotificationCenterDelegate, CLLocationManagerDelegate {
     var window: UIWindow?
+    var session: Session!
+    private(set) weak var home: Home!
+    private let location = CLLocationManager()
     
     func application(_: UIApplication, willFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         app = self
+        
         let window = UIWindow()
         window.rootViewController = self
         window.makeKeyAndVisible()
         self.window = window
+        
+        return true
+    }
+    
+    func application(_: UIApplication, open: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        DispatchQueue.main.async {
+            self.receive(open)
+        }
+        return true
+    }
+    
+    @available(iOS 10.0, *) func userNotificationCenter(_: UNUserNotificationCenter, willPresent: UNNotification, withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        withCompletionHandler([.alert])
+        UNUserNotificationCenter.current().getDeliveredNotifications { UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: $0.map { $0.request.identifier
+        }.filter { $0 != willPresent.request.identifier }) }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        location.delegate = self
+        
+        let home = Home()
+        view.addSubview(home)
+        self.home = home
+        
+        home.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        home.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        home.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        home.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self
@@ -25,47 +59,24 @@ private(set) weak var app: App!
             }
         }
         
-        return true
-    }
-    
-    func application(_: UIApplication, open: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-//        edit(open)
-        return true
-    }
-    
-    @available(iOS 10.0, *) func userNotificationCenter(_: UNUserNotificationCenter, willPresent: UNNotification, withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        withCompletionHandler([.alert])
-        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 15) {
-            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [willPresent.request.identifier])
+        Session.load {
+            self.session = $0
+//            list.refresh()
+            
+            if $0.items.isEmpty {
+//                self.help()
+            }
+            
+            if Date() >= $0.rating {
+                var components = DateComponents()
+                components.month = 4
+                $0.rating = Calendar.current.date(byAdding: components, to: .init())!
+                $0.save()
+                if #available(iOS 10.3, *) { SKStoreReviewController.requestReview() }
+            }
+            
+            self.status()
         }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-//        let edit = Edit()
-//        self.edit = edit
-//        view.addSubview(edit)
-//
-//        edit.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-//        edit.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-//        edit.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-//        edit.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-//
-//        Session.load {
-//            self.session = $0
-//            if $0.onboard {
-//                Onboard()
-//                self.edit.menu.toggle(self.edit.indicator)
-//            }
-//            if Date() >= $0.rating {
-//                var components = DateComponents()
-//                components.month = 4
-//                self.session.rating = Calendar.current.date(byAdding: components, to: Date())!
-//                if #available(iOS 10.3, *) { SKStoreReviewController.requestReview() }
-//            }
-//        }
-//
-//        if desk == nil { create() }
     }
     
     func alert(_ title: String, message: String) {
@@ -86,7 +97,30 @@ private(set) weak var app: App!
         }
     }
     
-    @objc func new() {
-
+    func receive(_ url: URL) {
+        Argonaut.receive(url) { _ in
+//            self.session.update($0)
+//            self.session.save()
+//            self.list.refresh()
+        }
     }
+    
+    private func status() {
+        switch CLLocationManager.authorizationStatus() {
+        case .denied, .restricted: app.alert(.key("Error"), message: .key("Error.location"))
+        case .notDetermined:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                self.location.requestWhenInUseAuthorization()
+            }
+        default: break
+        }
+    }
+    
+    func locationManager(_: CLLocationManager, didChangeAuthorization: CLAuthorizationStatus) { status() }
+    func locationManager(_: CLLocationManager, didUpdateLocations: [CLLocation]) { }
+    func locationManager(_: CLLocationManager, didFailWithError: Error) { alert(.key("Error"), message: didFailWithError.localizedDescription) }
+    
+    @objc private func about() { }
+    @objc private func privacy() { }
+    @objc private func help() { }
 }

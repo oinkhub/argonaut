@@ -89,7 +89,7 @@ private(set) weak var app: App!
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.project"))
             $0.submenu!.items = [
-                NSMenuItem(title: .key("Menu.new"), action: #selector(List.new), keyEquivalent: "n"),
+                NSMenuItem(title: .key("Menu.new"), action: #selector(Home.new), keyEquivalent: "n"),
                 NSMenuItem.separator(),
                 { $0.keyEquivalentModifierMask = []
                     return $0
@@ -215,7 +215,7 @@ private(set) weak var app: App!
             if Date() >= $0.rating {
                 var components = DateComponents()
                 components.month = 4
-                $0.rating = Calendar.current.date(byAdding: components, to: Date())!
+                $0.rating = Calendar.current.date(byAdding: components, to: .init())!
                 $0.save()
                 if #available(OSX 10.14, *) { SKStoreReviewController.requestReview() }
             }
