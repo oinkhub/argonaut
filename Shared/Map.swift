@@ -1,13 +1,14 @@
 import Argonaut
 import MapKit
 
-final class Map: MKMapView, MKMapViewDelegate {
+final class Map: MKMapView, MKMapViewDelegate, CLLocationManagerDelegate {
     var refresh: (() -> Void)!
     var zoom: ((Bool) -> Void)?
     private(set) var _follow = true
     private(set) var _walking = true
     private(set) var _driving = true
     let plan = Plan()
+    private var location: CLLocationManager?
     private let geocoder = CLGeocoder()
     
     required init?(coder: NSCoder) { return nil }
@@ -25,6 +26,26 @@ final class Map: MKMapView, MKMapViewDelegate {
         region.span.latitudeDelta = 0.05
         region.span.longitudeDelta = 0.05
         setRegion(region, animated: false)
+        
+        switch CLLocationManager.authorizationStatus() {
+        case .denied: app.alert(.key("Error"), message: .key("Error.location"))
+        case .notDetermined:
+            location = CLLocationManager()
+            location?.delegate = self
+            if #available(macOS 10.14, *) {
+                location!.requestLocation()
+            } else {
+                location!.startUpdatingLocation()
+            }
+        default: break
+        }
+    }
+    
+    func locationManager(_: CLLocationManager, didChangeAuthorization: CLAuthorizationStatus) { location = nil }
+    func locationManager(_: CLLocationManager, didUpdateLocations: [CLLocation]) { location = nil }
+    func locationManager(_: CLLocationManager, didFailWithError: Error) {
+        location = nil
+        app.alert(.key("Error"), message: didFailWithError.localizedDescription)
     }
     
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
