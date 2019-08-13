@@ -59,9 +59,7 @@ public final class Factory {
                     shot.tile = tile
                     shot.x = x
                     shot.y = y
-                    if #available(OSX 10.14, *) {
-                        shot.options.appearance = NSAppearance(named: .darkAqua)
-                    }
+                    shot.options.dark()
                     shot.options.mapType = .standard
                     shot.options.size = .init(width: Argonaut.tile, height: Argonaut.tile)
                     shot.options.mapRect = .init(x: Double(x) * proportion, y: Double(y) * proportion, width: proportion, height: proportion)
@@ -105,7 +103,7 @@ public final class Factory {
                     } else if let result = $0 {
                         self.shots.removeLast()
                         self.shoot()
-                        self.chunk(NSBitmapImageRep(cgImage: result.image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x, y: shot.y)
+                        self.chunk(result.data, tile: shot.tile, x: shot.x, y: shot.y)
                         if self.shots.isEmpty {
                             Argonaut.save(self.id, data: self.wrap())
                             DispatchQueue.main.async { [weak self] in

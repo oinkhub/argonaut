@@ -6,6 +6,16 @@ extension NSColor {
     static let driving = #colorLiteral(red: 0, green: 0.8377037809, blue: 0.7416605177, alpha: 1)
 }
 
+extension CGColor {
+    static let halo = NSColor.halo.cgColor
+    static let walking = NSColor.walking.cgColor
+    static let driving = NSColor.driving.cgColor
+}
+
+extension NSImage {
+    static let mark = NSImage(named: "mark")
+}
+
 final class Label: NSTextField {
     override var acceptsFirstResponder: Bool { return false }
     

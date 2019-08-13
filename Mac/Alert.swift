@@ -17,7 +17,7 @@ final class Alert: NSWindow {
         back.layer!.backgroundColor = NSColor.halo.withAlphaComponent(0.98).cgColor
         back.layer!.cornerRadius = 6
         back.layer!.borderWidth = 1
-        back.layer!.borderColor = NSColor.black.cgColor
+        back.layer!.borderColor = .black
         back.alphaValue = 0
         contentView!.addSubview(back)
         self.back = back
@@ -27,9 +27,9 @@ final class Alert: NSWindow {
         label.alignment = .center
         label.attributedStringValue = {
             if let title = title {
-                $0.append(NSAttributedString(string: title + "\n", attributes: [.font: NSFont.systemFont(ofSize: 16, weight: .bold)]))
+                $0.append(.init(string: title + "\n", attributes: [.font: NSFont.systemFont(ofSize: 16, weight: .bold)]))
             }
-            $0.append(NSAttributedString(string: message, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .regular)]))
+            $0.append(.init(string: message, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .regular)]))
             return $0
         } (NSMutableAttributedString())
         back.addSubview(label)

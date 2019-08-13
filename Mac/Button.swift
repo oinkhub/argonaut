@@ -61,7 +61,7 @@ class Button: NSView {
             super.init(target, action: action)
             wantsLayer = true
             layer!.cornerRadius = 3
-            layer!.backgroundColor = NSColor.halo.cgColor
+            layer!.backgroundColor = .halo
             label.alignment = .center
             label.font = .systemFont(ofSize: 14, weight: .bold)
             label.textColor = .black

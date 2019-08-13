@@ -20,6 +20,8 @@
 		CE26CE0822F467AA0007441D /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE26CDF822F4039F0007441D /* Line.swift */; };
 		CE2A863D22F7F7C000AC8190 /* Argonaut.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2A863C22F7F7C000AC8190 /* Argonaut.swift */; };
 		CE2A863E22F7F7C000AC8190 /* Argonaut.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2A863C22F7F7C000AC8190 /* Argonaut.swift */; };
+		CE3256B623029C2400D95A31 /* HelperMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3256B523029C2400D95A31 /* HelperMac.swift */; };
+		CE3256B823029C4200D95A31 /* HelperiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3256B723029C4200D95A31 /* HelperiOS.swift */; };
 		CE3978A022F5B1E60045E1D7 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE39789F22F5B1E60045E1D7 /* Marker.swift */; };
 		CE3978A122F5B1E60045E1D7 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE39789F22F5B1E60045E1D7 /* Marker.swift */; };
 		CE4A547C22D85E1B00125A9C /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A547B22D85E1B00125A9C /* Button.swift */; };
@@ -50,6 +52,9 @@
 		CEC5A3CE22EAFFAB00CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BD22D721C500EF2447 /* libArgonaut.a */; };
 		CECECD7C22F469F2006AE0C8 /* Liner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECECD7B22F469F2006AE0C8 /* Liner.swift */; };
 		CECECD7D22F469F2006AE0C8 /* Liner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECECD7B22F469F2006AE0C8 /* Liner.swift */; };
+		CEDB361E2302A4140078E521 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB361D2302A4140078E521 /* Extensions.swift */; };
+		CEDB36202302A5630078E521 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB361F2302A5630078E521 /* Alert.swift */; };
+		CEDB36222302BC560078E521 /* Callout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB36212302BC560078E521 /* Callout.swift */; };
 		CEDE10FD22D71F2400DD796B /* iOS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10F922D71F2400DD796B /* iOS.storyboard */; };
 		CEDE10FE22D71F2400DD796B /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE10FB22D71F2400DD796B /* App.swift */; };
 		CEDE10FF22D71F2400DD796B /* iOS.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10FC22D71F2400DD796B /* iOS.xcassets */; };
@@ -100,6 +105,8 @@
 		CE088B8622FEE7A80001BEE4 /* Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
 		CE26CDF822F4039F0007441D /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		CE2A863C22F7F7C000AC8190 /* Argonaut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Argonaut.swift; sourceTree = "<group>"; };
+		CE3256B523029C2400D95A31 /* HelperMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperMac.swift; sourceTree = "<group>"; };
+		CE3256B723029C4200D95A31 /* HelperiOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperiOS.swift; sourceTree = "<group>"; };
 		CE39789F22F5B1E60045E1D7 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		CE4A547B22D85E1B00125A9C /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,6 +130,9 @@
 		CEC5A3C922EAFE3200CE3B07 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFactory.swift; sourceTree = "<group>"; };
 		CECECD7B22F469F2006AE0C8 /* Liner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Liner.swift; sourceTree = "<group>"; };
+		CEDB361D2302A4140078E521 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CEDB361F2302A5630078E521 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		CEDB36212302BC560078E521 /* Callout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Callout.swift; sourceTree = "<group>"; };
 		CEDE10F322D71C2D00DD796B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CEDE10F422D71C2D00DD796B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CEDE10F522D71C2D00DD796B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -230,7 +240,10 @@
 		CEDE10FA22D71F2400DD796B /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				CEDB361F2302A5630078E521 /* Alert.swift */,
 				CEDE10FB22D71F2400DD796B /* App.swift */,
+				CEDB36212302BC560078E521 /* Callout.swift */,
+				CEDB361D2302A4140078E521 /* Extensions.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -278,6 +291,8 @@
 				CE6AE1F822F6BE5C0040B205 /* Cart.swift */,
 				CEABFA3622ED9401000ABB7E /* Extensions.swift */,
 				CEC5A3C922EAFE3200CE3B07 /* Factory.swift */,
+				CE3256B723029C4200D95A31 /* HelperiOS.swift */,
+				CE3256B523029C2400D95A31 /* HelperMac.swift */,
 				CE734F7D22F1BDAF009799BE /* Plan.swift */,
 				CEDE110B22D71FA300DD796B /* Session.swift */,
 			);
@@ -485,6 +500,7 @@
 				CE734F7E22F1BDAF009799BE /* Plan.swift in Sources */,
 				CE2A863D22F7F7C000AC8190 /* Argonaut.swift in Sources */,
 				CEC5A3CA22EAFE3200CE3B07 /* Factory.swift in Sources */,
+				CE3256B623029C2400D95A31 /* HelperMac.swift in Sources */,
 				CEDE110C22D71FA300DD796B /* Session.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -497,6 +513,7 @@
 				CE6AE1FA22F6BE5C0040B205 /* Cart.swift in Sources */,
 				CE734F7F22F1BDAF009799BE /* Plan.swift in Sources */,
 				CE2A863E22F7F7C000AC8190 /* Argonaut.swift in Sources */,
+				CE3256B823029C4200D95A31 /* HelperiOS.swift in Sources */,
 				CEC5A3CB22EAFE3200CE3B07 /* Factory.swift in Sources */,
 				CEDE110E22D71FA300DD796B /* Session.swift in Sources */,
 			);
@@ -549,12 +566,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEDE10FE22D71F2400DD796B /* App.swift in Sources */,
+				CEDB361E2302A4140078E521 /* Extensions.swift in Sources */,
 				CE3978A122F5B1E60045E1D7 /* Marker.swift in Sources */,
 				CEAB0F0B22D742D900320F4F /* Map.swift in Sources */,
 				CE9301DC22EF09AF00EACBD4 /* Tiler.swift in Sources */,
 				CE26CE0822F467AA0007441D /* Line.swift in Sources */,
 				CECECD7D22F469F2006AE0C8 /* Liner.swift in Sources */,
 				CEDE110922D71F5300DD796B /* Shared.swift in Sources */,
+				CEDB36202302A5630078E521 /* Alert.swift in Sources */,
+				CEDB36222302BC560078E521 /* Callout.swift in Sources */,
 				CE26CE0722F467A40007441D /* Mark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

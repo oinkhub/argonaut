@@ -63,7 +63,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }
         
         @objc func click() {
-            layer!.backgroundColor = NSColor.halo.cgColor
+            layer!.backgroundColor = .halo
             label.attributedStringValue = {
                 $0.append(label.attributedStringValue)
                 $0.addAttribute(.foregroundColor, value: NSColor.white, range: NSMakeRange(0, label.attributedStringValue.string.count))
@@ -91,8 +91,8 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             
             let title = Label()
             title.attributedStringValue = {
-                $0.append(NSAttributedString(string: "\(path.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .bold), .foregroundColor: NSColor.halo]))
-                $0.append(NSAttributedString(string: path.1.name, attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .medium), .foregroundColor: NSColor.white]))
+                $0.append(.init(string: "\(path.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .bold), .foregroundColor: NSColor.halo]))
+                $0.append(.init(string: path.1.name, attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .medium), .foregroundColor: NSColor.white]))
                 return $0
             } (NSMutableAttributedString())
             addSubview(title)
@@ -219,7 +219,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         let handle = NSView()
         handle.translatesAutoresizingMaskIntoConstraints = false
         handle.wantsLayer = true
-        handle.layer!.backgroundColor = NSColor.halo.cgColor
+        handle.layer!.backgroundColor = .halo
         handle.layer!.cornerRadius = 1
         contentView!.addSubview(handle)
         

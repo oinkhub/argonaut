@@ -1,7 +1,7 @@
 import MapKit
 
 final class Liner: MKOverlayRenderer {
-    private let color: NSColor
+    private let color: CGColor
     private let path = CGMutablePath()
     
     init(_ line: Line) {
@@ -13,7 +13,7 @@ final class Liner: MKOverlayRenderer {
     override func draw(_: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
         let size = MKRoadWidthAtZoomScale(zoomScale)
         context.setLineWidth(size * 2)
-        context.setStrokeColor(color.cgColor)
+        context.setStrokeColor(color)
         context.setLineCap(.round)
         context.setLineJoin(.round)
         context.setShadow(offset: .init(width: size, height: size), blur: size)

@@ -9,7 +9,7 @@ class Callout: NSView {
             let circle = NSView()
             circle.translatesAutoresizingMaskIntoConstraints = false
             circle.wantsLayer = true
-            circle.layer!.backgroundColor = NSColor.halo.cgColor
+            circle.layer!.backgroundColor = .halo
             circle.layer!.cornerRadius = 15
             addSubview(circle)
             
@@ -21,7 +21,7 @@ class Callout: NSView {
             let base = NSView()
             base.translatesAutoresizingMaskIntoConstraints = false
             base.wantsLayer = true
-            base.layer!.backgroundColor = NSColor.halo.cgColor
+            base.layer!.backgroundColor = .halo
             base.layer!.cornerRadius = 6
             addSubview(base)
             
@@ -85,7 +85,7 @@ class Callout: NSView {
             circle.translatesAutoresizingMaskIntoConstraints = false
             circle.wantsLayer = true
             circle.layer!.cornerRadius = 20
-            circle.layer!.borderColor = NSColor.halo.cgColor
+            circle.layer!.borderColor = .halo
             circle.layer!.borderWidth = 6
             addSubview(circle)
             
@@ -120,7 +120,7 @@ class Callout: NSView {
         }
     }
     
-    func remove() {
+    final func remove() {
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.35
             $0.allowsImplicitAnimation = true

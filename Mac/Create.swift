@@ -30,7 +30,7 @@ final class Create: NSWindow {
         let progress = NSView()
         progress.translatesAutoresizingMaskIntoConstraints = false
         progress.wantsLayer = true
-        progress.layer!.backgroundColor = NSColor.halo.cgColor
+        progress.layer!.backgroundColor = .halo
         base.addSubview(progress)
         
         let button = Button.Yes(self, action: #selector(self.retry))
