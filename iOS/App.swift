@@ -24,7 +24,11 @@ private(set) weak var app: App!
     
     func application(_: UIApplication, open: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         DispatchQueue.main.async {
-            self.receive(open)
+            Argonaut.receive(url) { _ in
+                //            self.session.update($0)
+                //            self.session.save()
+                //            self.list.refresh()
+            }
         }
         return true
     }
@@ -94,14 +98,6 @@ private(set) weak var app: App!
             }
         } else {
             DispatchQueue.main.async { Alert(title, message: message) }
-        }
-    }
-    
-    func receive(_ url: URL) {
-        Argonaut.receive(url) { _ in
-//            self.session.update($0)
-//            self.session.save()
-//            self.list.refresh()
         }
     }
     

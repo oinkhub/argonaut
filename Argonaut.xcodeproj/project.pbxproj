@@ -70,6 +70,7 @@
 		CEDE111422D71FD100DD796B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEDE111222D71FD100DD796B /* Assets.xcassets */; };
 		CEDE111722D7207800DD796B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEDE111522D7207800DD796B /* Localizable.strings */; };
 		CEDE111822D7207800DD796B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEDE111522D7207800DD796B /* Localizable.strings */; };
+		CEE098312302E3E200321C07 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE098302302E3E200321C07 /* About.swift */; };
 		CEE2BF9922EAF5400080C111 /* Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE2BF9822EAF5400080C111 /* Create.swift */; };
 		CEF5514922F2F3D900A16265 /* TestPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5514822F2F3D900A16265 /* TestPlan.swift */; };
 /* End PBXBuildFile section */
@@ -155,6 +156,7 @@
 		CEDE111622D7207800DD796B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CEDE111922D7209F00DD796B /* Argonaut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argonaut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDE111A22D720A500DD796B /* Argonaut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argonaut.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEE098302302E3E200321C07 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		CEE2BF9822EAF5400080C111 /* Create.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Create.swift; sourceTree = "<group>"; };
 		CEF5514822F2F3D900A16265 /* TestPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPlan.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -242,6 +244,7 @@
 		CEDE10FA22D71F2400DD796B /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				CEE098302302E3E200321C07 /* About.swift */,
 				CEDB361F2302A5630078E521 /* Alert.swift */,
 				CEDE10FB22D71F2400DD796B /* App.swift */,
 				CEDB36212302BC560078E521 /* Callout.swift */,
@@ -572,6 +575,7 @@
 				CEDB361E2302A4140078E521 /* Extensions.swift in Sources */,
 				CE3978A122F5B1E60045E1D7 /* Marker.swift in Sources */,
 				CEAB0F0B22D742D900320F4F /* Map.swift in Sources */,
+				CEE098312302E3E200321C07 /* About.swift in Sources */,
 				CE9301DC22EF09AF00EACBD4 /* Tiler.swift in Sources */,
 				CE0BA3242302CBEC004E6660 /* Home.swift in Sources */,
 				CE26CE0822F467AA0007441D /* Line.swift in Sources */,

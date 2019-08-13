@@ -56,6 +56,6 @@ final class Alert: UIControl {
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             self?.alpha = 0
             app.view.layoutIfNeeded()
-            }, completion: { [weak self] _ in self?.removeFromSuperview() })
+        }, completion: { [weak self] _ in self?.removeFromSuperview() })
     }
 }
