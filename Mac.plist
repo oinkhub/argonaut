@@ -41,6 +41,10 @@
 	<string>public.app-category.travel</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Argonaut can provide you with navigation</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Argonaut can provide you with navigation</string>
 	<key>NSPrincipalClass</key>
 	<string>ArgonautMac.App</string>
 	<key>NSSupportsAutomaticTermination</key>

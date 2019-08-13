@@ -249,7 +249,7 @@ private(set) weak var app: App!
             if #available(macOS 10.14, *) {
                 location.requestLocation()
             }
-        default: location.startUpdatingLocation()
+        default: break
         }
     }
     
