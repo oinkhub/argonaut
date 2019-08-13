@@ -2,14 +2,16 @@ import Argonaut
 import AppKit
 import StoreKit
 import UserNotifications
+import CoreLocation
 
 private(set) weak var app: App!
-@NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate {
+@NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate, CLLocationManagerDelegate {
     var session: Session!
     private(set) weak var list: List!
     private(set) weak var follow: NSMenuItem!
     private(set) weak var walking: NSMenuItem!
     private(set) weak var driving: NSMenuItem!
+    private let location = CLLocationManager()
     
     required init?(coder: NSCoder) { return nil }
     override init() {
@@ -64,6 +66,8 @@ private(set) weak var app: App!
     }
     
     func applicationWillFinishLaunching(_: Notification) {
+        location.delegate = self
+        
         let menu = NSMenu()
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.argonaut"))
@@ -215,6 +219,8 @@ private(set) weak var app: App!
                 $0.save()
                 if #available(OSX 10.14, *) { SKStoreReviewController.requestReview() }
             }
+            
+            self.status()
         }
     }
     
@@ -235,6 +241,21 @@ private(set) weak var app: App!
             DispatchQueue.main.async { Alert(title, message: message).makeKeyAndOrderFront(nil) }
         }
     }
+    
+    private func status() {
+        switch CLLocationManager.authorizationStatus() {
+        case .denied, .restricted: app.alert(.key("Error"), message: .key("Error.location"))
+        case .notDetermined:
+            if #available(macOS 10.14, *) {
+                location.requestLocation()
+            }
+        default: location.startUpdatingLocation()
+        }
+    }
+    
+    func locationManager(_: CLLocationManager, didChangeAuthorization: CLAuthorizationStatus) { status() }
+    func locationManager(_: CLLocationManager, didUpdateLocations: [CLLocation]) { }
+    func locationManager(_: CLLocationManager, didFailWithError: Error) { alert(.key("Error"), message: didFailWithError.localizedDescription) }
     
     private func order<W: NSWindow>(_ type: W.Type) { (windows.first(where: { $0 is W }) ?? W()).makeKeyAndOrderFront(nil) }
     @objc private func about() { order(About.self) }
