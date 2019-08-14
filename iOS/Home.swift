@@ -44,6 +44,7 @@ final class Home: UIView {
         
         let privacy = UIButton()
         privacy.setImage(UIImage(named: "privacy"), for: .normal)
+        privacy.addTarget(self, action: #selector(self.privacy), for: .touchUpInside)
         
         [info, new, privacy].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -79,4 +80,5 @@ final class Home: UIView {
     }
     
     @objc private func info() { app.push(About()) }
+    @objc private func privacy() { app.push(Privacy()) }
 }

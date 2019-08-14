@@ -21,7 +21,7 @@ final class List: NSWindow {
             addSubview(icon)
             
             let label = Label()
-            label.textColor = NSColor(white: 1, alpha: 0.5)
+            label.textColor = .init(white: 1, alpha: 0.5)
             label.font = .systemFont(ofSize: 12, weight: .regular)
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             
@@ -82,7 +82,7 @@ final class List: NSWindow {
             
             [origin, destination].forEach {
                 $0.font = .systemFont(ofSize: 14, weight: .regular)
-                $0.textColor = NSColor(white: 1, alpha: 0.7)
+                $0.textColor = .init(white: 1, alpha: 0.7)
                 $0.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
                 addSubview($0)
                 

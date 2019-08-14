@@ -45,6 +45,7 @@
 		CEAB0F0B22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
 		CEABFA3722ED9401000ABB7E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEABFA3622ED9401000ABB7E /* Extensions.swift */; };
 		CEABFA3822ED9401000ABB7E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEABFA3622ED9401000ABB7E /* Extensions.swift */; };
+		CEBB3A6423040F7200C5F61A /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBB3A6323040F7200C5F61A /* Privacy.swift */; };
 		CEC5A3C722EAFD9600CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BD22D721C500EF2447 /* libArgonaut.a */; };
 		CEC5A3C822EAFD9D00CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BE22D721C500EF2447 /* libArgonaut.a */; };
 		CEC5A3CA22EAFE3200CE3B07 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5A3C922EAFE3200CE3B07 /* Factory.swift */; };
@@ -130,6 +131,7 @@
 		CEAB0F0722D73C5800320F4F /* New.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = New.swift; sourceTree = "<group>"; };
 		CEAB0F0922D742D900320F4F /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		CEABFA3622ED9401000ABB7E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CEBB3A6323040F7200C5F61A /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
 		CEC5A3C922EAFE3200CE3B07 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFactory.swift; sourceTree = "<group>"; };
 		CECECD7B22F469F2006AE0C8 /* Liner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Liner.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 				CEDB36212302BC560078E521 /* Callout.swift */,
 				CEDB361D2302A4140078E521 /* Extensions.swift */,
 				CE0BA3232302CBEC004E6660 /* Home.swift */,
+				CEBB3A6323040F7200C5F61A /* Privacy.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -583,6 +586,7 @@
 				CEDE110922D71F5300DD796B /* Shared.swift in Sources */,
 				CEDB36202302A5630078E521 /* Alert.swift in Sources */,
 				CEDB36222302BC560078E521 /* Callout.swift in Sources */,
+				CEBB3A6423040F7200C5F61A /* Privacy.swift in Sources */,
 				CE26CE0722F467A40007441D /* Mark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

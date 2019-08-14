@@ -23,7 +23,7 @@ final class Privacy: NSWindow {
         contentView!.addSubview(title)
         
         let label = Label(.key("Privacy.label"))
-        label.textColor = NSColor(white: 1, alpha: 0.8)
+        label.textColor = .init(white: 1, alpha: 0.8)
         label.font = .systemFont(ofSize: 18, weight: .regular)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         contentView!.addSubview(label)

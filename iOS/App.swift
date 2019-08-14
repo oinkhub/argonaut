@@ -106,7 +106,7 @@ private(set) weak var app: App!
         
         view.layoutIfNeeded()
         top.constant = -1
-        UIView.animate(withDuration: 0.7, delay: 0, options: .curveEaseIn, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
             previous?.alpha = 0.3
             self.view.layoutIfNeeded()
         })
@@ -133,12 +133,10 @@ private(set) weak var app: App!
     @objc func pop() {
         if let top = stack.popLast() {
             top.constant = view.bounds.height
-            UIView.animate(withDuration: 0.45, animations: {
+            UIView.animate(withDuration: 0.35, animations: {
                 self.view.subviews[self.view.subviews.count - 2].alpha = 1
                 self.view.layoutIfNeeded()
-            }) { _ in
-                self.view.subviews.last!.removeFromSuperview()
-            }
+            }) { _ in self.view.subviews.last!.removeFromSuperview() }
         }
     }
 }
