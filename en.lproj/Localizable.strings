@@ -57,5 +57,4 @@ Menu.window="Window";
 Menu.showHelp="Show help";
 Menu.help="Help";
 Error="Error";
-Error.location="Argonaut is unable to access your location.";
 Error.max="This map is too big for Argonaut, try creating a smaller one.";

@@ -2,14 +2,12 @@ import Argonaut
 import UIKit
 import StoreKit
 import UserNotifications
-import CoreLocation
 
 private(set) weak var app: App!
 @UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UNUserNotificationCenterDelegate, CLLocationManagerDelegate {
     var window: UIWindow?
     var session: Session!
     private(set) weak var home: Home!
-    private let location = CLLocationManager()
     
     func application(_: UIApplication, willFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         app = self
