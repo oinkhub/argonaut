@@ -89,7 +89,7 @@ private(set) weak var app: App!
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.project"))
             $0.submenu!.items = [
-                NSMenuItem(title: .key("Menu.new"), action: #selector(Home.new), keyEquivalent: "n"),
+                NSMenuItem(title: .key("Menu.new"), action: #selector(List.new), keyEquivalent: "n"),
                 NSMenuItem.separator(),
                 { $0.keyEquivalentModifierMask = []
                     return $0
@@ -246,8 +246,8 @@ private(set) weak var app: App!
         switch CLLocationManager.authorizationStatus() {
         case .denied, .restricted: app.alert(.key("Error"), message: .key("Error.location"))
         case .notDetermined:
-            if #available(macOS 10.14, *) {
-                location.requestLocation()
+            if #available(macOS 10.15, *) {
+                location.requestAlwaysAuthorization()
             }
         default: break
         }
