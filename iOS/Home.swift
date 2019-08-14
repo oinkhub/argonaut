@@ -37,6 +37,7 @@ final class Home: UIView {
         
         let info = UIButton()
         info.setImage(UIImage(named: "info"), for: .normal)
+        info.addTarget(self, action: #selector(self.info), for: .touchUpInside)
         
         let new = UIButton()
         new.setImage(UIImage(named: "new"), for: .normal)
@@ -76,4 +77,6 @@ final class Home: UIView {
             privacy.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         }
     }
+    
+    @objc private func info() { app.push(About()) }
 }

@@ -22,10 +22,10 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocationUsageDescription</key>
-	<string>Argonaut can provide you with navigation</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Argonaut can provide you with navigation</string>
+	<string>With access to your location you will be able to have navigation instructions. It is just optional.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>With access to your location you will be able to have navigation instructions. It is just optional.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
