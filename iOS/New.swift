@@ -166,11 +166,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             self.completer = completer
         }
         
-        let search = UIView()
-        over(search)
-        
         let results = Scroll()
-        search.addSubview(results)
+        addSubview(results)
         self.results = results
         /*
         let list = NSScrollView()
@@ -224,17 +221,15 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         */
         let field = Field.Search()
         field.delegate = self
-        search.addSubview(field)
+        addSubview(field)
         self.field = field
+        
+//        tools(pin, top: _out.bottomAnchor)
  
-        search.topAnchor.constraint(equalTo: _close.topAnchor, constant: 20).isActive = true
-        search.leftAnchor.constraint(equalTo: _left.rightAnchor, constant: 10).isActive = true
-        search.rightAnchor.constraint(equalTo: _tools.leftAnchor, constant: -10).isActive = true
-        search.bottomAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
         
         results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
-        results.leftAnchor.constraint(equalTo: search.leftAnchor).isActive = true
-        results.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
+        results.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        results.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         results.heightAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
         results.heightAnchor.constraint(lessThanOrEqualTo: results.content.heightAnchor).isActive = true
         
@@ -275,22 +270,23 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         listTop = list.topAnchor.constraint(greaterThanOrEqualTo: contentView!.bottomAnchor, constant: -30)
         listTop.isActive = true
         */
-        field.topAnchor.constraint(equalTo: search.topAnchor).isActive = true
-        field.leftAnchor.constraint(equalTo: search.leftAnchor).isActive = true
-        field.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
+        
+        mapTop = map.topAnchor.constraint(equalTo: results.bottomAnchor)
+        
+        field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         field.heightAnchor.constraint(equalToConstant: 50).isActive = true
- 
-        tools(pin, top: _out.bottomAnchor)
-        _tools.bottomAnchor.constraint(equalTo: pin.bottomAnchor).isActive = true
+        
+        if #available(iOS 11.0, *) {
+            field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        } else {
+            field.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        }
+        
         /*
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.field.accepts = true
         }*/
-        if #available(iOS 13.0, *) {
-            app.style = .darkContent
-        } else {
-            app.style = .default
-        }
     }/*
      
     

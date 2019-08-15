@@ -3,9 +3,11 @@ import CoreLocation
 
 class World: UIView {
     let dater = DateComponentsFormatter()
+    weak var mapTop: NSLayoutConstraint! { didSet { oldValue.isActive = false; mapTop.isActive = true } }
+    weak var mapBottom: NSLayoutConstraint! { didSet { oldValue.isActive = false; mapBottom.isActive = true } }
+    weak var mapLeft: NSLayoutConstraint! { didSet { oldValue.isActive = false; mapLeft.isActive = true } }
+    weak var mapRight: NSLayoutConstraint! { didSet { oldValue.isActive = false; mapRight.isActive = true } }
     private(set) weak var map: Map!
-    private(set) weak var _tools: UIView!
-    private(set) weak var _left: UIView!
     private(set) weak var _out: UIButton!
     private(set) weak var _close: UIButton!
     private weak var _follow: UIButton!
@@ -42,17 +44,9 @@ class World: UIView {
         _close.setImage(UIImage(named: "close"), for: .normal)
         _close.imageView!.clipsToBounds = true
         _close.imageView!.contentMode = .center
-        _close.addTarget(self, action: #selector(close), for: .touchUpInside)
+        _close.addTarget(app, action: #selector(app.pop), for: .touchUpInside)
         addSubview(_close)
         self._close = _close
-        
-        let _tools = UIView()
-        over(_tools)
-        self._tools = _tools
-        
-        let _left = UIView()
-        over(_left)
-        self._left = _left
         
         let _in = UIButton()
         _in.addTarget(self, action: #selector(`in`), for: .touchUpInside)
@@ -82,10 +76,8 @@ class World: UIView {
         _driving.setImage(UIImage(named: "driving")!.withRenderingMode(.alwaysTemplate), for: [])
         _driving.accessibilityLabel = .key("World.driving")
         self._driving = _driving
-        
-        tools(_in, top: _tools.topAnchor)
-        tools(_out, top: _in.bottomAnchor)
-        
+        /*
+         
         var top = _left.topAnchor
         [_follow, _walking, _driving].forEach {
             $0.isSelected = true
@@ -103,23 +95,17 @@ class World: UIView {
             top = $0.bottomAnchor
         }
         _left.bottomAnchor.constraint(equalTo: top).isActive = true
+        */
         
-        map.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        map.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        mapTop = map.topAnchor.constraint(equalTo: topAnchor)
+        mapTop.isActive = true
+        mapBottom = map.bottomAnchor.constraint(equalTo: bottomAnchor)
+        mapBottom.isActive = true
+        mapLeft = map.leftAnchor.constraint(equalTo: leftAnchor)
+        mapLeft.isActive = true
+        mapRight = map.rightAnchor.constraint(equalTo: rightAnchor)
+        mapRight.isActive = true
         
-        _close.centerXAnchor.constraint(equalTo: _left.centerXAnchor).isActive = true
-        _close.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        _close.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
-        _tools.topAnchor.constraint(equalTo: _close.bottomAnchor).isActive = true
-        _tools.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
-        _tools.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        _left.topAnchor.constraint(equalTo: _close.bottomAnchor).isActive = true
-        _left.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-        _left.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
         if #available(iOS 11.0, *) {
             _close.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
@@ -134,25 +120,18 @@ class World: UIView {
     
     func refresh() { }
     
-    final func over(_ view: UIView) {
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .black
-        view.layer.cornerRadius = 4
-        addSubview(view)
-    }
-    
     final func tools(_ button: UIButton, top: NSLayoutYAxisAnchor) {
-        button.tintColor = .halo
-        button.isAccessibilityElement = true
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.imageView!.clipsToBounds = true
-        button.imageView!.contentMode = .center
-        _tools.addSubview(button)
-        
-        button.topAnchor.constraint(equalTo: top).isActive = true
-        button.centerXAnchor.constraint(equalTo: _tools.centerXAnchor).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//        button.tintColor = .halo
+//        button.isAccessibilityElement = true
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.imageView!.clipsToBounds = true
+//        button.imageView!.contentMode = .center
+//        _tools.addSubview(button)
+//
+//        button.topAnchor.constraint(equalTo: top).isActive = true
+//        button.centerXAnchor.constraint(equalTo: _tools.centerXAnchor).isActive = true
+//        button.widthAnchor.constraint(equalToConstant: 50).isActive = true
+//        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     final func measure(_ distance: CLLocationDistance) -> String {
@@ -171,8 +150,8 @@ class World: UIView {
     
     @objc final func follow() {
         map.follow()
-        _follow.isSelected.toggle()
-        _follow.tintColor = _follow.isSelected ? .halo : UIColor.halo.withAlphaComponent(0.6)
+//        _follow.isSelected.toggle()
+//        _follow.tintColor = _follow.isSelected ? .halo : UIColor.halo.withAlphaComponent(0.6)
     }
     
     @objc final func walking() {
@@ -187,10 +166,5 @@ class World: UIView {
         _driving.isSelected.toggle()
         _driving.tintColor = _driving.isSelected ? .halo : UIColor.halo.withAlphaComponent(0.6)
         refresh()
-    }
-    
-    @objc private func close() {
-        app.style = .lightContent
-        app.pop()
     }
 }

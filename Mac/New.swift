@@ -238,6 +238,8 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         contentView!.addSubview(field)
         self.field = field
         
+        tools(pin, top: _out.bottomAnchor)
+        
         search.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         search.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
         search.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 80).isActive = true
@@ -294,7 +296,6 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         field.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
         field.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
-        tools(pin, top: _out.bottomAnchor)
         _tools.bottomAnchor.constraint(equalTo: pin.bottomAnchor).isActive = true
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
