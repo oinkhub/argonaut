@@ -4,8 +4,10 @@ import CoreLocation
 class World: UIView {
     let dater = DateComponentsFormatter()
     private(set) weak var map: Map!
-    private(set) weak var tools: UIView!
+    private(set) weak var _tools: UIView!
+    private(set) weak var _left: UIView!
     private(set) weak var _out: UIButton!
+    private(set) weak var _close: UIButton!
     private weak var _follow: UIButton!
     private weak var _walking: UIButton!
     private weak var _driving: UIButton!
@@ -33,22 +35,24 @@ class World: UIView {
         addSubview(map)
         self.map = map
         
-        let close = UIButton()
-        close.translatesAutoresizingMaskIntoConstraints = false
-        close.isAccessibilityElement = true
-        close.accessibilityLabel = .key("Close")
-        close.setImage(UIImage(named: "close"), for: .normal)
-        close.imageView!.clipsToBounds = true
-        close.imageView!.contentMode = .center
-        close.addTarget(self, action: #selector(self.close), for: .touchUpInside)
-        addSubview(close)
+        let _close = UIButton()
+        _close.translatesAutoresizingMaskIntoConstraints = false
+        _close.isAccessibilityElement = true
+        _close.accessibilityLabel = .key("Close")
+        _close.setImage(UIImage(named: "close"), for: .normal)
+        _close.imageView!.clipsToBounds = true
+        _close.imageView!.contentMode = .center
+        _close.addTarget(self, action: #selector(close), for: .touchUpInside)
+        addSubview(_close)
+        self._close = _close
         
-        let tools = UIView()
-        over(tools)
-        self.tools = tools
+        let _tools = UIView()
+        over(_tools)
+        self._tools = _tools
         
-        let left = UIView()
-        over(left)
+        let _left = UIView()
+        over(_left)
+        self._left = _left
         
         let _in = UIButton()
         _in.addTarget(self, action: #selector(`in`), for: .touchUpInside)
@@ -79,33 +83,10 @@ class World: UIView {
         _driving.accessibilityLabel = .key("World.driving")
         self._driving = _driving
         
-        map.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        map.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        tools(_in, top: _tools.topAnchor)
+        tools(_out, top: _in.bottomAnchor)
         
-        close.centerXAnchor.constraint(equalTo: left.centerXAnchor).isActive = true
-        close.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        close.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
-        tools.topAnchor.constraint(equalTo: close.bottomAnchor).isActive = true
-        tools.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
-        tools.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        left.topAnchor.constraint(equalTo: close.bottomAnchor).isActive = true
-        left.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-        left.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        if #available(iOS 11.0, *) {
-            close.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
-        } else {
-            close.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        }
-        
-        tool(_in, top: tools.topAnchor)
-        tool(_out, top: _in.bottomAnchor)
-        
-        var top = left.topAnchor
+        var top = _left.topAnchor
         [_follow, _walking, _driving].forEach {
             $0.isSelected = true
             $0.tintColor = .halo
@@ -113,15 +94,38 @@ class World: UIView {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.imageView!.clipsToBounds = true
             $0.imageView!.contentMode = .center
-            left.addSubview($0)
+            _left.addSubview($0)
             
             $0.topAnchor.constraint(equalTo: top).isActive = true
-            $0.centerXAnchor.constraint(equalTo: left.centerXAnchor).isActive = true
+            $0.centerXAnchor.constraint(equalTo: _left.centerXAnchor).isActive = true
             $0.widthAnchor.constraint(equalToConstant: 50).isActive = true
             $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
             top = $0.bottomAnchor
         }
-        left.bottomAnchor.constraint(equalTo: top).isActive = true
+        _left.bottomAnchor.constraint(equalTo: top).isActive = true
+        
+        map.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        map.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        _close.centerXAnchor.constraint(equalTo: _left.centerXAnchor).isActive = true
+        _close.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        _close.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        
+        _tools.topAnchor.constraint(equalTo: _close.bottomAnchor).isActive = true
+        _tools.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+        _tools.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        _left.topAnchor.constraint(equalTo: _close.bottomAnchor).isActive = true
+        _left.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+        _left.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        if #available(iOS 11.0, *) {
+            _close.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+        } else {
+            _close.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.follow()
@@ -137,18 +141,18 @@ class World: UIView {
         addSubview(view)
     }
     
-    final func tool(_ view: UIButton, top: NSLayoutYAxisAnchor) {
-        view.tintColor = .halo
-        view.isAccessibilityElement = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.imageView!.clipsToBounds = true
-        view.imageView!.contentMode = .center
-        tools.addSubview(view)
+    final func tools(_ button: UIButton, top: NSLayoutYAxisAnchor) {
+        button.tintColor = .halo
+        button.isAccessibilityElement = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.imageView!.clipsToBounds = true
+        button.imageView!.contentMode = .center
+        _tools.addSubview(button)
         
-        view.topAnchor.constraint(equalTo: top).isActive = true
-        view.centerXAnchor.constraint(equalTo: tools.centerXAnchor).isActive = true
-        view.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        view.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        button.topAnchor.constraint(equalTo: top).isActive = true
+        button.centerXAnchor.constraint(equalTo: _tools.centerXAnchor).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     final func measure(_ distance: CLLocationDistance) -> String {

@@ -241,7 +241,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         search.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         search.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
         search.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 80).isActive = true
-        search.rightAnchor.constraint(lessThanOrEqualTo: tools.leftAnchor, constant: -10).isActive = true
+        search.rightAnchor.constraint(lessThanOrEqualTo: _tools.leftAnchor, constant: -10).isActive = true
         search.widthAnchor.constraint(equalToConstant: 450).isActive = true
         search.bottomAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
         
@@ -270,7 +270,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         base.topAnchor.constraint(equalTo: list.topAnchor, constant: -2).isActive = true
         base.heightAnchor.constraint(equalToConstant: 300).isActive = true
         base.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 10).isActive = true
-        base.rightAnchor.constraint(lessThanOrEqualTo: tools.leftAnchor, constant: -10).isActive = true
+        base.rightAnchor.constraint(lessThanOrEqualTo: _tools.leftAnchor, constant: -10).isActive = true
 
         total.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
         total.rightAnchor.constraint(equalTo: base.rightAnchor).isActive = true
@@ -294,8 +294,8 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         field.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
         field.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
-        tool(pin, top: _out.bottomAnchor)
-        tools.bottomAnchor.constraint(equalTo: pin.bottomAnchor).isActive = true
+        tools(pin, top: _out.bottomAnchor)
+        _tools.bottomAnchor.constraint(equalTo: pin.bottomAnchor).isActive = true
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.field.accepts = true

@@ -149,46 +149,30 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }*/
     }
     
-//    private weak var field: Field.Search!
-//    private weak var list: UIScrollView!
-//    private weak var results: UIScrollView!
-//    private weak var total: UIView!
-//    private weak var listTop: NSLayoutConstraint!
-//    private weak var itemsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; itemsBottom.isActive = true } }
-//    private weak var resultsBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; resultsBottom.isActive = true } }
-//    private weak var totalBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; totalBottom.isActive = true } }
-//    private var completer: Any?
+    private weak var field: Field.Search!
+    private weak var list: Scroll!
+    private weak var results: Scroll!
+    private weak var total: UIView!
+    private weak var totalBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; totalBottom.isActive = true } }
+    private var completer: Any?
     
     required init?(coder: NSCoder) { return nil }
     override init() {
         super.init()
-        /*
-        if #available(OSX 10.11.4, *) {
+        
+        if #available(iOS 9.3, *) {
             let completer = MKLocalSearchCompleter()
             completer.delegate = self
             self.completer = completer
         }
         
-        let search = NSView()
+        let search = UIView()
         over(search)
         
-        let base = NSView()
-        over(base)
-        
-        let results = NSScrollView()
-        results.translatesAutoresizingMaskIntoConstraints = false
-        results.drawsBackground = false
-        results.hasVerticalScroller = true
-        results.verticalScroller!.controlSize = .mini
-        results.horizontalScrollElasticity = .none
-        results.verticalScrollElasticity = .allowed
-        results.documentView = Flipped()
-        results.documentView!.translatesAutoresizingMaskIntoConstraints = false
-        results.documentView!.leftAnchor.constraint(equalTo: results.leftAnchor).isActive = true
-        results.documentView!.rightAnchor.constraint(equalTo: results.rightAnchor).isActive = true
+        let results = Scroll()
         search.addSubview(results)
         self.results = results
-        
+        /*
         let list = NSScrollView()
         list.translatesAutoresizingMaskIntoConstraints = false
         list.drawsBackground = false
@@ -237,27 +221,24 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         let save = Button.Yes(self, action: #selector(self.save))
         save.label.stringValue = .key("New.save")
         contentView!.addSubview(save)
-        
+        */
         let field = Field.Search()
         field.delegate = self
-        contentView!.addSubview(field)
+        search.addSubview(field)
         self.field = field
-        
-        search.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
-        search.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
-        search.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 80).isActive = true
-        search.rightAnchor.constraint(lessThanOrEqualTo: tools.leftAnchor, constant: -10).isActive = true
-        search.widthAnchor.constraint(equalToConstant: 450).isActive = true
+ 
+        search.topAnchor.constraint(equalTo: _close.topAnchor, constant: 20).isActive = true
+        search.leftAnchor.constraint(equalTo: _left.rightAnchor, constant: 10).isActive = true
+        search.rightAnchor.constraint(equalTo: _tools.leftAnchor, constant: -10).isActive = true
         search.bottomAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
         
         results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         results.leftAnchor.constraint(equalTo: search.leftAnchor).isActive = true
         results.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
         results.heightAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
-        results.heightAnchor.constraint(lessThanOrEqualTo: results.documentView!.heightAnchor).isActive = true
-        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: results.documentView!.topAnchor)
-        resultsBottom.isActive = true
+        results.heightAnchor.constraint(lessThanOrEqualTo: results.content.heightAnchor).isActive = true
         
+        /*
         handle.topAnchor.constraint(equalTo: list.topAnchor, constant: 10).isActive = true
         handle.heightAnchor.constraint(equalToConstant: 2).isActive = true
         handle.widthAnchor.constraint(equalToConstant: 20).isActive = true
@@ -293,14 +274,14 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         list.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 10).isActive = true
         listTop = list.topAnchor.constraint(greaterThanOrEqualTo: contentView!.bottomAnchor, constant: -30)
         listTop.isActive = true
-        
+        */
         field.topAnchor.constraint(equalTo: search.topAnchor).isActive = true
         field.leftAnchor.constraint(equalTo: search.leftAnchor).isActive = true
         field.rightAnchor.constraint(equalTo: search.rightAnchor).isActive = true
-        field.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        */
-        tool(pin, top: _out.bottomAnchor)
-        tools.bottomAnchor.constraint(equalTo: pin.bottomAnchor).isActive = true
+        field.heightAnchor.constraint(equalToConstant: 50).isActive = true
+ 
+        tools(pin, top: _out.bottomAnchor)
+        _tools.bottomAnchor.constraint(equalTo: pin.bottomAnchor).isActive = true
         /*
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.field.accepts = true

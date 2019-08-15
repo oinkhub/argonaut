@@ -4,7 +4,7 @@ import CoreLocation
 class World: NSWindow {
     let dater = DateComponentsFormatter()
     private(set) weak var map: Map!
-    private(set) weak var tools: NSView!
+    private(set) weak var _tools: NSView!
     private(set) weak var _out: Button.Image!
     private weak var _follow: Button.Image!
     private weak var _walking: Button.Image!
@@ -37,9 +37,9 @@ class World: NSWindow {
         contentView!.addSubview(map)
         self.map = map
         
-        let tools = NSView()
-        over(tools)
-        self.tools = tools
+        let _tools = NSView()
+        over(_tools)
+        self._tools = _tools
         
         let left = NSView()
         over(left)
@@ -79,22 +79,9 @@ class World: NSWindow {
             shadows = shadow.rightAnchor
         }
         
-        map.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
-        map.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor).isActive = true
-        map.leftAnchor.constraint(equalTo: contentView!.leftAnchor).isActive = true
-        map.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
+        tools(_in, top: _tools.topAnchor)
+        tools(_out, top: _in.bottomAnchor)
         
-        tools.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
-        tools.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
-        tools.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        left.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
-        left.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
-        left.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        tool(_in, top: tools.topAnchor)
-        tool(_out, top: _in.bottomAnchor)
-            
         var top = left.topAnchor
         [_follow, _walking, _driving].forEach {
             left.addSubview($0)
@@ -106,6 +93,19 @@ class World: NSWindow {
             top = $0.bottomAnchor
         }
         left.bottomAnchor.constraint(equalTo: top).isActive = true
+        
+        map.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
+        map.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor).isActive = true
+        map.leftAnchor.constraint(equalTo: contentView!.leftAnchor).isActive = true
+        map.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
+        
+        _tools.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
+        _tools.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
+        _tools.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        left.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
+        left.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
+        left.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.follow()
@@ -122,11 +122,11 @@ class World: NSWindow {
         contentView!.addSubview(view)
     }
     
-    final func tool(_ view: Button.Image, top: NSLayoutYAxisAnchor) {
-        tools.addSubview(view)
+    final func tools(_ view: Button.Image, top: NSLayoutYAxisAnchor) {
+        _tools.addSubview(view)
         
         view.topAnchor.constraint(equalTo: top).isActive = true
-        view.centerXAnchor.constraint(equalTo: tools.centerXAnchor).isActive = true
+        view.centerXAnchor.constraint(equalTo: _tools.centerXAnchor).isActive = true
         view.widthAnchor.constraint(equalToConstant: 50).isActive = true
         view.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }

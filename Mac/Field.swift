@@ -89,7 +89,6 @@ class Field: NSTextView {
             textContainerInset.height = 7
             textContainerInset.width = 10
             accepts = true
-            
             height = heightAnchor.constraint(greaterThanOrEqualToConstant: 40)
             height.isActive = true
         }
