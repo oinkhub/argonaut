@@ -28,10 +28,7 @@ class Field: UITextView {
         required init?(coder: NSCoder) { return nil }
         override init() {
             super.init()
-            textContainer.size.height = 35
-            textContainer.size.width = 370
-            textContainerInset = .init(top: 9, left: 40, bottom: 9, right: 40)
-            layoutManager.ensureLayout(for: textContainer)
+            textContainerInset = .init(top: 15, left: 50, bottom: 0, right: 50)
             accessibilityLabel = .key("Field.search")
             
             let icon = UIButton()
@@ -56,14 +53,16 @@ class Field: UITextView {
             addSubview(_cancel)
             self._cancel = _cancel
             
+            heightAnchor.constraint(equalToConstant: 60).isActive = true
+            
             icon.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-            icon.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            icon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 60).isActive = true
             icon.heightAnchor.constraint(equalToConstant: 50).isActive = true
             
             _cancel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            _cancel.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            _cancel.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            _cancel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            _cancel.widthAnchor.constraint(equalToConstant: 60).isActive = true
             _cancel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         }
         
@@ -99,7 +98,7 @@ class Field: UITextView {
         isScrollEnabled = false
         textColor = .white
         tintColor = .halo
-        font = .preferredFont(forTextStyle: .title2)
+        font = .preferredFont(forTextStyle: .title3)
         keyboardType = .alphabet
         keyboardAppearance = .dark
         autocorrectionType = .yes

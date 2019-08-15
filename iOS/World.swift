@@ -76,6 +76,12 @@ class World: UIView {
         _driving.setImage(UIImage(named: "driving")!.withRenderingMode(.alwaysTemplate), for: [])
         _driving.accessibilityLabel = .key("World.driving")
         self._driving = _driving
+        
+        let border = UIView()
+        border.translatesAutoresizingMaskIntoConstraints = false
+        border.isUserInteractionEnabled = false
+        border.backgroundColor = .halo
+        addSubview(border)
         /*
          
         var top = _left.topAnchor
@@ -99,18 +105,26 @@ class World: UIView {
         
         mapTop = map.topAnchor.constraint(equalTo: topAnchor)
         mapTop.isActive = true
-        mapBottom = map.bottomAnchor.constraint(equalTo: bottomAnchor)
+        mapBottom = map.bottomAnchor.constraint(equalTo: _close.topAnchor)
         mapBottom.isActive = true
         mapLeft = map.leftAnchor.constraint(equalTo: leftAnchor)
         mapLeft.isActive = true
         mapRight = map.rightAnchor.constraint(equalTo: rightAnchor)
         mapRight.isActive = true
         
+        border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        _close.topAnchor.constraint(equalTo: border.bottomAnchor).isActive = true
+        _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        _close.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        _close.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         if #available(iOS 11.0, *) {
-            _close.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+            border.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -60).isActive = true
         } else {
-            _close.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            border.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -60).isActive = true
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in

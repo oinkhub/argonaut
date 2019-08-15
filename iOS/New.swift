@@ -275,12 +275,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        field.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         if #available(iOS 11.0, *) {
-            field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+            field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
         } else {
-            field.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+            field.topAnchor.constraint(equalTo: topAnchor).isActive = true
         }
         
         /*
