@@ -7,6 +7,7 @@ final class Alert: UIControl {
     @discardableResult init(_ title: String? = nil, message: String) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
+        accessibilityViewIsModal = true
         backgroundColor = UIColor.halo.withAlphaComponent(0.96)
         layer.cornerRadius = 6
         layer.borderColor = UIColor.black.cgColor

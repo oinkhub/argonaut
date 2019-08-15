@@ -81,6 +81,14 @@ private(set) weak var app: App!
         }
     }
     
+    override func accessibilityPerformEscape() -> Bool {
+        if stack.isEmpty {
+            return false
+        }
+        pop()
+        return true
+    }
+    
     func push(_ screen: UIView) {
         let previous = view.subviews.last
         

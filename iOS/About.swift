@@ -5,6 +5,7 @@ final class About: UIView {
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
+        accessibilityViewIsModal = true
         backgroundColor = .black
         
         let close = UIButton()
