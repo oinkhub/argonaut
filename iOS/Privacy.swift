@@ -68,6 +68,9 @@ final class Privacy: UIView {
         border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         border.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
+        title.centerYAnchor.constraint(equalTo: close.centerYAnchor).isActive = true
+        title.leftAnchor.constraint(equalTo: close.rightAnchor).isActive = true
+        
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -83,9 +86,6 @@ final class Privacy: UIView {
         close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         close.widthAnchor.constraint(equalToConstant: 60).isActive = true
         close.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
-        title.centerYAnchor.constraint(equalTo: close.centerYAnchor).isActive = true
-        title.leftAnchor.constraint(equalTo: close.rightAnchor).isActive = true
         
         label.topAnchor.constraint(equalTo: content.topAnchor, constant: 20).isActive = true
         label.leftAnchor.constraint(equalTo: content.leftAnchor, constant: 20).isActive = true

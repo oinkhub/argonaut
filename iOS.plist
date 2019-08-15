@@ -22,10 +22,10 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>With access to your location you will be able to have navigation instructions. It is just optional.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>With access to your location you will be able to have navigation instructions. It is just optional.</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>With access to your location you will be able to have navigation instructions. It is just optional.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -71,7 +71,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
 </dict>
 </plist>

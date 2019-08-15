@@ -1,4 +1,5 @@
-import MapKit
+import AppKit
+import CoreLocation
 
 class World: NSWindow {
     let dater = DateComponentsFormatter()
@@ -43,10 +44,10 @@ class World: NSWindow {
         let left = NSView()
         over(left)
         
-        let `in` = Button.Image(self, action: #selector(self.in))
-        `in`.image.image = NSImage(named: "in")
+        let _in = Button.Image(self, action: #selector(`in`))
+        _in.image.image = NSImage(named: "in")
         
-        let _out = Button.Image(self, action: #selector(self.out))
+        let _out = Button.Image(self, action: #selector(out))
         _out.image.image = NSImage(named: "out")
         self._out = _out
         
@@ -91,8 +92,8 @@ class World: NSWindow {
         left.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 10).isActive = true
         left.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        tool(`in`, top: tools.topAnchor)
-        tool(_out, top: `in`.bottomAnchor)
+        tool(_in, top: tools.topAnchor)
+        tool(_out, top: _in.bottomAnchor)
             
         var top = left.topAnchor
         [_follow, _walking, _driving].forEach {

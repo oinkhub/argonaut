@@ -22,7 +22,7 @@ final class About: NSWindow {
         label.font = .systemFont(ofSize: 20, weight: .bold)
         contentView!.addSubview(label)
         
-        let version = Label((Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "")
+        let version = Label(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
         version.textColor = .halo
         version.font = .systemFont(ofSize: 12, weight: .light)
         contentView!.addSubview(version)

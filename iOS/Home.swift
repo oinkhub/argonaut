@@ -36,13 +36,20 @@ final class Home: UIView {
         addSubview(border)
         
         let info = UIButton()
+        info.isAccessibilityElement = true
+        info.accessibilityLabel = .key("Home.info")
         info.setImage(UIImage(named: "info"), for: .normal)
         info.addTarget(self, action: #selector(self.info), for: .touchUpInside)
         
         let new = UIButton()
+        new.isAccessibilityElement = true
+        new.accessibilityLabel = .key("Home.new")
         new.setImage(UIImage(named: "new"), for: .normal)
+        new.addTarget(self, action: #selector(self.new), for: .touchUpInside)
         
         let privacy = UIButton()
+        privacy.isAccessibilityElement = true
+        privacy.accessibilityLabel = .key("Home.privacy")
         privacy.setImage(UIImage(named: "privacy"), for: .normal)
         privacy.addTarget(self, action: #selector(self.privacy), for: .touchUpInside)
         
@@ -80,5 +87,6 @@ final class Home: UIView {
     }
     
     @objc private func info() { app.push(About()) }
+    @objc private func new() { app.push(New()) }
     @objc private func privacy() { app.push(Privacy()) }
 }

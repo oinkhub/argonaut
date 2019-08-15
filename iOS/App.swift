@@ -7,6 +7,8 @@ private(set) weak var app: App!
 @UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
     var session: Session!
+    var style = UIStatusBarStyle.lightContent { didSet { setNeedsStatusBarAppearanceUpdate() } }
+    override var preferredStatusBarStyle: UIStatusBarStyle { style }
     private(set) weak var home: Home!
     private var stack = [NSLayoutConstraint]()
     
