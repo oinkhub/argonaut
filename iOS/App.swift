@@ -90,6 +90,7 @@ private(set) weak var app: App!
     }
     
     func push(_ screen: UIView) {
+        window!.endEditing(true)
         let previous = view.subviews.last
         
         let border = UIView()
@@ -114,7 +115,7 @@ private(set) weak var app: App!
         
         view.layoutIfNeeded()
         top.constant = -1
-        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
+        UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseIn, animations: {
             previous?.alpha = 0.3
             self.view.layoutIfNeeded()
         })
@@ -139,9 +140,10 @@ private(set) weak var app: App!
     }
     
     @objc func pop() {
+        window!.endEditing(true)
         if let top = stack.popLast() {
             top.constant = view.bounds.height
-            UIView.animate(withDuration: 0.35, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 self.view.subviews[self.view.subviews.count - 2].alpha = 1
                 self.view.layoutIfNeeded()
             }) { _ in self.view.subviews.last!.removeFromSuperview() }

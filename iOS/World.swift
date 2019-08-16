@@ -3,10 +3,6 @@ import CoreLocation
 
 class World: UIView {
     let dater = DateComponentsFormatter()
-    weak var mapTop: NSLayoutConstraint! { didSet { oldValue.isActive = false; mapTop.isActive = true } }
-    weak var mapBottom: NSLayoutConstraint! { didSet { oldValue.isActive = false; mapBottom.isActive = true } }
-    weak var mapLeft: NSLayoutConstraint! { didSet { oldValue.isActive = false; mapLeft.isActive = true } }
-    weak var mapRight: NSLayoutConstraint! { didSet { oldValue.isActive = false; mapRight.isActive = true } }
     private(set) weak var map: Map!
     private(set) weak var _out: UIButton!
     private(set) weak var _close: UIButton!
@@ -48,17 +44,6 @@ class World: UIView {
         addSubview(_close)
         self._close = _close
         
-        let _in = UIButton()
-        _in.addTarget(self, action: #selector(`in`), for: .touchUpInside)
-        _in.setImage(UIImage(named: "in"), for: .normal)
-        _in.accessibilityLabel = .key("World.in")
-        
-        let _out = UIButton()
-        _out.addTarget(self, action: #selector(out), for: .touchUpInside)
-        _out.setImage(UIImage(named: "out"), for: .normal)
-        _out.accessibilityLabel = .key("World.out")
-        self._out = _out
-        
         let _follow = UIButton()
         _follow.addTarget(self, action: #selector(follow), for: .touchUpInside)
         _follow.setImage(UIImage(named: "follow")!.withRenderingMode(.alwaysTemplate), for: [])
@@ -76,12 +61,10 @@ class World: UIView {
         _driving.setImage(UIImage(named: "driving")!.withRenderingMode(.alwaysTemplate), for: [])
         _driving.accessibilityLabel = .key("World.driving")
         self._driving = _driving
+
+        _close.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        _close.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        let border = UIView()
-        border.translatesAutoresizingMaskIntoConstraints = false
-        border.isUserInteractionEnabled = false
-        border.backgroundColor = .halo
-        addSubview(border)
         /*
          
         var top = _left.topAnchor
@@ -102,31 +85,7 @@ class World: UIView {
         }
         _left.bottomAnchor.constraint(equalTo: top).isActive = true
         */
-        
-        mapTop = map.topAnchor.constraint(equalTo: topAnchor)
-        mapTop.isActive = true
-        mapBottom = map.bottomAnchor.constraint(equalTo: _close.topAnchor)
-        mapBottom.isActive = true
-        mapLeft = map.leftAnchor.constraint(equalTo: leftAnchor)
-        mapLeft.isActive = true
-        mapRight = map.rightAnchor.constraint(equalTo: rightAnchor)
-        mapRight.isActive = true
-        
-        border.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        
-        _close.topAnchor.constraint(equalTo: border.bottomAnchor).isActive = true
-        _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        _close.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        _close.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
-        if #available(iOS 11.0, *) {
-            border.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -60).isActive = true
-        } else {
-            border.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -60).isActive = true
-        }
-        
+ 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.follow()
         }
@@ -154,13 +113,6 @@ class World: UIView {
         }
         return "\(Int(distance))" + .key("New.distance")
     }
-    
-    @objc func up() { map.up() }
-    @objc func down() { map.down() }
-    @objc func `in`() { map.in() }
-    @objc func out() { map.out() }
-    @objc func left() { map.left() }
-    @objc func right() { map.right() }
     
     @objc final func follow() {
         map.follow()

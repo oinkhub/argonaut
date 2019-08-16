@@ -224,6 +224,18 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(field)
         self.field = field
         
+        map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
+        map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        map.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
+        _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
+        
+        field.leftAnchor.constraint(equalTo: _close.rightAnchor).isActive = true
+        field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        
 //        tools(pin, top: _out.bottomAnchor)
  
         
@@ -271,22 +283,26 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         listTop.isActive = true
         */
         
-        mapTop = map.topAnchor.constraint(equalTo: results.bottomAnchor)
-        
-        field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        
         if #available(iOS 11.0, *) {
             field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
         } else {
-            field.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            field.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
         }
         
         /*
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.field.accepts = true
         }*/
-    }/*
+    }
+    
+    func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
+        if replacementText == "\n" {
+            field.resignFirstResponder()
+            return false
+        }
+        return true
+    }
+    /*
      
     
     func textDidChange(_: Notification) {

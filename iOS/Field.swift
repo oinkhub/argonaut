@@ -28,7 +28,7 @@ class Field: UITextView {
         required init?(coder: NSCoder) { return nil }
         override init() {
             super.init()
-            textContainerInset = .init(top: 15, left: 50, bottom: 0, right: 50)
+            textContainerInset = .init(top: 12, left: 35, bottom: 12, right: 45)
             accessibilityLabel = .key("Field.search")
             
             let icon = UIButton()
@@ -37,6 +37,7 @@ class Field: UITextView {
             icon.setImage(UIImage(named: "search"), for: .normal)
             icon.imageView!.contentMode = .center
             icon.imageView!.clipsToBounds = true
+            icon.imageEdgeInsets.right = 15
             icon.isAccessibilityElement = true
             icon.accessibilityLabel = .key("Field.icon")
             addSubview(icon)
@@ -53,11 +54,11 @@ class Field: UITextView {
             addSubview(_cancel)
             self._cancel = _cancel
             
-            heightAnchor.constraint(equalToConstant: 60).isActive = true
+            heightAnchor.constraint(equalToConstant: NSAttributedString(string: "0", attributes: [.font: font!]).boundingRect(with: .init(width: 100, height: 0), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size.height + 30).isActive = true
             
             icon.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             icon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 35).isActive = true
             icon.heightAnchor.constraint(equalToConstant: 50).isActive = true
             
             _cancel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
