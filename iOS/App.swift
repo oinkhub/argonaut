@@ -143,10 +143,11 @@ private(set) weak var app: App!
         window!.endEditing(true)
         if let top = stack.popLast() {
             top.constant = view.bounds.height
+            let screen = view.subviews.last!
             UIView.animate(withDuration: 0.3, animations: {
                 self.view.subviews[self.view.subviews.count - 2].alpha = 1
                 self.view.layoutIfNeeded()
-            }) { _ in self.view.subviews.last!.removeFromSuperview() }
+            }) { _ in DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak screen] in screen?.removeFromSuperview() } }
         }
     }
 }

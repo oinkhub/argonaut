@@ -156,6 +156,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var _down: Button!
     private weak var _walking: Button!
     private weak var _driving: Button!
+    private weak var _follow: Button!
     private weak var mapBottom: NSLayoutConstraint!
     private weak var walkingRight: NSLayoutConstraint!
     private weak var drivingRight: NSLayoutConstraint!
@@ -228,6 +229,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(_driving)
         self._driving = _driving
         
+        let _follow = Button("follow")
+        _follow.accessibilityLabel = .key("New.follow")
+        _follow.addTarget(self, action: #selector(follow), for: .touchUpInside)
+        addSubview(_follow)
+        self._follow = _follow
+        
         let pin = UIButton()
         pin.addTarget(self, action: #selector(self.pin), for: .touchUpInside)
         pin.setImage(UIImage(named: "pin"), for: .normal)
@@ -250,11 +257,13 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         field.leftAnchor.constraint(equalTo: _close.rightAnchor).isActive = true
         field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
-        _up.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        _up.bottomAnchor.constraint(equalTo: map.bottomAnchor).isActive = true
+        _up.bottomAnchor.constraint(lessThanOrEqualTo: map.bottomAnchor).isActive = true
         
         _down.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
         _down.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        
+        _follow.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
+        _follow.bottomAnchor.constraint(equalTo: _up.topAnchor).isActive = true
         
         _walking.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
         walkingRight = _walking.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
@@ -310,8 +319,14 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         if #available(iOS 11.0, *) {
             field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+            
+            _up.bottomAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
+            _up.rightAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.rightAnchor).isActive = true
         } else {
             field.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+            
+            _up.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor).isActive = true
+            _up.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor).isActive = true
         }
         
         /*

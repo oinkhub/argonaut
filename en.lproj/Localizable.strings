@@ -7,6 +7,7 @@ New.up="Show details";
 New.down="Hide details";
 New.walking="Walking directions";
 New.driving="Driving directions";
+New.follow="Follow me";
 Home.info="Help";
 Home.new="Create map";
 Home.privacy="Privacy";
