@@ -157,6 +157,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var _walking: Button!
     private weak var _driving: Button!
     private weak var _follow: Button!
+    private weak var _pin: Button!
     private weak var mapBottom: NSLayoutConstraint!
     private weak var walkingRight: NSLayoutConstraint!
     private weak var drivingRight: NSLayoutConstraint!
@@ -202,32 +203,32 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         base.addSubview(list)
         self.list = list*/
         
-        let _up = Button("up")
-        _up.accessibilityLabel = .key("New.up")
-        _up.addTarget(self, action: #selector(up), for: .touchUpInside)
-        addSubview(_up)
-        self._up = _up
-        
-        let _down = Button("down")
-        _down.accessibilityLabel = .key("New.down")
-        _down.addTarget(self, action: #selector(down), for: .touchUpInside)
-        _down.alpha = 0
-        addSubview(_down)
-        self._down = _down
-        
         let _walking = Button("walking")
         _walking.accessibilityLabel = .key("New.walking")
         _walking.addTarget(self, action: #selector(walking), for: .touchUpInside)
-        _walking.alpha = 0
+        _walking.isHidden = true
         addSubview(_walking)
         self._walking = _walking
         
         let _driving = Button("driving")
         _driving.accessibilityLabel = .key("New.driving")
         _driving.addTarget(self, action: #selector(driving), for: .touchUpInside)
-        _driving.alpha = 0
+        _driving.isHidden = true
         addSubview(_driving)
         self._driving = _driving
+        
+        let _down = Button("down")
+        _down.accessibilityLabel = .key("New.down")
+        _down.addTarget(self, action: #selector(down), for: .touchUpInside)
+        _down.isHidden = true
+        addSubview(_down)
+        self._down = _down
+        
+        let _up = Button("up")
+        _up.accessibilityLabel = .key("New.up")
+        _up.addTarget(self, action: #selector(up), for: .touchUpInside)
+        addSubview(_up)
+        self._up = _up
         
         let _follow = Button("follow")
         _follow.accessibilityLabel = .key("New.follow")
@@ -235,10 +236,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(_follow)
         self._follow = _follow
         
-        let pin = UIButton()
-        pin.addTarget(self, action: #selector(self.pin), for: .touchUpInside)
-        pin.setImage(UIImage(named: "pin"), for: .normal)
-        pin.accessibilityLabel = .key("New.pin")
+        let _pin = Button("pin")
+        _pin.accessibilityLabel = .key("New.pin")
+        _pin.addTarget(self, action: #selector(pin), for: .touchUpInside)
+        addSubview(_pin)
+        self._pin = _pin
         
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -262,8 +264,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         _down.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
         _down.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
         
-        _follow.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
-        _follow.bottomAnchor.constraint(equalTo: _up.topAnchor).isActive = true
+        _pin.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
+        _pin.bottomAnchor.constraint(equalTo: _up.topAnchor).isActive = true
+        
+        _follow.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        _follow.rightAnchor.constraint(equalTo: _driving.leftAnchor).isActive = true
         
         _walking.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
         walkingRight = _walking.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
@@ -569,12 +574,13 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         mapBottom.constant = -300
         walkingRight.constant = -70
         drivingRight.constant = -140
-        UIView.animate(withDuration: 0.7) { [weak self] in
-            self?._up.alpha = 0
-            self?._down.alpha = 1
-            self?._walking.alpha = 1
-            self?._driving.alpha = 1
+        _walking.isHidden = false
+        _driving.isHidden = false
+        UIView.animate(withDuration: 0.6, animations: { [weak self] in
             self?.layoutIfNeeded()
+        }) { [weak self] _ in
+            self?._up.isHidden = true
+            self?._down.isHidden = false
         }
     }
     
@@ -582,12 +588,13 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         mapBottom.constant = 0
         walkingRight.constant = 0
         drivingRight.constant = 0
-        UIView.animate(withDuration: 0.7) { [weak self] in
-            self?._up.alpha = 1
-            self?._down.alpha = 0
-            self?._walking.alpha = 0
-            self?._driving.alpha = 0
+        UIView.animate(withDuration: 0.6, animations: { [weak self] in
             self?.layoutIfNeeded()
+        }) { [weak self] _ in
+            self?._walking.isHidden = true
+            self?._driving.isHidden = true
+            self?._up.isHidden = false
+            self?._down.isHidden = true
         }
     }
 }

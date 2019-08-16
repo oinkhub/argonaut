@@ -231,7 +231,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 path.options += options
                 self?.refresh()
                 if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
-                    self?.addOverlays(options.map { Line(path, option: $0) }, level: .aboveLabels)
+                    self?.addOverlays(options.map { Line(path, option: $0) }, level: .aboveRoads)
                 }
             }
         }
@@ -239,6 +239,6 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     private func filter() {
         removeOverlays(overlays.filter { $0 is Line })
-        addOverlays(plan.path.flatMap { path in path.options.filter { ($0.mode == .walking && _walking) || ($0.mode == .driving && _driving) }.map { Line(path, option: $0) } }, level: .aboveLabels)
+        addOverlays(plan.path.flatMap { path in path.options.filter { ($0.mode == .walking && _walking) || ($0.mode == .driving && _driving) }.map { Line(path, option: $0) } }, level: .aboveRoads)
     }
 }
