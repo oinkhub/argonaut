@@ -157,8 +157,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var _walking: Button!
     private weak var _driving: Button!
     private weak var mapBottom: NSLayoutConstraint!
-    private weak var walkingTop: NSLayoutConstraint!
-    private weak var drivingTop: NSLayoutConstraint!
+    private weak var walkingRight: NSLayoutConstraint!
+    private weak var drivingRight: NSLayoutConstraint!
     private var completer: Any?
     
     required init?(coder: NSCoder) { return nil }
@@ -256,14 +256,13 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         _down.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
         _down.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
         
-        _walking.rightAnchor.constraint(equalTo: _up.leftAnchor).isActive = true
-        walkingTop = _walking.topAnchor.constraint(equalTo: map.bottomAnchor)
-        walkingTop.isActive = true
+        _walking.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        walkingRight = _walking.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
+        walkingRight.isActive = true
         
-        _driving.rightAnchor.constraint(equalTo: _walking.leftAnchor).isActive = true
-        drivingTop = _driving.topAnchor.constraint(equalTo: map.bottomAnchor)
-        drivingTop.isActive = true
- 
+        _driving.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        drivingRight = _driving.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
+        drivingRight.isActive = true
         
         results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         results.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -553,8 +552,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     
     @objc private func up() {
         mapBottom.constant = -300
-        walkingTop.constant = -70
-        drivingTop.constant = -70
+        walkingRight.constant = -70
+        drivingRight.constant = -140
         UIView.animate(withDuration: 0.7) { [weak self] in
             self?._up.alpha = 0
             self?._down.alpha = 1
@@ -566,8 +565,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     
     @objc private func down() {
         mapBottom.constant = 0
-        walkingTop.constant = 0
-        drivingTop.constant = 0
+        walkingRight.constant = 0
+        drivingRight.constant = 0
         UIView.animate(withDuration: 0.7) { [weak self] in
             self?._up.alpha = 1
             self?._down.alpha = 0
