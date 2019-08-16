@@ -3,6 +3,7 @@ New="New";
 New.save="Save";
 New.distance=" metres";
 New.pin="Add pin";
+New.up="Show details";
 Home.info="Help";
 Home.new="Create map";
 Home.privacy="Privacy";

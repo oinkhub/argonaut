@@ -152,8 +152,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var field: Field.Search!
     private weak var list: Scroll!
     private weak var results: Scroll!
-    private weak var total: UIView!
-    private weak var totalBottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; totalBottom.isActive = true } }
+    private weak var _up: Button!
     private var completer: Any?
     
     required init?(coder: NSCoder) { return nil }
@@ -209,6 +208,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         let handler = Button(self, action: #selector(self.handle))
         contentView!.addSubview(handler)*/
         
+        let _up = Button("up")
+        _up.accessibilityLabel = .key("New.up")
+        _up.addTarget(self, action: #selector(up), for: .touchUpInside)
+        addSubview(_up)
+        self._up = _up
+        
         let pin = UIButton()
         pin.addTarget(self, action: #selector(self.pin), for: .touchUpInside)
         pin.setImage(UIImage(named: "pin"), for: .normal)
@@ -234,6 +239,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         field.leftAnchor.constraint(equalTo: _close.rightAnchor).isActive = true
         field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        _up.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
         
 //        tools(pin, top: _out.bottomAnchor)
@@ -285,8 +292,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         if #available(iOS 11.0, *) {
             field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+            
+            _up.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
         } else {
             field.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+            
+            _up.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
         
         /*
@@ -524,4 +535,10 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             results.superview!.layoutSubtreeIfNeeded()
         }) { }
     }*/
+    
+    @objc private func up() {
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?._up.alpha = 0
+        }
+    }
 }
