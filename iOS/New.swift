@@ -153,6 +153,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var list: Scroll!
     private weak var results: Scroll!
     private weak var _up: Button!
+    private weak var _down: Button!
+    private weak var _walking: Button!
+    private weak var _driving: Button!
+    private weak var mapBottom: NSLayoutConstraint!
+    private weak var walkingTop: NSLayoutConstraint!
+    private weak var drivingTop: NSLayoutConstraint!
     private var completer: Any?
     
     required init?(coder: NSCoder) { return nil }
@@ -164,6 +170,15 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             completer.delegate = self
             self.completer = completer
         }
+        
+        let field = Field.Search()
+        field.delegate = self
+        addSubview(field)
+        self.field = field
+        
+        let list = Scroll()
+        addSubview(list)
+        self.list = list
         
         let results = Scroll()
         addSubview(results)
@@ -184,29 +199,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         list.documentView!.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
         list.documentView!.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
         base.addSubview(list)
-        self.list = list
-        
-        let total = NSView()
-        total.translatesAutoresizingMaskIntoConstraints = false
-        total.alphaValue = 0
-        base.addSubview(total)
-        self.total = total
-        
-        let border = NSView()
-        border.translatesAutoresizingMaskIntoConstraints = false
-        border.wantsLayer = true
-        border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.2).cgColor
-        base.addSubview(border)
-        
-        let handle = NSView()
-        handle.translatesAutoresizingMaskIntoConstraints = false
-        handle.wantsLayer = true
-        handle.layer!.backgroundColor = .halo
-        handle.layer!.cornerRadius = 1
-        contentView!.addSubview(handle)
-        
-        let handler = Button(self, action: #selector(self.handle))
-        contentView!.addSubview(handler)*/
+        self.list = list*/
         
         let _up = Button("up")
         _up.accessibilityLabel = .key("New.up")
@@ -214,25 +207,42 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(_up)
         self._up = _up
         
+        let _down = Button("down")
+        _down.accessibilityLabel = .key("New.down")
+        _down.addTarget(self, action: #selector(down), for: .touchUpInside)
+        _down.alpha = 0
+        addSubview(_down)
+        self._down = _down
+        
+        let _walking = Button("walking")
+        _walking.accessibilityLabel = .key("New.walking")
+        _walking.addTarget(self, action: #selector(walking), for: .touchUpInside)
+        _walking.alpha = 0
+        addSubview(_walking)
+        self._walking = _walking
+        
+        let _driving = Button("driving")
+        _driving.accessibilityLabel = .key("New.driving")
+        _driving.addTarget(self, action: #selector(driving), for: .touchUpInside)
+        _driving.alpha = 0
+        addSubview(_driving)
+        self._driving = _driving
+        
         let pin = UIButton()
         pin.addTarget(self, action: #selector(self.pin), for: .touchUpInside)
         pin.setImage(UIImage(named: "pin"), for: .normal)
         pin.accessibilityLabel = .key("New.pin")
-        /*
- 
-        let save = Button.Yes(self, action: #selector(self.save))
-        save.label.stringValue = .key("New.save")
-        contentView!.addSubview(save)
-        */
-        let field = Field.Search()
-        field.delegate = self
-        addSubview(field)
-        self.field = field
         
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        map.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        mapBottom = map.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: 0)
+        mapBottom.isActive = true
+        
+        list.topAnchor.constraint(equalTo: map.bottomAnchor, constant: 60).isActive = true
+        list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        list.heightAnchor.constraint(equalToConstant: 240).isActive = true
         
         _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
@@ -241,9 +251,18 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
         _up.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        _up.bottomAnchor.constraint(equalTo: map.bottomAnchor).isActive = true
         
+        _down.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
+        _down.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
         
-//        tools(pin, top: _out.bottomAnchor)
+        _walking.rightAnchor.constraint(equalTo: _up.leftAnchor).isActive = true
+        walkingTop = _walking.topAnchor.constraint(equalTo: map.bottomAnchor)
+        walkingTop.isActive = true
+        
+        _driving.rightAnchor.constraint(equalTo: _walking.leftAnchor).isActive = true
+        drivingTop = _driving.topAnchor.constraint(equalTo: map.bottomAnchor)
+        drivingTop.isActive = true
  
         
         results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
@@ -292,12 +311,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         if #available(iOS 11.0, *) {
             field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
-            
-            _up.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
         } else {
             field.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
-            
-            _up.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
         
         /*
@@ -537,8 +552,28 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }*/
     
     @objc private func up() {
-        UIView.animate(withDuration: 0.5) { [weak self] in
+        mapBottom.constant = -300
+        walkingTop.constant = -70
+        drivingTop.constant = -70
+        UIView.animate(withDuration: 0.7) { [weak self] in
             self?._up.alpha = 0
+            self?._down.alpha = 1
+            self?._walking.alpha = 1
+            self?._driving.alpha = 1
+            self?.layoutIfNeeded()
+        }
+    }
+    
+    @objc private func down() {
+        mapBottom.constant = 0
+        walkingTop.constant = 0
+        drivingTop.constant = 0
+        UIView.animate(withDuration: 0.7) { [weak self] in
+            self?._up.alpha = 1
+            self?._down.alpha = 0
+            self?._walking.alpha = 0
+            self?._driving.alpha = 0
+            self?.layoutIfNeeded()
         }
     }
 }
