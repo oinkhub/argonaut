@@ -158,6 +158,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var _driving: Button!
     private weak var _follow: Button!
     private weak var _pin: Button!
+    private weak var _save: UIButton!
     private weak var mapBottom: NSLayoutConstraint!
     private weak var walkingRight: NSLayoutConstraint!
     private weak var drivingRight: NSLayoutConstraint!
@@ -177,6 +178,18 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         field.field.delegate = self
         addSubview(field)
         self.field = field
+        
+        let _save = UIButton()
+        _save.translatesAutoresizingMaskIntoConstraints = false
+        _save.isAccessibilityElement = true
+        _save.setTitle(.key("New.save"), for: [])
+        _save.accessibilityLabel = .key("New.save")
+        _save.titleLabel!.font = .preferredFont(forTextStyle: .headline)
+        _save.setTitleColor(.halo, for: .normal)
+        _save.setTitleColor(.init(white: 1, alpha: 0.2), for: .highlighted)
+        _save.addTarget(self, action: #selector(save), for: .touchUpInside)
+        addSubview(_save)
+        self._save = _save
         
         let list = Scroll()
         addSubview(list)
@@ -238,7 +251,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         let _pin = Button("pin")
         _pin.accessibilityLabel = .key("New.pin")
-        _pin.addTarget(self, action: #selector(pin), for: .touchUpInside)
+        _pin.addTarget(map, action: #selector(map.pin), for: .touchUpInside)
         addSubview(_pin)
         self._pin = _pin
         
@@ -247,6 +260,10 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         field.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
+        _save.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
+        _save.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        _save.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        _save.heightAnchor.constraint(equalToConstant: 54).isActive = true
         
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -346,10 +363,33 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     
     func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
         if replacementText == "\n" {
-            field.resignFirstResponder()
+            app.window!.endEditing(true)
             return false
         }
         return true
+    }
+    
+    func textViewDidBeginEditing(_: UITextView) {
+        field.width.constant = 280
+        UIView.animate(withDuration: 0.45) { [weak self] in
+            self?.field._cancel.alpha = 1
+            self?._close.alpha = 0
+            self?._save.alpha = 0
+            self?.layoutIfNeeded()
+        }
+    }
+    
+    func textViewDidEndEditing(_: UITextView) {
+        field.width.constant = 130
+        UIView.animate(withDuration: 0.45) { [weak self] in
+            self?.field._cancel.alpha = 0
+            self?._close.alpha = 1
+            self?._save.alpha = 1
+            self?.layoutIfNeeded()
+        }
+        if field.field.text.isEmpty {
+            clear()
+        }
     }
     /*
      
@@ -360,13 +400,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             if !field.string.isEmpty {
                 (completer as? MKLocalSearchCompleter)?.queryFragment = field.string
             }
-        }
-    }
-    
-    func textDidEndEditing(_: Notification) {
-        field._cancel.isHidden = field.string.isEmpty
-        if field.string.isEmpty {
-            clear()
         }
     }
     
@@ -535,10 +568,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    @objc func save() {
-        Create(map.plan, rect: map.visibleMapRect).makeKeyAndOrderFront(nil)
-        close()
-    }
+    
     
     @objc func handle() {
         let alpha: CGFloat
@@ -558,21 +588,24 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }) { }
     }
     
-    @objc func search() { makeFirstResponder(field) }*/
-    @objc func pin() { map.pin() }
-    /*
-     
+     */
+    
+    @objc private func save() {
+//        Create(map.plan, rect: map.visibleMapRect).makeKeyAndOrderFront(nil)
+        app.push(Create())
+    }
+    
     @objc private func clear() {
-        field.string = ""
-        makeFirstResponder(nil)
-        results.documentView!.subviews.forEach { $0.removeFromSuperview() }
-        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: results.documentView!.topAnchor)
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.3
-            $0.allowsImplicitAnimation = true
-            results.superview!.layoutSubtreeIfNeeded()
-        }) { }
-    }*/
+        field.field.text = ""
+        app.window!.endEditing(true)
+//        results.documentView!.subviews.forEach { $0.removeFromSuperview() }
+//        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: results.documentView!.topAnchor)
+//        NSAnimationContext.runAnimationGroup({
+//            $0.duration = 0.3
+//            $0.allowsImplicitAnimation = true
+//            results.superview!.layoutSubtreeIfNeeded()
+//        }) { }
+    }
     
     @objc private func up() {
         mapBottom.constant = -300

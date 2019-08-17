@@ -33,7 +33,7 @@ class Field: UITextView {
             translatesAutoresizingMaskIntoConstraints = false
             
             let field = Field()
-            field.textContainerInset = .init(top: 15, left: 30, bottom: 15, right: 25)
+            field.textContainerInset = .init(top: 15, left: 25, bottom: 15, right: 20)
             field.accessibilityLabel = .key("Field.search")
             addSubview(field)
             self.field = field
@@ -59,7 +59,7 @@ class Field: UITextView {
             _cancel.translatesAutoresizingMaskIntoConstraints = false
             _cancel.setImage(UIImage(named: "delete"), for: .normal)
             _cancel.addTarget(self, action: #selector(cancel), for: .touchUpInside)
-//            _cancel.isHidden = true
+            _cancel.alpha = 0
             _cancel.imageView!.contentMode = .center
             _cancel.imageView!.clipsToBounds = true
             _cancel.imageEdgeInsets.left = 15
@@ -69,7 +69,7 @@ class Field: UITextView {
             self._cancel = _cancel
             
             heightAnchor.constraint(equalToConstant: NSAttributedString(string: "0", attributes: [.font: field.font!]).boundingRect(with: .init(width: 100, height: 0), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size.height + 36).isActive = true
-            width = widthAnchor.constraint(equalToConstant: 120)
+            width = widthAnchor.constraint(equalToConstant: 130)
             width.isActive = true
             
             field.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -125,7 +125,7 @@ class Field: UITextView {
         isScrollEnabled = false
         textColor = .white
         tintColor = .halo
-        font = .preferredFont(forTextStyle: .title3)
+        font = .preferredFont(forTextStyle: .headline)
         keyboardType = .alphabet
         keyboardAppearance = .dark
         autocorrectionType = .yes
