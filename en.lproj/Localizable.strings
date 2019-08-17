@@ -29,6 +29,7 @@ Help.mark="Add marks in your points of interests to help you navigate.";
 Help.save="Save when you are ready.\n\nThis will render the map for you and might take a while.";
 Help.share="Share your map.\n\nYou can send it to your iPhone to navigate with your Argonaut iOS app.";
 Create.retry="Retry";
+Create.cancel="Cancel";
 Map.mark="Mark";
 Navigate.zoom="Zoom not supported";
 List.distance=" metres";
