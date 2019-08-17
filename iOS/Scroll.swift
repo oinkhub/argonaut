@@ -13,13 +13,16 @@ final class Scroll: UIScrollView {
         
         let content = UIView()
         content.translatesAutoresizingMaskIntoConstraints = false
-        content.isUserInteractionEnabled = false
         addSubview(content)
         self.content = content
+        
+        bottomAnchor.constraint(lessThanOrEqualTo: content.bottomAnchor).isActive = true
         
         content.topAnchor.constraint(equalTo: topAnchor).isActive = true
         content.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         content.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         content.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor).isActive = true
     }
+    
+    func clear() { content.subviews.forEach { $0.removeFromSuperview() } }
 }

@@ -31,6 +31,7 @@ class Field: UITextView {
         init() {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
+            accessibilityTraits = .searchField
             
             let field = Field()
             field.textContainerInset = .init(top: 15, left: 25, bottom: 15, right: 20)
@@ -69,7 +70,7 @@ class Field: UITextView {
             self._cancel = _cancel
             
             heightAnchor.constraint(equalToConstant: NSAttributedString(string: "0", attributes: [.font: field.font!]).boundingRect(with: .init(width: 100, height: 0), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size.height + 36).isActive = true
-            width = widthAnchor.constraint(equalToConstant: 130)
+            width = widthAnchor.constraint(equalToConstant: 150)
             width.isActive = true
             
             field.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -93,10 +94,7 @@ class Field: UITextView {
             _cancel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         }
         
-        @objc private func cancel() {
-            app.window!.endEditing(true)
-            field.text = ""
-        }
+        @objc private func cancel() { field.text = "" }
     }
     
     final class Name: Field {

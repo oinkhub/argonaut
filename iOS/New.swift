@@ -2,79 +2,42 @@ import Argonaut
 import MapKit
 
 final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
-    private final class Result: UIView {
-        /*var selected: ((CLLocationCoordinate2D) -> Void)?
-        var highlighted = false { didSet { layer!.backgroundColor = highlighted ? NSColor.halo.withAlphaComponent(0.4).cgColor : .clear }}
-        private weak var label: Label!
-        private let search: MKLocalSearchCompletion
+    @available(iOS 9.3, *) private final class Result: UIControl {
+        let search: MKLocalSearchCompletion
+        override var isHighlighted: Bool { didSet { alpha = 0.3 } }
         
         required init?(coder: NSCoder) { return nil }
         init(_ search: MKLocalSearchCompletion) {
             self.search = search
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
-            wantsLayer = true
+            isAccessibilityElement = true
+            accessibilityTraits = .button
+            accessibilityLabel = search.title
+            clipsToBounds = true
             
-            let label = Label()
-            label.attributedStringValue = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.numberOfLines = 0
+            label.attributedText = {
                 $0.append({ string in
                     search.titleHighlightRanges.forEach {
-                        string.addAttribute(.font, value: NSFont.systemFont(ofSize: 13, weight: .bold), range: $0 as! NSRange)
-                        string.addAttribute(.foregroundColor, value: NSColor.halo, range: $0 as! NSRange)
+                        string.addAttribute(.foregroundColor, value: UIColor.halo, range: $0 as! NSRange)
                     }
                     return string
-                    } (NSMutableAttributedString(string: search.title + (search.subtitle.isEmpty ? "" : "\n"), attributes: [.font: NSFont.systemFont(ofSize: 13, weight: .light), .foregroundColor: NSColor(white: 1, alpha: 0.9)])))
-                $0.append({ string in
-                    search.subtitleHighlightRanges.forEach {
-                        string.addAttribute(.font, value: NSFont.systemFont(ofSize: 13, weight: .bold), range: $0 as! NSRange)
-                        string.addAttribute(.foregroundColor, value: NSColor.halo, range: $0 as! NSRange)
-                    }
-                    return string
-                    } (NSMutableAttributedString(string: search.subtitle, attributes: [.font: NSFont.systemFont(ofSize: 13, weight: .light), .foregroundColor: NSColor(white: 1, alpha: 0.5)])))
+                } (NSMutableAttributedString(string: search.title + (search.subtitle.isEmpty ? "" : "\n"), attributes: [.font: UIFont.preferredFont(forTextStyle: .subheadline), .foregroundColor: UIColor.white])))
+                $0.append(.init(string: search.subtitle, attributes: [.font: UIFont.preferredFont(forTextStyle: .caption1), .foregroundColor: UIColor(white: 1, alpha: 0.65)]))
                 return $0
             } (NSMutableAttributedString())
             addSubview(label)
-            self.label = label
             
-            let border = NSView()
-            border.translatesAutoresizingMaskIntoConstraints = false
-            border.wantsLayer = true
-            border.layer!.backgroundColor = NSColor(white: 1, alpha: 0.2).cgColor
-            addSubview(border)
+            heightAnchor.constraint(greaterThanOrEqualToConstant: 55).isActive = true
+            bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 20).isActive = true
             
-            let button = Button(self, action: #selector(click))
-            addSubview(button)
-            
-            heightAnchor.constraint(equalToConstant: 60).isActive = true
-            
-            label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
-            label.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
-            
-            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
-            border.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
-            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
-            
-            button.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            button.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-            button.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            label.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+            label.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
         }
-        
-        @objc func click() {
-            layer!.backgroundColor = .halo
-            label.attributedStringValue = {
-                $0.append(label.attributedStringValue)
-                $0.addAttribute(.foregroundColor, value: NSColor.white, range: NSMakeRange(0, label.attributedStringValue.string.count))
-                return $0
-            } (NSMutableAttributedString())
-            
-            MKLocalSearch(request: MKLocalSearch.Request(completion: search)).start { [weak self] in
-                guard $1 == nil, let coordinate = $0?.mapItems.first?.placemark.coordinate else { return }
-                self?.selected?(coordinate)
-            }
-        }*/
     }
     
     private final class Item: UIView {/*
@@ -195,27 +158,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(list)
         self.list = list
         
-        let results = Scroll()
-        addSubview(results)
-        self.results = results
-        /*
-        let list = NSScrollView()
-        list.translatesAutoresizingMaskIntoConstraints = false
-        list.drawsBackground = false
-        list.hasVerticalScroller = true
-        list.verticalScroller!.controlSize = .mini
-        list.horizontalScrollElasticity = .none
-        list.verticalScrollElasticity = .allowed
-        list.alphaValue = 0
-        list.contentInsets.top = 30
-        list.automaticallyAdjustsContentInsets = false
-        list.documentView = Flipped()
-        list.documentView!.translatesAutoresizingMaskIntoConstraints = false
-        list.documentView!.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
-        list.documentView!.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
-        base.addSubview(list)
-        self.list = list*/
-        
         let _walking = Button("walking")
         _walking.accessibilityLabel = .key("New.walking")
         _walking.addTarget(self, action: #selector(walking), for: .touchUpInside)
@@ -255,6 +197,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(_pin)
         self._pin = _pin
         
+        let results = Scroll()
+        results.backgroundColor = .black
+        results.layer.cornerRadius = 4
+        addSubview(results)
+        self.results = results
+        
         _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         
@@ -270,6 +218,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         mapBottom = map.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: 0)
         mapBottom.isActive = true
+        
+        results.topAnchor.constraint(equalTo: field.bottomAnchor, constant: -6).isActive = true
+        results.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        results.widthAnchor.constraint(equalTo: widthAnchor, constant: -20).isActive = true
+        results.heightAnchor.constraint(lessThanOrEqualToConstant: 230).isActive = true
         
         list.topAnchor.constraint(equalTo: map.bottomAnchor, constant: 60).isActive = true
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -298,12 +251,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         _driving.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
         drivingRight = _driving.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
         drivingRight.isActive = true
-        
-        results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
-        results.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        results.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        results.heightAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
-        results.heightAnchor.constraint(lessThanOrEqualTo: results.content.heightAnchor).isActive = true
         
         /*
         handle.topAnchor.constraint(equalTo: list.topAnchor, constant: 10).isActive = true
@@ -369,8 +316,17 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         return true
     }
     
+    func textViewDidChange(_: UITextView) {
+        if #available(iOS 9.3, *) {
+            (completer as? MKLocalSearchCompleter)!.cancel()
+            if !field.field.text.isEmpty {
+                (completer as? MKLocalSearchCompleter)!.queryFragment = field.field.text
+            }
+        }
+    }
+    
     func textViewDidBeginEditing(_: UITextView) {
-        field.width.constant = 280
+        field.width.constant = bounds.width - 20
         UIView.animate(withDuration: 0.45) { [weak self] in
             self?.field._cancel.alpha = 1
             self?._close.alpha = 0
@@ -380,58 +336,50 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     func textViewDidEndEditing(_: UITextView) {
-        field.width.constant = 130
+        results.clear()
+        results.bottom = results.content.bottomAnchor.constraint(equalTo: results.topAnchor)
+        field.width.constant = 150
         UIView.animate(withDuration: 0.45) { [weak self] in
             self?.field._cancel.alpha = 0
             self?._close.alpha = 1
             self?._save.alpha = 1
             self?.layoutIfNeeded()
         }
-        if field.field.text.isEmpty {
-            clear()
-        }
-    }
-    /*
-     
-    
-    func textDidChange(_: Notification) {
-        if #available(OSX 10.11.4, *) {
-            (completer as? MKLocalSearchCompleter)?.cancel()
-            if !field.string.isEmpty {
-                (completer as? MKLocalSearchCompleter)?.queryFragment = field.string
-            }
-        }
+        
     }
     
-    @available(OSX 10.11.4, *) func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        results.documentView!.subviews.forEach { $0.removeFromSuperview() }
-        var top = results.documentView!.topAnchor
+    @available(iOS 9.3, *) func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        results.clear()
+        var top = results.topAnchor
         completer.results.forEach {
             let result = Result($0)
-            result.selected = { [weak self] in
-                self?.map.add($0)
-                self?.map.focus($0)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                    self?.clear()
-                }
+            result.addTarget(self, action: #selector(self.result(_:)), for: .touchUpInside)
+            results.content.addSubview(result)
+            
+            if top != results.topAnchor {
+                let border = UIView()
+                border.translatesAutoresizingMaskIntoConstraints = false
+                border.isUserInteractionEnabled = false
+                border.backgroundColor = .init(white: 1, alpha: 0.2)
+                results.content.addSubview(border)
+                
+                border.topAnchor.constraint(equalTo: top).isActive = true
+                border.leftAnchor.constraint(equalTo: result.leftAnchor, constant: 15).isActive = true
+                border.rightAnchor.constraint(equalTo: result.rightAnchor, constant: -15).isActive = true
+                border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             }
-            results.documentView!.addSubview(result)
             
             result.leftAnchor.constraint(equalTo: results.leftAnchor).isActive = true
-            result.rightAnchor.constraint(equalTo: results.rightAnchor).isActive = true
+            result.widthAnchor.constraint(equalTo: results.widthAnchor).isActive = true
             result.topAnchor.constraint(equalTo: top).isActive = true
             top = result.bottomAnchor
         }
         
-        results.superview!.layoutSubtreeIfNeeded()
-        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: top)
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.5
-            $0.allowsImplicitAnimation = true
-            results.superview!.layoutSubtreeIfNeeded()
-        }) { }
+        layoutIfNeeded()
+        results.bottom = results.content.bottomAnchor.constraint(equalTo: top)
+        UIView.animate(withDuration: 0.35) { [weak self] in self?.layoutIfNeeded() }
     }
-    
+    /*
     override func keyDown(with: NSEvent) {
         switch with.keyCode {
         case 36, 48: search()
@@ -595,18 +543,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         app.push(Create())
     }
     
-    @objc private func clear() {
-        field.field.text = ""
-        app.window!.endEditing(true)
-//        results.documentView!.subviews.forEach { $0.removeFromSuperview() }
-//        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: results.documentView!.topAnchor)
-//        NSAnimationContext.runAnimationGroup({
-//            $0.duration = 0.3
-//            $0.allowsImplicitAnimation = true
-//            results.superview!.layoutSubtreeIfNeeded()
-//        }) { }
-    }
-    
     @objc private func up() {
         mapBottom.constant = -300
         walkingRight.constant = -70
@@ -633,5 +569,15 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             self?._up.isHidden = false
             self?._down.isHidden = true
         }
+    }
+    
+    @available(iOS 9.3, *) @objc private func result(_ result: Result) {
+        field.field.text = result.search.title
+        MKLocalSearch(request: MKLocalSearch.Request(completion: result.search)).start { [weak self] in
+            guard $1 == nil, let coordinate = $0?.mapItems.first?.placemark.coordinate else { return }
+            self?.map.add(coordinate)
+            self?.map.focus(coordinate)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { app.window!.endEditing(true) }
     }
 }
