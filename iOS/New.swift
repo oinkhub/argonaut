@@ -174,7 +174,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
         
         let field = Field.Search()
-        field.delegate = self
+        field.field.delegate = self
         addSubview(field)
         self.field = field
         
@@ -242,6 +242,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(_pin)
         self._pin = _pin
         
+        _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
+        
+        field.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        
+        
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -253,11 +259,9 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         list.heightAnchor.constraint(equalToConstant: 240).isActive = true
         
-        _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         
-        field.leftAnchor.constraint(equalTo: _close.rightAnchor).isActive = true
-        field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        
         
         _up.bottomAnchor.constraint(lessThanOrEqualTo: map.bottomAnchor).isActive = true
         

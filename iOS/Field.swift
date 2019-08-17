@@ -22,14 +22,27 @@ class Field: UITextView {
         }
     }
     
-    final class Search: Field {
+    final class Search: UIView {
+        private(set) weak var field: Field!
         private(set) weak var _cancel: UIButton!
+        private(set) weak var width: NSLayoutConstraint!
         
         required init?(coder: NSCoder) { return nil }
-        override init() {
-            super.init()
-            textContainerInset = .init(top: 12, left: 35, bottom: 12, right: 45)
-            accessibilityLabel = .key("Field.search")
+        init() {
+            super.init(frame: .zero)
+            translatesAutoresizingMaskIntoConstraints = false
+            
+            let field = Field()
+            field.textContainerInset = .init(top: 15, left: 30, bottom: 15, right: 25)
+            field.accessibilityLabel = .key("Field.search")
+            addSubview(field)
+            self.field = field
+            
+            let border = UIView()
+            border.translatesAutoresizingMaskIntoConstraints = false
+            border.isUserInteractionEnabled = false
+            border.backgroundColor = .halo
+            addSubview(border)
             
             let icon = UIButton()
             icon.translatesAutoresizingMaskIntoConstraints = false
@@ -46,30 +59,43 @@ class Field: UITextView {
             _cancel.translatesAutoresizingMaskIntoConstraints = false
             _cancel.setImage(UIImage(named: "delete"), for: .normal)
             _cancel.addTarget(self, action: #selector(cancel), for: .touchUpInside)
-            _cancel.isHidden = true
+//            _cancel.isHidden = true
             _cancel.imageView!.contentMode = .center
             _cancel.imageView!.clipsToBounds = true
+            _cancel.imageEdgeInsets.left = 15
             _cancel.isAccessibilityElement = true
             _cancel.accessibilityLabel = .key("Field.cancel")
             addSubview(_cancel)
             self._cancel = _cancel
             
-            heightAnchor.constraint(equalToConstant: NSAttributedString(string: "0", attributes: [.font: font!]).boundingRect(with: .init(width: 100, height: 0), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size.height + 30).isActive = true
+            heightAnchor.constraint(equalToConstant: NSAttributedString(string: "0", attributes: [.font: field.font!]).boundingRect(with: .init(width: 100, height: 0), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size.height + 36).isActive = true
+            width = widthAnchor.constraint(equalToConstant: 120)
+            width.isActive = true
+            
+            field.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            field.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            
+            border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            border.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
+            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             
             icon.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             icon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 35).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 45).isActive = true
             icon.heightAnchor.constraint(equalToConstant: 50).isActive = true
             
             _cancel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             _cancel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            _cancel.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            _cancel.widthAnchor.constraint(equalToConstant: 45).isActive = true
             _cancel.heightAnchor.constraint(equalToConstant: 50).isActive = true
         }
         
         @objc private func cancel() {
             app.window!.endEditing(true)
-            text = ""
+            field.text = ""
         }
     }
     
