@@ -120,44 +120,6 @@ final class Map: MKMapView, MKMapViewDelegate {
         filter()
     }
     
-    @objc func `in`() {
-        var region = self.region
-        region.span.latitudeDelta *= 0.1
-        region.span.longitudeDelta *= 0.1
-        setRegion(region, animated: true)
-    }
-    
-    @objc func out() {
-        var region = self.region
-        region.span.latitudeDelta = min(region.span.latitudeDelta / 0.1, 180)
-        region.span.longitudeDelta = min(region.span.longitudeDelta / 0.1, 180)
-        setRegion(region, animated: true)
-    }
-    
-    @objc func up() {
-        var region = self.region
-        region.center.latitude = min(region.center.latitude + region.span.latitudeDelta / 2, 90)
-        setRegion(region, animated: true)
-    }
-    
-    @objc func down() {
-        var region = self.region
-        region.center.latitude = max(region.center.latitude - region.span.latitudeDelta / 2, -90)
-        setRegion(region, animated: true)
-    }
-    
-    @objc func left() {
-        var region = self.region
-        region.center.longitude = max(region.center.longitude - region.span.longitudeDelta / 2, -180)
-        setRegion(region, animated: true)
-    }
-    
-    @objc func right() {
-        var region = self.region
-        region.center.longitude = min(region.center.longitude + region.span.longitudeDelta / 2, 180)
-        setRegion(region, animated: true)
-    }
-    
     @objc func pin() {
         guard !geocoder.isGeocoding else { return }
         add(convert(.init(x: bounds.midX, y: bounds.midY + top), toCoordinateFrom: self))
@@ -232,7 +194,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 path.options += options
                 self?.refresh()
                 if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
-                    self?.addOverlays(options.map { Line(path, option: $0) }, level: .aboveRoads)
+                    self?.addOverlays(options.map { Line(path, option: $0) }, level: .aboveLabels)
                 }
             }
         }
@@ -240,6 +202,6 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     private func filter() {
         removeOverlays(overlays.filter { $0 is Line })
-        addOverlays(plan.path.flatMap { path in path.options.filter { ($0.mode == .walking && _walking) || ($0.mode == .driving && _driving) }.map { Line(path, option: $0) } }, level: .aboveRoads)
+        addOverlays(plan.path.flatMap { path in path.options.filter { ($0.mode == .walking && _walking) || ($0.mode == .driving && _driving) }.map { Line(path, option: $0) } }, level: .aboveLabels)
     }
 }

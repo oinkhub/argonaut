@@ -6,62 +6,38 @@ class Callout: UIView {
         @discardableResult init(_ view: MKAnnotationView, index: String) {
             super.init(view)
             
-            let circle = UIView()
-            circle.isUserInteractionEnabled = false
-            circle.translatesAutoresizingMaskIntoConstraints = false
-            circle.backgroundColor = .halo
-            circle.layer.cornerRadius = 15
-            addSubview(circle)
-            
-            let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.text = index
-            label.font = .preferredFont(forTextStyle: .headline)
-            label.textColor = .black
-            circle.addSubview(label)
-            
             let base = UIView()
             base.isUserInteractionEnabled = false
             base.translatesAutoresizingMaskIntoConstraints = false
             base.backgroundColor = .halo
             base.layer.cornerRadius = 6
+            base.layer.borderWidth = 1
+            base.layer.borderColor = UIColor.black.cgColor
             addSubview(base)
             
             let title = UILabel()
             title.translatesAutoresizingMaskIntoConstraints = false
-            title.font = .preferredFont(forTextStyle: .subheadline)
+            title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
             title.textColor = .black
             title.text = (view.annotation as! Mark).path.name
             base.addSubview(title)
             self.title = title
             
-            heightAnchor.constraint(equalToConstant: 140).isActive = true
-            leftAnchor.constraint(lessThanOrEqualTo: circle.leftAnchor).isActive = true
-            rightAnchor.constraint(greaterThanOrEqualTo: circle.rightAnchor).isActive = true
+            bottomAnchor.constraint(equalTo: base.bottomAnchor).isActive = true
             leftAnchor.constraint(lessThanOrEqualTo: base.leftAnchor).isActive = true
             rightAnchor.constraint(greaterThanOrEqualTo: base.rightAnchor).isActive = true
             
-            circle.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            circle.widthAnchor.constraint(equalToConstant: 30).isActive = true
-            circle.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            let top = circle.topAnchor.constraint(equalTo: topAnchor, constant: 35)
+            base.bottomAnchor.constraint(equalTo: title.bottomAnchor, constant: 7).isActive = true
+            let top = base.topAnchor.constraint(equalTo: centerYAnchor)
             top.isActive = true
-            
-            label.centerXAnchor.constraint(equalTo: circle.centerXAnchor).isActive = true
-            label.centerYAnchor.constraint(equalTo: circle.centerYAnchor).isActive = true
-            
-            base.heightAnchor.constraint(equalToConstant: 28).isActive = true
-            let bottom = base.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -35)
-            bottom.isActive = true
             
             title.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 12).isActive = true
             title.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -12).isActive = true
-            title.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
+            title.topAnchor.constraint(equalTo: base.topAnchor, constant: 7).isActive = true
             
             layoutIfNeeded()
-            top.constant = 0
-            bottom.constant = 0
-            UIView.animate(withDuration: 0.8) { [weak self] in self?.layoutIfNeeded() }
+            top.constant = 36
+            UIView.animate(withDuration: 0.4) { [weak self] in self?.layoutIfNeeded() }
         }
         
         func refresh(_ title: String) {
