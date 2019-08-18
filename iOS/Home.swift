@@ -17,17 +17,9 @@ final class Home: UIView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
-        let scroll = UIScrollView()
-        scroll.translatesAutoresizingMaskIntoConstraints = false
-        scroll.alwaysBounceVertical = true
-        scroll.indicatorStyle = .white
+        let scroll = Scroll()
         addSubview(scroll)
         self.scroll = scroll
-        
-        let content = UIView()
-        content.translatesAutoresizingMaskIntoConstraints = false
-        scroll.addSubview(content)
-        self.content = content
         
         let border = UIView()
         border.translatesAutoresizingMaskIntoConstraints = false

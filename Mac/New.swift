@@ -114,10 +114,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             top = title.bottomAnchor
         }
         
-        func walking(_ string: String) { add(.walking, string: string) }
-        func driving(_ string: String) { add(.driving, string: string) }
-        
-        private func add(_ color: NSColor, string: String) {
+        func add(_ color: NSColor, _ string: String) {
             let label = Label(string)
             label.textColor = .white
             label.font = .systemFont(ofSize: 13, weight: .light)
@@ -358,10 +355,8 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     override func refresh() {
         list.documentView!.subviews.forEach { $0.removeFromSuperview() }
         var previous: Item?
-        var walkingDistance = CLLocationDistance()
-        var walkingTime = TimeInterval()
-        var drivingDistance = CLLocationDistance()
-        var drivingTime = TimeInterval()
+        var walking = (CLLocationDistance(), TimeInterval())
+        var driving = (CLLocationDistance(), TimeInterval())
         map.plan.path.enumerated().forEach {
             let item = Item($0)
             item.delete = { [weak self] in self?.map.remove($0) }
@@ -373,14 +368,14 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             
             if previous != nil {
                 if map._walking, let _walking = previous!.path?.options.first(where: { $0.mode == .walking }) {
-                    walkingDistance += _walking.distance
-                    walkingTime += _walking.duration
-                    previous!.walking(measure(_walking.distance) + ": " + dater.string(from: _walking.duration)!)
+                    walking.0 += _walking.distance
+                    walking.1 += _walking.duration
+                    previous!.add(.walking, measure(_walking.distance) + ": " + dater.string(from: _walking.duration)!)
                 }
                 if map._driving, let _driving = previous!.path?.options.first(where: { $0.mode == .driving }) {
-                    drivingDistance += _driving.distance
-                    drivingTime += _driving.duration
-                    previous!.driving(measure(_driving.distance) + ": " + dater.string(from: _driving.duration)!)
+                    driving.0 += _driving.distance
+                    driving.1 += _driving.duration
+                    previous!.add(.driving, measure(_driving.distance) + ": " + dater.string(from: _driving.duration)!)
                 }
             }
             previous = item
@@ -389,8 +384,8 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         total.subviews.forEach { $0.removeFromSuperview() }
         var items = [(String, String, NSColor)]()
         if map.plan.path.count > 1 {
-            if map._walking { items.append(("walking", measure(walkingDistance) + ": " + dater.string(from: walkingTime)!, .walking)) }
-            if map._driving { items.append(("driving", measure(drivingDistance) + ": " + dater.string(from: drivingTime)!, .driving)) }
+            if map._walking { items.append(("walking", measure(walking.0) + ": " + dater.string(from: walking.1)!, .walking)) }
+            if map._driving { items.append(("driving", measure(driving.0) + ": " + dater.string(from: driving.1)!, .driving)) }
         }
         
         var top = total.topAnchor

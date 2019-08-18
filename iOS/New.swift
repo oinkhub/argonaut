@@ -40,76 +40,103 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    private final class Item: UIView {/*
- 
+    private final class Item: UIControl {
         weak var path: Plan.Path?
-        var delete: ((Plan.Path) -> Void)?
-        private weak var top: NSLayoutYAxisAnchor!
-        private weak var bottom: NSLayoutConstraint! { didSet { oldValue.isActive = false; bottom.isActive = true } }
+        private(set) weak var delete: UIButton!
+        private weak var title: UILabel!
         
         required init?(coder: NSCoder) { return nil }
         init(_ path: (Int, Plan.Path)) {
             self.path = path.1
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
+            isAccessibilityElement = true
+            accessibilityTraits = .button
+            accessibilityLabel = path.1.name
             
-            let title = Label()
-            title.attributedStringValue = {
-                $0.append(.init(string: "\(path.0 + 1)  ", attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .bold), .foregroundColor: NSColor.halo]))
-                $0.append(.init(string: path.1.name, attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .medium), .foregroundColor: NSColor.white]))
+            let title = UILabel()
+            title.translatesAutoresizingMaskIntoConstraints = false
+            title.textColor = .white
+            title.attributedText = {
+                $0.append(.init(string: "\(path.0 + 1)  ", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)]))
+                $0.append(.init(string: path.1.name, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .regular)]))
                 return $0
             } (NSMutableAttributedString())
             addSubview(title)
+            self.title = title
             
-            let delete = Button.Image(self, action: #selector(remove))
-            delete.image.image = NSImage(named: "delete")
+            let border = UIView()
+            border.isUserInteractionEnabled = false
+            border.translatesAutoresizingMaskIntoConstraints = false
+            border.backgroundColor = .init(white: 1, alpha: 0.2)
+            addSubview(border)
+            
+            let delete = UIButton()
+            delete.translatesAutoresizingMaskIntoConstraints = false
+            delete.setImage(UIImage(named: "delete"), for: .normal)
+            delete.imageView!.clipsToBounds = true
+            delete.imageView!.contentMode = .center
+            delete.imageEdgeInsets.left = 10
+            delete.imageEdgeInsets.bottom = 10
             addSubview(delete)
             
-            title.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
-            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
+            title.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+            title.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 18).isActive = true
+            
+            border.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 2).isActive = true
+            border.leftAnchor.constraint(equalTo: title.leftAnchor).isActive = true
+            border.rightAnchor.constraint(equalTo: title.rightAnchor).isActive = true
+            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             
             delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            delete.centerYAnchor.constraint(equalTo: title.centerYAnchor).isActive = true
-            delete.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            delete.heightAnchor.constraint(equalToConstant: 35).isActive = true
+            delete.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            delete.widthAnchor.constraint(equalToConstant: 65).isActive = true
+            delete.heightAnchor.constraint(equalToConstant: 65).isActive = true
             
-            bottom = bottomAnchor.constraint(equalTo: title.bottomAnchor, constant: 10)
-            bottom.isActive = true
-            top = title.bottomAnchor
+            bottomAnchor.constraint(greaterThanOrEqualTo: border.bottomAnchor, constant: 20).isActive = true
         }
         
-        func walking(_ string: String) { add(.walking, string: string) }
-        func driving(_ string: String) { add(.driving, string: string) }
+        func walking(_ string: String) {
+            let base = add(string)
+            base.backgroundColor = .walking
+            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        }
         
-        private func add(_ color: NSColor, string: String) {
-            let label = Label(string)
-            label.textColor = .white
-            label.font = .systemFont(ofSize: 13, weight: .light)
+        func driving(_ string: String) {
+            let base = add(string)
+            base.backgroundColor = .driving
+            base.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+        }
+        
+        private func add(_ string: String) -> UIView {
+            let base = UIView()
+            base.translatesAutoresizingMaskIntoConstraints = false
+            base.isUserInteractionEnabled = false
+            base.translatesAutoresizingMaskIntoConstraints = false
+            base.layer.cornerRadius = 4
+            addSubview(base)
+            
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.numberOfLines = 0
+            label.text = string
+            label.textColor = .black
+            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .callout).pointSize, weight: .light)
             addSubview(label)
             
-            let circle = NSView()
-            circle.translatesAutoresizingMaskIntoConstraints = false
-            circle.wantsLayer = true
-            circle.layer!.backgroundColor = color.cgColor
-            circle.layer!.cornerRadius = 5
-            addSubview(circle)
+            base.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 22).isActive = true
+            base.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5, constant: -30).isActive = true
+            base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
             
-            circle.leftAnchor.constraint(equalTo: leftAnchor, constant: 32).isActive = true
-            circle.topAnchor.constraint(equalTo: top, constant: 14).isActive = true
-            circle.widthAnchor.constraint(equalToConstant: 10).isActive = true
-            circle.heightAnchor.constraint(equalToConstant: 10).isActive = true
+            label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
+            label.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
+            label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
             
-            label.leftAnchor.constraint(equalTo: circle.rightAnchor, constant: 6).isActive = true
-            label.centerYAnchor.constraint(equalTo: circle.centerYAnchor).isActive = true
+            bottomAnchor.constraint(greaterThanOrEqualTo: base.bottomAnchor, constant: 10).isActive = true
             
-            bottom = bottomAnchor.constraint(equalTo: circle.bottomAnchor, constant: 14)
-            top = circle.bottomAnchor
+            return base
         }
-        
-        @objc private func remove() {
-            guard let path = self.path else { return }
-            delete?(path)
-        }*/
     }
     
     private weak var field: Field.Search!
@@ -153,10 +180,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         _save.addTarget(self, action: #selector(save), for: .touchUpInside)
         addSubview(_save)
         self._save = _save
-        
-        let list = Scroll()
-        addSubview(list)
-        self.list = list
         
         let _walking = Button("walking")
         _walking.accessibilityLabel = .key("New.walking")
@@ -203,6 +226,10 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(results)
         self.results = results
         
+        let list = Scroll()
+        addSubview(list)
+        self.list = list
+        
         _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         
@@ -224,14 +251,10 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         results.widthAnchor.constraint(equalTo: widthAnchor, constant: -20).isActive = true
         results.heightAnchor.constraint(lessThanOrEqualToConstant: 230).isActive = true
         
-        list.topAnchor.constraint(equalTo: map.bottomAnchor, constant: 60).isActive = true
+        list.topAnchor.constraint(equalTo: map.bottomAnchor, constant: 2).isActive = true
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        list.heightAnchor.constraint(equalToConstant: 240).isActive = true
-        
-        
-        
-        
+        list.heightAnchor.constraint(equalToConstant: 298).isActive = true
         
         _up.bottomAnchor.constraint(lessThanOrEqualTo: map.bottomAnchor).isActive = true
         
@@ -375,92 +398,53 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         results.bottom = results.content.bottomAnchor.constraint(equalTo: top)
         UIView.animate(withDuration: 0.35) { [weak self] in self?.layoutIfNeeded() }
     }
-    /*
     
     override func refresh() {
-        list.documentView!.subviews.forEach { $0.removeFromSuperview() }
+        list.clear(false)
         var previous: Item?
-        var walkingDistance = CLLocationDistance()
-        var walkingTime = TimeInterval()
-        var drivingDistance = CLLocationDistance()
-        var drivingTime = TimeInterval()
+        var walking = (CLLocationDistance(), TimeInterval())
+        var driving = (CLLocationDistance(), TimeInterval())
         map.plan.path.enumerated().forEach {
             let item = Item($0)
-            item.delete = { [weak self] in self?.map.remove($0) }
-            list.documentView!.addSubview(item)
+//            item.delete = { [weak self] in self?.map.remove($0) }
+            list.content.addSubview(item)
             
             item.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
-            item.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
-            item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.documentView!.topAnchor).isActive = true
+            item.widthAnchor.constraint(equalTo: list.widthAnchor).isActive = true
+            item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.topAnchor).isActive = true
             
             if previous != nil {
                 if map._walking, let _walking = previous!.path?.options.first(where: { $0.mode == .walking }) {
-                    walkingDistance += _walking.distance
-                    walkingTime += _walking.duration
-                    previous!.walking(measure(_walking.distance) + ": " + dater.string(from: _walking.duration)!)
+                    walking.0 += _walking.distance
+                    walking.1 += _walking.duration
+                    previous!.walking(measure(_walking.distance) + "\n" + dater.string(from: _walking.duration)!)
                 }
                 if map._driving, let _driving = previous!.path?.options.first(where: { $0.mode == .driving }) {
-                    drivingDistance += _driving.distance
-                    drivingTime += _driving.duration
-                    previous!.driving(measure(_driving.distance) + ": " + dater.string(from: _driving.duration)!)
+                    driving.0 += _driving.distance
+                    driving.1 += _driving.duration
+                    previous!.driving(measure(_driving.distance) + "\n" + dater.string(from: _driving.duration)!)
                 }
             }
             previous = item
         }
         
-        total.subviews.forEach { $0.removeFromSuperview() }
-        var items = [(String, String, NSColor)]()
         if map.plan.path.count > 1 {
-            if map._walking { items.append(("walking", measure(walkingDistance) + ": " + dater.string(from: walkingTime)!, .walking)) }
-            if map._driving { items.append(("driving", measure(drivingDistance) + ": " + dater.string(from: drivingTime)!, .driving)) }
+            let border = UIView()
+            border.isUserInteractionEnabled = false
+            border.translatesAutoresizingMaskIntoConstraints = false
+            border.backgroundColor = .halo
+            list.content.addSubview(border)
+            
+            border.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
+            border.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
+            border.widthAnchor.constraint(equalTo: list.widthAnchor).isActive = true
+            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+            
+            list.bottom = list.content.bottomAnchor.constraint(greaterThanOrEqualTo: border.bottomAnchor, constant: 30)
+        } else if let previous = previous {
+            list.bottom = list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous.bottomAnchor, constant: 30)
         }
-        
-        var top = total.topAnchor
-        items.forEach {
-            let image = NSImageView()
-            image.translatesAutoresizingMaskIntoConstraints = false
-            image.image = NSImage(named: $0.0)
-            image.imageScaling = .scaleNone
-            total.addSubview(image)
-            
-            let circle = NSView()
-            circle.translatesAutoresizingMaskIntoConstraints = false
-            circle.wantsLayer = true
-            circle.layer!.backgroundColor = $0.2.cgColor
-            circle.layer!.cornerRadius = 8
-            total.addSubview(circle)
-            
-            let label = Label($0.1)
-            label.font = .systemFont(ofSize: 14, weight: .medium)
-            label.textColor = .white
-            total.addSubview(label)
-            
-            image.topAnchor.constraint(equalTo: top, constant: 14).isActive = true
-            image.leftAnchor.constraint(equalTo: circle.rightAnchor, constant: 10).isActive = true
-            image.widthAnchor.constraint(equalToConstant: 20).isActive = true
-            image.heightAnchor.constraint(equalToConstant: 20).isActive = true
-            
-            circle.centerYAnchor.constraint(equalTo: image.centerYAnchor).isActive = true
-            circle.widthAnchor.constraint(equalToConstant: 16).isActive = true
-            circle.heightAnchor.constraint(equalToConstant: 16).isActive = true
-            circle.leftAnchor.constraint(equalTo: total.leftAnchor, constant: 14).isActive = true
-            
-            label.leftAnchor.constraint(equalTo: image.rightAnchor, constant: 10).isActive = true
-            label.centerYAnchor.constraint(equalTo: image.centerYAnchor).isActive = true
-            
-            top = image.bottomAnchor
-        }
-        totalBottom = total.bottomAnchor.constraint(equalTo: top, constant: 10)
-        itemsBottom = list.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? list.documentView!.topAnchor, constant: 10)
-        list.documentView!.layoutSubtreeIfNeeded()
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.5
-            $0.allowsImplicitAnimation = true
-            list.contentView.scrollToVisible(previous?.frame.insetBy(dx: 0, dy: 20) ?? .zero)
-        }) { }
     }
-    
-     */
     
     private func query(_ force: Bool) {
         if #available(iOS 9.3, *) {

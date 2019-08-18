@@ -32,23 +32,15 @@ final class About: UIView {
         border.isUserInteractionEnabled = false
         addSubview(border)
         
-        let scroll = UIScrollView()
-        scroll.translatesAutoresizingMaskIntoConstraints = false
-        scroll.indicatorStyle = .white
-        scroll.alwaysBounceVertical = true
+        let scroll = Scroll()
         addSubview(scroll)
-        
-        let content = UIView()
-        content.translatesAutoresizingMaskIntoConstraints = false
-        content.isUserInteractionEnabled = false
-        scroll.addSubview(content)
         
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.clipsToBounds = true
         image.contentMode = .scaleAspectFit
         image.image = UIImage(named: "logo")
-        content.addSubview(image)
+        scroll.content.addSubview(image)
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +49,7 @@ final class About: UIView {
         label.textColor = .halo
         label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
         label.numberOfLines = 0
-        content.addSubview(label)
+        scroll.content.addSubview(label)
         
         let version = UILabel()
         version.translatesAutoresizingMaskIntoConstraints = false
@@ -65,7 +57,7 @@ final class About: UIView {
         version.text = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
         version.textColor = .halo
         version.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
-        content.addSubview(version)
+        scroll.content.addSubview(version)
         
         border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -79,27 +71,23 @@ final class About: UIView {
         scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         scroll.topAnchor.constraint(equalTo: border.bottomAnchor).isActive = true
         
-        content.topAnchor.constraint(equalTo: scroll.topAnchor).isActive = true
-        content.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
-        content.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
-        content.bottomAnchor.constraint(greaterThanOrEqualTo: scroll.bottomAnchor).isActive = true
-        content.bottomAnchor.constraint(greaterThanOrEqualTo: version.bottomAnchor).isActive = true
+        scroll.bottom = scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: version.bottomAnchor)
         
         close.bottomAnchor.constraint(equalTo: border.topAnchor).isActive = true
         close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         close.widthAnchor.constraint(equalToConstant: 60).isActive = true
         close.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        image.topAnchor.constraint(equalTo: content.topAnchor, constant: 60).isActive = true
+        image.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 60).isActive = true
         image.widthAnchor.constraint(equalToConstant: 200).isActive = true
         image.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        image.centerXAnchor.constraint(equalTo: content.centerXAnchor).isActive = true
+        image.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
         
         label.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 20).isActive = true
-        label.centerXAnchor.constraint(equalTo: content.centerXAnchor).isActive = true
+        label.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
         
         version.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 2).isActive = true
-        version.centerXAnchor.constraint(equalTo: content.centerXAnchor).isActive = true
+        version.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
         
         if #available(iOS 11.0, *) {
             border.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 65).isActive = true
