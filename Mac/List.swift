@@ -74,11 +74,8 @@ final class List: NSWindow {
             let driving = Travel("drive", value: item.driving)
             addSubview(driving)
             
-            let origin = Label()
-            origin.stringValue = item.origin
-            
-            let destination = Label()
-            destination.stringValue = item.destination
+            let origin = Label(item.origin)
+            let destination = Label(item.destination)
             
             [origin, destination].forEach {
                 $0.font = .systemFont(ofSize: 14, weight: .regular)
@@ -112,10 +109,9 @@ final class List: NSWindow {
             addSubview(over)
             self.over = over
             
-            let warning = Label()
+            let warning = Label(.key("List.warning"))
             warning.font = .systemFont(ofSize: 18, weight: .regular)
             warning.textColor = .white
-            warning.stringValue = .key("List.warning")
             over.addSubview(warning)
             
             let cancel = Button.Text(self, action: #selector(self.cancel))

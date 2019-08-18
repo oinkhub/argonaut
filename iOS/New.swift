@@ -4,7 +4,7 @@ import MapKit
 final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     @available(iOS 9.3, *) private final class Result: UIControl {
         let search: MKLocalSearchCompletion
-        override var isHighlighted: Bool { didSet { alpha = 0.3 } }
+        override var isHighlighted: Bool { didSet { alpha = 0.5 } }
         
         required init?(coder: NSCoder) { return nil }
         init(_ search: MKLocalSearchCompletion) {
@@ -338,7 +338,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     func textViewDidEndEditing(_: UITextView) {
         results.clear()
         results.bottom = results.content.bottomAnchor.constraint(equalTo: results.topAnchor)
-        field.width.constant = 150
+        field.width.constant = 130
         UIView.animate(withDuration: 0.45) { [weak self] in
             self?.field._cancel.alpha = 0
             self?._close.alpha = 1
@@ -353,7 +353,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         var top = results.topAnchor
         completer.results.forEach {
             let result = Result($0)
-            result.addTarget(self, action: #selector(self.result(_:)), for: .touchUpInside)
+            result.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(edit(_:))))
+            result.addTarget(self, action: #selector(search(_:)), for: .touchUpInside)
             results.content.addSubview(result)
             
             if top != results.topAnchor {
@@ -380,12 +381,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         UIView.animate(withDuration: 0.35) { [weak self] in self?.layoutIfNeeded() }
     }
     /*
-    override func keyDown(with: NSEvent) {
-        switch with.keyCode {
-        case 36, 48: search()
-        default: super.keyDown(with: with)
-        }
-    }
     
     override func refresh() {
         list.documentView!.subviews.forEach { $0.removeFromSuperview() }
@@ -470,72 +465,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }) { }
     }
     
-    override func left() {
-        if firstResponder === field {
-            field.setSelectedRange(.init(location: max(0, field.selectedRange().location - 1), length: 0))
-        } else {
-            super.left()
-        }
-    }
-    
-    override func right() {
-        if firstResponder === field {
-            field.setSelectedRange(.init(location: field.selectedRange().location + 1, length: 0))
-        } else {
-            super.right()
-        }
-    }
-    
-    override func up() {
-        if #available(OSX 10.11.4, *), firstResponder === field {
-            var index = results.documentView!.subviews.count - 1
-            if let highlighted = results.documentView!.subviews.firstIndex(where: { ($0 as! Result).highlighted }), highlighted > 0 {
-                index = highlighted - 1
-            }
-            results.documentView!.subviews.enumerated().forEach { ($0.1 as! Result).highlighted = $0.0 == index }
-        } else {
-            super.up()
-        }
-    }
-    
-    override func down() {
-        if #available(OSX 10.11.4, *), firstResponder === field {
-            var index = 0
-            if let highlighted = results.documentView!.subviews.firstIndex(where: { ($0 as! Result).highlighted }), highlighted < results.documentView!.subviews.count - 1 {
-                index = highlighted + 1
-            }
-            results.documentView!.subviews.enumerated().forEach { ($0.1 as! Result).highlighted = $0.0 == index }
-        } else {
-            super.down()
-        }
-    }
-    
-    func choose() {
-        if #available(OSX 10.11.4, *) {
-            results.documentView!.subviews.map { $0 as! Result }.first(where: { $0.highlighted })?.click()
-        }
-    }
-    
-    
-    
-    @objc func handle() {
-        let alpha: CGFloat
-        if listTop.constant > -290 {
-            listTop.constant = -290
-            alpha = 1
-        } else {
-            listTop.constant = -30
-            alpha = 0
-        }
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.3
-            $0.allowsImplicitAnimation = true
-            contentView!.layoutSubtreeIfNeeded()
-            list.alphaValue = alpha
-            total.alphaValue = alpha
-        }) { }
-    }
-    
      */
     
     @objc private func save() {
@@ -571,13 +500,15 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    @available(iOS 9.3, *) @objc private func result(_ result: Result) {
-        field.field.text = result.search.title
+    @available(iOS 9.3, *) @objc private func edit(_ gesture: UILongPressGestureRecognizer) { field.field.text = (gesture.view as! Result).search.title }
+    
+    @available(iOS 9.3, *) @objc private func search(_ result: Result) {
+        app.window!.endEditing(true)
+        field.field.text = ""
         MKLocalSearch(request: MKLocalSearch.Request(completion: result.search)).start { [weak self] in
             guard $1 == nil, let coordinate = $0?.mapItems.first?.placemark.coordinate else { return }
             self?.map.add(coordinate)
             self?.map.focus(coordinate)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { app.window!.endEditing(true) }
     }
 }

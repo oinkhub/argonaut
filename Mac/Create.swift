@@ -39,11 +39,10 @@ final class Create: NSWindow {
         contentView!.addSubview(button)
         self.button = button
         
-        let label = Label()
+        let label = Label("0%")
         label.font = .systemFont(ofSize: 25, weight: .bold)
         label.textColor = .halo
         label.alignment = .right
-        label.stringValue = "0%"
         contentView!.addSubview(label)
         self.label = label
         

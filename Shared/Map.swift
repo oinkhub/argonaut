@@ -40,6 +40,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         guard let mark = viewFor as? Mark else { return view(for: viewFor) }
         let marker = dequeueReusableAnnotationView(withIdentifier: "marker") as? Marker ?? Marker(annotation: nil, reuseIdentifier: "marker")
         marker.annotation = mark
+        marker.index = "\(plan.path.firstIndex { $0 === mark.path }! + 1)"
         marker.subviews.compactMap { $0 as? Callout }.forEach { $0.remove() }
         return marker
     }

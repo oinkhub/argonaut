@@ -64,27 +64,6 @@ class World: UIView {
 
         _close.widthAnchor.constraint(equalToConstant: 60).isActive = true
         _close.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
-        /*
-         
-        var top = _left.topAnchor
-        [_follow, _walking, _driving].forEach {
-            $0.isSelected = true
-            $0.tintColor = .halo
-            $0.isAccessibilityElement = true
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.imageView!.clipsToBounds = true
-            $0.imageView!.contentMode = .center
-            _left.addSubview($0)
-            
-            $0.topAnchor.constraint(equalTo: top).isActive = true
-            $0.centerXAnchor.constraint(equalTo: _left.centerXAnchor).isActive = true
-            $0.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            top = $0.bottomAnchor
-        }
-        _left.bottomAnchor.constraint(equalTo: top).isActive = true
-        */
  
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.follow()
@@ -92,20 +71,6 @@ class World: UIView {
     }
     
     func refresh() { }
-    
-    final func tools(_ button: UIButton, top: NSLayoutYAxisAnchor) {
-//        button.tintColor = .halo
-//        button.isAccessibilityElement = true
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.imageView!.clipsToBounds = true
-//        button.imageView!.contentMode = .center
-//        _tools.addSubview(button)
-//
-//        button.topAnchor.constraint(equalTo: top).isActive = true
-//        button.centerXAnchor.constraint(equalTo: _tools.centerXAnchor).isActive = true
-//        button.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    }
     
     final func measure(_ distance: CLLocationDistance) -> String {
         if #available(iOS 10, *) {

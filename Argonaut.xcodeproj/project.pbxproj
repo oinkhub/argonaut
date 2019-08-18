@@ -29,7 +29,6 @@
 		CE3256B623029C2400D95A31 /* HelperMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3256B523029C2400D95A31 /* HelperMac.swift */; };
 		CE3256B823029C4200D95A31 /* HelperiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3256B723029C4200D95A31 /* HelperiOS.swift */; };
 		CE3978A022F5B1E60045E1D7 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE39789F22F5B1E60045E1D7 /* Marker.swift */; };
-		CE3978A122F5B1E60045E1D7 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE39789F22F5B1E60045E1D7 /* Marker.swift */; };
 		CE4A547C22D85E1B00125A9C /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A547B22D85E1B00125A9C /* Button.swift */; };
 		CE633A2122FD525E00846455 /* TestArgonaut.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE633A2022FD525E00846455 /* TestArgonaut.swift */; };
 		CE633A2322FD791C00846455 /* Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE633A2222FD791C00846455 /* Load.swift */; };
@@ -50,6 +49,7 @@
 		CEAB0F0B22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
 		CEABFA3722ED9401000ABB7E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEABFA3622ED9401000ABB7E /* Extensions.swift */; };
 		CEABFA3822ED9401000ABB7E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEABFA3622ED9401000ABB7E /* Extensions.swift */; };
+		CEACFC57230950A4008E76A9 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEACFC56230950A4008E76A9 /* Marker.swift */; };
 		CEBB3A6423040F7200C5F61A /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBB3A6323040F7200C5F61A /* Privacy.swift */; };
 		CEC5A3C722EAFD9600CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BD22D721C500EF2447 /* libArgonaut.a */; };
 		CEC5A3C822EAFD9D00CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BE22D721C500EF2447 /* libArgonaut.a */; };
@@ -142,6 +142,7 @@
 		CEAB0F0722D73C5800320F4F /* New.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = New.swift; sourceTree = "<group>"; };
 		CEAB0F0922D742D900320F4F /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		CEABFA3622ED9401000ABB7E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CEACFC56230950A4008E76A9 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		CEBB3A6323040F7200C5F61A /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
 		CEC5A3C922EAFE3200CE3B07 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFactory.swift; sourceTree = "<group>"; };
@@ -267,6 +268,7 @@
 				CEDB361D2302A4140078E521 /* Extensions.swift */,
 				CE0FE655230571D70058386B /* Field.swift */,
 				CE0BA3232302CBEC004E6660 /* Home.swift */,
+				CEACFC56230950A4008E76A9 /* Marker.swift */,
 				CE0FE651230555D40058386B /* New.swift */,
 				CEBB3A6323040F7200C5F61A /* Privacy.swift */,
 				CE0FE65323056F490058386B /* Scroll.swift */,
@@ -289,6 +291,7 @@
 				CE088B8622FEE7A80001BEE4 /* Help.swift */,
 				CE0038FD22D72E5B008A8E88 /* List.swift */,
 				CE633A2222FD791C00846455 /* Load.swift */,
+				CE39789F22F5B1E60045E1D7 /* Marker.swift */,
 				CE9301D822EEF9C000EACBD4 /* Navigate.swift */,
 				CEAB0F0722D73C5800320F4F /* New.swift */,
 				CE088B8422FEDE810001BEE4 /* Privacy.swift */,
@@ -304,7 +307,6 @@
 				CECECD7B22F469F2006AE0C8 /* Liner.swift */,
 				CEAB0F0922D742D900320F4F /* Map.swift */,
 				CE7EACE422E1E1620082D91C /* Mark.swift */,
-				CE39789F22F5B1E60045E1D7 /* Marker.swift */,
 				CEDE110722D71F5300DD796B /* Shared.swift */,
 				CE9301DA22EF09AF00EACBD4 /* Tiler.swift */,
 			);
@@ -595,7 +597,6 @@
 				CEDE10FE22D71F2400DD796B /* App.swift in Sources */,
 				CEDB361E2302A4140078E521 /* Extensions.swift in Sources */,
 				CE0FE65423056F490058386B /* Scroll.swift in Sources */,
-				CE3978A122F5B1E60045E1D7 /* Marker.swift in Sources */,
 				CEAB0F0B22D742D900320F4F /* Map.swift in Sources */,
 				CEE098312302E3E200321C07 /* About.swift in Sources */,
 				CE9301DC22EF09AF00EACBD4 /* Tiler.swift in Sources */,
@@ -612,6 +613,7 @@
 				CEDCC689230683C500AAF0C8 /* Button.swift in Sources */,
 				CE26CE0722F467A40007441D /* Mark.swift in Sources */,
 				CE18343E23080B260046E496 /* Create.swift in Sources */,
+				CEACFC57230950A4008E76A9 /* Marker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

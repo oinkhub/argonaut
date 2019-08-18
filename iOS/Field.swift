@@ -70,7 +70,7 @@ class Field: UITextView {
             self._cancel = _cancel
             
             heightAnchor.constraint(equalToConstant: NSAttributedString(string: "0", attributes: [.font: field.font!]).boundingRect(with: .init(width: 100, height: 0), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size.height + 36).isActive = true
-            width = widthAnchor.constraint(equalToConstant: 150)
+            width = widthAnchor.constraint(equalToConstant: 130)
             width.isActive = true
             
             field.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -130,6 +130,7 @@ class Field: UITextView {
         spellCheckingType = .yes
         autocapitalizationType = .sentences
         isAccessibilityElement = true
+        returnKeyType = .done
     }
     
     override func caretRect(for position: UITextPosition) -> CGRect {

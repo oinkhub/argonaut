@@ -25,10 +25,9 @@ class Callout: NSView {
             base.layer!.cornerRadius = 6
             addSubview(base)
             
-            let title = Label()
+            let title = Label((view.annotation as! Mark).path.name)
             title.font = .systemFont(ofSize: 12, weight: .light)
             title.textColor = .black
-            title.stringValue = (view.annotation as! Mark).path.name
             base.addSubview(title)
             self.title = title
             

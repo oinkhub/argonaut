@@ -31,8 +31,7 @@ final class Navigate: World {
         icon.image = NSImage(named: "error")
         zoom.addSubview(icon)
         
-        let warning = Label()
-        warning.stringValue = .key("Navigate.zoom")
+        let warning = Label(.key("Navigate.zoom"))
         warning.textColor = .white
         warning.font = .systemFont(ofSize: 14, weight: .regular)
         zoom.addSubview(warning)
