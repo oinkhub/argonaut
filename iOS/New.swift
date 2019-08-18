@@ -25,8 +25,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                         string.addAttribute(.foregroundColor, value: UIColor.halo, range: $0 as! NSRange)
                     }
                     return string
-                } (NSMutableAttributedString(string: search.title + (search.subtitle.isEmpty ? "" : "\n"), attributes: [.font: UIFont.preferredFont(forTextStyle: .subheadline), .foregroundColor: UIColor.white])))
-                $0.append(.init(string: search.subtitle, attributes: [.font: UIFont.preferredFont(forTextStyle: .caption1), .foregroundColor: UIColor(white: 1, alpha: 0.65)]))
+                } (NSMutableAttributedString(string: search.title + (search.subtitle.isEmpty ? "" : "\n"), attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .medium), .foregroundColor: UIColor.white])))
+                $0.append(.init(string: search.subtitle, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light), .foregroundColor: UIColor(white: 1, alpha: 0.7)]))
                 return $0
             } (NSMutableAttributedString())
             addSubview(label)
@@ -147,7 +147,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         _save.isAccessibilityElement = true
         _save.setTitle(.key("New.save"), for: [])
         _save.accessibilityLabel = .key("New.save")
-        _save.titleLabel!.font = .preferredFont(forTextStyle: .headline)
+        _save.titleLabel!.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .medium)
         _save.setTitleColor(.halo, for: .normal)
         _save.setTitleColor(.init(white: 1, alpha: 0.2), for: .highlighted)
         _save.addTarget(self, action: #selector(save), for: .touchUpInside)
@@ -316,40 +316,35 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         return true
     }
     
-    func textViewDidChange(_: UITextView) {
-        if #available(iOS 9.3, *) {
-            (completer as? MKLocalSearchCompleter)!.cancel()
-            if !field.field.text.isEmpty {
-                (completer as? MKLocalSearchCompleter)!.queryFragment = field.field.text
-            }
-        }
-    }
+    func textViewDidChange(_: UITextView) { query(false) }
     
     func textViewDidBeginEditing(_: UITextView) {
         field.width.constant = bounds.width - 20
-        UIView.animate(withDuration: 0.45) { [weak self] in
+        UIView.animate(withDuration: 0.45, animations: { [weak self] in
             self?.field._cancel.alpha = 1
             self?._close.alpha = 0
             self?._save.alpha = 0
             self?.layoutIfNeeded()
-        }
+        }) { [weak self] _ in self?.query(true) }
     }
     
     func textViewDidEndEditing(_: UITextView) {
-        results.clear()
-        results.bottom = results.content.bottomAnchor.constraint(equalTo: results.topAnchor)
-        field.width.constant = 130
+        if #available(iOS 9.3, *) {
+            (completer as! MKLocalSearchCompleter).cancel()
+        }
+        results.clear(true)
+        field.width.constant = 150
         UIView.animate(withDuration: 0.45) { [weak self] in
             self?.field._cancel.alpha = 0
             self?._close.alpha = 1
             self?._save.alpha = 1
             self?.layoutIfNeeded()
         }
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.results.clear(true) }
     }
     
     @available(iOS 9.3, *) func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        results.clear()
+        results.clear(false)
         var top = results.topAnchor
         completer.results.forEach {
             let result = Result($0)
@@ -466,6 +461,18 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
      */
+    
+    private func query(_ force: Bool) {
+        if #available(iOS 9.3, *) {
+            (completer as! MKLocalSearchCompleter).cancel()
+            if !field.field.text.isEmpty {
+                if force {
+                    (completer as! MKLocalSearchCompleter).queryFragment = ""
+                }
+                (completer as! MKLocalSearchCompleter).queryFragment = field.field.text
+            }
+        }
+    }
     
     @objc private func save() {
 //        Create(map.plan, rect: map.visibleMapRect).makeKeyAndOrderFront(nil)

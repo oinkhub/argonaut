@@ -34,7 +34,7 @@ class Field: UITextView {
             accessibilityTraits = .searchField
             
             let field = Field()
-            field.textContainerInset = .init(top: 15, left: 25, bottom: 15, right: 20)
+            field.textContainerInset = .init(top: 15, left: 30, bottom: 15, right: 0)
             field.accessibilityLabel = .key("Field.search")
             addSubview(field)
             self.field = field
@@ -69,8 +69,8 @@ class Field: UITextView {
             addSubview(_cancel)
             self._cancel = _cancel
             
-            heightAnchor.constraint(equalToConstant: NSAttributedString(string: "0", attributes: [.font: field.font!]).boundingRect(with: .init(width: 100, height: 0), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size.height + 36).isActive = true
-            width = widthAnchor.constraint(equalToConstant: 130)
+            heightAnchor.constraint(equalToConstant: NSAttributedString(string: "0", attributes: [.font: field.font!]).boundingRect(with: .init(width: 200, height: 0), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size.height + 40).isActive = true
+            width = widthAnchor.constraint(equalToConstant: 150)
             width.isActive = true
             
             field.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -123,7 +123,7 @@ class Field: UITextView {
         isScrollEnabled = false
         textColor = .white
         tintColor = .halo
-        font = .preferredFont(forTextStyle: .headline)
+        font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .medium)
         keyboardType = .alphabet
         keyboardAppearance = .dark
         autocorrectionType = .yes

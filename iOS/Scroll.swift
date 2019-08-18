@@ -24,5 +24,10 @@ final class Scroll: UIScrollView {
         content.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor).isActive = true
     }
     
-    func clear() { content.subviews.forEach { $0.removeFromSuperview() } }
+    func clear(_ close: Bool) {
+        content.subviews.forEach { $0.removeFromSuperview() }
+        if close {
+            bottom = content.bottomAnchor.constraint(equalTo: topAnchor)
+        }
+    }
 }

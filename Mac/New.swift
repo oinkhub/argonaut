@@ -305,9 +305,9 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     
     func textDidChange(_: Notification) {
         if #available(OSX 10.11.4, *) {
-            (completer as? MKLocalSearchCompleter)?.cancel()
+            (completer as! MKLocalSearchCompleter).cancel()
             if !field.string.isEmpty {
-                (completer as? MKLocalSearchCompleter)?.queryFragment = field.string
+                (completer as! MKLocalSearchCompleter).queryFragment = field.string
             }
         }
     }

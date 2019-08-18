@@ -23,11 +23,7 @@ final class About: UIView {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.text = .key("About.title")
         title.textColor = .white
-        if #available(iOS 11.0, *) {
-            title.font = .preferredFont(forTextStyle: .largeTitle)
-        } else {
-            title.font = .preferredFont(forTextStyle: .title1)
-        }
+        title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title1).pointSize, weight: .bold)
         addSubview(title)
         
         let border = UIView()
@@ -59,7 +55,7 @@ final class About: UIView {
         label.isAccessibilityElement = true
         label.text = .key("About.label")
         label.textColor = .halo
-        label.font = .preferredFont(forTextStyle: .headline)
+        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
         label.numberOfLines = 0
         content.addSubview(label)
         
@@ -68,7 +64,7 @@ final class About: UIView {
         version.isAccessibilityElement = true
         version.text = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
         version.textColor = .halo
-        version.font = .preferredFont(forTextStyle: .body)
+        version.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
         content.addSubview(version)
         
         border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true

@@ -13,7 +13,7 @@ final class Create: UIView {
         cancel.isAccessibilityElement = true
         cancel.setTitle(.key("Create.cancel"), for: [])
         cancel.accessibilityLabel = .key("Create.cancel")
-        cancel.titleLabel!.font = .preferredFont(forTextStyle: .headline)
+        cancel.titleLabel!.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .regular)
         cancel.setTitleColor(.init(white: 1, alpha: 0.8), for: .normal)
         cancel.setTitleColor(.init(white: 1, alpha: 0.2), for: .highlighted)
         cancel.addTarget(app, action: #selector(app.pop), for: .touchUpInside)
