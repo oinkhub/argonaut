@@ -130,6 +130,7 @@ class Field: UITextView {
         spellCheckingType = .yes
         autocapitalizationType = .sentences
         isAccessibilityElement = true
+        keyboardDismissMode = .interactive
         returnKeyType = .done
     }
     

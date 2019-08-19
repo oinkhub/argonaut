@@ -9,12 +9,13 @@ final class Marker: MKAnnotationView {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         image = .mark
         isDraggable = true
-        centerOffset.y = -28
+        centerOffset.x = -26
+        contentMode = .center
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize, weight: .bold)
-        label.textColor = .halo
+        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .bold)
+        label.textColor = .black
         addSubview(label)
         self.label = label
         

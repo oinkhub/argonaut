@@ -22,8 +22,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         
         var region = MKCoordinateRegion()
         region.center = userLocation.location == nil ? self.region.center : userLocation.coordinate
-        region.span.latitudeDelta = 0.01
-        region.span.longitudeDelta = 0.01
+        region.span.latitudeDelta = 0.02
+        region.span.longitudeDelta = 0.02
         setRegion(region, animated: false)
     }
     
