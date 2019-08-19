@@ -10,14 +10,14 @@ class Callout: UIView {
             base.isUserInteractionEnabled = false
             base.translatesAutoresizingMaskIntoConstraints = false
             base.backgroundColor = .halo
-            base.layer.cornerRadius = 6
+            base.layer.cornerRadius = 4
             base.layer.borderWidth = 1
             base.layer.borderColor = UIColor.black.cgColor
             addSubview(base)
             
             let title = UILabel()
             title.translatesAutoresizingMaskIntoConstraints = false
-            title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
+            title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .medium)
             title.textColor = .black
             title.text = (view.annotation as! Mark).path.name
             base.addSubview(title)
@@ -27,17 +27,12 @@ class Callout: UIView {
             leftAnchor.constraint(lessThanOrEqualTo: base.leftAnchor).isActive = true
             rightAnchor.constraint(greaterThanOrEqualTo: base.rightAnchor).isActive = true
             
-            base.bottomAnchor.constraint(equalTo: title.bottomAnchor, constant: 7).isActive = true
-            let top = base.topAnchor.constraint(equalTo: centerYAnchor)
-            top.isActive = true
+            base.bottomAnchor.constraint(equalTo: title.bottomAnchor, constant: 5).isActive = true
+            base.topAnchor.constraint(equalTo: centerYAnchor, constant: 32).isActive = true
             
-            title.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 12).isActive = true
-            title.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -12).isActive = true
-            title.topAnchor.constraint(equalTo: base.topAnchor, constant: 7).isActive = true
-            
-            layoutIfNeeded()
-            top.constant = 36
-            UIView.animate(withDuration: 0.4) { [weak self] in self?.layoutIfNeeded() }
+            title.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
+            title.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
+            title.topAnchor.constraint(equalTo: base.topAnchor, constant: 5).isActive = true
         }
         
         func refresh(_ title: String) {
