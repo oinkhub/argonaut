@@ -31,7 +31,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             } (NSMutableAttributedString())
             addSubview(label)
             
-            heightAnchor.constraint(greaterThanOrEqualToConstant: 55).isActive = true
+            heightAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
             bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 20).isActive = true
             
             label.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
@@ -149,9 +149,9 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var _follow: Button!
     private weak var _pin: Button!
     private weak var _save: UIButton!
-    private weak var mapBottom: NSLayoutConstraint!
     private weak var walkingRight: NSLayoutConstraint!
     private weak var drivingRight: NSLayoutConstraint!
+    private weak var listHeight: NSLayoutConstraint!
     private var completer: Any?
     
     required init?(coder: NSCoder) { return nil }
@@ -222,11 +222,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         let results = Scroll()
         results.backgroundColor = .black
-        results.layer.cornerRadius = 4
         addSubview(results)
         self.results = results
         
         let list = Scroll()
+        list.backgroundColor = .black
         addSubview(list)
         self.list = list
         
@@ -243,20 +243,20 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        mapBottom = map.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: 0)
-        mapBottom.isActive = true
+        map.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-        results.topAnchor.constraint(equalTo: field.bottomAnchor, constant: -6).isActive = true
-        results.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        results.widthAnchor.constraint(equalTo: widthAnchor, constant: -20).isActive = true
-        results.heightAnchor.constraint(lessThanOrEqualToConstant: 230).isActive = true
+        results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
+        results.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        results.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        results.heightAnchor.constraint(lessThanOrEqualToConstant: 220).isActive = true
         
-        list.topAnchor.constraint(equalTo: map.bottomAnchor, constant: 2).isActive = true
+        list.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        list.heightAnchor.constraint(equalToConstant: 298).isActive = true
+        listHeight = list.heightAnchor.constraint(equalToConstant: 0)
+        listHeight.isActive = true
         
-        _up.bottomAnchor.constraint(lessThanOrEqualTo: map.bottomAnchor).isActive = true
+        _up.bottomAnchor.constraint(lessThanOrEqualTo: list.topAnchor).isActive = true
         
         _down.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
         _down.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
@@ -342,7 +342,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     func textViewDidChange(_: UITextView) { query(false) }
     
     func textViewDidBeginEditing(_: UITextView) {
-        field.width.constant = bounds.width - 20
+        field.width.constant = bounds.width
         UIView.animate(withDuration: 0.45, animations: { [weak self] in
             self?.field._cancel.alpha = 1
             self?._close.alpha = 0
@@ -464,12 +464,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     @objc private func up() {
-        mapBottom.constant = -300
+        listHeight.constant = 300
         walkingRight.constant = -70
         drivingRight.constant = -140
         _walking.isHidden = false
         _driving.isHidden = false
-        UIView.animate(withDuration: 0.6, animations: { [weak self] in
+        UIView.animate(withDuration: 0.4, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?._up.isHidden = true
@@ -478,10 +478,10 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     @objc private func down() {
-        mapBottom.constant = 0
+        listHeight.constant = 0
         walkingRight.constant = 0
         drivingRight.constant = 0
-        UIView.animate(withDuration: 0.6, animations: { [weak self] in
+        UIView.animate(withDuration: 0.4, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?._walking.isHidden = true

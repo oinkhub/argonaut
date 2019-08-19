@@ -14,6 +14,7 @@ extension CGColor {
     static let halo = UIColor.halo.cgColor
     static let walking = UIColor.walking.cgColor
     static let driving = UIColor.driving.cgColor
+    static let black = UIColor.black.cgColor
 }
 
 extension UIImage {

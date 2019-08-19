@@ -34,7 +34,7 @@ class Field: UITextView {
             accessibilityTraits = .searchField
             
             let field = Field()
-            field.textContainerInset = .init(top: 15, left: 30, bottom: 15, right: 0)
+            field.textContainerInset = .init(top: 15, left: 40, bottom: 15, right: 20)
             field.accessibilityLabel = .key("Field.search")
             addSubview(field)
             self.field = field
@@ -80,18 +80,18 @@ class Field: UITextView {
             
             border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            border.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
-            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+            border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            border.heightAnchor.constraint(equalToConstant: 3).isActive = true
             
             icon.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             icon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 45).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 60).isActive = true
             
             _cancel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             _cancel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            _cancel.widthAnchor.constraint(equalToConstant: 45).isActive = true
-            _cancel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            _cancel.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            _cancel.heightAnchor.constraint(equalToConstant: 60).isActive = true
         }
         
         @objc private func cancel() { field.text = "" }

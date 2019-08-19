@@ -12,7 +12,7 @@ class Callout: UIView {
             base.backgroundColor = .halo
             base.layer.cornerRadius = 4
             base.layer.borderWidth = 1
-            base.layer.borderColor = UIColor.black.cgColor
+            base.layer.borderColor = .black
             addSubview(base)
             
             let title = UILabel()

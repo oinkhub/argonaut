@@ -10,7 +10,7 @@ final class Alert: UIControl {
         accessibilityViewIsModal = true
         backgroundColor = UIColor.halo.withAlphaComponent(0.96)
         layer.cornerRadius = 6
-        layer.borderColor = UIColor.black.cgColor
+        layer.borderColor = .black
         layer.borderWidth = 1
         alpha = 0
         addTarget(self, action: #selector(dismiss), for: .touchUpInside)
