@@ -216,7 +216,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         let _pin = Button("pin")
         _pin.accessibilityLabel = .key("New.pin")
-        _pin.addTarget(map, action: #selector(map.pin), for: .touchUpInside)
+        _pin.addTarget(self, action: #selector(pin), for: .touchUpInside)
         addSubview(_pin)
         self._pin = _pin
         
@@ -464,12 +464,16 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     @objc private func up() {
+        var region = map.region
+        region.center = map.convert(.init(x: map.bounds.midX, y: map.bounds.midY + 150), toCoordinateFrom: map)
+        map.setRegion(region, animated: true)
+        
         listHeight.constant = 300
         walkingRight.constant = -70
         drivingRight.constant = -140
         _walking.isHidden = false
         _driving.isHidden = false
-        UIView.animate(withDuration: 0.4, animations: { [weak self] in
+        UIView.animate(withDuration: 0.5, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?._up.isHidden = true
@@ -478,10 +482,14 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     @objc private func down() {
+        var region = map.region
+        region.center = map.convert(.init(x: map.bounds.midX, y: map.bounds.midY - 150), toCoordinateFrom: map)
+        map.setRegion(region, animated: true)
+        
         listHeight.constant = 0
         walkingRight.constant = 0
         drivingRight.constant = 0
-        UIView.animate(withDuration: 0.4, animations: { [weak self] in
+        UIView.animate(withDuration: 0.5, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?._walking.isHidden = true
@@ -489,6 +497,10 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             self?._up.isHidden = false
             self?._down.isHidden = true
         }
+    }
+    
+    @objc private func pin() {
+        map.add(map.convert(.init(x: map.bounds.midX, y: map.bounds.midY + map.top - (listHeight.constant / 2)), toCoordinateFrom: map))
     }
     
     @available(iOS 9.3, *) @objc private func edit(_ gesture: UILongPressGestureRecognizer) { field.field.text = (gesture.view as! Result).search.title }
