@@ -119,21 +119,21 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
-            label.numberOfLines = 0
+            label.numberOfLines = 2
             label.text = string
             label.textColor = .black
-            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .callout).pointSize, weight: .light)
+            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize + 5, weight: .regular)
             addSubview(label)
             
-            base.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 22).isActive = true
-            base.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5, constant: -30).isActive = true
-            base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
+            base.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
+            base.widthAnchor.constraint(greaterThanOrEqualTo: widthAnchor, multiplier: 0.5, constant: -30).isActive = true
+            base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 6).isActive = true
             
-            label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
-            label.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
-            label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
+            label.topAnchor.constraint(equalTo: base.topAnchor, constant: 6).isActive = true
+            label.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 6).isActive = true
+            label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -6).isActive = true
             
-            bottomAnchor.constraint(greaterThanOrEqualTo: base.bottomAnchor, constant: 10).isActive = true
+            bottomAnchor.constraint(greaterThanOrEqualTo: base.bottomAnchor).isActive = true
             
             return base
         }
@@ -432,12 +432,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                 if map._walking, let _walking = previous!.path?.options.first(where: { $0.mode == .walking }) {
                     walking.0 += _walking.distance
                     walking.1 += _walking.duration
-                    previous!.walking(measure(_walking.distance) + "\n" + dater.string(from: _walking.duration)!)
+                    previous!.walking(measure(_walking.distance) + ": " + dater.string(from: _walking.duration)!)
                 }
                 if map._driving, let _driving = previous!.path?.options.first(where: { $0.mode == .driving }) {
                     driving.0 += _driving.distance
                     driving.1 += _driving.duration
-                    previous!.driving(measure(_driving.distance) + "\n" + dater.string(from: _driving.duration)!)
+                    previous!.driving(measure(_driving.distance) + ": " + dater.string(from: _driving.duration)!)
                 }
             }
             previous = item
