@@ -33,8 +33,15 @@ class Field: UITextView {
             translatesAutoresizingMaskIntoConstraints = false
             accessibilityTraits = .searchField
             
+            let background = UIView()
+            background.translatesAutoresizingMaskIntoConstraints = false
+            background.backgroundColor = UIColor.halo.withAlphaComponent(0.3)
+            background.isUserInteractionEnabled = false
+            background.layer.cornerRadius = 4
+            addSubview(background)
+            
             let field = Field()
-            field.textContainerInset = .init(top: 15, left: 40, bottom: 15, right: 20)
+            field.textContainerInset = .init(top: 16, left: 45, bottom: 16, right: 30)
             field.accessibilityLabel = .key("Field.search")
             addSubview(field)
             self.field = field
@@ -69,9 +76,14 @@ class Field: UITextView {
             addSubview(_cancel)
             self._cancel = _cancel
             
-            heightAnchor.constraint(equalToConstant: NSAttributedString(string: "0", attributes: [.font: field.font!]).boundingRect(with: .init(width: 200, height: 0), options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil).size.height + 40).isActive = true
-            width = widthAnchor.constraint(equalToConstant: 150)
+            heightAnchor.constraint(equalToConstant: UIFont.preferredFont(forTextStyle: .headline).pointSize + 40).isActive = true
+            width = widthAnchor.constraint(equalToConstant: 160)
             width.isActive = true
+            
+            background.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
+            background.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
+            background.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
+            background.rightAnchor.constraint(equalTo: rightAnchor, constant: -8).isActive = true
             
             field.topAnchor.constraint(equalTo: topAnchor).isActive = true
             field.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -81,16 +93,16 @@ class Field: UITextView {
             border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-            border.heightAnchor.constraint(equalToConstant: 3).isActive = true
+            border.heightAnchor.constraint(equalToConstant: 0).isActive = true
             
             icon.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             icon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 72).isActive = true
             icon.heightAnchor.constraint(equalToConstant: 60).isActive = true
             
             _cancel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             _cancel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            _cancel.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            _cancel.widthAnchor.constraint(equalToConstant: 72).isActive = true
             _cancel.heightAnchor.constraint(equalToConstant: 60).isActive = true
         }
         
@@ -123,7 +135,7 @@ class Field: UITextView {
         isScrollEnabled = false
         textColor = .white
         tintColor = .halo
-        font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .medium)
+        font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
         keyboardType = .alphabet
         keyboardAppearance = .dark
         autocorrectionType = .yes

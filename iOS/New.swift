@@ -174,7 +174,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         _save.isAccessibilityElement = true
         _save.setTitle(.key("New.save"), for: [])
         _save.accessibilityLabel = .key("New.save")
-        _save.titleLabel!.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .medium)
+        _save.titleLabel!.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
         _save.setTitleColor(.halo, for: .normal)
         _save.setTitleColor(.init(white: 1, alpha: 0.2), for: .highlighted)
         _save.addTarget(self, action: #selector(save), for: .touchUpInside)
@@ -237,8 +237,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         _save.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         _save.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        _save.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        _save.heightAnchor.constraint(equalToConstant: 54).isActive = true
+        _save.widthAnchor.constraint(equalToConstant: 90).isActive = true
+        _save.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -356,7 +356,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             (completer as! MKLocalSearchCompleter).cancel()
         }
         results.clear(true)
-        field.width.constant = 150
+        field.width.constant = 160
         UIView.animate(withDuration: 0.45) { [weak self] in
             self?.field._cancel.alpha = 0
             self?._close.alpha = 1
