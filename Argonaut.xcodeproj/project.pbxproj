@@ -51,6 +51,7 @@
 		CEABFA3822ED9401000ABB7E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEABFA3622ED9401000ABB7E /* Extensions.swift */; };
 		CEACFC57230950A4008E76A9 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEACFC56230950A4008E76A9 /* Marker.swift */; };
 		CEBB3A6423040F7200C5F61A /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBB3A6323040F7200C5F61A /* Privacy.swift */; };
+		CEC2BA5C230BC26900FB4BA1 /* Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC2BA5B230BC26900FB4BA1 /* Gradient.swift */; };
 		CEC5A3C722EAFD9600CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BD22D721C500EF2447 /* libArgonaut.a */; };
 		CEC5A3C822EAFD9D00CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BE22D721C500EF2447 /* libArgonaut.a */; };
 		CEC5A3CA22EAFE3200CE3B07 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5A3C922EAFE3200CE3B07 /* Factory.swift */; };
@@ -144,6 +145,7 @@
 		CEABFA3622ED9401000ABB7E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CEACFC56230950A4008E76A9 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		CEBB3A6323040F7200C5F61A /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
+		CEC2BA5B230BC26900FB4BA1 /* Gradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradient.swift; sourceTree = "<group>"; };
 		CEC5A3C922EAFE3200CE3B07 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFactory.swift; sourceTree = "<group>"; };
 		CECECD7B22F469F2006AE0C8 /* Liner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Liner.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				CE18343D23080B260046E496 /* Create.swift */,
 				CEDB361D2302A4140078E521 /* Extensions.swift */,
 				CE0FE655230571D70058386B /* Field.swift */,
+				CEC2BA5B230BC26900FB4BA1 /* Gradient.swift */,
 				CE0BA3232302CBEC004E6660 /* Home.swift */,
 				CEACFC56230950A4008E76A9 /* Marker.swift */,
 				CE0FE651230555D40058386B /* New.swift */,
@@ -611,6 +614,7 @@
 				CEBB3A6423040F7200C5F61A /* Privacy.swift in Sources */,
 				CE0FE652230555D40058386B /* New.swift in Sources */,
 				CEDCC689230683C500AAF0C8 /* Button.swift in Sources */,
+				CEC2BA5C230BC26900FB4BA1 /* Gradient.swift in Sources */,
 				CE26CE0722F467A40007441D /* Mark.swift in Sources */,
 				CE18343E23080B260046E496 /* Create.swift in Sources */,
 				CEACFC57230950A4008E76A9 /* Marker.swift in Sources */,

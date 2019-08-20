@@ -220,6 +220,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(_pin)
         self._pin = _pin
         
+        let top = Gradient.Top()
+        addSubview(top)
+        
+        let bottom = Gradient.Bottom()
+        addSubview(bottom)
+        
         let results = Scroll()
         results.backgroundColor = .black
         addSubview(results)
@@ -274,6 +280,14 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         _driving.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
         drivingRight = _driving.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
         drivingRight.isActive = true
+        
+        top.topAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
+        top.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        top.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        
+        bottom.bottomAnchor.constraint(equalTo: list.topAnchor).isActive = true
+        bottom.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        bottom.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         
         /*
         handle.topAnchor.constraint(equalTo: list.topAnchor, constant: 10).isActive = true
@@ -394,6 +408,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             top = result.bottomAnchor
         }
         
+        results.bottom = results.content.bottomAnchor.constraint(equalTo: results.topAnchor, constant: results.bounds.height)
         layoutIfNeeded()
         results.bottom = results.content.bottomAnchor.constraint(equalTo: top)
         UIView.animate(withDuration: 0.35) { [weak self] in self?.layoutIfNeeded() }
