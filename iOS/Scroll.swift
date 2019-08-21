@@ -2,7 +2,6 @@ import UIKit
 
 final class Scroll: UIScrollView {
     private(set) weak var content: UIView!
-    
     required init?(coder: NSCoder) { return nil }
     init() {
         super.init(frame: .zero)
@@ -22,7 +21,5 @@ final class Scroll: UIScrollView {
         content.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor).isActive = true
     }
     
-    func clear(_ close: Bool) {
-        content.subviews.forEach { $0.removeFromSuperview() }
-    }
+    func clear() { content.subviews.forEach { $0.removeFromSuperview() } }
 }

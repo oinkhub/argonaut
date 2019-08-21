@@ -54,7 +54,7 @@ class Field: UITextView {
             
             let icon = UIButton()
             icon.translatesAutoresizingMaskIntoConstraints = false
-            icon.addTarget(self, action: #selector(becomeFirstResponder), for: .touchUpInside)
+            icon.addTarget(self, action: #selector(edit), for: .touchUpInside)
             icon.setImage(UIImage(named: "search"), for: .normal)
             icon.imageView!.contentMode = .center
             icon.imageView!.clipsToBounds = true
@@ -107,6 +107,7 @@ class Field: UITextView {
         }
         
         @objc private func cancel() { field.text = "" }
+        @objc private func edit() { field.becomeFirstResponder() }
     }
     
     final class Name: Field {

@@ -70,7 +70,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
                 return $0
             } (NSMutableAttributedString())
             
-            MKLocalSearch(request: MKLocalSearch.Request(completion: search)).start { [weak self] in
+            MKLocalSearch(request: .init(completion: search)).start { [weak self] in
                 guard $1 == nil, let coordinate = $0?.mapItems.first?.placemark.coordinate else { return }
                 self?.selected?(coordinate)
             }

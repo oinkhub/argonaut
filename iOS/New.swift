@@ -4,7 +4,7 @@ import MapKit
 final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     @available(iOS 9.3, *) private final class Result: UIControl {
         let search: MKLocalSearchCompletion
-        override var isHighlighted: Bool { didSet { alpha = 0.5 } }
+        override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.5 : 1 } }
         
         required init?(coder: NSCoder) { return nil }
         init(_ search: MKLocalSearchCompletion) {
@@ -43,6 +43,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private final class Item: UIControl {
         weak var path: Plan.Path?
         private(set) weak var delete: UIButton!
+        override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.5 : 1 } }
         
         required init?(coder: NSCoder) { return nil }
         init(_ path: (Int, Plan.Path), walking: String?, driving: String?) {
@@ -77,6 +78,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             delete.imageEdgeInsets.left = 10
             delete.imageEdgeInsets.bottom = 10
             addSubview(delete)
+            self.delete = delete
             
             if walking == nil && driving == nil {
                 title.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
@@ -153,18 +155,10 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     private weak var field: Field.Search!
-    private weak var list: Scroll!
     private weak var results: Scroll!
-    private weak var _up: Button!
-    private weak var _down: Button!
-    private weak var _walking: Button!
-    private weak var _driving: Button!
-    private weak var _follow: Button!
     private weak var _pin: Button!
     private weak var _save: UIButton!
-    private weak var walkingRight: NSLayoutConstraint!
-    private weak var drivingRight: NSLayoutConstraint!
-    private weak var listTop: NSLayoutConstraint!
+    private weak var resultsHeight: NSLayoutConstraint!
     private var completer: Any?
     
     required init?(coder: NSCoder) { return nil }
@@ -194,39 +188,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(_save)
         self._save = _save
         
-        let _walking = Button("walking")
-        _walking.accessibilityLabel = .key("New.walking")
-        _walking.addTarget(self, action: #selector(walking), for: .touchUpInside)
-        _walking.isHidden = true
-        addSubview(_walking)
-        self._walking = _walking
-        
-        let _driving = Button("driving")
-        _driving.accessibilityLabel = .key("New.driving")
-        _driving.addTarget(self, action: #selector(driving), for: .touchUpInside)
-        _driving.isHidden = true
-        addSubview(_driving)
-        self._driving = _driving
-        
-        let _down = Button("down")
-        _down.accessibilityLabel = .key("New.down")
-        _down.addTarget(self, action: #selector(down), for: .touchUpInside)
-        _down.isHidden = true
-        addSubview(_down)
-        self._down = _down
-        
-        let _up = Button("up")
-        _up.accessibilityLabel = .key("New.up")
-        _up.addTarget(self, action: #selector(up), for: .touchUpInside)
-        addSubview(_up)
-        self._up = _up
-        
-        let _follow = Button("follow")
-        _follow.accessibilityLabel = .key("New.follow")
-        _follow.addTarget(self, action: #selector(follow), for: .touchUpInside)
-        addSubview(_follow)
-        self._follow = _follow
-        
         let _pin = Button("pin")
         _pin.accessibilityLabel = .key("New.pin")
         _pin.addTarget(self, action: #selector(pin), for: .touchUpInside)
@@ -244,15 +205,13 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(results)
         self.results = results
         
-        let list = Scroll()
-        list.backgroundColor = .black
-        addSubview(list)
-        self.list = list
-        
         _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         
         field.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        
+        _pin.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
+        _pin.bottomAnchor.constraint(equalTo: _up.topAnchor).isActive = true
         
         _save.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         _save.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -267,32 +226,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         results.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         results.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        results.heightAnchor.constraint(lessThanOrEqualToConstant: 220).isActive = true
-        
-        list.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        listTop = list.topAnchor.constraint(equalTo: bottomAnchor)
-        listTop.isActive = true
-        
-        _up.bottomAnchor.constraint(lessThanOrEqualTo: list.topAnchor).isActive = true
-        
-        _down.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
-        _down.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
-        
-        _pin.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
-        _pin.bottomAnchor.constraint(equalTo: _up.topAnchor).isActive = true
-        
-        _follow.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
-        _follow.rightAnchor.constraint(equalTo: _driving.leftAnchor).isActive = true
-        
-        _walking.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
-        walkingRight = _walking.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
-        walkingRight.isActive = true
-        
-        _driving.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
-        drivingRight = _driving.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
-        drivingRight.isActive = true
+        resultsHeight = results.heightAnchor.constraint(lessThanOrEqualToConstant: 0)
+        resultsHeight.isActive = true
         
         top.topAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
         top.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -302,60 +237,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         bottom.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         bottom.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         
-        /*
-        handle.topAnchor.constraint(equalTo: list.topAnchor, constant: 10).isActive = true
-        handle.heightAnchor.constraint(equalToConstant: 2).isActive = true
-        handle.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        handle.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
-        
-        handler.topAnchor.constraint(equalTo: list.topAnchor).isActive = true
-        handler.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        handler.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
-        handler.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
-        
-        save.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: -10).isActive = true
-        save.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -10).isActive = true
-        
-        base.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
-        base.topAnchor.constraint(equalTo: list.topAnchor, constant: -2).isActive = true
-        base.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        base.leftAnchor.constraint(greaterThanOrEqualTo: contentView!.leftAnchor, constant: 10).isActive = true
-        base.rightAnchor.constraint(lessThanOrEqualTo: tools.leftAnchor, constant: -10).isActive = true
-        
-        total.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
-        total.rightAnchor.constraint(equalTo: base.rightAnchor).isActive = true
-        total.bottomAnchor.constraint(equalTo: base.bottomAnchor, constant: -10).isActive = true
-        
-        border.topAnchor.constraint(equalTo: total.topAnchor).isActive = true
-        border.leftAnchor.constraint(equalTo: total.leftAnchor).isActive = true
-        border.rightAnchor.constraint(equalTo: total.rightAnchor).isActive = true
-        border.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-        list.widthAnchor.constraint(equalToConstant: 450).isActive = true
-        list.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
-        list.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -2).isActive = true
-        list.bottomAnchor.constraint(equalTo: total.topAnchor).isActive = true
-        list.topAnchor.constraint(greaterThanOrEqualTo: search.bottomAnchor, constant: 10).isActive = true
-        listTop = list.topAnchor.constraint(greaterThanOrEqualTo: contentView!.bottomAnchor, constant: -30)
-        listTop.isActive = true
-        */
-        
         if #available(iOS 11.0, *) {
             field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
-            
-            _up.bottomAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
-            _up.rightAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.rightAnchor).isActive = true
         } else {
             field.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
-            
-            _up.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor).isActive = true
-            _up.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor).isActive = true
         }
-        
-        /*
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.field.accepts = true
-        }*/
     }
     
     func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
@@ -366,7 +252,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         return true
     }
     
-    func textViewDidChange(_: UITextView) { query(false) }
+    func textViewDidChange(_: UITextView) { query() }
     
     func textViewDidBeginEditing(_: UITextView) {
         field.width.constant = bounds.width
@@ -375,26 +261,28 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             self?._close.alpha = 0
             self?._save.alpha = 0
             self?.layoutIfNeeded()
-        }) { [weak self] _ in self?.query(true) }
+        }) { [weak self] _ in
+            self?.query()
+        }
     }
     
     func textViewDidEndEditing(_: UITextView) {
         if #available(iOS 9.3, *) {
             (completer as! MKLocalSearchCompleter).cancel()
         }
-        results.clear(true)
+        results.clear()
         field.width.constant = 160
+        resultsHeight.constant = 0
         UIView.animate(withDuration: 0.45) { [weak self] in
             self?.field._cancel.alpha = 0
             self?._close.alpha = 1
             self?._save.alpha = 1
             self?.layoutIfNeeded()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.results.clear(true) }
     }
     
     @available(iOS 9.3, *) func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        results.clear(false)
+        results.clear()
         var top = results.topAnchor
         completer.results.forEach {
             let result = Result($0)
@@ -420,17 +308,15 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             result.topAnchor.constraint(equalTo: top).isActive = true
             top = result.bottomAnchor
         }
-        
-        let bottom = results.content.bottomAnchor.constraint(equalTo: results.topAnchor, constant: results.bounds.height)
-        bottom.isActive = true
-        layoutIfNeeded()
-        bottom.isActive = false
+        resultsHeight.constant = results.bounds.height
+        results.layoutIfNeeded()
+        resultsHeight.constant = 220
         results.content.bottomAnchor.constraint(equalTo: top).isActive = true
-        UIView.animate(withDuration: 0.35) { [weak self] in self?.layoutIfNeeded() }
+        UIView.animate(withDuration: 0.4) { [weak self] in self?.layoutIfNeeded() }
     }
     
     override func refresh() {
-        list.clear(false)
+        list.clear()
         var previous: Item?
         var walking = (CLLocationDistance(), TimeInterval())
         var driving = (CLLocationDistance(), TimeInterval())
@@ -451,7 +337,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             }
             
             let item = Item($0, walking: walk, driving: drive)
-//            item.delete = { [weak self] in self?.map.remove($0) }
+            item.delete.addTarget(self, action: #selector(remove(_:)), for: .touchUpInside)
+            item.addTarget(self, action: #selector(focus(_:)), for: .touchUpInside)
             list.content.addSubview(item)
             
             item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.topAnchor).isActive = true
@@ -511,13 +398,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    private func query(_ force: Bool) {
+    private func query() {
         if #available(iOS 9.3, *) {
             (completer as! MKLocalSearchCompleter).cancel()
             if !field.field.text.isEmpty {
-                if force {
-                    (completer as! MKLocalSearchCompleter).queryFragment = ""
-                }
+                (completer as! MKLocalSearchCompleter).queryFragment = ""
                 (completer as! MKLocalSearchCompleter).queryFragment = field.field.text
             }
         }
@@ -545,13 +430,13 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
         base.addSubview(label)
         
-        icon.topAnchor.constraint(equalTo: base.topAnchor, constant: 5).isActive = true
-        icon.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
-        icon.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        icon.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 5).isActive = true
+        icon.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
+        icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
         
-        label.topAnchor.constraint(equalTo: icon.bottomAnchor).isActive = true
-        label.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
+        label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
+        label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 4).isActive = true
         label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
         
         base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
@@ -564,52 +449,24 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         app.push(Create())
     }
     
-    @objc private func up() {
-        var region = map.region
-        region.center = map.convert(.init(x: map.bounds.midX, y: map.bounds.midY + 150), toCoordinateFrom: map)
-        map.setRegion(region, animated: true)
-        
-        listTop.constant = -300
-        walkingRight.constant = -70
-        drivingRight.constant = -140
-        _walking.isHidden = false
-        _driving.isHidden = false
-        UIView.animate(withDuration: 0.5, animations: { [weak self] in
-            self?.layoutIfNeeded()
-        }) { [weak self] _ in
-            self?._up.isHidden = true
-            self?._down.isHidden = false
+    @objc private func focus(_ item: Item) {
+        if let path = item.path {
+            var point = map.convert(.init(latitude: path.latitude, longitude: path.longitude), toPointTo: map)
+            point.y -= map.top + (listTop.constant / 2)
+            var region = map.region
+            region.center = map.convert(point, toCoordinateFrom: map)
+            map.setRegion(region, animated: true)
         }
     }
     
-    @objc private func down() {
-        var region = map.region
-        region.center = map.convert(.init(x: map.bounds.midX, y: map.bounds.midY - 150), toCoordinateFrom: map)
-        map.setRegion(region, animated: true)
-        
-        listTop.constant = 0
-        walkingRight.constant = 0
-        drivingRight.constant = 0
-        UIView.animate(withDuration: 0.5, animations: { [weak self] in
-            self?.layoutIfNeeded()
-        }) { [weak self] _ in
-            self?._walking.isHidden = true
-            self?._driving.isHidden = true
-            self?._up.isHidden = false
-            self?._down.isHidden = true
-        }
-    }
-    
-    @objc private func pin() {
-        map.add(map.convert(.init(x: map.bounds.midX, y: map.bounds.midY + map.top + (listTop.constant / 2)), toCoordinateFrom: map))
-    }
-    
+    @objc private func pin() { map.add(map.convert(.init(x: map.bounds.midX, y: map.bounds.midY + map.top + (listTop.constant / 2)), toCoordinateFrom: map)) }
+    @objc private func remove(_ item: UIView) { if let path = (item.superview as! Item).path { map.remove(path) } }
     @available(iOS 9.3, *) @objc private func edit(_ gesture: UILongPressGestureRecognizer) { field.field.text = (gesture.view as! Result).search.title }
     
     @available(iOS 9.3, *) @objc private func search(_ result: Result) {
         app.window!.endEditing(true)
         field.field.text = ""
-        MKLocalSearch(request: MKLocalSearch.Request(completion: result.search)).start { [weak self] in
+        MKLocalSearch(request: .init(completion: result.search)).start { [weak self] in
             guard $1 == nil, let coordinate = $0?.mapItems.first?.placemark.coordinate else { return }
             self?.map.add(coordinate)
             self?.map.focus(coordinate)
