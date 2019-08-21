@@ -22,7 +22,7 @@ class World: UIView {
         
         if #available(iOS 10, *) {
             let formatter = MeasurementFormatter()
-            formatter.unitStyle = .short
+            formatter.unitStyle = .long
             formatter.unitOptions = .naturalScale
             formatter.numberFormatter.maximumFractionDigits = 1
             self.formatter = formatter

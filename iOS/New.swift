@@ -138,7 +138,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             label.numberOfLines = 0
             label.text = string
             label.textColor = .black
-            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
+            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
             addSubview(label)
             
             label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
@@ -164,7 +164,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var _save: UIButton!
     private weak var walkingRight: NSLayoutConstraint!
     private weak var drivingRight: NSLayoutConstraint!
-    private weak var listHeight: NSLayoutConstraint!
+    private weak var listTop: NSLayoutConstraint!
     private var completer: Any?
     
     required init?(coder: NSCoder) { return nil }
@@ -269,11 +269,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         results.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         results.heightAnchor.constraint(lessThanOrEqualToConstant: 220).isActive = true
         
-        list.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        list.heightAnchor.constraint(equalToConstant: 300).isActive = true
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        listHeight = list.heightAnchor.constraint(equalToConstant: 0)
-        listHeight.isActive = true
+        listTop = list.topAnchor.constraint(equalTo: bottomAnchor)
+        listTop.isActive = true
         
         _up.bottomAnchor.constraint(lessThanOrEqualTo: list.topAnchor).isActive = true
         
@@ -421,9 +421,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             top = result.bottomAnchor
         }
         
-        results.bottom = results.content.bottomAnchor.constraint(equalTo: results.topAnchor, constant: results.bounds.height)
+        let bottom = results.content.bottomAnchor.constraint(equalTo: results.topAnchor, constant: results.bounds.height)
+        bottom.isActive = true
         layoutIfNeeded()
-        results.bottom = results.content.bottomAnchor.constraint(equalTo: top)
+        bottom.isActive = false
+        results.content.bottomAnchor.constraint(equalTo: top).isActive = true
         UIView.animate(withDuration: 0.35) { [weak self] in self?.layoutIfNeeded() }
     }
     
@@ -471,15 +473,14 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             border.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
             border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             
-            list.content.bottomAnchor.constraint(greaterThanOrEqualTo: border.bottomAnchor, constant: 30).isActive = true
+            list.content.bottomAnchor.constraint(greaterThanOrEqualTo: border.bottomAnchor, constant: 20).isActive = true
             
             if map._walking {
                 let _walking = make("walking", total: measure(walking.0) + ": " + dater.string(from: walking.1)!)
                 _walking.backgroundColor = .walking
-                
                 _walking.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 10).isActive = true
                 _walking.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
-                list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _walking.bottomAnchor, constant: 30).isActive = true
+                list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _walking.bottomAnchor, constant: 20).isActive = true
                 
                 if map._driving {
                     _walking.rightAnchor.constraint(equalTo: list.content.centerXAnchor, constant: -10).isActive = true
@@ -491,7 +492,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             if map._driving {
                 let _driving = make("driving", total: measure(driving.0) + ": " + dater.string(from: driving.1)!)
                 _driving.backgroundColor = .driving
-                
                 _driving.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 10).isActive = true
                 _driving.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
                 list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _driving.bottomAnchor, constant: 30).isActive = true
@@ -503,14 +503,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                 }
             }
         } else if let previous = previous {
-            list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous.bottomAnchor, constant: 30).isActive = true
+            list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous.bottomAnchor, constant: 20).isActive = true
         }
-//        list.content.layoutIfNeeded()
-        list.scrollRectToVisible(.init(x: 0, y: 500, width: 1, height: 1), animated: true)
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-//            guard let self = self else { return }
-//            self.list.scrollRectToVisible(.init(x: 0, y: self.list.content.bounds.height - 1, width: 1, height: 1), animated: true)
-//        }
+        list.layoutIfNeeded()
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.list.contentOffset.y = max((self?.list.content.bounds.height ?? 0) - 300, 0)
+        }
     }
     
     private func query(_ force: Bool) {
@@ -544,13 +542,13 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         label.numberOfLines = 0
         label.text = total
         label.textColor = .black
-        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
+        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
         base.addSubview(label)
         
-        icon.topAnchor.constraint(equalTo: base.topAnchor).isActive = true
+        icon.topAnchor.constraint(equalTo: base.topAnchor, constant: 5).isActive = true
         icon.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
-        icon.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        icon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        icon.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         label.topAnchor.constraint(equalTo: icon.bottomAnchor).isActive = true
         label.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
@@ -571,7 +569,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         region.center = map.convert(.init(x: map.bounds.midX, y: map.bounds.midY + 150), toCoordinateFrom: map)
         map.setRegion(region, animated: true)
         
-        listHeight.constant = 300
+        listTop.constant = -300
         walkingRight.constant = -70
         drivingRight.constant = -140
         _walking.isHidden = false
@@ -589,7 +587,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         region.center = map.convert(.init(x: map.bounds.midX, y: map.bounds.midY - 150), toCoordinateFrom: map)
         map.setRegion(region, animated: true)
         
-        listHeight.constant = 0
+        listTop.constant = 0
         walkingRight.constant = 0
         drivingRight.constant = 0
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
@@ -603,7 +601,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     @objc private func pin() {
-        map.add(map.convert(.init(x: map.bounds.midX, y: map.bounds.midY + map.top - (listHeight.constant / 2)), toCoordinateFrom: map))
+        map.add(map.convert(.init(x: map.bounds.midX, y: map.bounds.midY + map.top + (listTop.constant / 2)), toCoordinateFrom: map))
     }
     
     @available(iOS 9.3, *) @objc private func edit(_ gesture: UILongPressGestureRecognizer) { field.field.text = (gesture.view as! Result).search.title }

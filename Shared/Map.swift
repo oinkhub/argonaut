@@ -192,9 +192,11 @@ final class Map: MKMapView, MKMapViewDelegate {
                     return option
                 } as [Plan.Option]
                 path.options += options
-                self?.refresh()
-                if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
-                    self?.addOverlays(options.map { Line(path, option: $0) }, level: .aboveLabels)
+                DispatchQueue.main.async { [weak self] in
+                    self?.refresh()
+                    if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
+                        self?.addOverlays(options.map { Line(path, option: $0) }, level: .aboveLabels)
+                    }
                 }
             }
         }

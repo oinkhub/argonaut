@@ -70,8 +70,7 @@ final class About: UIView {
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         scroll.topAnchor.constraint(equalTo: border.bottomAnchor).isActive = true
-        
-        scroll.bottom = scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: version.bottomAnchor)
+        scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: version.bottomAnchor).isActive = true
         
         close.bottomAnchor.constraint(equalTo: border.topAnchor).isActive = true
         close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true

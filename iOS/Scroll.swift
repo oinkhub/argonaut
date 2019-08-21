@@ -1,7 +1,6 @@
 import UIKit
 
 final class Scroll: UIScrollView {
-    weak var bottom: NSLayoutConstraint! { didSet { oldValue?.isActive = false; bottom.isActive = true } }
     private(set) weak var content: UIView!
     
     required init?(coder: NSCoder) { return nil }
@@ -16,19 +15,14 @@ final class Scroll: UIScrollView {
         addSubview(content)
         self.content = content
         
-        bottomAnchor.constraint(lessThanOrEqualTo: content.bottomAnchor).isActive = true
-        
         content.topAnchor.constraint(equalTo: topAnchor).isActive = true
         content.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         content.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         content.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor).isActive = true
-    
+        content.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor).isActive = true
     }
     
     func clear(_ close: Bool) {
         content.subviews.forEach { $0.removeFromSuperview() }
-        if close {
-            bottom = content.bottomAnchor.constraint(equalTo: topAnchor)
-        }
     }
 }
