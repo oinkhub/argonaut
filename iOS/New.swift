@@ -43,10 +43,9 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private final class Item: UIControl {
         weak var path: Plan.Path?
         private(set) weak var delete: UIButton!
-        private weak var title: UILabel!
         
         required init?(coder: NSCoder) { return nil }
-        init(_ path: (Int, Plan.Path)) {
+        init(_ path: (Int, Plan.Path), walking: String?, driving: String?) {
             self.path = path.1
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
@@ -58,12 +57,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             title.translatesAutoresizingMaskIntoConstraints = false
             title.textColor = .white
             title.attributedText = {
-                $0.append(.init(string: "\(path.0 + 1)  ", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)]))
-                $0.append(.init(string: path.1.name, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .regular)]))
+                $0.append(.init(string: "\(path.0 + 1): ", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)]))
+                $0.append(.init(string: path.1.name, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)]))
                 return $0
             } (NSMutableAttributedString())
             addSubview(title)
-            self.title = title
             
             let border = UIView()
             border.isUserInteractionEnabled = false
@@ -80,7 +78,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             delete.imageEdgeInsets.bottom = 10
             addSubview(delete)
             
-            title.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+            title.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 30).isActive = true
             title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             title.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 18).isActive = true
             
@@ -90,26 +88,42 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             
             delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            delete.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            delete.centerYAnchor.constraint(equalTo: title.centerYAnchor, constant: 5).isActive = true
             delete.widthAnchor.constraint(equalToConstant: 65).isActive = true
             delete.heightAnchor.constraint(equalToConstant: 65).isActive = true
             
-            bottomAnchor.constraint(greaterThanOrEqualTo: border.bottomAnchor, constant: 20).isActive = true
+            bottomAnchor.constraint(equalTo: border.bottomAnchor, constant: 15).isActive = true
+            
+            if let walking = walking {
+                let walking = make(walking)
+                walking.backgroundColor = .walking
+                walking.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+                
+                if driving == nil {
+                    walking.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+                } else {
+                    walking.rightAnchor.constraint(equalTo: centerXAnchor, constant: -10).isActive = true
+                }
+                
+                title.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor, constant: 10).isActive = true
+            }
+            
+            if let driving = driving {
+                let driving = make(driving)
+                driving.backgroundColor = .driving
+                driving.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+                
+                if walking == nil {
+                    driving.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+                } else {
+                    driving.leftAnchor.constraint(equalTo: centerXAnchor, constant: 10).isActive = true
+                }
+                
+                title.topAnchor.constraint(greaterThanOrEqualTo: driving.bottomAnchor, constant: 10).isActive = true
+            }
         }
         
-        func walking(_ string: String) {
-            let base = add(string)
-            base.backgroundColor = .walking
-            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-        }
-        
-        func driving(_ string: String) {
-            let base = add(string)
-            base.backgroundColor = .driving
-            base.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
-        }
-        
-        private func add(_ string: String) -> UIView {
+        private func make(_ string: String) -> UIView {
             let base = UIView()
             base.translatesAutoresizingMaskIntoConstraints = false
             base.isUserInteractionEnabled = false
@@ -119,21 +133,18 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
-            label.numberOfLines = 2
+            label.numberOfLines = 0
             label.text = string
             label.textColor = .black
-            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize + 5, weight: .regular)
+            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
             addSubview(label)
             
-            base.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 10).isActive = true
-            base.widthAnchor.constraint(greaterThanOrEqualTo: widthAnchor, multiplier: 0.5, constant: -30).isActive = true
-            base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 6).isActive = true
+            label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
+            label.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
+            label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
             
-            label.topAnchor.constraint(equalTo: base.topAnchor, constant: 6).isActive = true
-            label.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 6).isActive = true
-            label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -6).isActive = true
-            
-            bottomAnchor.constraint(greaterThanOrEqualTo: base.bottomAnchor).isActive = true
+            base.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
             
             return base
         }
@@ -420,26 +431,29 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         var walking = (CLLocationDistance(), TimeInterval())
         var driving = (CLLocationDistance(), TimeInterval())
         map.plan.path.enumerated().forEach {
-            let item = Item($0)
+            var walk: String?
+            var drive: String?
+            if previous != nil {
+                if map._walking, let _walking = previous!.path?.options.first(where: { $0.mode == .walking }) {
+                    walking.0 += _walking.distance
+                    walking.1 += _walking.duration
+                    walk = measure(_walking.distance) + ": " + dater.string(from: _walking.duration)!
+                }
+                if map._driving, let _driving = previous!.path?.options.first(where: { $0.mode == .driving }) {
+                    driving.0 += _driving.distance
+                    driving.1 += _driving.duration
+                    drive = measure(_driving.distance) + ": " + dater.string(from: _driving.duration)!
+                }
+            }
+            
+            let item = Item($0, walking: walk, driving: drive)
 //            item.delete = { [weak self] in self?.map.remove($0) }
             list.content.addSubview(item)
             
             item.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
             item.widthAnchor.constraint(equalTo: list.widthAnchor).isActive = true
             item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.topAnchor).isActive = true
-            
-            if previous != nil {
-                if map._walking, let _walking = previous!.path?.options.first(where: { $0.mode == .walking }) {
-                    walking.0 += _walking.distance
-                    walking.1 += _walking.duration
-                    previous!.walking(measure(_walking.distance) + ": " + dater.string(from: _walking.duration)!)
-                }
-                if map._driving, let _driving = previous!.path?.options.first(where: { $0.mode == .driving }) {
-                    driving.0 += _driving.distance
-                    driving.1 += _driving.duration
-                    previous!.driving(measure(_driving.distance) + ": " + dater.string(from: _driving.duration)!)
-                }
-            }
+
             previous = item
         }
         
