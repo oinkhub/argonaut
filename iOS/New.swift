@@ -78,7 +78,10 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             delete.imageEdgeInsets.bottom = 10
             addSubview(delete)
             
-            title.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 30).isActive = true
+            if walking == nil && driving == nil {
+                title.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
+            }
+            
             title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             title.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 18).isActive = true
             
@@ -125,7 +128,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         private func make(_ string: String) -> UIView {
             let base = UIView()
-            base.translatesAutoresizingMaskIntoConstraints = false
             base.isUserInteractionEnabled = false
             base.translatesAutoresizingMaskIntoConstraints = false
             base.layer.cornerRadius = 4
@@ -450,9 +452,9 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
 //            item.delete = { [weak self] in self?.map.remove($0) }
             list.content.addSubview(item)
             
+            item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.topAnchor).isActive = true
             item.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
             item.widthAnchor.constraint(equalTo: list.widthAnchor).isActive = true
-            item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.topAnchor).isActive = true
 
             previous = item
         }
@@ -465,14 +467,50 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             list.content.addSubview(border)
             
             border.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-            border.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
-            border.widthAnchor.constraint(equalTo: list.widthAnchor).isActive = true
+            border.leftAnchor.constraint(equalTo: list.leftAnchor, constant: 20).isActive = true
+            border.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
             border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             
-            list.bottom = list.content.bottomAnchor.constraint(greaterThanOrEqualTo: border.bottomAnchor, constant: 30)
+            list.content.bottomAnchor.constraint(greaterThanOrEqualTo: border.bottomAnchor, constant: 30).isActive = true
+            
+            if map._walking {
+                let _walking = make("walking", total: measure(walking.0) + ": " + dater.string(from: walking.1)!)
+                _walking.backgroundColor = .walking
+                
+                _walking.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 10).isActive = true
+                _walking.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
+                list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _walking.bottomAnchor, constant: 30).isActive = true
+                
+                if map._driving {
+                    _walking.rightAnchor.constraint(equalTo: list.content.centerXAnchor, constant: -10).isActive = true
+                } else {
+                    _walking.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
+                }
+            }
+            
+            if map._driving {
+                let _driving = make("driving", total: measure(driving.0) + ": " + dater.string(from: driving.1)!)
+                _driving.backgroundColor = .driving
+                
+                _driving.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 10).isActive = true
+                _driving.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
+                list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _driving.bottomAnchor, constant: 30).isActive = true
+                
+                if map._walking {
+                    _driving.leftAnchor.constraint(equalTo: list.content.centerXAnchor, constant: 10).isActive = true
+                } else {
+                    _driving.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
+                }
+            }
         } else if let previous = previous {
-            list.bottom = list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous.bottomAnchor, constant: 30)
+            list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous.bottomAnchor, constant: 30).isActive = true
         }
+//        list.content.layoutIfNeeded()
+        list.scrollRectToVisible(.init(x: 0, y: 500, width: 1, height: 1), animated: true)
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+//            guard let self = self else { return }
+//            self.list.scrollRectToVisible(.init(x: 0, y: self.list.content.bounds.height - 1, width: 1, height: 1), animated: true)
+//        }
     }
     
     private func query(_ force: Bool) {
@@ -485,6 +523,42 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                 (completer as! MKLocalSearchCompleter).queryFragment = field.field.text
             }
         }
+    }
+    
+    private func make(_ image: String, total: String) -> UIView {
+        let base = UIView()
+        base.isUserInteractionEnabled = false
+        base.translatesAutoresizingMaskIntoConstraints = false
+        base.layer.cornerRadius = 4
+        list.content.addSubview(base)
+        
+        let icon = UIImageView(image: UIImage(named: image)!.withRenderingMode(.alwaysTemplate))
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        icon.tintColor = .black
+        icon.contentMode = .center
+        icon.clipsToBounds = true
+        base.addSubview(icon)
+        
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.text = total
+        label.textColor = .black
+        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
+        base.addSubview(label)
+        
+        icon.topAnchor.constraint(equalTo: base.topAnchor).isActive = true
+        icon.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
+        icon.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        icon.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        label.topAnchor.constraint(equalTo: icon.bottomAnchor).isActive = true
+        label.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
+        label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
+        
+        base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
+        
+        return base
     }
     
     @objc private func save() {

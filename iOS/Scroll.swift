@@ -22,6 +22,7 @@ final class Scroll: UIScrollView {
         content.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         content.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         content.heightAnchor.constraint(greaterThanOrEqualTo: heightAnchor).isActive = true
+    
     }
     
     func clear(_ close: Bool) {
