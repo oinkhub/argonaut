@@ -16,10 +16,6 @@ extension CGColor {
     static let driving = NSColor.driving.cgColor
 }
 
-extension NSImage {
-    static let mark = NSImage(named: "mark")
-}
-
 final class Label: NSTextField {
     override var acceptsFirstResponder: Bool { return false }
     

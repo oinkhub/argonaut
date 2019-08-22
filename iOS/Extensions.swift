@@ -16,7 +16,3 @@ extension CGColor {
     static let driving = UIColor.driving.cgColor
     static let black = UIColor.black.cgColor
 }
-
-extension UIImage {
-    static let mark = UIImage(named: "mark")
-}

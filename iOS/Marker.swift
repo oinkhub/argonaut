@@ -7,10 +7,11 @@ final class Marker: MKAnnotationView {
     required init?(coder: NSCoder) { return nil }
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        image = .mark
+        image = UIImage(named: "mark")
         isDraggable = true
         centerOffset.y = -20
         contentMode = .center
+        canShowCallout = false
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false

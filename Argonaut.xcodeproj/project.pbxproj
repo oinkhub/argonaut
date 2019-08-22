@@ -60,6 +60,7 @@
 		CEC5A3CE22EAFFAB00CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BD22D721C500EF2447 /* libArgonaut.a */; };
 		CECECD7C22F469F2006AE0C8 /* Liner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECECD7B22F469F2006AE0C8 /* Liner.swift */; };
 		CECECD7D22F469F2006AE0C8 /* Liner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECECD7B22F469F2006AE0C8 /* Liner.swift */; };
+		CED0E78E230E9ECA00D30D85 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED0E78D230E9ECA00D30D85 /* User.swift */; };
 		CEDB361E2302A4140078E521 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB361D2302A4140078E521 /* Extensions.swift */; };
 		CEDB36202302A5630078E521 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB361F2302A5630078E521 /* Alert.swift */; };
 		CEDB36222302BC560078E521 /* Callout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB36212302BC560078E521 /* Callout.swift */; };
@@ -149,6 +150,7 @@
 		CEC5A3C922EAFE3200CE3B07 /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFactory.swift; sourceTree = "<group>"; };
 		CECECD7B22F469F2006AE0C8 /* Liner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Liner.swift; sourceTree = "<group>"; };
+		CED0E78D230E9ECA00D30D85 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		CEDB361D2302A4140078E521 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CEDB361F2302A5630078E521 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		CEDB36212302BC560078E521 /* Callout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Callout.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 				CE0FE651230555D40058386B /* New.swift */,
 				CEBB3A6323040F7200C5F61A /* Privacy.swift */,
 				CE0FE65323056F490058386B /* Scroll.swift */,
+				CED0E78D230E9ECA00D30D85 /* User.swift */,
 				CE0FE64F23053F340058386B /* World.swift */,
 			);
 			path = iOS;
@@ -607,6 +610,7 @@
 				CE26CE0822F467AA0007441D /* Line.swift in Sources */,
 				CECECD7D22F469F2006AE0C8 /* Liner.swift in Sources */,
 				CE0FE65023053F340058386B /* World.swift in Sources */,
+				CED0E78E230E9ECA00D30D85 /* User.swift in Sources */,
 				CEDE110922D71F5300DD796B /* Shared.swift in Sources */,
 				CEDB36202302A5630078E521 /* Alert.swift in Sources */,
 				CEDB36222302BC560078E521 /* Callout.swift in Sources */,

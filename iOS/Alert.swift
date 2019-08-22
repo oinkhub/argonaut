@@ -8,8 +8,8 @@ final class Alert: UIControl {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         accessibilityViewIsModal = true
-        backgroundColor = UIColor.halo.withAlphaComponent(0.96)
-        layer.cornerRadius = 6
+        backgroundColor = .halo
+        layer.cornerRadius = 4
         layer.borderColor = .black
         layer.borderWidth = 1
         alpha = 0
@@ -19,9 +19,9 @@ final class Alert: UIControl {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.attributedText = {
             if let title = title {
-                $0.append(.init(string: title + "\n", attributes: [.font: UIFont.systemFont(ofSize: 13, weight: .bold)]))
+                $0.append(.init(string: title + "\n", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .bold)]))
             }
-            $0.append(.init(string: message, attributes: [.font: UIFont.systemFont(ofSize: 13, weight: .regular)]))
+            $0.append(.init(string: message, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)]))
             return $0
         } (NSMutableAttributedString())
         label.numberOfLines = 0
@@ -30,13 +30,13 @@ final class Alert: UIControl {
         
         app.view.addSubview(self)
         
-        widthAnchor.constraint(equalToConstant: 340).isActive = true
-        centerXAnchor.constraint(equalTo: app.view.centerXAnchor).isActive = true
+        leftAnchor.constraint(equalTo: app.view.leftAnchor, constant: 15).isActive = true
+        rightAnchor.constraint(equalTo: app.view.rightAnchor, constant: -15).isActive = true
         bottom = bottomAnchor.constraint(equalTo: app.view.topAnchor)
         bottom.isActive = true
         
-        label.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
-        label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
+        label.topAnchor.constraint(equalTo: topAnchor, constant: 12).isActive = true
+        label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12).isActive = true
         label.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         label.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
         app.view.layoutIfNeeded()
