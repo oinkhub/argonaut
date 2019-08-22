@@ -16,7 +16,7 @@ final class Liner: MKOverlayRenderer {
         context.setStrokeColor(color)
         context.setLineCap(.round)
         context.setLineJoin(.round)
-        context.setShadow(offset: .zero, blur: size, color: .black)
+        context.setShadow(offset: .zero, blur: size / 2, color: .black)
         context.addPath(path)
         context.drawPath(using: .stroke)
     }

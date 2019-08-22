@@ -9,7 +9,7 @@ final class Marker: MKAnnotationView {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         image = .mark
         isDraggable = true
-        centerOffset.y = -26
+        centerOffset.y = -20
         contentMode = .center
         
         let label = UILabel()
