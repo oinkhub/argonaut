@@ -73,13 +73,17 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.subviews.compactMap { $0 as? Callout }.forEach { $0.remove() } }
+    func mapView(_: MKMapView, didDeselect: MKAnnotationView) {
+        switch didDeselect {
+        case let marker as Marker: didDeselect.subviews.compactMap { $0 as? Callout }.forEach { $0.remove() }
+        default: didDeselect.isSelected = false
+        }
+    }
     
     func mapView(_: MKMapView, didSelect: MKAnnotationView) {
-        if let mark = didSelect.annotation as? Mark {
-            Callout.Item(didSelect, index: "\(plan.path.firstIndex { $0 === mark.path }! + 1)")
-        } else {
-            Callout.User(didSelect)
+        switch didSelect {
+        case let marker as Marker: Callout.Item(didSelect, index: "\(plan.path.firstIndex { $0 === (marker.annotation as? Mark)?.path }! + 1)")
+        default: didSelect.isSelected = true
         }
     }
     
