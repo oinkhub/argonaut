@@ -128,8 +128,12 @@ final class Map: MKMapView, MKMapViewDelegate {
     @objc func follow() {
         _follow.toggle()
         if _follow {
-            focus(userLocation.coordinate)
-            selectAnnotation(userLocation, animated: true)
+            if annotations.contains(where: { $0 === userLocation }) {
+                focus(userLocation.coordinate)
+                selectAnnotation(userLocation, animated: true)
+            }
+        } else {
+            selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
         }
     }
     

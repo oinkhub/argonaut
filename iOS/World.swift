@@ -1,7 +1,7 @@
 import UIKit
 import CoreLocation
 
-class World: UIView {
+class World: UIView, CLLocationManagerDelegate {
     let dater = DateComponentsFormatter()
     private(set) weak var map: Map!
     private(set) weak var _close: UIButton!
@@ -15,6 +15,7 @@ class World: UIView {
     private weak var walkingRight: NSLayoutConstraint!
     private weak var drivingRight: NSLayoutConstraint!
     private var formatter: Any!
+    private let manager = CLLocationManager()
     
     required init?(coder: NSCoder) { return nil }
     init() {
@@ -24,6 +25,7 @@ class World: UIView {
         backgroundColor = .black
         dater.unitsStyle = .full
         dater.allowedUnits = [.minute, .hour]
+        manager.delegate = self
         
         if #available(iOS 10, *) {
             let formatter = MeasurementFormatter()
@@ -79,6 +81,8 @@ class World: UIView {
         let _follow = Button("follow")
         _follow.accessibilityLabel = .key("World.follow")
         _follow.addTarget(self, action: #selector(follow), for: .touchUpInside)
+        _follow.isEnabled = false
+        _follow.active = false
         addSubview(_follow)
         self._follow = _follow
         
@@ -119,9 +123,17 @@ class World: UIView {
             _up.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor).isActive = true
             _up.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor).isActive = true
         }
- 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.follow()
+    }
+    
+    func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool { true }
+    func locationManager(_: CLLocationManager, didFailWithError: Error) { }
+    func locationManager(_: CLLocationManager, didFinishDeferredUpdatesWithError: Error?) { }
+    func locationManager(_: CLLocationManager, didUpdateLocations: [CLLocation]) { }
+    func locationManager(_: CLLocationManager, didChangeAuthorization: CLAuthorizationStatus) {
+        switch didChangeAuthorization {
+            case .denied: app.alert(.key("Error"), message: .key("Error.location"))
+            case .notDetermined: manager.requestWhenInUseAuthorization()
+            default: initial()
         }
     }
     
@@ -132,6 +144,13 @@ class World: UIView {
             return (formatter as! MeasurementFormatter).string(from: Measurement(value: distance, unit: UnitLength.meters))
         }
         return "\(Int(distance))" + .key("New.distance")
+    }
+    
+    private func initial() {
+        _follow.isEnabled = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            self?.follow()
+        }
     }
     
     @objc final func follow() {
