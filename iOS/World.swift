@@ -6,12 +6,12 @@ class World: UIView, CLLocationManagerDelegate {
     private(set) weak var map: Map!
     private(set) weak var _close: UIButton!
     private(set) weak var list: Scroll!
-    private(set) weak var listTop: NSLayoutConstraint!
     private(set) weak var _up: Button!
     private weak var _down: Button!
     private weak var _walking: Button!
     private weak var _driving: Button!
     private weak var _follow: Button!
+    private weak var listTop: NSLayoutConstraint!
     private weak var walkingRight: NSLayoutConstraint!
     private weak var drivingRight: NSLayoutConstraint!
     private var formatter: Any!
@@ -171,10 +171,6 @@ class World: UIView, CLLocationManagerDelegate {
     }
     
     @objc private func up() {
-        var region = map.region
-        region.center = map.convert(.init(x: map.bounds.midX, y: map.bounds.midY + 150), toCoordinateFrom: map)
-        map.setRegion(region, animated: true)
-        
         listTop.constant = -300
         walkingRight.constant = -140
         drivingRight.constant = -70
@@ -189,10 +185,6 @@ class World: UIView, CLLocationManagerDelegate {
     }
     
     @objc private func down() {
-        var region = map.region
-        region.center = map.convert(.init(x: map.bounds.midX, y: map.bounds.midY - 150), toCoordinateFrom: map)
-        map.setRegion(region, animated: true)
-        
         listTop.constant = 0
         walkingRight.constant = 0
         drivingRight.constant = 0

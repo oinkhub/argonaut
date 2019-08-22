@@ -221,7 +221,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        map.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        map.bottomAnchor.constraint(equalTo: list.topAnchor).isActive = true
         
         results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         results.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -444,21 +444,13 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         return base
     }
     
-    private func region(_ coordinate: CLLocationCoordinate2D) {
-        var point = map.convert(coordinate, toPointTo: map)
-        point.y += listTop.constant == 0 ? (map.top + 2.98) / 2 : 155
-        var region = map.region
-        region.center = map.convert(point, toCoordinateFrom: map)
-        map.setRegion(region, animated: true)
-    }
-    
     @objc private func save() {
 //        Create(map.plan, rect: map.visibleMapRect).makeKeyAndOrderFront(nil)
         app.push(Create())
     }
     
-    @objc private func focus(_ item: Item) { if let path = item.path { region(.init(latitude: path.latitude, longitude: path.longitude)) } }
-    @objc private func pin() { map.add(map.convert(.init(x: map.bounds.midX, y: map.bounds.midY + ((listTop.constant - map.top) / 2)), toCoordinateFrom: map)) }
+    @objc private func focus(_ item: Item) { if let path = item.path { map.focus(.init(latitude: path.latitude, longitude: path.longitude)) } }
+    @objc private func pin() { map.add(map.convert(.init(x: map.bounds.midX, y: map.bounds.midY), toCoordinateFrom: map)) }
     @objc private func remove(_ item: UIView) { if let path = (item.superview as! Item).path { map.remove(path) } }
     @available(iOS 9.3, *) @objc private func edit(_ gesture: UILongPressGestureRecognizer) { field.field.text = (gesture.view as! Result).search.title }
     
@@ -468,7 +460,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         MKLocalSearch(request: .init(completion: result.search)).start { [weak self] in
             guard $1 == nil, let coordinate = $0?.mapItems.first?.placemark.coordinate else { return }
             self?.map.add(coordinate)
-            self?.region(coordinate)
+            self?.map.focus(coordinate)
         }
     }
 }
