@@ -21,9 +21,9 @@ final class About: UIView {
         let title = UILabel()
         title.isAccessibilityElement = true
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.text = .key("About.title")
+        title.text = .key("About.label")
         title.textColor = .white
-        title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title1).pointSize, weight: .bold)
+        title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .bold)
         addSubview(title)
         
         let border = UIView()
@@ -42,21 +42,12 @@ final class About: UIView {
         image.image = UIImage(named: "logo")
         scroll.content.addSubview(image)
         
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.isAccessibilityElement = true
-        label.text = .key("About.label")
-        label.textColor = .halo
-        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
-        label.numberOfLines = 0
-        scroll.content.addSubview(label)
-        
         let version = UILabel()
         version.translatesAutoresizingMaskIntoConstraints = false
         version.isAccessibilityElement = true
         version.text = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
         version.textColor = .halo
-        version.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
+        version.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
         scroll.content.addSubview(version)
         
         border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -82,10 +73,7 @@ final class About: UIView {
         image.heightAnchor.constraint(equalToConstant: 220).isActive = true
         image.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
         
-        label.topAnchor.constraint(equalTo: image.bottomAnchor, constant: -40).isActive = true
-        label.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
-        
-        version.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 2).isActive = true
+        version.topAnchor.constraint(equalTo: image.bottomAnchor, constant: -40).isActive = true
         version.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
         
         if #available(iOS 11.0, *) {

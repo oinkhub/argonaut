@@ -23,7 +23,7 @@ final class Privacy: UIView {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.text = .key("Privacy.title")
         title.textColor = .white
-        title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title1).pointSize, weight: .bold)
+        title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .bold)
         addSubview(title)
         
         let border = UIView()
@@ -47,7 +47,7 @@ final class Privacy: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.isAccessibilityElement = true
         label.text = .key("Privacy.label")
-        label.textColor = .init(white: 1, alpha: 0.8)
+        label.textColor = .init(white: 0.8, alpha: 1)
         label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.numberOfLines = 0

@@ -458,11 +458,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         return base
     }
     
-    @objc private func save() {
-//        Create(map.plan, rect: map.visibleMapRect).makeKeyAndOrderFront(nil)
-        app.push(Create())
-    }
-    
+    @objc private func save() { app.push(Create(map.plan, rect: map.visibleMapRect)) }
     @objc private func focus(_ item: Item) { if let path = item.path { map.focus(.init(latitude: path.latitude, longitude: path.longitude)) } }
     @objc private func pin() { map.add(map.convert(.init(x: map.bounds.midX, y: map.bounds.midY), toCoordinateFrom: map)) }
     @objc private func remove(_ item: UIView) { if let path = (item.superview as! Item).path { map.remove(path) } }
