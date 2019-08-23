@@ -8,6 +8,7 @@ final class Scroll: UIScrollView {
         translatesAutoresizingMaskIntoConstraints = false
         indicatorStyle = .white
         alwaysBounceVertical = true
+        keyboardDismissMode = .interactive
         
         let content = UIView()
         content.translatesAutoresizingMaskIntoConstraints = false

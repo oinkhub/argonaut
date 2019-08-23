@@ -43,6 +43,7 @@ class Field: UITextView {
             let field = Field()
             field.textContainerInset = .init(top: 16, left: 45, bottom: 16, right: 30)
             field.accessibilityLabel = .key("Field.search")
+            field.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
             addSubview(field)
             self.field = field
             
@@ -76,7 +77,7 @@ class Field: UITextView {
             addSubview(_cancel)
             self._cancel = _cancel
             
-            heightAnchor.constraint(equalToConstant: UIFont.preferredFont(forTextStyle: .headline).pointSize + 40).isActive = true
+            heightAnchor.constraint(equalToConstant: field.font!.pointSize + 40).isActive = true
             width = widthAnchor.constraint(equalToConstant: 160)
             width.isActive = true
             
@@ -114,9 +115,10 @@ class Field: UITextView {
         required init?(coder: NSCoder) { return nil }
         override init() {
             super.init()
-            textContainerInset = .init(top: 7, left: 10, bottom: 7, right: 10)
-            heightAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
+            textContainerInset = .init(top: 18, left: 16, bottom: 18, right: 16)
+            heightAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
             accessibilityLabel = .key("Field.name")
+            font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize, weight: .bold)
         }
     }
     
@@ -136,7 +138,6 @@ class Field: UITextView {
         isScrollEnabled = false
         textColor = .white
         tintColor = .halo
-        font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
         keyboardType = .alphabet
         keyboardAppearance = .dark
         autocorrectionType = .yes

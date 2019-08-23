@@ -162,11 +162,8 @@ final class Create: UIView {
     }
     
     private func complete(_ item: Session.Item) {
-//        app.session.items.append(item)
-//        app.session.save()
-//        app.list.refresh()
-        close()
-//        Load(item.id).makeKeyAndOrderFront(nil)
+        UIApplication.shared.isIdleTimerDisabled = false
+        app.created(item)
     }
     
     @objc private func retry() {

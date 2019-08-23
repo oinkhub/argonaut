@@ -3,13 +3,12 @@ import AppKit
 
 final class List: NSWindow {
     private final class Travel: NSView {
-        private let dater = DateComponentsFormatter()
-        
         required init?(coder: NSCoder) { return nil }
         init(_ image: String, value: Session.Travel) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             
+            let dater = DateComponentsFormatter()
             dater.unitsStyle = .full
             dater.allowedUnits = [.minute, .hour]
             
@@ -30,9 +29,9 @@ final class List: NSWindow {
                 formatter.unitStyle = .long
                 formatter.unitOptions = .naturalScale
                 formatter.numberFormatter.maximumFractionDigits = 1
-                label.stringValue += formatter.string(from: Measurement(value: value.distance, unit: UnitLength.meters))
+                label.stringValue = formatter.string(from: .init(value: value.distance, unit: UnitLength.meters))
             } else {
-                label.stringValue += "\(Int(value.distance))" + .key("List.distance")
+                label.stringValue = "\(Int(value.distance))" + .key("List.distance")
             }
             
             label.stringValue += ": " + dater.string(from: value.duration)!
@@ -54,7 +53,7 @@ final class List: NSWindow {
     private final class Item: NSView, NSTextViewDelegate {
         private weak var over: NSView!
         private weak var field: Field.Name!
-        private let item: Session.Item
+        private weak var item: Session.Item!
         
         required init?(coder: NSCoder) { return nil }
         init(_ item: Session.Item) {

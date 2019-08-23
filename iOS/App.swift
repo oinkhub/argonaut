@@ -6,8 +6,8 @@ import UserNotifications
 private(set) weak var app: App!
 @UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
-    var session: Session!
     private(set) weak var home: Home!
+    private(set) var session: Session!
     private var stack = [NSLayoutConstraint]()
     
     func application(_: UIApplication, willFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -65,11 +65,7 @@ private(set) weak var app: App!
         
         Session.load {
             self.session = $0
-//            list.refresh()
-            
-            if $0.items.isEmpty {
-//                self.help()
-            }
+            self.home.refresh()
             
             if Date() >= $0.rating {
                 var components = DateComponents()
@@ -136,6 +132,20 @@ private(set) weak var app: App!
             }
         } else {
             DispatchQueue.main.async { Alert(title, message: message) }
+        }
+    }
+    
+    func created(_ item: Session.Item) {
+        session.items.append(item)
+        session.save()
+        view.subviews[self.view.subviews.count - 2].removeFromSuperview()
+        stack.last!.constant = view.bounds.height
+        UIView.animate(withDuration: 0.3, animations: {
+            self.home.alpha = 1
+            self.view.layoutIfNeeded()
+        }) { _ in
+            self.stack = []
+            self.view.subviews.last!.removeFromSuperview()
         }
     }
     

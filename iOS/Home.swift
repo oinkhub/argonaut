@@ -1,16 +1,144 @@
+import Argonaut
 import UIKit
 
 final class Home: UIView {
-    private final class Item: UIView {
+    private final class Item: UIView, UITextViewDelegate {
+        private weak var item: Session.Item!
+        private weak var field: Field.Name!
+        private let dater = DateComponentsFormatter()
+        
         required init?(coder: NSCoder) { return nil }
-        init() {
+        init(_ item: Session.Item) {
+            self.item = item
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
+            isAccessibilityElement = true
+            accessibilityLabel = item.title
+
+            dater.unitsStyle = .full
+            dater.allowedUnits = [.minute, .hour]
+            
+            let field = Field.Name()
+            field.text = item.title.isEmpty ? .key("List.field") : item.title
+            field.delegate = self
+            addSubview(field)
+            self.field = field
+            
+            let origin = UILabel()
+            origin.text = item.origin
+            
+            let destination = UILabel()
+            destination.text = item.destination
+            
+            let walking = make("walk", travel: item.walking)
+            
+            let driving = make("drive", travel: item.driving)
+            
+            let navigate = UIButton()
+            navigate.translatesAutoresizingMaskIntoConstraints = false
+            navigate.setImage(UIImage(named: "directions"), for: .normal)
+            navigate.imageView!.clipsToBounds = true
+            navigate.imageView!.contentMode = .center
+            navigate.isAccessibilityElement = true
+            navigate.accessibilityLabel = .key("List.view")
+            addSubview(navigate)
+            
+            [origin, destination].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                $0.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
+                $0.textColor = .white
+                $0.numberOfLines = 0
+                addSubview($0)
+                
+                $0.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+                $0.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+            }
+            
+            field.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            
+            origin.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
+            destination.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 10).isActive = true
+            
+            walking.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 20).isActive = true
+            walking.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+            walking.rightAnchor.constraint(equalTo: centerXAnchor, constant: -10).isActive = true
+            
+            driving.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 20).isActive = true
+            driving.leftAnchor.constraint(equalTo: centerXAnchor, constant: 10).isActive = true
+            driving.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+            
+            navigate.topAnchor.constraint(equalTo: driving.bottomAnchor, constant: 10).isActive = true
+            navigate.heightAnchor.constraint(equalToConstant: 70).isActive = true
+            navigate.widthAnchor.constraint(equalToConstant: 76).isActive = true
+            navigate.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            
+            bottomAnchor.constraint(equalTo: navigate.bottomAnchor, constant: 10).isActive = true
+        }
+        
+        func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
+            if replacementText == "\n" {
+                app.window!.endEditing(true)
+                return false
+            }
+            return true
+        }
+        
+        func textViewDidEndEditing(_: UITextView) {
+            item.title = field.text
+            app.session.save()
+        }
+        
+        private func make(_ image: String, travel: Session.Travel) -> UIView {
+            let base = UIView()
+            base.isUserInteractionEnabled = false
+            base.translatesAutoresizingMaskIntoConstraints = false
+            base.layer.cornerRadius = 4
+            base.backgroundColor = .init(white: 0.1333, alpha: 1)
+            addSubview(base)
+            
+            let icon = UIImageView(image: UIImage(named: image))
+            icon.translatesAutoresizingMaskIntoConstraints = false
+            icon.contentMode = .center
+            icon.clipsToBounds = true
+            base.addSubview(icon)
+            
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.numberOfLines = 0
+            label.textColor = .init(white: 0.8, alpha: 1)
+            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
+            
+            if #available(iOS 10, *) {
+                let formatter = MeasurementFormatter()
+                formatter.unitStyle = .long
+                formatter.unitOptions = .naturalScale
+                formatter.numberFormatter.maximumFractionDigits = 1
+                label.text = formatter.string(from: .init(value: travel.distance, unit: UnitLength.meters))
+            } else {
+                label.text = "\(Int(travel.distance))" + .key("List.distance")
+            }
+            
+            label.text = label.text! + ": " + dater.string(from: travel.duration)!
+            base.addSubview(label)
+            
+            icon.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 5).isActive = true
+            icon.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
+            
+            label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
+            label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 4).isActive = true
+            label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
+            
+            base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
+            
+            return base
         }
     }
     
-    private(set) weak var scroll: UIScrollView!
-    private weak var content: UIView!
+    private(set) weak var scroll: Scroll!
     
     required init?(coder: NSCoder) { return nil }
     init() {
@@ -56,8 +184,7 @@ final class Home: UIView {
             $0.heightAnchor.constraint(equalToConstant: 70).isActive = true
         }
         
-        scroll.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        scroll.bottomAnchor.constraint(equalTo: border.topAnchor).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
@@ -68,14 +195,51 @@ final class Home: UIView {
         new.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         if #available(iOS 11.0, *) {
+            scroll.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+            
             border.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -70).isActive = true
             info.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 10).isActive = true
             privacy.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
         } else {
+            scroll.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            
             border.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -70).isActive = true
             info.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
             privacy.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         }
+    }
+    
+    func refresh() {
+        if app.session.items.isEmpty {
+            
+        }
+        scroll.clear()
+        var top = scroll.topAnchor
+        app.session.items.forEach {
+            if top != scroll.topAnchor {
+                let border = UIView()
+                border.translatesAutoresizingMaskIntoConstraints = false
+                border.backgroundColor = .init(white: 1, alpha: 0.2)
+                border.isUserInteractionEnabled = false
+                scroll.content.addSubview(border)
+                
+                border.topAnchor.constraint(equalTo: top).isActive = true
+                border.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 20).isActive = true
+                border.rightAnchor.constraint(equalTo: scroll.content.rightAnchor, constant: -20).isActive = true
+                border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+                top = border.bottomAnchor
+            }
+            
+            let item = Item($0)
+            scroll.content.addSubview(item)
+            
+            item.topAnchor.constraint(equalTo: top).isActive = true
+            item.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
+            item.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
+            
+            top = item.bottomAnchor
+        }
+        scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top).isActive = true
     }
     
     @objc private func info() { app.push(About()) }
