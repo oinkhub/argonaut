@@ -28,26 +28,24 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
-        guard _follow else { return }
+        guard _follow, let coordinate = didUpdate.location?.coordinate else { return }
         var region = self.region
-        region.center = didUpdate.coordinate
+        region.center = coordinate
         setRegion(region, animated: false)
     }
     
     func mapView(_: MKMapView, viewFor: MKAnnotation) -> MKAnnotationView? {
+        var view: MKAnnotationView?
         switch viewFor {
-        case let user as MKUserLocation:
-            let heading = dequeueReusableAnnotationView(withIdentifier: "user") as? User ?? User(annotation: nil, reuseIdentifier: "user")
-            heading.annotation = user
-            heading.subviews.compactMap { $0 as? Callout }.forEach { $0.remove() }
-            return heading
-        case let mark as Mark:
-            let marker = dequeueReusableAnnotationView(withIdentifier: Marker.id) as? Marker ?? Marker()
-            marker.annotation = mark
-            marker.index?.text = "\(plan.path.firstIndex { $0 === mark.path }! + 1)"
-            return marker
-        default: return nil
+        case is MKUserLocation:
+            view = dequeueReusableAnnotationView(withIdentifier: "User") as? User ?? User()
+        case is Mark:
+            view = dequeueReusableAnnotationView(withIdentifier: "Marker") as? Marker ?? Marker()
+            (view as! Marker).index?.text = "\(plan.path.firstIndex { $0 === (viewFor as! Mark).path }! + 1)"
+        default: break
         }
+        view?.annotation = viewFor
+        return view
     }
     
     func mapView(_: MKMapView, annotationView: MKAnnotationView, didChange: MKAnnotationView.DragState, fromOldState: MKAnnotationView.DragState) {

@@ -77,12 +77,12 @@ final class About: UIView {
         close.widthAnchor.constraint(equalToConstant: 60).isActive = true
         close.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        image.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 60).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        image.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 40).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 220).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 220).isActive = true
         image.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
         
-        label.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 20).isActive = true
+        label.topAnchor.constraint(equalTo: image.bottomAnchor, constant: -40).isActive = true
         label.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
         
         version.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 2).isActive = true

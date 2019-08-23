@@ -63,7 +63,6 @@
 		CED0E78E230E9ECA00D30D85 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED0E78D230E9ECA00D30D85 /* User.swift */; };
 		CEDB361E2302A4140078E521 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB361D2302A4140078E521 /* Extensions.swift */; };
 		CEDB36202302A5630078E521 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB361F2302A5630078E521 /* Alert.swift */; };
-		CEDB36222302BC560078E521 /* Callout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB36212302BC560078E521 /* Callout.swift */; };
 		CEDCC689230683C500AAF0C8 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDCC688230683C500AAF0C8 /* Button.swift */; };
 		CEDE10FD22D71F2400DD796B /* iOS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDE10F922D71F2400DD796B /* iOS.storyboard */; };
 		CEDE10FE22D71F2400DD796B /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE10FB22D71F2400DD796B /* App.swift */; };
@@ -153,7 +152,6 @@
 		CED0E78D230E9ECA00D30D85 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		CEDB361D2302A4140078E521 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CEDB361F2302A5630078E521 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
-		CEDB36212302BC560078E521 /* Callout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Callout.swift; sourceTree = "<group>"; };
 		CEDCC688230683C500AAF0C8 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CEDE10F322D71C2D00DD796B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CEDE10F422D71C2D00DD796B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -267,7 +265,6 @@
 				CEDB361F2302A5630078E521 /* Alert.swift */,
 				CEDE10FB22D71F2400DD796B /* App.swift */,
 				CEDCC688230683C500AAF0C8 /* Button.swift */,
-				CEDB36212302BC560078E521 /* Callout.swift */,
 				CE18343D23080B260046E496 /* Create.swift */,
 				CEDB361D2302A4140078E521 /* Extensions.swift */,
 				CE0FE655230571D70058386B /* Field.swift */,
@@ -613,7 +610,6 @@
 				CED0E78E230E9ECA00D30D85 /* User.swift in Sources */,
 				CEDE110922D71F5300DD796B /* Shared.swift in Sources */,
 				CEDB36202302A5630078E521 /* Alert.swift in Sources */,
-				CEDB36222302BC560078E521 /* Callout.swift in Sources */,
 				CE0FE656230571D70058386B /* Field.swift in Sources */,
 				CEBB3A6423040F7200C5F61A /* Privacy.swift in Sources */,
 				CE0FE652230555D40058386B /* New.swift in Sources */,

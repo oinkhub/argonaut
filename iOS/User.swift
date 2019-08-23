@@ -6,10 +6,11 @@ final class User: MKAnnotationView {
     } }
     private(set) weak var heading: UIImageView!
     private weak var me: UIImageView!
+    override var reuseIdentifier: String? { "User" }
     
     required init?(coder: NSCoder) { return nil }
-    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
-        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+    init() {
+        super.init(annotation: nil, reuseIdentifier: nil)
         image = UIImage(named: "heading")
         canShowCallout = false
         frame = .init(x: 0, y: 0, width: 22, height: 22)
@@ -31,11 +32,11 @@ final class User: MKAnnotationView {
         
         layer.addSublayer({
             $0.add({
-                $0.fromValue = { $0.addEllipse(in: .init(x: 2, y: 2, width: 18, height: 18)); return $0 } (CGMutablePath())
-                $0.toValue = { $0.addEllipse(in: .init(x: 6, y: 6, width: 10, height: 10)); return $0 } (CGMutablePath())
+                $0.fromValue = { $0.addEllipse(in: .init(x: 1, y: 1, width: 20, height: 20)); return $0 } (CGMutablePath())
+                $0.toValue = { $0.addEllipse(in: .init(x: 8, y: 8, width: 6, height: 6)); return $0 } (CGMutablePath())
                 $0.repeatCount = .infinity
                 $0.autoreverses = true
-                $0.duration = 3
+                $0.duration = 5
                 return $0
             } (CABasicAnimation(keyPath: "path")), forKey: nil)
             $0.fillColor = .halo

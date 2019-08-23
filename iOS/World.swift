@@ -26,6 +26,8 @@ class World: UIView, CLLocationManagerDelegate {
         dater.unitsStyle = .full
         dater.allowedUnits = [.minute, .hour]
         manager.delegate = self
+        manager.stopUpdatingHeading()
+        manager.startUpdatingHeading()
         
         if #available(iOS 10, *) {
             let formatter = MeasurementFormatter()
@@ -37,6 +39,7 @@ class World: UIView, CLLocationManagerDelegate {
         
         let map = Map()
         map.refresh = { [weak self] in self?.refresh() }
+        map.setUserTrackingMode(.followWithHeading, animated: true)
         addSubview(map)
         self.map = map
         
@@ -134,6 +137,13 @@ class World: UIView, CLLocationManagerDelegate {
             case .denied: app.alert(.key("Error"), message: .key("Error.location"))
             case .notDetermined: manager.requestWhenInUseAuthorization()
             default: initial()
+        }
+    }
+    
+    func locationManager(_: CLLocationManager, didUpdateHeading: CLHeading) {
+        guard didUpdateHeading.headingAccuracy > 0, let user = map.annotations.first(where: { $0 === map.userLocation }), let view = map.view(for: user) as? User else { return }
+        UIView.animate(withDuration: 0.5) {
+            view.heading.transform = .init(rotationAngle: .init(((didUpdateHeading.trueHeading > 0 ? didUpdateHeading.trueHeading : didUpdateHeading.magneticHeading) / 180) * .pi))
         }
     }
     

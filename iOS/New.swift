@@ -75,8 +75,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             delete.setImage(UIImage(named: "delete"), for: .normal)
             delete.imageView!.clipsToBounds = true
             delete.imageView!.contentMode = .center
-            delete.imageEdgeInsets.left = 10
-            delete.imageEdgeInsets.bottom = 10
+            delete.imageEdgeInsets.left = 8
             addSubview(delete)
             self.delete = delete
             
@@ -85,7 +84,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             }
             
             title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-            title.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 18).isActive = true
+            title.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 12).isActive = true
             
             border.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 2).isActive = true
             border.leftAnchor.constraint(equalTo: title.leftAnchor).isActive = true
@@ -93,11 +92,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             
             delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            delete.centerYAnchor.constraint(equalTo: title.centerYAnchor, constant: 5).isActive = true
+            delete.centerYAnchor.constraint(equalTo: border.centerYAnchor).isActive = true
             delete.widthAnchor.constraint(equalToConstant: 65).isActive = true
             delete.heightAnchor.constraint(equalToConstant: 65).isActive = true
             
-            bottomAnchor.constraint(equalTo: border.bottomAnchor, constant: 15).isActive = true
+            bottomAnchor.constraint(equalTo: border.bottomAnchor, constant: 35).isActive = true
             
             if let walking = walking {
                 let walking = make(walking)
@@ -110,7 +109,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                     walking.rightAnchor.constraint(equalTo: centerXAnchor, constant: -10).isActive = true
                 }
                 
-                title.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor, constant: 15).isActive = true
+                title.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor, constant: 25).isActive = true
             }
             
             if let driving = driving {
@@ -124,7 +123,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                     driving.leftAnchor.constraint(equalTo: centerXAnchor, constant: 10).isActive = true
                 }
                 
-                title.topAnchor.constraint(greaterThanOrEqualTo: driving.bottomAnchor, constant: 15).isActive = true
+                title.topAnchor.constraint(greaterThanOrEqualTo: driving.bottomAnchor, constant: 25).isActive = true
             }
         }
         
@@ -158,6 +157,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var results: Scroll!
     private weak var _pin: Button!
     private weak var _save: UIButton!
+    private weak var logo: UIImageView!
     private weak var resultsHeight: NSLayoutConstraint!
     private var completer: Any?
     
@@ -205,6 +205,14 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(results)
         self.results = results
         
+        let logo = UIImageView(image: UIImage(named: "logo"))
+        logo.translatesAutoresizingMaskIntoConstraints = false
+        logo.clipsToBounds = true
+        logo.contentMode = .scaleAspectFit
+        logo.alpha = 0.8
+        addSubview(logo)
+        self.logo = logo
+        
         _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         
@@ -236,6 +244,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         bottom.bottomAnchor.constraint(equalTo: list.topAnchor).isActive = true
         bottom.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         bottom.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        
+        logo.centerYAnchor.constraint(equalTo: list.centerYAnchor).isActive = true
+        logo.centerXAnchor.constraint(equalTo: list.centerXAnchor).isActive = true
+        logo.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        logo.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
         if #available(iOS 11.0, *) {
             field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
@@ -317,6 +330,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     
     override func refresh() {
         list.clear()
+        logo.isHidden = !map.plan.path.isEmpty
         var previous: Item?
         var walking = (CLLocationDistance(), TimeInterval())
         var driving = (CLLocationDistance(), TimeInterval())
@@ -365,7 +379,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             if map._walking {
                 let _walking = make("walking", total: measure(walking.0) + ": " + dater.string(from: walking.1)!)
                 _walking.backgroundColor = .walking
-                _walking.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 10).isActive = true
+                _walking.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 20).isActive = true
                 _walking.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
                 list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _walking.bottomAnchor, constant: 20).isActive = true
                 
@@ -379,9 +393,9 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             if map._driving {
                 let _driving = make("driving", total: measure(driving.0) + ": " + dater.string(from: driving.1)!)
                 _driving.backgroundColor = .driving
-                _driving.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 10).isActive = true
+                _driving.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 20).isActive = true
                 _driving.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
-                list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _driving.bottomAnchor, constant: 30).isActive = true
+                list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _driving.bottomAnchor, constant: 20).isActive = true
                 
                 if map._walking {
                     _driving.leftAnchor.constraint(equalTo: list.content.centerXAnchor, constant: 10).isActive = true

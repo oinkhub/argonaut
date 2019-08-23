@@ -1,7 +1,6 @@
 import MapKit
 
 final class Marker: MKAnnotationView {
-    static let id = "Marker"
     override var annotation: MKAnnotation? { didSet { refresh() } }
     override var isSelected: Bool { didSet { refresh() } }
     private(set) weak var index: UILabel?
@@ -9,7 +8,7 @@ final class Marker: MKAnnotationView {
     private weak var title: UILabel?
     private weak var off: UIImageView?
     private weak var on: UIImageView?
-    override var reuseIdentifier: String? { Marker.id }
+    override var reuseIdentifier: String? { "Marker" }
     
     required init?(coder: NSCoder) { return nil }
     init() {
