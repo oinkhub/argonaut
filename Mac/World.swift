@@ -133,7 +133,7 @@ class World: NSWindow {
     
     final func measure(_ distance: CLLocationDistance) -> String {
         if #available(OSX 10.12, *) {
-            return (formatter as! MeasurementFormatter).string(from: Measurement(value: distance, unit: UnitLength.meters))
+            return (formatter as! MeasurementFormatter).string(from: .init(value: distance, unit: UnitLength.meters))
         }
         return "\(Int(distance))" + .key("New.distance")
     }

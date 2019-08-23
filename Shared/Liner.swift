@@ -12,11 +12,15 @@ final class Liner: MKOverlayRenderer {
     
     override func draw(_: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
         let size = MKRoadWidthAtZoomScale(zoomScale)
-        context.setLineWidth(size)
-        context.setStrokeColor(color)
+        context.setLineWidth(size * 1.2)
+        context.setStrokeColor(.black)
         context.setLineCap(.round)
         context.setLineJoin(.round)
-        context.setShadow(offset: .zero, blur: size / 2, color: .black)
+        context.addPath(path)
+        context.drawPath(using: .stroke)
+        
+        context.setLineWidth(size)
+        context.setStrokeColor(color)
         context.addPath(path)
         context.drawPath(using: .stroke)
     }

@@ -140,7 +140,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             label.numberOfLines = 0
             label.text = string
             label.textColor = .black
-            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
+            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
             addSubview(label)
             
             label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
@@ -427,7 +427,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         label.numberOfLines = 0
         label.text = total
         label.textColor = .black
-        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
+        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
         base.addSubview(label)
         
         icon.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 5).isActive = true

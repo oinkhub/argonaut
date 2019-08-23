@@ -108,6 +108,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                     self.direction(self.plan.path[index - 1], destination: self.plan.path[index + 1])
                 } else {
                     self.removeOverlays(self.overlays.filter { ($0 as? Line)?.path === self.plan.path[index - 1] } )
+                    self.plan.path[index - 1].options = []
                 }
             }
             self.plan.path.remove(at: index)

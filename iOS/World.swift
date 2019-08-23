@@ -141,14 +141,14 @@ class World: UIView, CLLocationManagerDelegate {
     
     final func measure(_ distance: CLLocationDistance) -> String {
         if #available(iOS 10, *) {
-            return (formatter as! MeasurementFormatter).string(from: Measurement(value: distance, unit: UnitLength.meters))
+            return (formatter as! MeasurementFormatter).string(from: .init(value: distance, unit: UnitLength.meters))
         }
         return "\(Int(distance))" + .key("New.distance")
     }
     
     private func initial() {
         _follow.isEnabled = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             self?.follow()
         }
     }
