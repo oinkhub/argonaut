@@ -42,10 +42,9 @@ final class Map: MKMapView, MKMapViewDelegate {
             heading.subviews.compactMap { $0 as? Callout }.forEach { $0.remove() }
             return heading
         case let mark as Mark:
-            let marker = dequeueReusableAnnotationView(withIdentifier: "marker") as? Marker ?? Marker(annotation: nil, reuseIdentifier: "marker")
+            let marker = dequeueReusableAnnotationView(withIdentifier: Marker.id) as? Marker ?? Marker()
             marker.annotation = mark
-            marker.index = "\(plan.path.firstIndex { $0 === mark.path }! + 1)"
-            marker.subviews.compactMap { $0 as? Callout }.forEach { $0.remove() }
+            marker.index?.text = "\(plan.path.firstIndex { $0 === mark.path }! + 1)"
             return marker
         default: return nil
         }
@@ -74,18 +73,10 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) {
-        switch didDeselect {
-        case let marker as Marker: didDeselect.subviews.compactMap { $0 as? Callout }.forEach { $0.remove() }
-        default: didDeselect.isSelected = false
-        }
+        didDeselect.isSelected = false
     }
     
-    func mapView(_: MKMapView, didSelect: MKAnnotationView) {
-        switch didSelect {
-        case let marker as Marker: Callout.Item(didSelect, index: "\(plan.path.firstIndex { $0 === (marker.annotation as? Mark)?.path }! + 1)")
-        default: didSelect.isSelected = true
-        }
-    }
+    func mapView(_: MKMapView, didSelect: MKAnnotationView) { didSelect.isSelected = true }
     
     func focus(_ coordinate: CLLocationCoordinate2D) {
         var region = self.region
@@ -163,7 +154,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 mark.path.name = $0?.first?.name ?? .key("Map.mark")
                 DispatchQueue.main.async { [weak self, weak mark] in
                     guard let self = self, let mark = mark else { return }
-                    self.view(for: mark)?.subviews.compactMap { $0 as? Callout.Item }.first?.refresh(mark.path.name)
+                    (self.view(for: mark) as? Marker)?.refresh()
                     self.refresh()
                     DispatchQueue.global(qos: .background).async { [weak self] in
                         guard let self = self else { return }
