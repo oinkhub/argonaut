@@ -41,7 +41,6 @@ private(set) weak var app: App!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
         
         let home = Home()
         view.addSubview(home)
@@ -92,27 +91,27 @@ private(set) weak var app: App!
         let border = UIView()
         border.translatesAutoresizingMaskIntoConstraints = false
         border.isUserInteractionEnabled = false
-        border.backgroundColor = .halo
+        border.backgroundColor = .init(white: 0.1333, alpha: 0.7)
         screen.addSubview(border)
         
         view.addSubview(screen)
         
-        border.topAnchor.constraint(equalTo: screen.topAnchor).isActive = true
+        border.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        border.bottomAnchor.constraint(equalTo: screen.topAnchor).isActive = true
         border.leftAnchor.constraint(equalTo: screen.leftAnchor).isActive = true
         border.rightAnchor.constraint(equalTo: screen.rightAnchor).isActive = true
-        border.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         screen.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        screen.heightAnchor.constraint(equalTo: view.heightAnchor, constant: 1).isActive = true
+        screen.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
         screen.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         let top = screen.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height)
         top.isActive = true
         stack.append(top)
         
         view.layoutIfNeeded()
-        top.constant = -1
-        UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseIn, animations: {
-            previous?.alpha = 0.3
+        top.constant = 0
+        UIView.animate(withDuration: 0.45, delay: 0, options: .curveEaseIn, animations: {
+            previous?.alpha = 0
             self.view.layoutIfNeeded()
         })
     }
@@ -154,10 +153,13 @@ private(set) weak var app: App!
         if let top = stack.popLast() {
             top.constant = view.bounds.height
             let screen = view.subviews.last!
-            UIView.animate(withDuration: 0.3, animations: {
+            UIView.animate(withDuration: 0.4, animations: {
                 self.view.subviews[self.view.subviews.count - 2].alpha = 1
                 self.view.layoutIfNeeded()
-            }) { _ in DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak screen] in screen?.removeFromSuperview() } }
+            }) { [weak screen] _ in
+                screen?.alpha = 0
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak screen] in screen?.removeFromSuperview() }
+            }
         }
     }
 }

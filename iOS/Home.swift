@@ -85,6 +85,12 @@ final class Home: UIView {
             return true
         }
         
+        func textViewDidBeginEditing(_: UITextView) {
+            UIView.animate(withDuration: 0.6) {
+                app.home.scroll.contentOffset.y = app.home.scroll.convert(.init(x: 0, y: self.field.frame.minY), from: self).y
+            }
+        }
+        
         func textViewDidEndEditing(_: UITextView) {
             item.title = field.text
             app.session.save()
@@ -123,13 +129,13 @@ final class Home: UIView {
             label.text = label.text! + ": " + dater.string(from: travel.duration)!
             base.addSubview(label)
             
-            icon.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 5).isActive = true
+            icon.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 3).isActive = true
             icon.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 25).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 25).isActive = true
             
             label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
-            label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 4).isActive = true
+            label.leftAnchor.constraint(equalTo: icon.rightAnchor).isActive = true
             label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
             
             base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
@@ -184,9 +190,10 @@ final class Home: UIView {
             $0.heightAnchor.constraint(equalToConstant: 70).isActive = true
         }
         
-        scroll.bottomAnchor.constraint(equalTo: border.topAnchor).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        let bottom = scroll.bottomAnchor.constraint(equalTo: border.topAnchor)
+        bottom.isActive = true
         
         border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -207,6 +214,13 @@ final class Home: UIView {
             info.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
             privacy.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         }
+        
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) {
+            bottom.constant = { $0.minY < self.bounds.height ? -($0.height - (self.bounds.height - border.frame.minY)) : 0 } (($0.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue)
+            UIView.animate(withDuration: ($0.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue) {
+                self.layoutIfNeeded()
+            }
+        }
     }
     
     func refresh() {
@@ -215,7 +229,7 @@ final class Home: UIView {
         }
         scroll.clear()
         var top = scroll.topAnchor
-        app.session.items.forEach {
+        app.session.items.reversed().forEach {
             if top != scroll.topAnchor {
                 let border = UIView()
                 border.translatesAutoresizingMaskIntoConstraints = false
