@@ -25,9 +25,11 @@ final class Home: UIView {
             self.field = field
             
             let origin = UILabel()
+            origin.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
             origin.text = item.origin
             
             let destination = UILabel()
+            destination.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
             destination.text = item.destination
             
             let walking = make("walk", travel: item.walking)
@@ -35,17 +37,19 @@ final class Home: UIView {
             let driving = make("drive", travel: item.driving)
             
             let navigate = UIButton()
-            navigate.translatesAutoresizingMaskIntoConstraints = false
             navigate.setImage(UIImage(named: "directions"), for: .normal)
-            navigate.imageView!.clipsToBounds = true
-            navigate.imageView!.contentMode = .center
-            navigate.isAccessibilityElement = true
             navigate.accessibilityLabel = .key("List.view")
-            addSubview(navigate)
+            
+            let share = UIButton()
+            share.setImage(UIImage(named: "share"), for: .normal)
+            share.accessibilityLabel = .key("Home.share")
+            
+            let delete = UIButton()
+            delete.setImage(UIImage(named: "delete"), for: .normal)
+            delete.accessibilityLabel = .key("Home.delete")
             
             [origin, destination].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
-                $0.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
                 $0.textColor = .white
                 $0.numberOfLines = 0
                 addSubview($0)
@@ -54,27 +58,38 @@ final class Home: UIView {
                 $0.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
             }
             
+            var right = rightAnchor
+            
+            [navigate, share, delete].forEach {
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                $0.imageView!.clipsToBounds = true
+                $0.imageView!.contentMode = .center
+                $0.isAccessibilityElement = true
+                addSubview($0)
+                
+                $0.topAnchor.constraint(equalTo: driving.bottomAnchor).isActive = true
+                $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
+                $0.widthAnchor.constraint(equalToConstant: 60).isActive = true
+                $0.rightAnchor.constraint(equalTo: right).isActive = true
+                right = $0.leftAnchor
+            }
+            
             field.topAnchor.constraint(equalTo: topAnchor).isActive = true
             field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             
             origin.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
-            destination.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 10).isActive = true
+            destination.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 2).isActive = true
             
-            walking.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 20).isActive = true
+            walking.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
             walking.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             walking.rightAnchor.constraint(equalTo: centerXAnchor, constant: -10).isActive = true
             
-            driving.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 20).isActive = true
+            driving.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
             driving.leftAnchor.constraint(equalTo: centerXAnchor, constant: 10).isActive = true
             driving.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
             
-            navigate.topAnchor.constraint(equalTo: driving.bottomAnchor, constant: 10).isActive = true
-            navigate.heightAnchor.constraint(equalToConstant: 70).isActive = true
-            navigate.widthAnchor.constraint(equalToConstant: 76).isActive = true
-            navigate.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            
-            bottomAnchor.constraint(equalTo: navigate.bottomAnchor, constant: 10).isActive = true
+            bottomAnchor.constraint(equalTo: navigate.bottomAnchor).isActive = true
         }
         
         func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
@@ -192,7 +207,7 @@ final class Home: UIView {
         
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        let bottom = scroll.bottomAnchor.constraint(equalTo: border.topAnchor)
+        let bottom = scroll.bottomAnchor.constraint(equalTo: border.topAnchor, constant: -1)
         bottom.isActive = true
         
         border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -216,7 +231,7 @@ final class Home: UIView {
         }
         
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) {
-            bottom.constant = { $0.minY < self.bounds.height ? -($0.height - (self.bounds.height - border.frame.minY)) : 0 } (($0.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue)
+            bottom.constant = { $0.minY < self.bounds.height ? -($0.height - (self.bounds.height - border.frame.minY)) : -1 } (($0.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue)
             UIView.animate(withDuration: ($0.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue) {
                 self.layoutIfNeeded()
             }
@@ -233,7 +248,7 @@ final class Home: UIView {
             if top != scroll.topAnchor {
                 let border = UIView()
                 border.translatesAutoresizingMaskIntoConstraints = false
-                border.backgroundColor = .init(white: 1, alpha: 0.2)
+                border.backgroundColor = .init(white: 0.1333, alpha: 1)
                 border.isUserInteractionEnabled = false
                 scroll.content.addSubview(border)
                 
@@ -253,7 +268,9 @@ final class Home: UIView {
             
             top = item.bottomAnchor
         }
-        scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top).isActive = true
+        if top != scroll.topAnchor {
+            scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top, constant: 10).isActive = true
+        }
     }
     
     @objc private func info() { app.push(About()) }
