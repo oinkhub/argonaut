@@ -56,10 +56,6 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
-        zoom?(log2(visibleMapRect.width / Double(bounds.width / 100) ) < 14)
-    }
-    
     func mapView(_: MKMapView, rendererFor: MKOverlay) -> MKOverlayRenderer {
         if let tiler = rendererFor as? Tiler {
             return MKTileOverlayRenderer(tileOverlay: tiler)
@@ -70,10 +66,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func mapView(_: MKMapView, didDeselect: MKAnnotationView) {
-        didDeselect.isSelected = false
-    }
-    
+    func mapView(_: MKMapView, regionDidChangeAnimated: Bool) { zoom?(log2(visibleMapRect.width / Double(bounds.width / 100) ) < 14) }
+    func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.isSelected = false }
     func mapView(_: MKMapView, didSelect: MKAnnotationView) { didSelect.isSelected = true }
     
     func focus(_ coordinate: CLLocationCoordinate2D) {
@@ -122,7 +116,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     @objc func pin() {
         guard !geocoder.isGeocoding else { return }
-//        add(convert(.init(x: bounds.midX, y: bounds.midY + top), toCoordinateFrom: self))
+        add(convert(.init(x: bounds.midX, y: bounds.midY), toCoordinateFrom: self))
     }
     
     @objc func follow() {

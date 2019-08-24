@@ -4,8 +4,23 @@ final class User: MKAnnotationView {
     override var isSelected: Bool { didSet {
         UIView.animate(withDuration: 0.5) { [weak self] in self?.me.alpha = self?.isSelected == true ? 1 : 0 }
     } }
+    
+    override var annotation: MKAnnotation? { didSet {
+        if halo?.animation(forKey: "halo") == nil {
+            halo?.add({
+                $0.fromValue = { $0.addEllipse(in: .init(x: 1, y: 1, width: 20, height: 20)); return $0 } (CGMutablePath())
+                $0.toValue = { $0.addEllipse(in: .init(x: 8, y: 8, width: 6, height: 6)); return $0 } (CGMutablePath())
+                $0.repeatCount = .infinity
+                $0.autoreverses = true
+                $0.duration = 5
+                return $0
+            } (CABasicAnimation(keyPath: "path")), forKey: "halo")
+        }
+    } }
+    
     private(set) weak var heading: UIImageView!
     private weak var me: UIImageView!
+    private weak var halo: CAShapeLayer?
     override var reuseIdentifier: String? { "User" }
     
     required init?(coder: NSCoder) { return nil }
@@ -30,18 +45,10 @@ final class User: MKAnnotationView {
         addSubview(me)
         self.me = me
         
-        layer.addSublayer({
-            $0.add({
-                $0.fromValue = { $0.addEllipse(in: .init(x: 1, y: 1, width: 20, height: 20)); return $0 } (CGMutablePath())
-                $0.toValue = { $0.addEllipse(in: .init(x: 8, y: 8, width: 6, height: 6)); return $0 } (CGMutablePath())
-                $0.repeatCount = .infinity
-                $0.autoreverses = true
-                $0.duration = 5
-                return $0
-            } (CABasicAnimation(keyPath: "path")), forKey: nil)
-            $0.fillColor = .halo
-            return $0
-        } (CAShapeLayer()))
+        let halo = CAShapeLayer()
+        halo.fillColor = .halo
+        layer.addSublayer(halo)
+        self.halo = halo
         
         heading.widthAnchor.constraint(equalToConstant: 44).isActive = true
         heading.heightAnchor.constraint(equalToConstant: 90).isActive = true

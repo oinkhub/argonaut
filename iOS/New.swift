@@ -190,7 +190,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         let _pin = Button("pin")
         _pin.accessibilityLabel = .key("New.pin")
-        _pin.addTarget(self, action: #selector(pin), for: .touchUpInside)
+        _pin.addTarget(map, action: #selector(map.pin), for: .touchUpInside)
         addSubview(_pin)
         self._pin = _pin
         
@@ -459,10 +459,15 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     @objc private func save() { app.push(Create(map.plan, rect: map.visibleMapRect)) }
-    @objc private func focus(_ item: Item) { if let path = item.path { map.focus(.init(latitude: path.latitude, longitude: path.longitude)) } }
-    @objc private func pin() { map.add(map.convert(.init(x: map.bounds.midX, y: map.bounds.midY), toCoordinateFrom: map)) }
     @objc private func remove(_ item: UIView) { if let path = (item.superview as! Item).path { map.remove(path) } }
     @available(iOS 9.3, *) @objc private func edit(_ gesture: UILongPressGestureRecognizer) { field.field.text = (gesture.view as! Result).search.title }
+    
+    @objc private func focus(_ item: Item) {
+        if let mark = map.annotations.first(where: { ($0 as? Mark)?.path === item.path }) {
+            map.selectAnnotation(mark, animated: true)
+            map.focus(mark.coordinate)
+        }
+    }
     
     @available(iOS 9.3, *) @objc private func search(_ result: Result) {
         app.window!.endEditing(true)

@@ -145,6 +145,7 @@ private(set) weak var app: App!
         }) { _ in
             self.stack = []
             self.view.subviews.last!.removeFromSuperview()
+            self.home.refresh()
         }
     }
     
