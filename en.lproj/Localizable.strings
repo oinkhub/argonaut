@@ -35,6 +35,7 @@ Create.title="Creating map";
 Create.info="\nThis process is done only once but might take a few minutes, please wait.\nArgo apologises for any inconvenience.";
 Map.mark="Mark";
 Navigate.zoom="Zoom not supported";
+Navigate.title="Unamed map";
 List.distance=" metres";
 List.view="Navigate";
 List.warning="Delete this map?";

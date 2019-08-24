@@ -12,11 +12,13 @@ final class Navigate: World {
     
     private final class Item: UIControl {
         override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.3 : 1 } }
+        private(set) weak var path: Plan.Path!
         
         required init?(coder: NSCoder) { return nil }
         init(_ item: (Int, Plan.Path)) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
+            self.path = item.1
             
             let base = UIView()
             base.translatesAutoresizingMaskIntoConstraints = false
@@ -28,7 +30,7 @@ final class Navigate: World {
             let _index = UILabel()
             _index.translatesAutoresizingMaskIntoConstraints = false
             _index.textColor = .white
-            _index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
+            _index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize, weight: .bold)
             _index.text = "\(item.0 + 1)"
             addSubview(_index)
             
@@ -40,23 +42,21 @@ final class Navigate: World {
             name.numberOfLines = 0
             addSubview(name)
             
-            heightAnchor.constraint(greaterThanOrEqualToConstant: 60).isActive = true
-            topAnchor.constraint(equalTo: name.topAnchor, constant: -20).isActive = true
-            bottomAnchor.constraint(equalTo: name.bottomAnchor, constant: 20).isActive = true
+            topAnchor.constraint(equalTo: name.topAnchor, constant: -30).isActive = true
+            bottomAnchor.constraint(equalTo: name.bottomAnchor, constant: 30).isActive = true
             
             base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             base.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
-            base.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-            base.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 10).isActive = true
+            base.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+            base.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
             
             _index.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            _index.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
+            _index.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 15).isActive = true
             
-            name.leftAnchor.constraint(equalTo: _index.rightAnchor, constant: 5).isActive = true
+            name.leftAnchor.constraint(equalTo: _index.rightAnchor, constant: 10).isActive = true
             name.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+            name.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         }
-        
-        
     }
     
     private weak var _zoom: UIView!
@@ -96,7 +96,7 @@ final class Navigate: World {
         title.isAccessibilityElement = true
         title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
         title.textColor = .white
-        title.text = item.title
+        title.text = item.title.isEmpty ? .key("Navigate.title") : item.title
         addSubview(title)
         
         top.topAnchor.constraint(equalTo: map.topAnchor).isActive = true
@@ -128,6 +128,7 @@ final class Navigate: World {
         var previous: Item?
         map.plan.path.enumerated().forEach {
             let item = Item($0)
+            item.addTarget(self, action: #selector(focus(_:)), for: .touchUpInside)
             list.content.addSubview(item)
             
             item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.topAnchor).isActive = true
@@ -135,11 +136,19 @@ final class Navigate: World {
             item.widthAnchor.constraint(equalTo: list.widthAnchor).isActive = true
             previous = item
         }
+        
+        list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? bottomAnchor).isActive = true
     }
     
     private func zoom(_ valid: Bool) {
         UIView.animate(withDuration: 0.3) { [weak self] in
             self?._zoom.alpha = valid ? 0 : 0.8
+        }
+    }
+    
+    @objc private func focus(_ item: Item) {
+        if let mark = map.annotations.first(where: { ($0 as? Mark)?.path === item.path }) {
+            map.selectAnnotation(mark, animated: true)
         }
     }
 }
