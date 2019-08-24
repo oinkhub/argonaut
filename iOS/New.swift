@@ -321,10 +321,14 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             result.topAnchor.constraint(equalTo: top).isActive = true
             top = result.bottomAnchor
         }
-        resultsHeight.constant = results.bounds.height
-        results.layoutIfNeeded()
-        resultsHeight.constant = 220
-        results.content.bottomAnchor.constraint(equalTo: top).isActive = true
+        if top == results.topAnchor {
+            resultsHeight.constant = 0
+        } else {
+            resultsHeight.constant = results.bounds.height
+            results.layoutIfNeeded()
+            resultsHeight.constant = 220
+            results.content.bottomAnchor.constraint(equalTo: top).isActive = true
+        }
         UIView.animate(withDuration: 0.4) { [weak self] in self?.layoutIfNeeded() }
     }
     

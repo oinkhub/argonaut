@@ -41,7 +41,7 @@ class Field: UITextView {
             addSubview(background)
             
             let field = Field()
-            field.textContainerInset = .init(top: 16, left: 45, bottom: 16, right: 30)
+            field.textContainerInset = .init(top: 16, left: 45, bottom: 16, right: 8)
             field.accessibilityLabel = .key("Field.search")
             field.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
             addSubview(field)
@@ -66,10 +66,10 @@ class Field: UITextView {
             
             let _cancel = UIButton()
             _cancel.translatesAutoresizingMaskIntoConstraints = false
-            _cancel.setImage(UIImage(named: "delete"), for: .normal)
+            _cancel.setImage(UIImage(named: "close"), for: .normal)
             _cancel.addTarget(self, action: #selector(cancel), for: .touchUpInside)
             _cancel.alpha = 0
-            _cancel.imageView!.contentMode = .center
+            _cancel.imageView!.contentMode = .scaleAspectFit
             _cancel.imageView!.clipsToBounds = true
             _cancel.imageEdgeInsets.left = 15
             _cancel.isAccessibilityElement = true

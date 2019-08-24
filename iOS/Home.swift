@@ -25,11 +25,11 @@ final class Home: UIView {
             self.field = field
             
             let origin = UILabel()
-            origin.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
+            origin.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .medium)
             origin.text = item.origin
             
             let destination = UILabel()
-            destination.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
+            destination.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
             destination.text = item.destination
             
             let walking = make("walk", travel: item.walking)
@@ -39,14 +39,17 @@ final class Home: UIView {
             let navigate = UIButton()
             navigate.setImage(UIImage(named: "directions"), for: .normal)
             navigate.accessibilityLabel = .key("List.view")
+            navigate.addTarget(self, action: #selector(self.navigate), for: .touchUpInside)
             
             let share = UIButton()
             share.setImage(UIImage(named: "share"), for: .normal)
             share.accessibilityLabel = .key("Home.share")
+            share.addTarget(self, action: #selector(self.share), for: .touchUpInside)
             
             let delete = UIButton()
             delete.setImage(UIImage(named: "delete"), for: .normal)
             delete.accessibilityLabel = .key("Home.delete")
+            delete.addTarget(self, action: #selector(remove), for: .touchUpInside)
             
             [origin, destination].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -156,6 +159,29 @@ final class Home: UIView {
             base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
             
             return base
+        }
+        
+        @objc private func navigate() { Load.load(item.id) }
+        
+        @objc private func remove() {
+            let alert = UIAlertController(title: .key("Home.deleteTitle") + item.title, message: nil, preferredStyle: .actionSheet)
+            alert.addAction(.init(title: .key("Home.deleteConfirm"), style: .destructive) { [weak self] _ in
+                if let item = self?.item { app.delete(item) }
+            })
+            alert.addAction(.init(title: .key("Home.deleteCancel"), style: .cancel))
+            alert.popoverPresentationController?.sourceView = self
+            alert.popoverPresentationController?.sourceRect = .init(x: frame.midX, y: frame.maxY, width: 1, height: 1)
+            app.present(alert, animated: true)
+        }
+        
+        @objc private func share() {
+            Argonaut.share(item) { [weak self] in
+                guard let self = self else { return }
+                let share = UIActivityViewController(activityItems: [$0], applicationActivities: nil)
+                share.popoverPresentationController?.sourceView = self
+                share.popoverPresentationController?.sourceRect = .init(x: self.frame.midX, y: self.frame.maxY, width: 1, height: 1)
+                app.present(share, animated: true)
+            }
         }
     }
     

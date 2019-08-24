@@ -149,6 +149,13 @@ private(set) weak var app: App!
         }
     }
     
+    func delete(_ item: Session.Item) {
+        session.items.removeAll(where: { $0.id == item.id })
+        session.save()
+        home.refresh()
+        Argonaut.delete(item.id)
+    }
+    
     @objc func pop() {
         window!.endEditing(true)
         if let top = stack.popLast() {

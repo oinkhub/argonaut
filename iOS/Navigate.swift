@@ -1,43 +1,46 @@
 import Argonaut
-import AppKit
+import UIKit
 
 final class Navigate: World {
-    private weak var zoom: NSView!
+    private weak var zoom: UIView!
     private let plan: Plan
     
+    required init?(coder: NSCoder) { return nil }
     init(_ project: (Plan, Cart)) {
         plan = project.0
         super.init()
         map.addOverlay(Tiler(project.1), level: .aboveLabels)
         map.merge(plan)
-        _tools.bottomAnchor.constraint(equalTo: _out.bottomAnchor).isActive = true
         
-        map.zoom = { [weak self] valid in
-            NSAnimationContext.runAnimationGroup({
-                $0.duration = 0.3
-                $0.allowsImplicitAnimation = true
-                self?.zoom.alphaValue = valid ? 0 : 0.7
-            }) { }
+        map.zoom = { valid in
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                self?.zoom.alpha = valid ? 0 : 0.7
+            }
         }
         
-        let zoom = NSView()
-        zoom.alphaValue = 0
-        over(zoom)
+        let zoom = UIView()
+        zoom.translatesAutoresizingMaskIntoConstraints = false
+        zoom.isUserInteractionEnabled = false
+        zoom.backgroundColor = .black
+        zoom.alpha = 0
+        addSubview(zoom)
         self.zoom = zoom
         
-        let icon = NSImageView()
+        let icon = UIImageView(image: UIImage(named: "error"))
         icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.imageScaling = .scaleNone
-        icon.image = NSImage(named: "error")
+        icon.contentMode = .center
+        icon.clipsToBounds = true
         zoom.addSubview(icon)
         
-        let warning = Label(.key("Navigate.zoom"))
+        let warning = UILabel()
+        warning.translatesAutoresizingMaskIntoConstraints = false
+        warning.text = .key("Navigate.zoom")
         warning.textColor = .white
-        warning.font = .systemFont(ofSize: 14, weight: .regular)
+        warning.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
         zoom.addSubview(warning)
         
-        zoom.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
-        zoom.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 38).isActive = true
+        zoom.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        zoom.topAnchor.constraint(equalTo: topAnchor, constant: 38).isActive = true
         zoom.widthAnchor.constraint(equalToConstant: 200).isActive = true
         zoom.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
