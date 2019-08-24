@@ -64,8 +64,8 @@ public final class Argonaut {
     
     private static func code(_ data: Data) -> Data {
         return data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
-            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, data.count * 10, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count)
+            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, data.count, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
             buffer.deallocate()
             return result
         }
@@ -73,8 +73,8 @@ public final class Argonaut {
     
     private static func decode(_ data: Data) -> Data {
         return data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
-            let result = Data(bytes: buffer, count: compression_decode_buffer(buffer, data.count * 10, $0.bindMemory(
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 2)
+            let result = Data(bytes: buffer, count: compression_decode_buffer(buffer, data.count * 2, $0.bindMemory(
                 to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
             buffer.deallocate()
             return result
