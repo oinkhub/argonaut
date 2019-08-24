@@ -3,10 +3,8 @@ import AppKit
 
 final class Navigate: World {
     private weak var zoom: NSView!
-    private let plan: Plan
     
     init(_ project: (Plan, Cart)) {
-        plan = project.0
         super.init()
         map.addOverlay(Tiler(project.1), level: .aboveLabels)
         map.merge(plan)

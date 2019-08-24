@@ -68,7 +68,12 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func mapView(_: MKMapView, regionDidChangeAnimated: Bool) { zoom?(log2(visibleMapRect.width / Double(bounds.width / 100) ) < 14) }
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.isSelected = false }
-    func mapView(_: MKMapView, didSelect: MKAnnotationView) { didSelect.isSelected = true }
+    func mapView(_: MKMapView, didSelect: MKAnnotationView) {
+        didSelect.isSelected = true
+        if let coordinate = didSelect.annotation?.coordinate {
+            focus(coordinate)
+        }
+    }
     
     func focus(_ coordinate: CLLocationCoordinate2D) {
         var region = self.region
@@ -123,11 +128,10 @@ final class Map: MKMapView, MKMapViewDelegate {
         _follow.toggle()
         if _follow {
             if annotations.contains(where: { $0 === userLocation }) {
-                focus(userLocation.coordinate)
                 selectAnnotation(userLocation, animated: true)
             }
         } else {
-            selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
+            selectedAnnotations.first(where: { $0 is MKUserLocation }).map { deselectAnnotation($0, animated: true) }
         }
     }
     

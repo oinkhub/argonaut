@@ -4,7 +4,7 @@ import UIKit
 final class Load: UIView {
     private static weak var view: Load?
     
-    class func load(_ id: String) {
+    class func load(_ item: Session.Item) {
         guard view == nil else { return }
         let view = Load()
         self.view = view
@@ -18,7 +18,7 @@ final class Load: UIView {
         UIView.animate(withDuration: 0.3, animations: {
             view.alpha = 1
         }) { [weak view] _ in
-            view?.load(id)
+            view?.load(item)
         }
     }
     
@@ -55,11 +55,17 @@ final class Load: UIView {
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     }
     
-    private func load(_ id: String) {
+    private func load(_ item: Session.Item) {
         DispatchQueue.global(qos: .background).async {
-            let project = Argonaut.load(id)
-            DispatchQueue.main.async { app.push(Navigate(project)) }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in self?.removeFromSuperview() }
+            let project = Argonaut.load(item.id)
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.5, animations: { [weak self] in
+                    self?.alpha = 0
+                }) { [weak self] _ in
+                    self?.removeFromSuperview()
+                    app.push(Navigate(item, project: project))
+                }
+            }
         }
     }
 }

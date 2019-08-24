@@ -4,9 +4,10 @@ import CoreLocation
 class World: UIView, CLLocationManagerDelegate {
     let dater = DateComponentsFormatter()
     private(set) weak var map: Map!
-    private(set) weak var _close: UIButton!
     private(set) weak var list: Scroll!
     private(set) weak var _up: Button!
+    private(set) weak var _close: UIButton!
+    private(set) weak var top: Gradient.Top!
     private weak var _down: Button!
     private weak var _walking: Button!
     private weak var _driving: Button!
@@ -42,6 +43,13 @@ class World: UIView, CLLocationManagerDelegate {
         map.setUserTrackingMode(.followWithHeading, animated: true)
         addSubview(map)
         self.map = map
+        
+        let top = Gradient.Top()
+        addSubview(top)
+        self.top = top
+        
+        let bottom = Gradient.Bottom()
+        addSubview(bottom)
         
         let _close = UIButton()
         _close.translatesAutoresizingMaskIntoConstraints = false
@@ -94,8 +102,20 @@ class World: UIView, CLLocationManagerDelegate {
         addSubview(list)
         self.list = list
         
+        map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        map.bottomAnchor.constraint(equalTo: list.topAnchor).isActive = true
+        
         _close.widthAnchor.constraint(equalToConstant: 60).isActive = true
         _close.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        
+        top.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        top.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        
+        bottom.bottomAnchor.constraint(equalTo: list.topAnchor).isActive = true
+        bottom.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        bottom.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         
         _up.bottomAnchor.constraint(lessThanOrEqualTo: list.topAnchor).isActive = true
         
@@ -116,7 +136,7 @@ class World: UIView, CLLocationManagerDelegate {
         list.heightAnchor.constraint(equalToConstant: 300).isActive = true
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        listTop = list.topAnchor.constraint(equalTo: bottomAnchor)
+        listTop = list.topAnchor.constraint(greaterThanOrEqualTo: bottomAnchor)
         listTop.isActive = true
         
         if #available(iOS 11.0, *) {

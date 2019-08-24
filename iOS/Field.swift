@@ -77,7 +77,7 @@ class Field: UITextView {
             addSubview(_cancel)
             self._cancel = _cancel
             
-            heightAnchor.constraint(equalToConstant: field.font!.pointSize + 40).isActive = true
+            heightAnchor.constraint(equalToConstant: (field.font!.pointSize * 1.2) + 40).isActive = true
             width = widthAnchor.constraint(equalToConstant: 160)
             width.isActive = true
             

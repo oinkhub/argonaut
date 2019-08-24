@@ -194,12 +194,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(_pin)
         self._pin = _pin
         
-        let top = Gradient.Top()
-        addSubview(top)
-        
-        let bottom = Gradient.Bottom()
-        addSubview(bottom)
-        
         let results = Scroll()
         results.backgroundColor = .black
         addSubview(results)
@@ -210,13 +204,14 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         logo.clipsToBounds = true
         logo.contentMode = .scaleAspectFit
         logo.alpha = 0.8
-        addSubview(logo)
+        list.addSubview(logo)
         self.logo = logo
         
-        _close.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
-        
         field.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        
+        top.topAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
+        
+        _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         
         _pin.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
         _pin.bottomAnchor.constraint(equalTo: _up.topAnchor).isActive = true
@@ -227,23 +222,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         _save.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
-        map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        map.bottomAnchor.constraint(equalTo: list.topAnchor).isActive = true
         
         results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         results.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         results.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         resultsHeight = results.heightAnchor.constraint(lessThanOrEqualToConstant: 0)
         resultsHeight.isActive = true
-        
-        top.topAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
-        top.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        top.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        
-        bottom.bottomAnchor.constraint(equalTo: list.topAnchor).isActive = true
-        bottom.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        bottom.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         
         logo.centerYAnchor.constraint(equalTo: list.centerYAnchor).isActive = true
         logo.centerXAnchor.constraint(equalTo: list.centerXAnchor).isActive = true
@@ -469,7 +453,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     @objc private func focus(_ item: Item) {
         if let mark = map.annotations.first(where: { ($0 as? Mark)?.path === item.path }) {
             map.selectAnnotation(mark, animated: true)
-            map.focus(mark.coordinate)
         }
     }
     
@@ -479,7 +462,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         MKLocalSearch(request: .init(completion: result.search)).start { [weak self] in
             guard $1 == nil, let coordinate = $0?.mapItems.first?.placemark.coordinate else { return }
             self?.map.add(coordinate)
-            self?.map.focus(coordinate)
         }
     }
 }

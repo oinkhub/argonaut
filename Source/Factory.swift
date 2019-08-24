@@ -115,7 +115,7 @@ public final class Factory {
                         throw Fail("Couldn't create map")
                     }
                 } catch let error {
-                    DispatchQueue.main.async { [weak self] in self?.error?(error) }
+                    DispatchQueue.main.async { [weak self] in self?.error(error) }
                 }
             }
         }

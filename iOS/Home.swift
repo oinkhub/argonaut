@@ -161,7 +161,7 @@ final class Home: UIView {
             return base
         }
         
-        @objc private func navigate() { Load.load(item.id) }
+        @objc private func navigate() { Load.load(item) }
         
         @objc private func remove() {
             let alert = UIAlertController(title: .key("Home.deleteTitle") + item.title, message: nil, preferredStyle: .actionSheet)
