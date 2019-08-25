@@ -133,7 +133,6 @@ class World: UIView, CLLocationManagerDelegate {
         drivingRight = _driving.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
         drivingRight.isActive = true
         
-        list.heightAnchor.constraint(equalToConstant: 300).isActive = true
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         listTop = list.topAnchor.constraint(greaterThanOrEqualTo: bottomAnchor)
@@ -201,7 +200,7 @@ class World: UIView, CLLocationManagerDelegate {
     }
     
     @objc private func up() {
-        listTop.constant = -300
+        listTop.constant = -list.frame.height
         walkingRight.constant = -140
         drivingRight.constant = -70
         _walking.isHidden = false

@@ -3,11 +3,13 @@ import MapKit
 
 final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
+    var user: ((CLLocation) -> Void)?
     var zoom: ((Bool) -> Void)?
     private(set) var _follow = true
     private(set) var _walking = true
     private(set) var _driving = true
     let plan = Plan()
+    private var last: CLLocation?
     private let geocoder = CLGeocoder()
     
     required init?(coder: NSCoder) { return nil }
@@ -28,10 +30,13 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
-        guard _follow, let coordinate = didUpdate.location?.coordinate else { return }
-        var region = self.region
-        region.center = coordinate
-        setRegion(region, animated: false)
+        guard let location = didUpdate.location else { return }
+        if _follow {
+            var region = self.region
+            region.center = location.coordinate
+            setRegion(region, animated: false)
+        }
+        user?(location)
     }
     
     func mapView(_: MKMapView, viewFor: MKAnnotation) -> MKAnnotationView? {

@@ -1,15 +1,19 @@
 import Argonaut
-import UIKit
+import MapKit
 
 final class Navigate: World {
     private final class Item: UIControl {
         override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.3 : 1 } }
         private(set) weak var path: Plan.Path!
+        private(set) weak var distance: UILabel!
         
         required init?(coder: NSCoder) { return nil }
         init(_ item: (Int, Plan.Path)) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
+            isAccessibilityElement = true
+            accessibilityTraits = .button
+            accessibilityLabel = item.1.name
             self.path = item.1
             
             let base = UIView()
@@ -29,25 +33,34 @@ final class Navigate: World {
             let name = UILabel()
             name.translatesAutoresizingMaskIntoConstraints = false
             name.textColor = .white
-            name.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .medium)
+            name.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
             name.text = item.1.name
             name.numberOfLines = 0
             addSubview(name)
             
-            topAnchor.constraint(equalTo: name.topAnchor, constant: -34).isActive = true
-            bottomAnchor.constraint(equalTo: name.bottomAnchor, constant: 34).isActive = true
+            let distance = UILabel()
+            distance.translatesAutoresizingMaskIntoConstraints = false
+            distance.textColor = .white
+            distance.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
+            addSubview(distance)
+            self.distance = distance
+            
+            bottomAnchor.constraint(equalTo: base.bottomAnchor, constant: 10).isActive = true
             
             base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             base.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
-            base.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
-            base.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
+            base.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+            base.bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 10).isActive = true
             
             _index.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
             _index.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 15).isActive = true
             
-            name.leftAnchor.constraint(equalTo: _index.rightAnchor, constant: 10).isActive = true
-            name.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
-            name.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            name.leftAnchor.constraint(equalTo: _index.rightAnchor, constant: 12).isActive = true
+            name.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
+            name.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
+            
+            distance.leftAnchor.constraint(equalTo: _index.rightAnchor, constant: 12).isActive = true
+            distance.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 2).isActive = true
         }
     }
     
@@ -58,8 +71,8 @@ final class Navigate: World {
         super.init()
         map.addOverlay(Tiler(project.1), level: .aboveLabels)
         map.merge(project.0)
-        
         map.zoom = { [weak self] in self?.zoom($0) }
+        map.user = { [weak self] in self?.user($0) }
         
         let _zoom = UIView()
         _zoom.translatesAutoresizingMaskIntoConstraints = false
@@ -95,6 +108,8 @@ final class Navigate: World {
         
         _close.centerYAnchor.constraint(equalTo: map.topAnchor, constant: -22).isActive = true
         
+        list.heightAnchor.constraint(equalToConstant: 180).isActive = true
+        
         _zoom.leftAnchor.constraint(equalTo: icon.leftAnchor, constant: -5).isActive = true
         _zoom.rightAnchor.constraint(equalTo: warning.rightAnchor, constant: 15).isActive = true
         _zoom.topAnchor.constraint(equalTo: warning.topAnchor, constant: -12).isActive = true
@@ -126,6 +141,10 @@ final class Navigate: World {
         map.plan.path.enumerated().forEach {
             let item = Item($0)
             item.addTarget(self, action: #selector(focus(_:)), for: .touchUpInside)
+            if let user = map.annotations.first(where: { $0 is MKUserLocation })?.coordinate {
+                item.distance.text = measure(CLLocation(latitude: user.latitude, longitude: user.longitude).distance(from: .init(latitude: $0.1.latitude, longitude: $0.1.longitude)))
+            }
+            
             list.content.addSubview(item)
             
             if previous == nil {
@@ -172,12 +191,18 @@ final class Navigate: World {
             previous = item
         }
         
-        list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? bottomAnchor).isActive = true
+        list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? bottomAnchor, constant: 20).isActive = true
     }
     
     private func zoom(_ valid: Bool) {
         UIView.animate(withDuration: 0.3) { [weak self] in
             self?._zoom.alpha = valid ? 0 : 0.8
+        }
+    }
+    
+    private func user(_ location: CLLocation) {
+        list.content.subviews.compactMap { $0 as? Item }.forEach {
+            $0.distance.text = measure(location.distance(from: .init(latitude: $0.path.latitude, longitude: $0.path.longitude)))
         }
     }
     

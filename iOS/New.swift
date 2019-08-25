@@ -223,6 +223,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         
+        list.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        
         results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         results.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         results.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
