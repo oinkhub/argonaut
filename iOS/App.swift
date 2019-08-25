@@ -116,6 +116,41 @@ private(set) weak var app: App!
         })
     }
     
+    func replace(_ screen: UIView) {
+        window!.endEditing(true)
+        stack.removeLast()
+        let previous = view.subviews.last
+        
+        let border = UIView()
+        border.translatesAutoresizingMaskIntoConstraints = false
+        border.isUserInteractionEnabled = false
+        border.backgroundColor = .init(white: 0.1333, alpha: 0.7)
+        screen.addSubview(border)
+        
+        view.addSubview(screen)
+        
+        border.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        border.bottomAnchor.constraint(equalTo: screen.topAnchor).isActive = true
+        border.leftAnchor.constraint(equalTo: screen.leftAnchor).isActive = true
+        border.rightAnchor.constraint(equalTo: screen.rightAnchor).isActive = true
+        
+        screen.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        screen.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        screen.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        let top = screen.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height)
+        top.isActive = true
+        stack.append(top)
+        
+        view.layoutIfNeeded()
+        top.constant = 0
+        UIView.animate(withDuration: 0.45, delay: 0, options: .curveEaseIn, animations: { [weak previous] in
+            previous?.alpha = 0
+            self.view.layoutIfNeeded()
+        }) { [weak previous] _ in
+            previous?.removeFromSuperview()
+        }
+    }
+    
     func alert(_ title: String, message: String) {
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().getNotificationSettings {
@@ -137,16 +172,8 @@ private(set) weak var app: App!
     func created(_ item: Session.Item) {
         session.items.append(item)
         session.save()
-        view.subviews[self.view.subviews.count - 2].removeFromSuperview()
-        stack.last!.constant = view.bounds.height
-        UIView.animate(withDuration: 0.3, animations: {
-            self.home.alpha = 1
-            self.view.layoutIfNeeded()
-        }) { _ in
-            self.stack = []
-            self.view.subviews.last!.removeFromSuperview()
-            self.home.refresh()
-        }
+        pop()
+        home.refresh()
     }
     
     func delete(_ item: Session.Item) {

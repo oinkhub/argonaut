@@ -36,15 +36,15 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func mapView(_: MKMapView, viewFor: MKAnnotation) -> MKAnnotationView? {
         var view: MKAnnotationView?
-//        switch viewFor {
-//        case is MKUserLocation:
-//            view = dequeueReusableAnnotationView(withIdentifier: "User") as? User ?? User()
-//        case is Mark:
-//            view = dequeueReusableAnnotationView(withIdentifier: "Marker") as? Marker ?? Marker()
-//            (view as! Marker).index?.text = "\(plan.path.firstIndex { $0 === (viewFor as! Mark).path }! + 1)"
-//        default: break
-//        }
-//        view?.annotation = viewFor
+        switch viewFor {
+        case is MKUserLocation:
+            view = dequeueReusableAnnotationView(withIdentifier: "User") as? User ?? User()
+        case is Mark:
+            view = dequeueReusableAnnotationView(withIdentifier: "Marker") as? Marker ?? Marker()
+            (view as! Marker).index?.text = "\(plan.path.firstIndex { $0 === (viewFor as! Mark).path }! + 1)"
+        default: break
+        }
+        view?.annotation = viewFor
         return view
     }
     
@@ -151,7 +151,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 mark.path.name = $0?.first?.name ?? .key("Map.mark")
                 DispatchQueue.main.async { [weak self, weak mark] in
                     guard let self = self, let mark = mark else { return }
-//                    (self.view(for: mark) as? Marker)?.refresh()
+                    (self.view(for: mark) as? Marker)?.refresh()
                     self.refresh()
                     DispatchQueue.global(qos: .background).async { [weak self] in
                         guard let self = self else { return }
