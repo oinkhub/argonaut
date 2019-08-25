@@ -24,10 +24,10 @@ private(set) weak var app: App!
     
     func application(_: UIApplication, open: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         DispatchQueue.main.async {
-            Argonaut.receive(open) { _ in
-                //            self.session.update($0)
-                //            self.session.save()
-                //            self.list.refresh()
+            Argonaut.receive(open) {
+                self.session.update($0)
+                self.session.save()
+                self.home.refresh()
             }
         }
         return true

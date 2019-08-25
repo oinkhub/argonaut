@@ -6,6 +6,28 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Argonaut</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+            <key>CFBundleTypeIconFiles</key>
+            <array>
+                <string>icon_22x28.png</string>
+                <string>icon_44x58.png</string>
+                <string>icon_64x64.png</string>
+                <string>icon_320x320.png</string>
+            </array>
+			<key>CFBundleTypeName</key>
+			<string>Map</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>iturbide.argonaut</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -52,5 +74,32 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Argonaut map</string>
+            <key>CFBundleTypeIconFiles</key>
+            <array>
+                <string>icon_22x28.png</string>
+                <string>icon_44x58.png</string>
+                <string>icon_64x64.png</string>
+                <string>icon_320x320.png</string>
+            </array>
+			<key>UTTypeIdentifier</key>
+			<string>iturbide.argonaut</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>argonaut</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
