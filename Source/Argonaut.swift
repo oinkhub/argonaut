@@ -31,8 +31,18 @@ public final class Argonaut {
             let coded = code(try! JSONEncoder().encode(item))
             _ = withUnsafeBytes(of: UInt16(coded.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 2) }
             _ = coded.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: coded.count) }
-            let data = try! Data(contentsOf: url(item.id))
-            _ = data.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: data.count) }
+            let input = InputStream(url: url(item.id))!
+            input.open()
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 4096)
+            while input.hasBytesAvailable {
+                let size = input.read(buffer, maxLength: 4096)
+                if size < 1 {
+                    break
+                }
+                out.write(buffer, maxLength: size)
+            }
+            buffer.deallocate()
+            input.close()
             out.close()
             DispatchQueue.main.async {
                 result(temporal)
