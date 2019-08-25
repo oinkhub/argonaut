@@ -8,6 +8,7 @@ final class TestArgonaut: XCTestCase {
     
     override func tearDown() {
         try! FileManager.default.removeItem(at: Argonaut.url)
+        try? FileManager.default.removeItem(at: Argonaut.temporal)
     }
     
     func testDelete() {

@@ -4,7 +4,7 @@ import Compression
 public final class Argonaut {
     public static let tile = 512.0
     static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
-    private static let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("map.argonaut")
+    static let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("map.argonaut")
     
     public static func save(_ id: String, data: Data) {
         prepare()
@@ -26,12 +26,14 @@ public final class Argonaut {
     
     public static func share(_ item: Session.Item, result: @escaping((URL) -> Void)) {
         DispatchQueue.global(qos: .background).async {
+            let out = OutputStream(url: temporal, append: false)!
+            out.open()
             let coded = code(try! JSONEncoder().encode(item))
-            var data = Data()
-            withUnsafeBytes(of: UInt16(coded.count)) { data += $0 }
-            data += coded
-            data += try! Data(contentsOf: url(item.id))
-            try! data.write(to: temporal, options: .atomic)
+            _ = withUnsafeBytes(of: UInt16(coded.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 2) }
+            _ = coded.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: coded.count) }
+            let data = try! Data(contentsOf: url(item.id))
+            _ = data.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: data.count) }
+            out.close()
             DispatchQueue.main.async {
                 result(temporal)
             }
