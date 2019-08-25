@@ -65,7 +65,7 @@ private(set) weak var app: App!
         Session.load {
             self.session = $0
             self.home.refresh()
-            
+
             if Date() >= $0.rating {
                 var components = DateComponents()
                 components.month = 4
