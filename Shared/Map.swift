@@ -66,7 +66,11 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func mapView(_: MKMapView, regionDidChangeAnimated: Bool) { zoom?(log2(visibleMapRect.width / Double(bounds.width / 100) ) < 14) }
+    func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
+        let level = log2(visibleMapRect.width / Double(bounds.width / 100) )
+        zoom?(level < 12 && level > 7.2)
+    }
+    
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.isSelected = false }
     func mapView(_: MKMapView, didSelect: MKAnnotationView) {
         didSelect.isSelected = true

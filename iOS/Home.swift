@@ -177,7 +177,6 @@ final class Home: UIView {
         @objc private func share() {
             Argonaut.share(item) { [weak self] in
                 guard let self = self else { return }
-                print("presenting")
                 let share = UIActivityViewController(activityItems: [$0], applicationActivities: nil)
                 share.popoverPresentationController?.sourceView = self
                 share.popoverPresentationController?.sourceRect = .init(x: self.frame.midX, y: self.frame.maxY, width: 1, height: 1)

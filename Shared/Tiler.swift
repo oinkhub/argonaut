@@ -7,6 +7,7 @@ final class Tiler: MKTileOverlay {
     init(_ cart: Cart) {
         self.cart = cart
         super.init(urlTemplate: nil)
+        canReplaceMapContent = true
         tileSize = .init(width: Argonaut.tile * 2, height: Argonaut.tile * 2)
     }
     
