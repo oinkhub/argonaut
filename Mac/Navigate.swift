@@ -7,7 +7,7 @@ final class Navigate: World {
     init(_ project: (Plan, Cart)) {
         super.init()
         map.addOverlay(Tiler(project.1), level: .aboveLabels)
-        map.merge(plan)
+        map.merge(project.0)
         _tools.bottomAnchor.constraint(equalTo: _out.bottomAnchor).isActive = true
         
         map.zoom = { [weak self] valid in

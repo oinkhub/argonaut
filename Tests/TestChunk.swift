@@ -35,4 +35,19 @@ final class TestChunk: XCTestCase {
         XCTAssertEqual(2, wrapped.subdata(in: 1 ..< 5).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
         XCTAssertEqual(99, wrapped[5])
     }
+    
+    func testCleanAfterWrap() {
+        factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
+        factory.chunk(.init("lorem ipsum".utf8), tile: 23, x: 34, y: 12)
+        factory.plan.path = [.init()]
+        XCTAssertFalse(factory.content.isEmpty)
+        XCTAssertFalse(factory.info.isEmpty)
+        XCTAssertFalse(factory.plan.path.isEmpty)
+        let wrapped = factory.wrap()
+        XCTAssertTrue(factory.content.isEmpty)
+        XCTAssertTrue(factory.info.isEmpty)
+        XCTAssertTrue(factory.plan.path.isEmpty)
+        XCTAssertEqual(2, wrapped.subdata(in: 19 ..< 23).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
+        XCTAssertEqual(99, wrapped[23])
+    }
 }

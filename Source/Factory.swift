@@ -131,5 +131,13 @@ public final class Factory {
         chunks += 1
     }
     
-    func wrap() -> Data { plan.code() + withUnsafeBytes(of: UInt32(chunks)) { Data($0) } + info + content }
+    func wrap() -> Data {
+        var data = plan.code() + withUnsafeBytes(of: UInt32(chunks)) { Data($0) }
+        plan.path = []
+        data += info
+        info = .init()
+        data += content
+        content = .init()
+        return data
+    }
 }
