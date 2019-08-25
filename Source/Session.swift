@@ -17,6 +17,13 @@ public class Session: Codable {
         public init() { }
     }
     
+    public struct Onboard: Codable {
+        public var first = true
+        public var rename = true
+        public var new = true
+        public var navigate = true
+    }
+    
     public static func load(_ result: @escaping((Session) -> Void)) {
         queue.async {
             let session = {
@@ -28,6 +35,7 @@ public class Session: Codable {
     
     private static let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
     public var items = [Item]()
+    public var onboard = Onboard()
     public var rating = Calendar.current.date(byAdding: {
         var d = DateComponents()
         d.day = 3
