@@ -2,14 +2,6 @@ import Argonaut
 import UIKit
 
 final class Navigate: World {
-    private final class Travel: UIView {
-        required init?(coder: NSCoder) { return nil }
-        init() {
-            super.init(frame: .zero)
-            translatesAutoresizingMaskIntoConstraints = false
-        }
-    }
-    
     private final class Item: UIControl {
         override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.3 : 1 } }
         private(set) weak var path: Plan.Path!
@@ -131,7 +123,18 @@ final class Navigate: World {
             item.addTarget(self, action: #selector(focus(_:)), for: .touchUpInside)
             list.content.addSubview(item)
             
-            item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.topAnchor).isActive = true
+            if previous == nil {
+                item.topAnchor.constraint(equalTo: list.topAnchor).isActive = true
+            } else {
+//                item.topAnchor.constrain
+                if map._walking {
+                    
+                }
+                if map._driving {
+                    
+                }
+            }
+            
             item.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
             item.widthAnchor.constraint(equalTo: list.widthAnchor).isActive = true
             previous = item
@@ -144,6 +147,42 @@ final class Navigate: World {
         UIView.animate(withDuration: 0.3) { [weak self] in
             self?._zoom.alpha = valid ? 0 : 0.8
         }
+    }
+    
+    private func make(_ image: String, total: String) -> UIView {
+        let base = UIView()
+        base.isUserInteractionEnabled = false
+        base.translatesAutoresizingMaskIntoConstraints = false
+        base.layer.cornerRadius = 4
+        list.content.addSubview(base)
+        
+        let icon = UIImageView(image: UIImage(named: image)!.withRenderingMode(.alwaysTemplate))
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        icon.tintColor = .black
+        icon.contentMode = .center
+        icon.clipsToBounds = true
+        base.addSubview(icon)
+        
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.text = total
+        label.textColor = .black
+        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
+        base.addSubview(label)
+        
+        icon.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 5).isActive = true
+        icon.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
+        icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        
+        label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
+        label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 4).isActive = true
+        label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
+        
+        base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
+        
+        return base
     }
     
     @objc private func focus(_ item: Item) {

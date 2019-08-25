@@ -26,6 +26,7 @@
 		CE26CE0822F467AA0007441D /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE26CDF822F4039F0007441D /* Line.swift */; };
 		CE2A863D22F7F7C000AC8190 /* Argonaut.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2A863C22F7F7C000AC8190 /* Argonaut.swift */; };
 		CE2A863E22F7F7C000AC8190 /* Argonaut.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2A863C22F7F7C000AC8190 /* Argonaut.swift */; };
+		CE2F61472312963100A01CF6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2F61462312963100A01CF6 /* User.swift */; };
 		CE3256B623029C2400D95A31 /* HelperMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3256B523029C2400D95A31 /* HelperMac.swift */; };
 		CE3256B823029C4200D95A31 /* HelperiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3256B723029C4200D95A31 /* HelperiOS.swift */; };
 		CE3978A022F5B1E60045E1D7 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE39789F22F5B1E60045E1D7 /* Marker.swift */; };
@@ -123,6 +124,7 @@
 		CE18343D23080B260046E496 /* Create.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Create.swift; sourceTree = "<group>"; };
 		CE26CDF822F4039F0007441D /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		CE2A863C22F7F7C000AC8190 /* Argonaut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Argonaut.swift; sourceTree = "<group>"; };
+		CE2F61462312963100A01CF6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		CE3256B523029C2400D95A31 /* HelperMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperMac.swift; sourceTree = "<group>"; };
 		CE3256B723029C4200D95A31 /* HelperiOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperiOS.swift; sourceTree = "<group>"; };
 		CE39789F22F5B1E60045E1D7 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				CEAB0F0722D73C5800320F4F /* New.swift */,
 				CE088B8422FEDE810001BEE4 /* Privacy.swift */,
 				CE734F7B22F1A2F7009799BE /* World.swift */,
+				CE2F61462312963100A01CF6 /* User.swift */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -596,6 +599,7 @@
 				CEE2BF9922EAF5400080C111 /* Create.swift in Sources */,
 				CE26CE0522F4679C0007441D /* Mark.swift in Sources */,
 				CE3978A022F5B1E60045E1D7 /* Marker.swift in Sources */,
+				CE2F61472312963100A01CF6 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

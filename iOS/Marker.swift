@@ -1,9 +1,10 @@
 import MapKit
 
 final class Marker: MKAnnotationView {
+    var index = "" { didSet { _index?.text = index } }
     override var annotation: MKAnnotation? { didSet { refresh() } }
     override var isSelected: Bool { didSet { refresh() } }
-    private(set) weak var index: UILabel?
+    private weak var _index: UILabel?
     private weak var base: UIView?
     private weak var title: UILabel?
     private weak var off: UIImageView?
@@ -36,15 +37,15 @@ final class Marker: MKAnnotationView {
             $0.heightAnchor.constraint(equalToConstant: 44).isActive = true
         }
         
-        let index = UILabel()
-        index.translatesAutoresizingMaskIntoConstraints = false
-        index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .bold)
-        index.textColor = .black
-        addSubview(index)
-        self.index = index
+        let _index = UILabel()
+        _index.translatesAutoresizingMaskIntoConstraints = false
+        _index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .bold)
+        _index.textColor = .black
+        addSubview(_index)
+        self._index = _index
         
-        index.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        index.bottomAnchor.constraint(equalTo: centerYAnchor, constant: -19).isActive = true
+        _index.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        _index.bottomAnchor.constraint(equalTo: centerYAnchor, constant: -19).isActive = true
         
         let base = UIView()
         base.isUserInteractionEnabled = false

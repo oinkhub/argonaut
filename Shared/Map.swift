@@ -41,7 +41,7 @@ final class Map: MKMapView, MKMapViewDelegate {
             view = dequeueReusableAnnotationView(withIdentifier: "User") as? User ?? User()
         case is Mark:
             view = dequeueReusableAnnotationView(withIdentifier: "Marker") as? Marker ?? Marker()
-            (view as! Marker).index?.text = "\(plan.path.firstIndex { $0 === (viewFor as! Mark).path }! + 1)"
+            (view as! Marker).index = "\(plan.path.firstIndex { $0 === (viewFor as! Mark).path }! + 1)"
         default: break
         }
         view?.annotation = viewFor

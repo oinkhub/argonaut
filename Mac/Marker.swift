@@ -10,4 +10,7 @@ final class Marker: MKAnnotationView {
         isDraggable = true
         centerOffset.y = -28
     }
+    
+    func refresh() {
+    }
 }
