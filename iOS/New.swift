@@ -106,7 +106,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                 if driving == nil {
                     walking.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
                 } else {
-                    walking.rightAnchor.constraint(equalTo: centerXAnchor, constant: -10).isActive = true
+                    walking.rightAnchor.constraint(equalTo: centerXAnchor, constant: -5).isActive = true
                 }
                 
                 title.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor, constant: 25).isActive = true
@@ -120,7 +120,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                 if walking == nil {
                     driving.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
                 } else {
-                    driving.leftAnchor.constraint(equalTo: centerXAnchor, constant: 10).isActive = true
+                    driving.leftAnchor.constraint(equalTo: centerXAnchor, constant: 5).isActive = true
                 }
                 
                 title.topAnchor.constraint(greaterThanOrEqualTo: driving.bottomAnchor, constant: 25).isActive = true
@@ -372,7 +372,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                 list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _walking.bottomAnchor, constant: 20).isActive = true
                 
                 if map._driving {
-                    _walking.rightAnchor.constraint(equalTo: list.content.centerXAnchor, constant: -10).isActive = true
+                    _walking.rightAnchor.constraint(equalTo: list.content.centerXAnchor, constant: -5).isActive = true
                 } else {
                     _walking.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
                 }
@@ -386,7 +386,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                 list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _driving.bottomAnchor, constant: 20).isActive = true
                 
                 if map._walking {
-                    _driving.leftAnchor.constraint(equalTo: list.content.centerXAnchor, constant: 10).isActive = true
+                    _driving.leftAnchor.constraint(equalTo: list.content.centerXAnchor, constant: 5).isActive = true
                 } else {
                     _driving.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
                 }

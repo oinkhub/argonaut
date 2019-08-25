@@ -22,8 +22,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         
         var region = MKCoordinateRegion()
         region.center = userLocation.location == nil ? self.region.center : userLocation.coordinate
-        region.span.latitudeDelta = 0.02
-        region.span.longitudeDelta = 0.02
+        region.span.latitudeDelta = 0.005
+        region.span.longitudeDelta = 0.005
         setRegion(region, animated: false)
     }
     
@@ -68,7 +68,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
         let level = log2(visibleMapRect.width / Double(bounds.width / 100) )
-        zoom?(level < 12 && level > 7.2)
+        zoom?(level > 7.2 && level < 13.2)
     }
     
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.isSelected = false }

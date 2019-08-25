@@ -34,8 +34,8 @@ final class Navigate: World {
             name.numberOfLines = 0
             addSubview(name)
             
-            topAnchor.constraint(equalTo: name.topAnchor, constant: -30).isActive = true
-            bottomAnchor.constraint(equalTo: name.bottomAnchor, constant: 30).isActive = true
+            topAnchor.constraint(equalTo: name.topAnchor, constant: -34).isActive = true
+            bottomAnchor.constraint(equalTo: name.bottomAnchor, constant: 34).isActive = true
             
             base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             base.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
@@ -96,17 +96,17 @@ final class Navigate: World {
         _close.centerYAnchor.constraint(equalTo: map.topAnchor, constant: -22).isActive = true
         
         _zoom.leftAnchor.constraint(equalTo: icon.leftAnchor, constant: -5).isActive = true
-        _zoom.rightAnchor.constraint(equalTo: warning.rightAnchor, constant: 20).isActive = true
-        _zoom.topAnchor.constraint(equalTo: warning.topAnchor, constant: -14).isActive = true
-        _zoom.bottomAnchor.constraint(equalTo: warning.bottomAnchor, constant: 14).isActive = true
+        _zoom.rightAnchor.constraint(equalTo: warning.rightAnchor, constant: 15).isActive = true
+        _zoom.topAnchor.constraint(equalTo: warning.topAnchor, constant: -12).isActive = true
+        _zoom.bottomAnchor.constraint(equalTo: warning.bottomAnchor, constant: 12).isActive = true
         
-        icon.centerYAnchor.constraint(equalTo: warning.centerYAnchor).isActive = true
+        icon.centerYAnchor.constraint(equalTo: warning.centerYAnchor, constant: -1).isActive = true
         icon.rightAnchor.constraint(equalTo: warning.leftAnchor).isActive = true
-        icon.widthAnchor.constraint(equalToConstant: 45).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        icon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        icon.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        warning.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 20).isActive = true
-        warning.topAnchor.constraint(equalTo: map.topAnchor, constant: 30).isActive = true
+        warning.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 15).isActive = true
+        warning.topAnchor.constraint(equalTo: map.topAnchor, constant: 20).isActive = true
         
         title.centerYAnchor.constraint(equalTo: _close.centerYAnchor).isActive = true
         title.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
@@ -117,6 +117,11 @@ final class Navigate: World {
             map.topAnchor.constraint(equalTo: topAnchor, constant: 44).isActive = true
         }
         
+        refresh()
+    }
+    
+    override func refresh() {
+        list.clear()
         var previous: Item?
         map.plan.path.enumerated().forEach {
             let item = Item($0)
@@ -126,12 +131,39 @@ final class Navigate: World {
             if previous == nil {
                 item.topAnchor.constraint(equalTo: list.topAnchor).isActive = true
             } else {
-//                item.topAnchor.constrain
-                if map._walking {
-                    
-                }
-                if map._driving {
-                    
+                if !map._walking && !map._driving {
+                    item.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
+                } else {
+                    if map._walking, let option = previous!.path?.options.first(where: { $0.mode == .walking }) {
+                        let walking = make("walking", total: measure(option.distance) + ": " + dater.string(from: option.duration)!)
+                        walking.backgroundColor = .walking
+                        
+                        walking.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
+                        walking.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
+                        
+                        if map._driving {
+                            walking.rightAnchor.constraint(equalTo: list.content.centerXAnchor, constant: -5).isActive = true
+                        } else {
+                            walking.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
+                        }
+                        
+                        item.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor).isActive = true
+                    }
+                    if map._driving, let option = previous!.path?.options.first(where: { $0.mode == .driving }) {
+                        let driving = make("driving", total: measure(option.distance) + ": " + dater.string(from: option.duration)!)
+                        driving.backgroundColor = .driving
+                        
+                        driving.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
+                        driving.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
+                        
+                        if map._walking {
+                            driving.leftAnchor.constraint(equalTo: list.content.centerXAnchor, constant: 5).isActive = true
+                        } else {
+                            driving.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
+                        }
+                        
+                        item.topAnchor.constraint(greaterThanOrEqualTo: driving.bottomAnchor).isActive = true
+                    }
                 }
             }
             
