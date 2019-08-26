@@ -3,6 +3,7 @@ import Compression
 
 public final class Argonaut {
     public static let tile = 512.0
+    static let size = 100_000
     static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
     static let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("map.argonaut")
     
@@ -12,7 +13,7 @@ public final class Argonaut {
     }
     
     public static func load(_ id: String) -> (Plan, Cart) {
-        let data = decode(try! Data(contentsOf: url(id)))
+        let data = Coder().code(url(id), operation: COMPRESSION_STREAM_DECODE)
         let plan = Plan()
         let cart = Cart(data.subdata(in: plan.decode(data) ..< data.count))
         return (plan, cart)
@@ -54,10 +55,22 @@ public final class Argonaut {
         DispatchQueue.global(qos: .background).async {
             guard map.pathExtension == "argonaut" else { return }
             prepare()
-            let data = try! Data(contentsOf: map)
-            let count = Int(data.subdata(in: 0 ..< 2).withUnsafeBytes { $0.bindMemory(to: UInt16.self)[0] })
-            let item = try! JSONDecoder().decode(Session.Item.self, from: decode(data.subdata(in: 2 ..< count + 2)))
-            try! data.subdata(in: 2 + count ..< data.count).write(to: url(item.id), options: .atomic)
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
+            let input = InputStream(url: map)!
+            input.open()
+            print(input.read(buffer, maxLength: 2))
+            let count = Int(buffer.withMemoryRebound(to: UInt16.self, capacity: 1) { $0.pointee })
+            let actual = input.read(buffer, maxLength: count)
+            print("count: \(count), actual: \(actual)")
+            let item = try! JSONDecoder().decode(Session.Item.self, from: Data(bytes: buffer, count: count))
+            let out = OutputStream(url: url(item.id), append: false)!
+            out.open()
+            while input.hasBytesAvailable {
+                out.write(buffer, maxLength: input.read(buffer, maxLength: size))
+            }
+            buffer.deallocate()
+            input.close()
+            out.close()
             DispatchQueue.main.async {
                 result(item)
             }
@@ -78,16 +91,6 @@ public final class Argonaut {
         return data.withUnsafeBytes {
             let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
             let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, data.count * 10, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
-            buffer.deallocate()
-            return result
-        }
-    }
-    
-    private static func decode(_ data: Data) -> Data {
-        return data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
-            let result = Data(bytes: buffer, count: compression_decode_buffer(buffer, data.count * 10, $0.bindMemory(
-                to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
             buffer.deallocate()
             return result
         }
