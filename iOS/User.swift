@@ -2,7 +2,7 @@ import MapKit
 
 final class User: MKAnnotationView {
     override var isSelected: Bool { didSet {
-        UIView.animate(withDuration: 0.5) { [weak self] in self?.me.alpha = self?.isSelected == true ? 1 : 0 }
+        UIView.animate(withDuration: 0.5) { [weak self] in self?.me?.alpha = self?.isSelected == true ? 1 : 0 }
     } }
     
     override var annotation: MKAnnotation? { didSet {
@@ -18,8 +18,8 @@ final class User: MKAnnotationView {
         }
     } }
     
-    private(set) weak var heading: UIImageView!
-    private weak var me: UIImageView!
+    private(set) weak var heading: UIImageView?
+    private weak var me: UIImageView?
     private weak var halo: CAShapeLayer?
     override var reuseIdentifier: String? { "User" }
     

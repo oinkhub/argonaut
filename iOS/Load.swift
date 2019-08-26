@@ -4,7 +4,36 @@ import UIKit
 final class Load: UIView {
     private static weak var view: Load?
     
-    class func load(_ item: Session.Item) {
+    class func navigate(_ item: Session.Item) {
+        modal {
+            let project = Argonaut.load(item.id)
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.5, animations: {
+                    view?.alpha = 0
+                }) { _ in
+                    view?.removeFromSuperview()
+                    app.push(Navigate(item, project: project))
+                }
+            }
+        }
+    }
+    
+    class func share(_ item: Session.Item) {
+        modal {
+            Argonaut.share(item) { url in
+                UIView.animate(withDuration: 0.5, animations: {
+                    view?.alpha = 0
+                }) { _ in
+                    view?.removeFromSuperview()
+                    let share = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                    share.popoverPresentationController?.sourceView = app.view
+                    app.present(share, animated: true)
+                }
+            }
+        }
+    }
+    
+    private class func modal(_ perform: @escaping(() -> Void)) {
         guard view == nil else { return }
         let view = Load()
         self.view = view
@@ -17,9 +46,7 @@ final class Load: UIView {
         
         UIView.animate(withDuration: 0.3, animations: {
             view.alpha = 1
-        }) { [weak view] _ in
-            view?.load(item)
-        }
+        }) { _ in perform() }
     }
     
     required init?(coder: NSCoder) { return nil }
@@ -53,19 +80,5 @@ final class Load: UIView {
         
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-    }
-    
-    private func load(_ item: Session.Item) {
-        DispatchQueue.global(qos: .background).async {
-            let project = Argonaut.load(item.id)
-            DispatchQueue.main.async {
-                UIView.animate(withDuration: 0.5, animations: { [weak self] in
-                    self?.alpha = 0
-                }) { [weak self] _ in
-                    self?.removeFromSuperview()
-                    app.push(Navigate(item, project: project))
-                }
-            }
-        }
     }
 }

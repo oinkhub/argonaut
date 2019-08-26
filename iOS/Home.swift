@@ -161,7 +161,8 @@ final class Home: UIView {
             return base
         }
         
-        @objc private func navigate() { Load.load(item) }
+        @objc private func navigate() { Load.navigate(item) }
+        @objc private func share() { Load.share(item) }
         
         @objc private func remove() {
             let alert = UIAlertController(title: .key("Home.deleteTitle") + item.title, message: nil, preferredStyle: .actionSheet)
@@ -172,16 +173,6 @@ final class Home: UIView {
             alert.popoverPresentationController?.sourceView = self
             alert.popoverPresentationController?.sourceRect = .init(x: frame.midX, y: frame.maxY, width: 1, height: 1)
             app.present(alert, animated: true)
-        }
-        
-        @objc private func share() {
-            Argonaut.share(item) { [weak self] in
-                guard let self = self else { return }
-                let share = UIActivityViewController(activityItems: [$0], applicationActivities: nil)
-                share.popoverPresentationController?.sourceView = self
-                share.popoverPresentationController?.sourceRect = .init(x: self.frame.midX, y: self.frame.maxY, width: 1, height: 1)
-                app.present(share, animated: true)
-            }
         }
     }
     

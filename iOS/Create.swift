@@ -104,7 +104,7 @@ final class Create: UIView {
         self.progress.isActive = true
         
         label.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-        label.widthAnchor.constraint(lessThanOrEqualToConstant: 280).isActive = true
+        label.widthAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
         label.bottomAnchor.constraint(equalTo: cancel.topAnchor, constant: -40).isActive = true
         
         logo.bottomAnchor.constraint(equalTo: label.topAnchor).isActive = true
