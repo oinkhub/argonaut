@@ -19,9 +19,12 @@ public class Session: Codable {
     
     public struct Onboard: Codable {
         public var first = true
-        public var rename = true
-        public var new = true
-        public var navigate = true
+        public var created = true
+        public var newDown = true
+        public var newUp = true
+        public var navigateDown = true
+        public var navigateUp = true
+        public var added = true
     }
     
     public static func load(_ result: @escaping((Session) -> Void)) {

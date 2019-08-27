@@ -16,8 +16,7 @@ public final class Argonaut {
         (0 ..< buffer.pointee).forEach { _ in
             let item = Plan.Path()
             input.read(buffer, maxLength: 1)
-            let len = Int(buffer.pointee)
-            input.read(buffer, maxLength: len)
+            input.read(buffer, maxLength: Int(buffer.pointee))
             item.name = String(cString: buffer)
             input.read(buffer, maxLength: 8)
             item.latitude = buffer.withMemoryRebound(to: Double.self, capacity: 1) { $0[0] }
@@ -50,9 +49,14 @@ public final class Argonaut {
             input.read(buffer, maxLength: 4)
             let y = buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] }
             input.read(buffer, maxLength: 4)
-            let length = Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })
-            input.read(buffer, maxLength: length)
-            map["\(tile)-\(x).\(y)"] = Data(bytes: buffer, count: length)
+            var length = Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })
+            var data = Data()
+            repeat {
+                let read = input.read(buffer, maxLength: min(size, length))
+                data.append(buffer, count: read)
+                length -= read
+            } while length > 0
+            map["\(tile)-\(x).\(y)"] = data
         }
         buffer.deallocate()
         input.close()
@@ -114,7 +118,25 @@ public final class Argonaut {
         prepare()
         let out = OutputStream(url: temporal, append: false)!
         out.open()
-        _ = factory.plan.code().withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
+        _ = withUnsafeBytes(of: UInt8(factory.plan.path.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
+        factory.plan.path.forEach {
+            let name = Data($0.name.utf8)
+            _ = withUnsafeBytes(of: UInt8(name.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
+            _ = withUnsafeBytes(of: name) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: name.count) }
+            _ = withUnsafeBytes(of: $0.latitude) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
+            _ = withUnsafeBytes(of: $0.longitude) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
+            _ = withUnsafeBytes(of: UInt8($0.options.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
+            $0.options.forEach {
+                _ = withUnsafeBytes(of: UInt8($0.mode.rawValue)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
+                _ = withUnsafeBytes(of: $0.duration) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
+                _ = withUnsafeBytes(of: $0.distance) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
+                _ = withUnsafeBytes(of: UInt16($0.points.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 2) }
+                $0.points.forEach {
+                    _ = withUnsafeBytes(of: $0.0) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
+                    _ = withUnsafeBytes(of: $0.1) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
+                }
+            }
+        }
         _ = withUnsafeBytes(of: UInt32(factory.chunks)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
         _ = factory.content.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
         out.close()

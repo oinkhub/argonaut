@@ -70,7 +70,8 @@ final class Home: UIView {
                 $0.isAccessibilityElement = true
                 addSubview($0)
                 
-                $0.topAnchor.constraint(equalTo: driving.bottomAnchor).isActive = true
+                $0.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor).isActive = true
+                $0.topAnchor.constraint(greaterThanOrEqualTo: driving.bottomAnchor).isActive = true
                 $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
                 $0.widthAnchor.constraint(equalToConstant: 60).isActive = true
                 $0.rightAnchor.constraint(equalTo: right).isActive = true

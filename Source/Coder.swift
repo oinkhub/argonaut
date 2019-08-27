@@ -3,9 +3,8 @@ import Compression
 
 final class Coder {
     class func decode(_ from: URL) -> URL {
-        let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("argonaut.tmp")
-        code(from, to: url, operation: COMPRESSION_STREAM_DECODE)
-        return url
+        code(from, to: Argonaut.temporal, operation: COMPRESSION_STREAM_DECODE)
+        return Argonaut.temporal
     }
     
     class func code(_ from: URL, to: URL, operation: compression_stream_operation = COMPRESSION_STREAM_ENCODE) {

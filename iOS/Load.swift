@@ -53,16 +53,9 @@ final class Load: UIView {
     private init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = .black
+        backgroundColor = .init(white: 0.1333, alpha: 1)
         alpha = 0
         accessibilityViewIsModal = true
-        
-        let base = UIView()
-        base.isUserInteractionEnabled = false
-        base.translatesAutoresizingMaskIntoConstraints = false
-        base.backgroundColor = .init(white: 0.1333, alpha: 1)
-        base.layer.cornerRadius = 6
-        addSubview(base)
         
         let label = UILabel()
         label.isAccessibilityElement = true
@@ -70,13 +63,8 @@ final class Load: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = .key("Load.label")
         label.textColor = .halo
-        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
+        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize, weight: .bold)
         addSubview(label)
-        
-        base.leftAnchor.constraint(equalTo: label.leftAnchor, constant: -15).isActive = true
-        base.rightAnchor.constraint(equalTo: label.rightAnchor, constant: 15).isActive = true
-        base.topAnchor.constraint(equalTo: label.topAnchor, constant: -15).isActive = true
-        base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 15).isActive = true
         
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true

@@ -3,34 +3,35 @@ import XCTest
 
 final class TestPlan: XCTestCase {
     func testCode() {
-        let plan = Plan()
-        plan.path = [.init(), .init()]
-        plan.path[0].name = "hello world"
-        let coded = plan.code()
-        XCTAssertEqual(2, coded[0])
-        XCTAssertEqual(11, coded[1])
-        XCTAssertEqual("hello world", String(decoding: coded.subdata(in: 2 ..< 13), as: UTF8.self))
+        let factory = Factory()
+        factory.plan.path = [.init(), .init()]
+        factory.plan.path[0].name = "hello world"
+        factory.item.id = "abc"
+        Argonaut.save(factory)
+        let coded = Argonaut.load("abc")
+        XCTAssertEqual(2, coded.0.path.count)
+        XCTAssertEqual("hello world", coded.0.path[0].name)
     }
     
     func testDecode() {
-        let old = Plan()
-        old.path = [.init(), .init()]
-        old.path[0].name = "hello world"
-        old.path[0].latitude = 33.5
-        old.path[0].longitude = 23.5
-        old.path[0].options = [.init(), .init()]
-        old.path[0].options[0].mode = .driving
-        old.path[0].options[0].duration = 88.34
-        old.path[0].options[0].distance = 123.2
-        old.path[0].options[0].points = [(1.5, 2), (3, 4), (5, 6)]
-        old.path[1].name = "lorem ipsum"
-        old.path[1].latitude = 45.9
-        old.path[1].longitude = 90.1
-        old.path[1].options = [.init()]
-        old.path[1].options[0].points = [(99, 88)]
-        
-        let new = Plan()
-        _ = new.decode(old.code())
+        let old = Factory()
+        old.plan.path = [.init(), .init()]
+        old.plan.path[0].name = "hello world"
+        old.plan.path[0].latitude = 33.5
+        old.plan.path[0].longitude = 23.5
+        old.plan.path[0].options = [.init(), .init()]
+        old.plan.path[0].options[0].mode = .driving
+        old.plan.path[0].options[0].duration = 88.34
+        old.plan.path[0].options[0].distance = 123.2
+        old.plan.path[0].options[0].points = [(1.5, 2), (3, 4), (5, 6)]
+        old.plan.path[1].name = "lorem ipsum"
+        old.plan.path[1].latitude = 45.9
+        old.plan.path[1].longitude = 90.1
+        old.plan.path[1].options = [.init()]
+        old.plan.path[1].options[0].points = [(99, 88)]
+        old.item.id = "a"
+        Argonaut.save(old)
+        let new = Argonaut.load("a").0
         XCTAssertEqual(2, new.path.count)
         XCTAssertEqual("hello world", new.path[0].name)
         XCTAssertEqual(33.5, new.path[0].latitude)
