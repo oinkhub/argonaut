@@ -25,7 +25,6 @@ public final class Plan {
     }
     
     public var path = [Path]()
-    
     public init() { }
     
     func code() -> Data {
@@ -60,9 +59,9 @@ public final class Plan {
             index += 1
             item.name = String(decoding: data.subdata(in: index ..< index + name), as: UTF8.self)
             index += name
-            item.latitude = data.subdata(in: index ..< index + 8 ).withUnsafeBytes { $0.bindMemory(to: Double.self)[0] }
+            item.latitude = data.subdata(in: index ..< index + 8).withUnsafeBytes { $0.bindMemory(to: Double.self)[0] }
             index += 8
-            item.longitude = data.subdata(in: index ..< index + 8 ).withUnsafeBytes { $0.bindMemory(to: Double.self)[0] }
+            item.longitude = data.subdata(in: index ..< index + 8).withUnsafeBytes { $0.bindMemory(to: Double.self)[0] }
             index += 8
             index += 1
             (0 ..< data[index - 1]).forEach { _ in

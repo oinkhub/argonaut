@@ -78,6 +78,7 @@ final class TestArgonaut: XCTestCase {
         factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
         factory.chunk(.init("lorem ipsum".utf8), tile: 34, x: 45, y: 12)
         factory.plan.path = [.init()]
+        factory.plan.path[0].name = "hello"
         factory.plan.path[0].options = [.init()]
         factory.plan.path[0].options[0].points = [(-50, 60), (70, -80), (-30, 20), (82, -40)]
         Argonaut.save("abc", data: factory.wrap())

@@ -9,13 +9,57 @@ public final class Argonaut {
     
     public static func save(_ id: String, data: Data) {
         prepare()
-        try! code(data).write(to: url(id), options: .atomic)
+        try! Coder.code(data).write(to: url(id), options: .atomic)
     }
     
     public static func load(_ id: String) -> (Plan, Cart) {
-        let data = Coder().code(url(id), operation: COMPRESSION_STREAM_DECODE)
         let plan = Plan()
-        let cart = Cart(data.subdata(in: plan.decode(data) ..< data.count))
+        let cart = Cart()
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
+        let input = InputStream(url: Coder.code(url(id), operation: COMPRESSION_STREAM_DECODE))!
+        input.open()
+        input.read(buffer, maxLength: 1)
+        (0 ..< buffer.pointee).forEach { _ in
+            let item = Plan.Path()
+            input.read(buffer, maxLength: 1)
+            let len = Int(buffer.pointee)
+            input.read(buffer, maxLength: len)
+            item.name = String(cString: buffer)
+            input.read(buffer, maxLength: 8)
+            item.latitude = buffer.withMemoryRebound(to: Double.self, capacity: 1) { $0[0] }
+            input.read(buffer, maxLength: 8)
+            item.longitude = buffer.withMemoryRebound(to: Double.self, capacity: 1) { $0[0] }
+            input.read(buffer, maxLength: 1)
+            (0 ..< buffer.pointee).forEach { _ in
+                let option = Plan.Option()
+                input.read(buffer, maxLength: 1)
+                option.mode = Plan.Mode(rawValue: buffer.pointee)!
+                input.read(buffer, maxLength: 8)
+                option.duration = buffer.withMemoryRebound(to: Double.self, capacity: 1) { $0[0] }
+                input.read(buffer, maxLength: 8)
+                option.distance = buffer.withMemoryRebound(to: Double.self, capacity: 1) { $0[0] }
+                input.read(buffer, maxLength: 2)
+                (0 ..< Int(buffer.withMemoryRebound(to: UInt16.self, capacity: 1) { $0[0] })).forEach { _ in
+                    input.read(buffer, maxLength: 16)
+                    option.points.append(buffer.withMemoryRebound(to: Double.self, capacity: 2) { ($0[0], $0[1]) })
+                }
+                item.options.append(option)
+            }
+            plan.path.append(item)
+        }
+        input.read(buffer, maxLength: 4)
+        cart.map = (0 ..< Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })).reduce(into: [:]) { map, _ in
+            input.read(buffer, maxLength: 1)
+            let tile = buffer.pointee
+            input.read(buffer, maxLength: 4)
+            let x = buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] }
+            input.read(buffer, maxLength: 4)
+            let y = buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] }
+            input.read(buffer, maxLength: 4)
+            let length = Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })
+            input.read(buffer, maxLength: length)
+            map["\(tile)-\(x).\(y)"] = Data(bytes: buffer, count: length)
+        }
         return (plan, cart)
     }
     
@@ -29,7 +73,7 @@ public final class Argonaut {
         DispatchQueue.global(qos: .background).async {
             let out = OutputStream(url: temporal, append: false)!
             out.open()
-            let coded = code(try! JSONEncoder().encode(item))
+            let coded = Coder.code(try! JSONEncoder().encode(item))
             _ = withUnsafeBytes(of: UInt16(coded.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 2) }
             _ = coded.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: coded.count) }
             let input = InputStream(url: url(item.id))!
@@ -59,7 +103,7 @@ public final class Argonaut {
             let input = InputStream(url: map)!
             input.open()
             input.read(buffer, maxLength: 2)
-            let item = try! JSONDecoder().decode(Session.Item.self, from: Coder().decode(.init(bytes: buffer, count: input.read(buffer, maxLength: Int(buffer.withMemoryRebound(to: UInt16.self, capacity: 1) { $0.pointee })))))
+            let item = try! JSONDecoder().decode(Session.Item.self, from: Coder.decode(.init(bytes: buffer, count: input.read(buffer, maxLength: Int(buffer.withMemoryRebound(to: UInt16.self, capacity: 1) { $0.pointee })))))
             let out = OutputStream(url: url(item.id), append: false)!
             out.open()
             while input.hasBytesAvailable {
@@ -83,13 +127,4 @@ public final class Argonaut {
     }
     
     private static func url(_ id: String) -> URL { return url.appendingPathComponent(id + ".argonaut") }
-    
-    private static func code(_ data: Data) -> Data {
-        return data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
-            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, data.count * 10, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
-            buffer.deallocate()
-            return result
-        }
-    }
 }

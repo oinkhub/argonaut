@@ -1,9 +1,9 @@
 import Foundation
 
 public final class Cart {
-    private let map: [String: Data]
-    
-    public init(_ data: Data) {
+    var map = [String: Data]()
+    /*
+    init(_ data: Data) {
         let count = Int(data.subdata(in: 0 ..< 4).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
         let content = 4 + (17 * count)
         map = (0 ..< count).reduce(into: [:]) {
@@ -15,7 +15,7 @@ public final class Cart {
             let position = content + start
             $0["\(tile)-\(x).\(y)"] = data.subdata(in: position ..< position + Int(data.subdata(in: stride + 13 ..< stride + 17).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] }))
         }
-    }
+    }*/
     
     public func tile(_ zoom: Int, x: Int, y: Int) -> Data? {
         return map["\(zoom)-\(x).\(y)"] ?? (zoom >= 12 ? Data() : nil)
