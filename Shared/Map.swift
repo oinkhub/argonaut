@@ -5,6 +5,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
     var user: ((CLLocation) -> Void)?
     var zoom: ((Bool) -> Void)?
+    var drag = true
     private(set) var _follow = true
     private(set) var _walking = true
     private(set) var _driving = true
@@ -45,7 +46,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         case is MKUserLocation:
             view = dequeueReusableAnnotationView(withIdentifier: "User") as? User ?? User()
         case is Mark:
-            view = dequeueReusableAnnotationView(withIdentifier: "Marker") as? Marker ?? Marker()
+            view = dequeueReusableAnnotationView(withIdentifier: "Marker") as? Marker ?? Marker(drag)
             (view as! Marker).index = "\(plan.path.firstIndex { $0 === (viewFor as! Mark).path }! + 1)"
         default: break
         }

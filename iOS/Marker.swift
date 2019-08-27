@@ -12,9 +12,9 @@ final class Marker: MKAnnotationView {
     override var reuseIdentifier: String? { "Marker" }
     
     required init?(coder: NSCoder) { return nil }
-    init() {
+    init(_ drag: Bool) {
         super.init(annotation: nil, reuseIdentifier: nil)
-        isDraggable = true
+        isDraggable = drag
         canShowCallout = false
         frame = .init(x: 0, y: 0, width: 60, height: 60)
         

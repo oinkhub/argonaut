@@ -73,6 +73,7 @@ final class Navigate: World {
         map.merge(project.0)
         map.zoom = { [weak self] in self?.zoom($0) }
         map.user = { [weak self] in self?.user($0) }
+        map.drag = false
         
         let _zoom = UIView()
         _zoom.translatesAutoresizingMaskIntoConstraints = false

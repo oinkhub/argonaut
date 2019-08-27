@@ -453,6 +453,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     @available(iOS 9.3, *) @objc private func edit(_ gesture: UILongPressGestureRecognizer) { field.field.text = (gesture.view as! Result).search.title }
     
     @objc private func focus(_ item: Item) {
+        map.selectedAnnotations.forEach { map.deselectAnnotation($0, animated: true) }
         if let mark = map.annotations.first(where: { ($0 as? Mark)?.path === item.path }) {
             map.selectAnnotation(mark, animated: true)
         }
