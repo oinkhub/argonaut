@@ -43,7 +43,6 @@ final class TestCoder: XCTestCase {
             buffer.deallocate()
             return result
         } as Data, as: UTF8.self))
-        XCTAssertFalse(FileManager.default.fileExists(atPath: coder.url.path))
     }
     
     func testDecodeUrl() {

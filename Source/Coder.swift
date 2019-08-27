@@ -2,14 +2,15 @@ import Foundation
 import Compression
 
 final class Coder {
-    let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("argonaut.tmp")
     func code(_ data: Data, to: URL, operation: compression_stream_operation) {
+        let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("argonaut.tmp")
         try! data.write(to: url, options: .atomic)
         code(url, to: to, operation: operation)
         try! FileManager.default.removeItem(at: url)
     }
     
     func code(_ from: URL, operation: compression_stream_operation) -> Data {
+        let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("argonaut.tmp")
         try? FileManager.default.removeItem(at: url)
         code(from, to: url, operation: operation)
         return try! Data(contentsOf: url)
@@ -35,5 +36,24 @@ final class Coder {
         buffer.deallocate()
         input.close()
         out.close()
+    }
+    
+    func code(_ data: Data) -> Data {
+        return data.withUnsafeBytes {
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
+            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, data.count * 10, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
+            buffer.deallocate()
+            return result
+        }
+    }
+    
+    func decode(_ data: Data) -> Data {
+        return data.withUnsafeBytes {
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
+            let result = Data(bytes: buffer, count: compression_decode_buffer(buffer, data.count * 10, $0.bindMemory(
+                to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
+            buffer.deallocate()
+            return result
+        }
     }
 }

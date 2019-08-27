@@ -17,7 +17,7 @@
 				<string>icon_320x320.png</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Map</string>
+			<string>Argonaut map</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>

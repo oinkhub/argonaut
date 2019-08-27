@@ -58,11 +58,8 @@ public final class Argonaut {
             let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
             let input = InputStream(url: map)!
             input.open()
-            print(input.read(buffer, maxLength: 2))
-            let count = Int(buffer.withMemoryRebound(to: UInt16.self, capacity: 1) { $0.pointee })
-            let actual = input.read(buffer, maxLength: count)
-            print("count: \(count), actual: \(actual)")
-            let item = try! JSONDecoder().decode(Session.Item.self, from: Data(bytes: buffer, count: count))
+            input.read(buffer, maxLength: 2)
+            let item = try! JSONDecoder().decode(Session.Item.self, from: Coder().decode(.init(bytes: buffer, count: input.read(buffer, maxLength: Int(buffer.withMemoryRebound(to: UInt16.self, capacity: 1) { $0.pointee })))))
             let out = OutputStream(url: url(item.id), append: false)!
             out.open()
             while input.hasBytesAvailable {
