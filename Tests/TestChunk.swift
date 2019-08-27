@@ -11,43 +11,28 @@ final class TestChunk: XCTestCase {
     func testAdd() {
         factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
         XCTAssertEqual(1, factory.chunks)
-        XCTAssertEqual(99, factory.info.first)
-        XCTAssertEqual(87, factory.info.subdata(in: 1 ..< 5).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(76, factory.info.subdata(in: 5 ..< 9).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(0, factory.info.subdata(in: 9 ..< 13).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(11, factory.info.subdata(in: 13 ..< 17).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual("hello world", String(decoding: factory.content.subdata(in: 0 ..< 11), as: UTF8.self))
+        XCTAssertEqual(99, factory.content.first)
+        XCTAssertEqual(87, factory.content.subdata(in: 1 ..< 5).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
+        XCTAssertEqual(76, factory.content.subdata(in: 5 ..< 9).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
+        XCTAssertEqual(11, factory.content.subdata(in: 9 ..< 13).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
+        XCTAssertEqual("hello world", String(decoding: factory.content.subdata(in: 13 ..< 24), as: UTF8.self))
         
         factory.chunk(.init("lorem ipsum".utf8), tile: 42, x: 21, y: 67)
         XCTAssertEqual(2, factory.chunks)
-        XCTAssertEqual(42, factory.info[17])
-        XCTAssertEqual(21, factory.info.subdata(in: 18 ..< 22).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(67, factory.info.subdata(in: 22 ..< 26).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(11, factory.info.subdata(in: 26 ..< 30).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(11, factory.info.subdata(in: 30 ..< 34).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual("lorem ipsum", String(decoding: factory.content.subdata(in: 11 ..< 22), as: UTF8.self))
+        XCTAssertEqual(42, factory.content[24])
+        XCTAssertEqual(21, factory.content.subdata(in: 25 ..< 29).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
+        XCTAssertEqual(67, factory.content.subdata(in: 29 ..< 33).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
+        XCTAssertEqual(11, factory.content.subdata(in: 33 ..< 37).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
+        XCTAssertEqual("lorem ipsum", String(decoding: factory.content.subdata(in: 37 ..< 48), as: UTF8.self))
     }
     
     func testWrap() {
         factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
         factory.chunk(.init("lorem ipsum".utf8), tile: 23, x: 34, y: 12)
-        let wrapped = factory.wrap()
-        XCTAssertEqual(2, wrapped.subdata(in: 1 ..< 5).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(99, wrapped[5])
-    }
-    
-    func testCleanAfterWrap() {
-        factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
-        factory.chunk(.init("lorem ipsum".utf8), tile: 23, x: 34, y: 12)
-        factory.plan.path = [.init()]
-        XCTAssertFalse(factory.content.isEmpty)
-        XCTAssertFalse(factory.info.isEmpty)
-        XCTAssertFalse(factory.plan.path.isEmpty)
-        let wrapped = factory.wrap()
-        XCTAssertTrue(factory.content.isEmpty)
-        XCTAssertTrue(factory.info.isEmpty)
-        XCTAssertTrue(factory.plan.path.isEmpty)
-        XCTAssertEqual(2, wrapped.subdata(in: 19 ..< 23).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(99, wrapped[23])
+        factory.item.id = "abc"
+        Argonaut.save(factory)
+        let cart = Argonaut.load("abc").1
+        XCTAssertEqual(2, cart.map.keys.count)
+        XCTAssertNotNil(cart.tile(99, x: 87, y: 76))
     }
 }

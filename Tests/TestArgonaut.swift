@@ -62,18 +62,6 @@ final class TestArgonaut: XCTestCase {
         waitForExpectations(timeout: 1)
     }
     
-    func testSave() {
-        Argonaut.save("abc", data: Data("hello world".utf8))
-        let data = try! Data(contentsOf: Argonaut.url.appendingPathComponent("abc.argonaut"))
-        XCTAssertEqual("hello world", String(decoding: data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 10000)
-            let result = Data(bytes: buffer, count: compression_decode_buffer(buffer, 10000, $0.bindMemory(
-                to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
-            buffer.deallocate()
-            return result
-        } as Data, as: UTF8.self))
-    }
-    
     func testLoad() {
         factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
         factory.chunk(.init("lorem ipsum".utf8), tile: 34, x: 45, y: 12)
@@ -81,7 +69,8 @@ final class TestArgonaut: XCTestCase {
         factory.plan.path[0].name = "hello"
         factory.plan.path[0].options = [.init()]
         factory.plan.path[0].options[0].points = [(-50, 60), (70, -80), (-30, 20), (82, -40)]
-        Argonaut.save("abc", data: factory.wrap())
+        factory.item.id = "abc"
+        Argonaut.save(factory)
         let loaded = Argonaut.load("abc")
         XCTAssertEqual("hello world", String(decoding: loaded.1.tile(99, x: 87, y: 76)!, as: UTF8.self))
         XCTAssertEqual("lorem ipsum", String(decoding: loaded.1.tile(34, x: 45, y: 12)!, as: UTF8.self))

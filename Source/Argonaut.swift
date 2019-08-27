@@ -7,11 +7,6 @@ public final class Argonaut {
     static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
     static let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("map.argonaut")
     
-    public static func save(_ id: String, data: Data) {
-        prepare()
-        try! Coder.code(data).write(to: url(id), options: .atomic)
-    }
-    
     public static func load(_ id: String) -> (Plan, Cart) {
         let plan = Plan()
         let cart = Cart()
@@ -60,6 +55,8 @@ public final class Argonaut {
             input.read(buffer, maxLength: length)
             map["\(tile)-\(x).\(y)"] = Data(bytes: buffer, count: length)
         }
+        buffer.deallocate()
+        input.close()
         return (plan, cart)
     }
     
@@ -116,6 +113,19 @@ public final class Argonaut {
                 result(item)
             }
         }
+    }
+    
+    static func save(_ factory: Factory) {
+        prepare()
+        let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(factory.item.id)")
+        let out = OutputStream(url: temporal, append: false)!
+        out.open()
+        _ = factory.plan.code().withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
+        _ = withUnsafeBytes(of: UInt32(factory.chunks)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
+        _ = factory.content.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
+        out.close()
+        Coder.code(temporal, to: url(factory.item.id), operation: COMPRESSION_STREAM_ENCODE)
+        try! FileManager.default.removeItem(at: temporal)
     }
     
     private static func prepare() {

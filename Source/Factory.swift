@@ -17,7 +17,6 @@ public final class Factory {
     var range = (13 ... 18)
     private(set) var item = Session.Item()
     private(set) var content = Data()
-    private(set) var info = Data()
     private(set) var shots = [Shot]()
     private(set) var chunks = 0
     let id = UUID().uuidString
@@ -105,7 +104,7 @@ public final class Factory {
                         self.shoot()
                         self.chunk(result.data, tile: shot.tile, x: shot.x, y: shot.y)
                         if self.shots.isEmpty {
-                            Argonaut.save(self.id, data: self.wrap())
+                            Argonaut.save(self)
                             DispatchQueue.main.async { [weak self] in
                                 guard let item = self?.item else { return }
                                 self?.complete(item)
@@ -122,22 +121,11 @@ public final class Factory {
     }
     
     func chunk(_ bits: Data, tile: Int, x: Int, y: Int) {
-        withUnsafeBytes(of: UInt8(tile)) { info += $0 }
-        withUnsafeBytes(of: UInt32(x)) { info += $0 }
-        withUnsafeBytes(of: UInt32(y)) { info += $0 }
-        withUnsafeBytes(of: UInt32(content.count)) { info += $0 }
-        withUnsafeBytes(of: UInt32(bits.count)) { info += $0 }
+        withUnsafeBytes(of: UInt8(tile)) { content += $0 }
+        withUnsafeBytes(of: UInt32(x)) { content += $0 }
+        withUnsafeBytes(of: UInt32(y)) { content += $0 }
+        withUnsafeBytes(of: UInt32(bits.count)) { content += $0 }
         content += bits
         chunks += 1
-    }
-    
-    func wrap() -> Data {
-        var data = plan.code() + withUnsafeBytes(of: UInt32(chunks)) { Data($0) }
-        plan.path = []
-        data += info
-        info = .init()
-        data += content
-        content = .init()
-        return data
     }
 }
