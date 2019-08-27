@@ -18,26 +18,12 @@ final class TestCoder: XCTestCase {
         let destination = url.appendingPathComponent("other.file")
         try! Data("hello world".utf8).write(to: origin)
         XCTAssertFalse(FileManager.default.fileExists(atPath: destination.path))
-        Coder.code(origin, to: destination, operation: COMPRESSION_STREAM_ENCODE)
+        Coder.code(origin, to: destination)
         let data = try! Data(contentsOf: destination)
         XCTAssertEqual("hello world", String(decoding: data.withUnsafeBytes {
             let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 10000)
             let result = Data(bytes: buffer, count: compression_decode_buffer(buffer, 10000, $0.bindMemory(
-                to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
-            buffer.deallocate()
-            return result
-        } as Data, as: UTF8.self))
-    }
-    
-    func testCodeData() {
-        let destination = url.appendingPathComponent("other.file")
-        XCTAssertFalse(FileManager.default.fileExists(atPath: destination.path))
-        Coder.code(Data("hello world".utf8), to: destination, operation: COMPRESSION_STREAM_ENCODE)
-        let data = try! Data(contentsOf: destination)
-        XCTAssertEqual("hello world", String(decoding: data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 10000)
-            let result = Data(bytes: buffer, count: compression_decode_buffer(buffer, 10000, $0.bindMemory(
-                to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
+                to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_LZFSE))
             buffer.deallocate()
             return result
         } as Data, as: UTF8.self))
@@ -49,7 +35,7 @@ final class TestCoder: XCTestCase {
         let data = Data("hello world".utf8)
         try! (data.withUnsafeBytes {
             let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 10000)
-            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, 10000, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
+            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, 10000, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_LZFSE))
             buffer.deallocate()
             return result
         } as Data).write(to: origin, options: .atomic)
@@ -58,27 +44,15 @@ final class TestCoder: XCTestCase {
         XCTAssertEqual("hello world", try! String(decoding: Data(contentsOf: destination), as: UTF8.self))
     }
     
-    func testDecodeData() {
-        let origin = url.appendingPathComponent("some.file")
-        let data = Data("hello world".utf8)
-        try! (data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 10000)
-            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, 10000, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
-            buffer.deallocate()
-            return result
-        } as Data).write(to: origin, options: .atomic)
-        XCTAssertEqual("hello world", String(decoding: Coder.code(origin, operation: COMPRESSION_STREAM_DECODE), as: UTF8.self))
-    }
-    
     func testReceiveUrl() {
         let origin = url.appendingPathComponent("some.file")
         let data = Data("hello world".utf8)
         try! (data.withUnsafeBytes {
             let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 10000)
-            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, 10000, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_ZLIB))
+            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, 10000, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_LZFSE))
             buffer.deallocate()
             return result
         } as Data).write(to: origin, options: .atomic)
-        XCTAssertEqual("hello world", try! String(decoding: Data(contentsOf: Coder.code(origin, operation: COMPRESSION_STREAM_DECODE)), as: UTF8.self))
+        XCTAssertEqual("hello world", try! String(decoding: Data(contentsOf: Coder.decode(origin)), as: UTF8.self))
     }
 }

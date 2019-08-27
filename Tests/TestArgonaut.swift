@@ -1,6 +1,5 @@
 @testable import Argonaut
 import XCTest
-import Compression
 
 final class TestArgonaut: XCTestCase {
     private var factory: Factory!
@@ -82,5 +81,10 @@ final class TestArgonaut: XCTestCase {
         XCTAssertEqual(20, loaded.0.path[0].options[0].points[2].1)
         XCTAssertEqual(82, loaded.0.path[0].options[0].points[3].0)
         XCTAssertEqual(-40, loaded.0.path[0].options[0].points[3].1)
+    }
+    
+    func testSaveRemovesTemporal() {
+        Argonaut.save(.init())
+        XCTAssertFalse(FileManager.default.fileExists(atPath: Argonaut.temporal.path))
     }
 }

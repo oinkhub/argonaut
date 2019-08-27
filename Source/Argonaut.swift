@@ -1,5 +1,4 @@
 import Foundation
-import Compression
 
 public final class Argonaut {
     public static let tile = 512.0
@@ -11,7 +10,7 @@ public final class Argonaut {
         let plan = Plan()
         let cart = Cart()
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
-        let input = InputStream(url: Coder.code(url(id), operation: COMPRESSION_STREAM_DECODE))!
+        let input = InputStream(url: Coder.decode(url(id)))!
         input.open()
         input.read(buffer, maxLength: 1)
         (0 ..< buffer.pointee).forEach { _ in
@@ -75,13 +74,9 @@ public final class Argonaut {
             _ = coded.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: coded.count) }
             let input = InputStream(url: url(item.id))!
             input.open()
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 4096)
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
             while input.hasBytesAvailable {
-                let size = input.read(buffer, maxLength: 4096)
-                if size < 1 {
-                    break
-                }
-                out.write(buffer, maxLength: size)
+                out.write(buffer, maxLength: input.read(buffer, maxLength: size))
             }
             buffer.deallocate()
             input.close()
@@ -117,14 +112,13 @@ public final class Argonaut {
     
     static func save(_ factory: Factory) {
         prepare()
-        let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(factory.item.id)")
         let out = OutputStream(url: temporal, append: false)!
         out.open()
         _ = factory.plan.code().withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
         _ = withUnsafeBytes(of: UInt32(factory.chunks)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
         _ = factory.content.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
         out.close()
-        Coder.code(temporal, to: url(factory.item.id), operation: COMPRESSION_STREAM_ENCODE)
+        Coder.code(temporal, to: url(factory.item.id))
         try! FileManager.default.removeItem(at: temporal)
     }
     
