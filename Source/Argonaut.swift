@@ -8,7 +8,7 @@ public final class Argonaut {
     
     public static func load(_ id: String) -> (Plan, Cart) {
         let plan = Plan()
-        let cart = Cart()
+        let cart = Cart(url(id))
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
         let input = InputStream(url: url(id))!
         input.open()
@@ -42,7 +42,7 @@ public final class Argonaut {
             plan.path.append(item)
         }
         input.read(buffer, maxLength: 4)
-        cart.map = (0 ..< Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })).reduce(into: [:]) { map, i in
+        cart.map = (0 ..< Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })).reduce(into: [:]) { map, _ in
             input.read(buffer, maxLength: 1)
             let tile = buffer.pointee
             input.read(buffer, maxLength: 4)
@@ -50,14 +50,10 @@ public final class Argonaut {
             input.read(buffer, maxLength: 4)
             let y = buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] }
             input.read(buffer, maxLength: 4)
-            var length = Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })
-            var data = Data()
-            repeat {
-                let read = input.read(buffer, maxLength: min(size, length))
-                data.append(buffer, count: read)
-                length -= read
-            } while length > 0
-            map["\(tile)-\(x).\(y)"] = data
+            let length = Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })
+            let index = (input.property(forKey: .fileCurrentOffsetKey) as! NSNumber).intValue
+            input.setProperty(NSNumber(value: index + length), forKey: .fileCurrentOffsetKey)
+            map["\(tile)-\(x).\(y)"] = (index, length)
         }
         buffer.deallocate()
         input.close()
