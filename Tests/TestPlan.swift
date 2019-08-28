@@ -2,19 +2,29 @@
 import XCTest
 
 final class TestPlan: XCTestCase {
+    override class func setUp() {
+        try? FileManager.default.removeItem(at: Argonaut.temporal)
+    }
+    
+    override func tearDown() {
+        try? FileManager.default.removeItem(at: Argonaut.url)
+        try? FileManager.default.removeItem(at: Argonaut.temporal)
+    }
+    
     func testCode() {
-        let factory = Factory()
+        var factory: Factory! = Factory()
         factory.plan.path = [.init(), .init()]
         factory.plan.path[0].name = "hello world"
         factory.item.id = "abc"
         Argonaut.save(factory)
+        factory = nil
         let coded = Argonaut.load("abc")
         XCTAssertEqual(2, coded.0.path.count)
         XCTAssertEqual("hello world", coded.0.path[0].name)
     }
     
     func testDecode() {
-        let old = Factory()
+        var old: Factory! = Factory()
         old.plan.path = [.init(), .init()]
         old.plan.path[0].name = "hello world"
         old.plan.path[0].latitude = 33.5
@@ -31,6 +41,7 @@ final class TestPlan: XCTestCase {
         old.plan.path[1].options[0].points = [(99, 88)]
         old.item.id = "a"
         Argonaut.save(old)
+        old = nil
         let new = Argonaut.load("a").0
         XCTAssertEqual(2, new.path.count)
         XCTAssertEqual("hello world", new.path[0].name)

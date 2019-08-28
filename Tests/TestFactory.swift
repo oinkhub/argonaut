@@ -9,6 +9,11 @@ final class TestFactory: XCTestCase {
         factory = .init()
     }
     
+    override func tearDown() {
+        try? FileManager.default.removeItem(at: Argonaut.url)
+        try? FileManager.default.removeItem(at: Argonaut.temporal)
+    }
+    
     func testEmptyPlan() {
         factory.measure()
     }

@@ -6,6 +6,11 @@ final class TestSession: XCTestCase {
         UserDefaults.standard.removeObject(forKey: "session")
     }
     
+    override func tearDown() {
+        try? FileManager.default.removeItem(at: Argonaut.url)
+        try? FileManager.default.removeItem(at: Argonaut.temporal)
+    }
+    
     func testLoad() {
         let expect = expectation(description: "")
         let dateMin = Calendar.current.date(byAdding: {

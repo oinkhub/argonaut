@@ -41,7 +41,6 @@ final class TestArgonaut: XCTestCase {
             XCTAssertTrue(FileManager.default.fileExists(atPath: url.path))
             try! FileManager.default.removeItem(at: url)
             XCTAssertFalse(FileManager.default.fileExists(atPath: url.path))
-            
             XCTAssertEqual(.main, Thread.current)
             XCTAssertTrue(FileManager.default.fileExists(atPath: shared.path))
             DispatchQueue.global(qos: .background).async {
@@ -70,6 +69,7 @@ final class TestArgonaut: XCTestCase {
         factory.plan.path[0].options[0].points = [(-50, 60), (70, -80), (-30, 20), (82, -40)]
         factory.item.id = "abc"
         Argonaut.save(factory)
+        factory = nil
         let loaded = Argonaut.load("abc")
         XCTAssertEqual("hello world", String(decoding: loaded.1.tile(99, x: 87, y: 76)!, as: UTF8.self))
         XCTAssertEqual("lorem ipsum dolec", String(decoding: loaded.1.tile(34, x: 45, y: 12)!, as: UTF8.self))

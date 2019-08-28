@@ -18,7 +18,7 @@ public final class Argonaut {
             input.read(buffer, maxLength: 1)
             let length = Int(buffer.pointee)
             input.read(buffer, maxLength: length)
-            item.name = String(bytesNoCopy: buffer, length: length, encoding: .utf8, freeWhenDone: false)!
+            item.name = String(decoding: Data(bytes: buffer, count: length), as: UTF8.self)
             input.read(buffer, maxLength: 8)
             item.latitude = buffer.withMemoryRebound(to: Double.self, capacity: 1) { $0[0] }
             input.read(buffer, maxLength: 8)

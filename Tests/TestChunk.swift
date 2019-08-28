@@ -8,6 +8,11 @@ final class TestChunk: XCTestCase {
         factory = .init()
     }
     
+    override func tearDown() {
+        try? FileManager.default.removeItem(at: Argonaut.url)
+        try? FileManager.default.removeItem(at: Argonaut.temporal)
+    }
+    
     func testAdd() {
         factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
         XCTAssertEqual(1, factory.chunks)
