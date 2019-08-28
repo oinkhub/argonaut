@@ -10,7 +10,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>icons</string>
 			<key>CFBundleTypeName</key>
-			<string>Map</string>
+			<string>Argonaut map</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
