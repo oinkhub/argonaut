@@ -41,7 +41,7 @@ public final class Argonaut {
             plan.path.append(item)
         }
         input.read(buffer, maxLength: 4)
-        cart.map = (0 ..< Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })).reduce(into: [:]) { map, _ in
+        cart.map = (0 ..< Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })).reduce(into: [:]) { map, i in
             input.read(buffer, maxLength: 1)
             let tile = buffer.pointee
             input.read(buffer, maxLength: 4)

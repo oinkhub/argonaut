@@ -10,23 +10,31 @@ final class Coder {
     class func code(_ from: URL, to: URL, operation: compression_stream_operation = COMPRESSION_STREAM_ENCODE) {
         let input = InputStream(url: from)!
         let out = OutputStream(url: to, append: false)!
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Argonaut.size)
+        let reading = UnsafeMutablePointer<UInt8>.allocate(capacity: Argonaut.size)
+        let writing = UnsafeMutablePointer<UInt8>.allocate(capacity: Argonaut.size)
         var stream = UnsafeMutablePointer<compression_stream>.allocate(capacity: 1).pointee
         var status = compression_stream_init(&stream, operation, COMPRESSION_LZFSE)
+        var read = 0
         input.open()
         out.open()
         repeat {
-            stream.src_size = input.read(buffer, maxLength: Argonaut.size)
-            stream.src_ptr = UnsafePointer(buffer)
-            stream.dst_ptr = buffer
-            stream.dst_size = Argonaut.size
-            status = compression_stream_process(&stream, stream.src_size < Argonaut.size ? Int32(COMPRESSION_STREAM_FINALIZE.rawValue) : 0)
-            if Argonaut.size - stream.dst_size > 0 {
-                out.write(buffer, maxLength: Argonaut.size - stream.dst_size)
+            var flag = Int32()
+            if stream.src_size == 0 {
+                read = input.read(reading, maxLength: Argonaut.size)
+                stream.src_size = read
+                if read < Argonaut.size {
+                    flag = Int32(COMPRESSION_STREAM_FINALIZE.rawValue)
+                }
             }
+            stream.src_ptr = UnsafePointer(reading).advanced(by: read - stream.src_size)
+            stream.dst_ptr = writing
+            stream.dst_size = Argonaut.size
+            status = compression_stream_process(&stream, flag)
+            out.write(writing, maxLength: Argonaut.size - stream.dst_size)
         } while status == COMPRESSION_STATUS_OK
         compression_stream_destroy(&stream)
-        buffer.deallocate()
+        reading.deallocate()
+        writing.deallocate()
         input.close()
         out.close()
     }
