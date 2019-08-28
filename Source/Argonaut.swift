@@ -119,7 +119,7 @@ public final class Argonaut {
         factory.plan.path.forEach {
             let name = Data($0.name.utf8)
             _ = withUnsafeBytes(of: UInt8(name.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
-            _ = withUnsafeBytes(of: name) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: name.count) }
+            _ = name.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: name.count) }
             _ = withUnsafeBytes(of: $0.latitude) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
             _ = withUnsafeBytes(of: $0.longitude) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
             _ = withUnsafeBytes(of: UInt8($0.options.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }

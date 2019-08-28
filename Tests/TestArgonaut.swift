@@ -63,10 +63,11 @@ final class TestArgonaut: XCTestCase {
     func testLoad() {
         factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
         factory.chunk(.init("lorem ipsum dolec".utf8), tile: 34, x: 45, y: 12)
-        factory.plan.path = [.init()]
+        factory.plan.path = [.init(), .init()]
         factory.plan.path[0].name = "hello"
         factory.plan.path[0].options = [.init()]
         factory.plan.path[0].options[0].points = [(-50, 60), (70, -80), (-30, 20), (82, -40)]
+        factory.plan.path[1].name = "adasdsadas dadskjnaslkdas sakmdasklmdas asmdkaslmdlksama sdksamdklasmklsa asdsaasd\n sdadas"
         factory.item.id = "abc"
         Argonaut.save(factory)
         factory = nil
@@ -81,6 +82,8 @@ final class TestArgonaut: XCTestCase {
         XCTAssertEqual(20, loaded.0.path[0].options[0].points[2].1)
         XCTAssertEqual(82, loaded.0.path[0].options[0].points[3].0)
         XCTAssertEqual(-40, loaded.0.path[0].options[0].points[3].1)
+        XCTAssertEqual("hello", loaded.0.path[0].name)
+        XCTAssertEqual("adasdsadas dadskjnaslkdas sakmdasklmdas asmdkaslmdlksama sdksamdklasmklsa asdsaasd\n sdadas", loaded.0.path[1].name)
     }
     
     func testSaveRemovesTemporal() {

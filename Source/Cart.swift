@@ -18,7 +18,13 @@ public final class Cart {
     public func tile(_ zoom: Int, x: Int, y: Int) -> Data? {
         guard let specs = map["\(zoom)-\(x).\(y)"] else { return nil }
         input.setProperty(NSNumber(value: specs.0), forKey: .fileCurrentOffsetKey)
-        input.read(buffer, maxLength: specs.1)
-        return Data(bytes: buffer, count: specs.1)
-    }
+        var length = specs.1
+        var data = Data()
+        repeat {
+            let read = input.read(buffer, maxLength: min(Argonaut.size, length))
+            data.append(buffer, count: read)
+            length -= read
+        } while length > 0
+        return data
+     }
 }
