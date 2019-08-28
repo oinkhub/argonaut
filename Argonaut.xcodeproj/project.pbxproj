@@ -20,9 +20,6 @@
 		CE0FE65423056F490058386B /* Scroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0FE65323056F490058386B /* Scroll.swift */; };
 		CE0FE656230571D70058386B /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0FE655230571D70058386B /* Field.swift */; };
 		CE18343E23080B260046E496 /* Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18343D23080B260046E496 /* Create.swift */; };
-		CE2633442313C00D00576400 /* Coder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2633432313C00D00576400 /* Coder.swift */; };
-		CE2633452313C00D00576400 /* Coder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2633432313C00D00576400 /* Coder.swift */; };
-		CE2633472313C02200576400 /* TestCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2633462313C02200576400 /* TestCoder.swift */; };
 		CE26CE0522F4679C0007441D /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE422E1E1620082D91C /* Mark.swift */; };
 		CE26CE0622F4679C0007441D /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE26CDF822F4039F0007441D /* Line.swift */; };
 		CE26CE0722F467A40007441D /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE422E1E1620082D91C /* Mark.swift */; };
@@ -129,8 +126,6 @@
 		CE0FE65323056F490058386B /* Scroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scroll.swift; sourceTree = "<group>"; };
 		CE0FE655230571D70058386B /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		CE18343D23080B260046E496 /* Create.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Create.swift; sourceTree = "<group>"; };
-		CE2633432313C00D00576400 /* Coder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coder.swift; sourceTree = "<group>"; };
-		CE2633462313C02200576400 /* TestCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCoder.swift; sourceTree = "<group>"; };
 		CE26CDF822F4039F0007441D /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		CE2A863C22F7F7C000AC8190 /* Argonaut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Argonaut.swift; sourceTree = "<group>"; };
 		CE2F61462312963100A01CF6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -347,7 +342,6 @@
 			children = (
 				CE2A863C22F7F7C000AC8190 /* Argonaut.swift */,
 				CE6AE1F822F6BE5C0040B205 /* Cart.swift */,
-				CE2633432313C00D00576400 /* Coder.swift */,
 				CEABFA3622ED9401000ABB7E /* Extensions.swift */,
 				CEC5A3C922EAFE3200CE3B07 /* Factory.swift */,
 				CE3256B723029C4200D95A31 /* HelperiOS.swift */,
@@ -364,7 +358,6 @@
 				CE633A2022FD525E00846455 /* TestArgonaut.swift */,
 				CE6AE1FB22F6BEAE0040B205 /* TestCart.swift */,
 				CE734F8022F1BE24009799BE /* TestChunk.swift */,
-				CE2633462313C02200576400 /* TestCoder.swift */,
 				CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */,
 				CEF5514822F2F3D900A16265 /* TestPlan.swift */,
 				CEDE111022D71FB200DD796B /* TestSession.swift */,
@@ -562,7 +555,6 @@
 				CEABFA3722ED9401000ABB7E /* Extensions.swift in Sources */,
 				CE6AE1F922F6BE5C0040B205 /* Cart.swift in Sources */,
 				CE734F7E22F1BDAF009799BE /* Plan.swift in Sources */,
-				CE2633442313C00D00576400 /* Coder.swift in Sources */,
 				CE2A863D22F7F7C000AC8190 /* Argonaut.swift in Sources */,
 				CEC5A3CA22EAFE3200CE3B07 /* Factory.swift in Sources */,
 				CE3256B623029C2400D95A31 /* HelperMac.swift in Sources */,
@@ -577,7 +569,6 @@
 				CEABFA3822ED9401000ABB7E /* Extensions.swift in Sources */,
 				CE6AE1FA22F6BE5C0040B205 /* Cart.swift in Sources */,
 				CE734F7F22F1BDAF009799BE /* Plan.swift in Sources */,
-				CE2633452313C00D00576400 /* Coder.swift in Sources */,
 				CE2A863E22F7F7C000AC8190 /* Argonaut.swift in Sources */,
 				CE3256B823029C4200D95A31 /* HelperiOS.swift in Sources */,
 				CEC5A3CB22EAFE3200CE3B07 /* Factory.swift in Sources */,
@@ -590,7 +581,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE734F8122F1BE24009799BE /* TestChunk.swift in Sources */,
-				CE2633472313C02200576400 /* TestCoder.swift in Sources */,
 				CEC5A3CD22EAFF7900CE3B07 /* TestFactory.swift in Sources */,
 				CE6AE1FC22F6BEAE0040B205 /* TestCart.swift in Sources */,
 				CEDE111122D71FB200DD796B /* TestSession.swift in Sources */,
