@@ -14,7 +14,7 @@ final class Privacy: NSWindow {
         let image = NSImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.imageScaling = .scaleProportionallyDown
-        image.image = NSImage(named: "logo")
+        image.image = NSImage(named: "splash")
         contentView!.addSubview(image)
         
         let title = Label(.key("Privacy.title"))

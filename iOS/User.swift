@@ -26,7 +26,6 @@ final class User: MKAnnotationView {
     required init?(coder: NSCoder) { return nil }
     init() {
         super.init(annotation: nil, reuseIdentifier: nil)
-        image = UIImage(named: "heading")
         canShowCallout = false
         frame = .init(x: 0, y: 0, width: 22, height: 22)
         

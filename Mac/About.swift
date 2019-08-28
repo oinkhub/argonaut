@@ -29,7 +29,7 @@ final class About: NSWindow {
         
         image.widthAnchor.constraint(equalToConstant: 200).isActive = true
         image.heightAnchor.constraint(equalToConstant: 220).isActive = true
-        image.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
+        image.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 20).isActive = true
         image.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         
         label.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true

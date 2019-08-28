@@ -160,9 +160,9 @@ class World: UIView, CLLocationManagerDelegate {
     }
     
     func locationManager(_: CLLocationManager, didUpdateHeading: CLHeading) {
-        guard didUpdateHeading.headingAccuracy > 0, let user = map.annotations.first(where: { $0 === map.userLocation }), let view = map.view(for: user) as? User else { return }
+        guard didUpdateHeading.headingAccuracy >= 0, didUpdateHeading.trueHeading >= 0, let user = map.annotations.first(where: { $0 === map.userLocation }), let view = map.view(for: user) as? User else { return }
         UIView.animate(withDuration: 0.5) {
-            view.heading?.transform = .init(rotationAngle: .init(((didUpdateHeading.trueHeading > 0 ? didUpdateHeading.trueHeading : didUpdateHeading.magneticHeading) / 180) * .pi))
+            view.heading?.transform = .init(rotationAngle: .init(didUpdateHeading.trueHeading) * .pi / 180)
         }
     }
     

@@ -14,7 +14,7 @@ final class Help: NSWindow {
         required init?(coder: NSCoder) { return nil }
         override init() {
             super.init()
-            icon.image = NSImage(named: "mark")
+            icon.image = NSImage(named: "markOff")
             label.stringValue = .key("Help.mark")
         }
     }
