@@ -81,27 +81,19 @@ final class Map: MKMapView, MKMapViewDelegate {
     func mapView(_: MKMapView, didSelect: MKAnnotationView) {
         didSelect.isSelected = true
         if let coordinate = didSelect.annotation?.coordinate {
-            focus(coordinate)
+            setCenter(coordinate, animated: true)
         }
-    }
-    
-    func focus(_ coordinate: CLLocationCoordinate2D) {
-        var region = self.region
-        region.center = coordinate
-        setRegion(region, animated: true)
     }
     
     func add(_ coordinate: CLLocationCoordinate2D) {
-        if !plan.path.contains(where: { $0.latitude == coordinate.latitude && $0.longitude == coordinate.longitude }) {
-            let path = Plan.Path()
-            path.latitude = coordinate.latitude
-            path.longitude = coordinate.longitude
-            plan.path.append(path)
-            let mark = Mark(path)
-            addAnnotation(mark)
-            selectAnnotation(mark, animated: true)
-            locate(mark)
-        }
+        let path = Plan.Path()
+        path.latitude = coordinate.latitude
+        path.longitude = coordinate.longitude
+        plan.path.append(path)
+        let mark = Mark(path)
+        addAnnotation(mark)
+        selectAnnotation(mark, animated: true)
+        locate(mark)
     }
     
     func remove(_ path: Plan.Path) {
@@ -131,7 +123,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     @objc func pin() {
         guard !geocoder.isGeocoding else { return }
-        add(convert(.init(x: bounds.midX, y: bounds.midY), toCoordinateFrom: self))
+        add(centerCoordinate)
     }
     
     @objc func follow() {

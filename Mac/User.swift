@@ -31,7 +31,6 @@ final class User: MKAnnotationView {
     init() {
         super.init(annotation: nil, reuseIdentifier: nil)
         canShowCallout = false
-        wantsLayer = true
         frame = .init(x: 0, y: 0, width: 22, height: 22)
         
         let heading = NSImageView()
@@ -49,9 +48,14 @@ final class User: MKAnnotationView {
         addSubview(me)
         self.me = me
         
+        let animation = NSView()
+        animation.translatesAutoresizingMaskIntoConstraints = false
+        animation.wantsLayer = true
+        addSubview(animation)
+        
         let halo = CAShapeLayer()
         halo.fillColor = .halo
-        layer!.addSublayer(halo)
+        animation.layer!.addSublayer(halo)
         self.halo = halo
         
         heading.widthAnchor.constraint(equalToConstant: 44).isActive = true
@@ -63,5 +67,10 @@ final class User: MKAnnotationView {
         me.heightAnchor.constraint(equalToConstant: 30).isActive = true
         me.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         me.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        
+        animation.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        animation.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        animation.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        animation.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 }

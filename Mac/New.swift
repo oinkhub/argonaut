@@ -323,7 +323,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             let result = Result($0)
             result.selected = { [weak self] in
                 self?.map.add($0)
-                self?.map.focus($0)
+                self?.map.setCenter($0, animated: true)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                     self?.clear()
                 }
