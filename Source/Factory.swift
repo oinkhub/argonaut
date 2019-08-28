@@ -16,7 +16,6 @@ public final class Factory {
     public var valid: Bool { return rect.width < max && rect.height < max }
     var range = (13 ... 18)
     private(set) var item = Session.Item()
-    private(set) var content = Data()
     private(set) var shots = [Shot]()
     private(set) var chunks = 0
     let id = UUID().uuidString
@@ -26,14 +25,20 @@ public final class Factory {
     private let max = 150000.0
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
+    private let out = OutputStream(url: Argonaut.temporal, append: false)!
     
     public init() {
+        out.open()
         timer.resume()
         timer.schedule(deadline: .distantFuture)
         timer.setEventHandler { [weak self] in
             self?.shooter?.cancel()
             DispatchQueue.main.async { [weak self] in self?.error(Fail("Mapping timed out.")) }
         }
+    }
+    
+    deinit {
+        out.close()
     }
     
     public func measure() {
@@ -104,6 +109,7 @@ public final class Factory {
                         self.shoot()
                         self.chunk(result.data, tile: shot.tile, x: shot.x, y: shot.y)
                         if self.shots.isEmpty {
+                            self.out.close()
                             Argonaut.save(self)
                             DispatchQueue.main.async { [weak self] in
                                 guard let item = self?.item else { return }
@@ -121,11 +127,11 @@ public final class Factory {
     }
     
     func chunk(_ bits: Data, tile: Int, x: Int, y: Int) {
-        withUnsafeBytes(of: UInt8(tile)) { content += $0 }
-        withUnsafeBytes(of: UInt32(x)) { content += $0 }
-        withUnsafeBytes(of: UInt32(y)) { content += $0 }
-        withUnsafeBytes(of: UInt32(bits.count)) { content += $0 }
-        content += bits
+        _ = withUnsafeBytes(of: UInt8(tile)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
+        _ = withUnsafeBytes(of: UInt32(x)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
+        _ = withUnsafeBytes(of: UInt32(y)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
+        _ = withUnsafeBytes(of: UInt32(bits.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
+        _ = bits.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
         chunks += 1
     }
 }

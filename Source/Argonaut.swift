@@ -139,8 +139,16 @@ public final class Argonaut {
             }
         }
         _ = withUnsafeBytes(of: UInt32(factory.chunks)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
-        _ = factory.content.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
+        let input = InputStream(url: temporal)!
+        input.open()
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
+        while input.hasBytesAvailable {
+            out.write(buffer, maxLength: input.read(buffer, maxLength: size))
+        }
+        buffer.deallocate()
+        input.close()
         out.close()
+        try! FileManager.default.removeItem(at: temporal)
     }
     
     private static func prepare() {
