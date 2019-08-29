@@ -209,10 +209,11 @@ final class List: NSWindow {
         }
         
         @objc private func confirm() {
+            app.windows.filter { $0 is Navigate }.forEach { $0.close() }
+            Argonaut.delete(item.id)
             app.session.items.removeAll(where: { $0.id == item.id })
             app.session.save()
             app.list.refresh()
-            Argonaut.delete(item.id)
         }
         
         @objc private func share() {
