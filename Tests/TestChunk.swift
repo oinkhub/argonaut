@@ -26,7 +26,6 @@ final class TestChunk: XCTestCase {
         factory.item.id = "abc"
         Argonaut.save(factory)
         let cart = Argonaut.load("abc").1
-        print(cart.map)
         XCTAssertEqual(2, cart.map.keys.count)
         XCTAssertNotNil(cart.tile(87, 76))
     }

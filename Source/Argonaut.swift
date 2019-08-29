@@ -115,17 +115,14 @@ public final class Argonaut {
             let name = Data($0.name.utf8)
             _ = withUnsafeBytes(of: UInt8(name.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
             _ = name.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: name.count) }
-            _ = withUnsafeBytes(of: $0.latitude) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
-            _ = withUnsafeBytes(of: $0.longitude) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
+            _ = [$0.latitude, $0.longitude].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
             _ = withUnsafeBytes(of: UInt8($0.options.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
             $0.options.forEach {
                 _ = withUnsafeBytes(of: UInt8($0.mode.rawValue)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
-                _ = withUnsafeBytes(of: $0.duration) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
-                _ = withUnsafeBytes(of: $0.distance) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
+                _ = [$0.duration, $0.distance].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
                 _ = withUnsafeBytes(of: UInt16($0.points.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 2) }
-                $0.points.forEach {
-                    _ = withUnsafeBytes(of: $0.0) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
-                    _ = withUnsafeBytes(of: $0.1) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 8) }
+                if !$0.points.isEmpty {
+                    _ = $0.points.withUnsafeBytes{ out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
                 }
             }
         }
