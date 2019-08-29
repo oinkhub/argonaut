@@ -15,18 +15,9 @@ final class TestChunk: XCTestCase {
     
     func testAdd() {
         factory.chunk(.init("hello world".utf8), x: 87, y: 76)
-        var data = try! Data(contentsOf: Argonaut.temporal)
+        let data = try! Data(contentsOf: Argonaut.temporal)
         XCTAssertEqual(87, data.subdata(in: 0 ..< 4).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
         XCTAssertEqual(76, data.subdata(in: 4 ..< 8).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(11, data.subdata(in: 8 ..< 12).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual("hello world", String(decoding: data.subdata(in: 12 ..< 23), as: UTF8.self))
-        
-        factory.chunk(.init("lorem ipsum".utf8), x: 21, y: 67)
-        data = try! Data(contentsOf: Argonaut.temporal)
-        XCTAssertEqual(21, data.subdata(in: 23 ..< 27).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(67, data.subdata(in: 27 ..< 31).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual(11, data.subdata(in: 31 ..< 35).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
-        XCTAssertEqual("lorem ipsum", String(decoding: data.subdata(in: 35 ..< 46), as: UTF8.self))
     }
     
     func testWrap() {

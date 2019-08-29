@@ -1,4 +1,5 @@
 import Foundation
+import Compression
 
 public final class Argonaut {
     public static let tile = 512.0
@@ -6,7 +7,7 @@ public final class Argonaut {
     static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
     static let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("map.argonaut")
     
-    public static func load(_ id: String) -> (Plan, Cart) {
+    public class func load(_ id: String) -> (Plan, Cart) {
         let plan = Plan()
         let cart = Cart(url(id))
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
@@ -54,13 +55,13 @@ public final class Argonaut {
         return (plan, cart)
     }
     
-    public static func delete(_ id: String) {
+    public class func delete(_ id: String) {
         DispatchQueue.global(qos: .background).async {
             try? FileManager.default.removeItem(at: url(id))
         }
     }
     
-    public static func share(_ item: Session.Item, result: @escaping((URL) -> Void)) {
+    public class func share(_ item: Session.Item, result: @escaping((URL) -> Void)) {
         DispatchQueue.global(qos: .background).async {
             let out = OutputStream(url: temporal, append: false)!
             out.open()
@@ -82,7 +83,7 @@ public final class Argonaut {
         }
     }
     
-    public static func receive(_ map: URL, result: @escaping((Session.Item) -> Void)) {
+    public class func receive(_ map: URL, result: @escaping((Session.Item) -> Void)) {
         DispatchQueue.global(qos: .background).async {
             guard map.pathExtension == "argonaut" else { return }
             prepare()
@@ -105,7 +106,7 @@ public final class Argonaut {
         }
     }
     
-    static func save(_ factory: Factory) {
+    class func save(_ factory: Factory) {
         prepare()
         let out = OutputStream(url: url(factory.item.id), append: false)!
         out.open()
@@ -138,6 +139,25 @@ public final class Argonaut {
         input.close()
         out.close()
         try! FileManager.default.removeItem(at: temporal)
+    }
+    
+    class func code(_ data: Data) -> Data {
+        return data.withUnsafeBytes {
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
+            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, data.count * 10, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_LZMA))
+            buffer.deallocate()
+            return result
+        }
+    }
+
+    class func decode(_ data: Data) -> Data {
+        return data.withUnsafeBytes {
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
+            let result = Data(bytes: buffer, count: compression_decode_buffer(buffer, data.count * 10, $0.bindMemory(
+                to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_LZMA))
+            buffer.deallocate()
+            return result
+        }
     }
     
     private static func prepare() {

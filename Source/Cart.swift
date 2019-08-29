@@ -16,15 +16,16 @@ public final class Cart {
     }
     
     public func tile(_ x: Int, _ y: Int) -> Data? {
-        guard let specs = map["\(x).\(y)"] else { return nil }
-        input.setProperty(NSNumber(value: specs.0), forKey: .fileCurrentOffsetKey)
-        var length = specs.1
-        var data = Data()
-        repeat {
-            let read = input.read(buffer, maxLength: min(Argonaut.size, length))
-            data.append(buffer, count: read)
-            length -= read
-        } while length > 0
-        return data
+        map["\(x).\(y)"].map {
+            input.setProperty(NSNumber(value: $0.0), forKey: .fileCurrentOffsetKey)
+            var length = $0.1
+            var data = Data()
+            repeat {
+                let read = input.read(buffer, maxLength: min(Argonaut.size, length))
+                data.append(buffer, count: read)
+                length -= read
+            } while length > 0
+            return Argonaut.decode(data)
+        }
      }
 }

@@ -7,6 +7,7 @@ public final class Factory {
         var y = 0
     }
     
+    var total2 = 0
     public var error: ((Error) -> Void)!
     public var progress: ((Float) -> Void)!
     public var complete: ((Session.Item) -> Void)!
@@ -108,6 +109,7 @@ public final class Factory {
                         if self.shots.isEmpty {
                             self.out.close()
                             Argonaut.save(self)
+                            print("total: \(self.total2)")
                             DispatchQueue.main.async { [weak self] in
                                 guard let item = self?.item else { return }
                                 self?.complete(item)
@@ -124,9 +126,10 @@ public final class Factory {
     }
     
     func chunk(_ bits: Data, x: Int, y: Int) {
-        _ = withUnsafeBytes(of: UInt32(x)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
-        _ = withUnsafeBytes(of: UInt32(y)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
-        _ = withUnsafeBytes(of: UInt32(bits.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
-        _ = bits.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
+        let chunk = Argonaut.code(bits)
+        _ = [UInt32(x), UInt32(y), UInt32(chunk.count)].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 12) }
+        _ = chunk.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
+        print("\(x),\(y) \(bits.count), \(chunk.count)  :\(bits.count - chunk.count)")
+        total2 += bits.count - chunk.count
     }
 }
