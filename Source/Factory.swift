@@ -17,7 +17,6 @@ public final class Factory {
     var range = (13 ... 18)
     private(set) var item = Session.Item()
     private(set) var shots = [Shot]()
-    private(set) var chunks = 0
     let id = UUID().uuidString
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
@@ -132,6 +131,5 @@ public final class Factory {
         _ = withUnsafeBytes(of: UInt32(y)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
         _ = withUnsafeBytes(of: UInt32(bits.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
         _ = bits.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
-        chunks += 1
     }
 }

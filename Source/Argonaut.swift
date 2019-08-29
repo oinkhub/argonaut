@@ -41,9 +41,7 @@ public final class Argonaut {
             }
             plan.path.append(item)
         }
-        input.read(buffer, maxLength: 4)
-        cart.map = (0 ..< Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })).reduce(into: [:]) { map, _ in
-            input.read(buffer, maxLength: 1)
+        while input.hasBytesAvailable && input.read(buffer, maxLength: 1) == 1 {
             let tile = buffer.pointee
             input.read(buffer, maxLength: 4)
             let x = buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] }
@@ -53,7 +51,7 @@ public final class Argonaut {
             let length = Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })
             let index = (input.property(forKey: .fileCurrentOffsetKey) as! NSNumber).intValue
             input.setProperty(NSNumber(value: index + length), forKey: .fileCurrentOffsetKey)
-            map["\(tile)-\(x).\(y)"] = (index, length)
+            cart.map["\(tile)-\(x).\(y)"] = (index, length)
         }
         buffer.deallocate()
         input.close()
@@ -134,7 +132,6 @@ public final class Argonaut {
                 }
             }
         }
-        _ = withUnsafeBytes(of: UInt32(factory.chunks)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
         let input = InputStream(url: temporal)!
         input.open()
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
