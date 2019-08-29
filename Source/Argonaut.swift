@@ -19,19 +19,21 @@ public final class Argonaut {
             let length = Int(buffer.pointee)
             input.read(buffer, maxLength: length)
             item.name = String(decoding: Data(bytes: buffer, count: length), as: UTF8.self)
-            input.read(buffer, maxLength: 8)
-            item.latitude = buffer.withMemoryRebound(to: Double.self, capacity: 1) { $0[0] }
-            input.read(buffer, maxLength: 8)
-            item.longitude = buffer.withMemoryRebound(to: Double.self, capacity: 1) { $0[0] }
+            input.read(buffer, maxLength: 16)
+            buffer.withMemoryRebound(to: Double.self, capacity: 2) {
+                item.latitude = $0[0]
+                item.longitude = $0[1]
+            }
             input.read(buffer, maxLength: 1)
             (0 ..< buffer.pointee).forEach { _ in
                 let option = Plan.Option()
                 input.read(buffer, maxLength: 1)
                 option.mode = Plan.Mode(rawValue: buffer.pointee)!
-                input.read(buffer, maxLength: 8)
-                option.duration = buffer.withMemoryRebound(to: Double.self, capacity: 1) { $0[0] }
-                input.read(buffer, maxLength: 8)
-                option.distance = buffer.withMemoryRebound(to: Double.self, capacity: 1) { $0[0] }
+                input.read(buffer, maxLength: 16)
+                buffer.withMemoryRebound(to: Double.self, capacity: 2) {
+                    option.duration = $0[0]
+                    option.distance = $0[1]
+                }
                 input.read(buffer, maxLength: 2)
                 (0 ..< Int(buffer.withMemoryRebound(to: UInt16.self, capacity: 1) { $0[0] })).forEach { _ in
                     input.read(buffer, maxLength: 16)
@@ -41,17 +43,11 @@ public final class Argonaut {
             }
             plan.path.append(item)
         }
-        while input.hasBytesAvailable && input.read(buffer, maxLength: 1) == 1 {
-            let tile = buffer.pointee
-            input.read(buffer, maxLength: 4)
-            let x = buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] }
-            input.read(buffer, maxLength: 4)
-            let y = buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] }
-            input.read(buffer, maxLength: 4)
-            let length = Int(buffer.withMemoryRebound(to: UInt32.self, capacity: 1) { $0[0] })
+        while input.hasBytesAvailable && input.read(buffer, maxLength: 12) == 12 {
+            let info = buffer.withMemoryRebound(to: UInt32.self, capacity: 3) { $0 }
             let index = (input.property(forKey: .fileCurrentOffsetKey) as! NSNumber).intValue
-            input.setProperty(NSNumber(value: index + length), forKey: .fileCurrentOffsetKey)
-            cart.map["\(tile)-\(x).\(y)"] = (index, length)
+            input.setProperty(NSNumber(value: index + Int(info[2])), forKey: .fileCurrentOffsetKey)
+            cart.map["\(info[0]).\(info[1])"] = (index, Int(info[2]))
         }
         buffer.deallocate()
         input.close()

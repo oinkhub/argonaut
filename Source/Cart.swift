@@ -15,8 +15,8 @@ public final class Cart {
         input.close()
     }
     
-    public func tile(_ zoom: Int, x: Int, y: Int) -> Data? {
-        guard let specs = map["\(zoom)-\(x).\(y)"] else { return nil }
+    public func tile(_ x: Int, _ y: Int) -> Data? {
+        guard let specs = map["\(x).\(y)"] else { return nil }
         input.setProperty(NSNumber(value: specs.0), forKey: .fileCurrentOffsetKey)
         var length = specs.1
         var data = Data()

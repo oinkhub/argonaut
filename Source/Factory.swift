@@ -3,7 +3,6 @@ import MapKit
 public final class Factory {
     struct Shot {
         var options = MKMapSnapshotter.Options()
-        var tile = 0
         var x = 0
         var y = 0
     }
@@ -54,12 +53,11 @@ public final class Factory {
     }
     
     public func divide() {
-        range.forEach { tile in
-            let proportion = MKMapRect.world.width / pow(2, Double(tile))
+        range.forEach {
+            let proportion = MKMapRect.world.width / pow(2, Double($0))
             (Int(rect.minX / proportion) ..< Int(ceil(rect.maxX / proportion))).forEach { x in
                 (Int(rect.minY / proportion) ..< Int(ceil(rect.maxY / proportion))).forEach { y in
                     var shot = Shot()
-                    shot.tile = tile
                     shot.x = x
                     shot.y = y
                     shot.options.dark()
@@ -106,7 +104,7 @@ public final class Factory {
                     } else if let result = $0 {
                         self.shots.removeLast()
                         self.shoot()
-                        self.chunk(result.data, tile: shot.tile, x: shot.x, y: shot.y)
+                        self.chunk(result.data, x: shot.x, y: shot.y)
                         if self.shots.isEmpty {
                             self.out.close()
                             Argonaut.save(self)
@@ -125,8 +123,7 @@ public final class Factory {
         }
     }
     
-    func chunk(_ bits: Data, tile: Int, x: Int, y: Int) {
-        _ = withUnsafeBytes(of: UInt8(tile)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
+    func chunk(_ bits: Data, x: Int, y: Int) {
         _ = withUnsafeBytes(of: UInt32(x)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
         _ = withUnsafeBytes(of: UInt32(y)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }
         _ = withUnsafeBytes(of: UInt32(bits.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 4) }

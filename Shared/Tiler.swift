@@ -11,6 +11,6 @@ final class Tiler: MKTileOverlay {
     }
     
     override func loadTile(at: MKTileOverlayPath, result: @escaping(Data?, Error?) -> Void) {
-        result(cart.tile(at.z, x: at.x, y: at.y), nil)
+        result(cart.tile(at.x, at.y), nil)
     }
 }

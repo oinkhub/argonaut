@@ -61,8 +61,8 @@ final class TestArgonaut: XCTestCase {
     }
     
     func testLoad() {
-        factory.chunk(.init("hello world".utf8), tile: 99, x: 87, y: 76)
-        factory.chunk(.init("lorem ipsum dolec".utf8), tile: 34, x: 45, y: 12)
+        factory.chunk(.init("hello world".utf8), x: 87, y: 76)
+        factory.chunk(.init("lorem ipsum dolec".utf8), x: 45, y: 12)
         factory.plan.path = [.init(), .init()]
         factory.plan.path[0].name = "hello"
         factory.plan.path[0].options = [.init()]
@@ -72,8 +72,8 @@ final class TestArgonaut: XCTestCase {
         Argonaut.save(factory)
         factory = nil
         let loaded = Argonaut.load("abc")
-        XCTAssertEqual("hello world", String(decoding: loaded.1.tile(99, x: 87, y: 76)!, as: UTF8.self))
-        XCTAssertEqual("lorem ipsum dolec", String(decoding: loaded.1.tile(34, x: 45, y: 12)!, as: UTF8.self))
+        XCTAssertEqual("hello world", String(decoding: loaded.1.tile(87, 76)!, as: UTF8.self))
+        XCTAssertEqual("lorem ipsum dolec", String(decoding: loaded.1.tile(45, 12)!, as: UTF8.self))
         XCTAssertEqual(-50, loaded.0.path[0].options[0].points[0].0)
         XCTAssertEqual(60, loaded.0.path[0].options[0].points[0].1)
         XCTAssertEqual(70, loaded.0.path[0].options[0].points[1].0)
