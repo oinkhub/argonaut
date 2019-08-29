@@ -62,7 +62,6 @@ final class Home: UIView {
             }
             
             var right = rightAnchor
-            
             [navigate, share, delete].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
                 $0.imageView!.clipsToBounds = true
@@ -70,11 +69,10 @@ final class Home: UIView {
                 $0.isAccessibilityElement = true
                 addSubview($0)
                 
-                $0.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor).isActive = true
-                $0.topAnchor.constraint(greaterThanOrEqualTo: driving.bottomAnchor).isActive = true
                 $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
                 $0.widthAnchor.constraint(equalToConstant: 60).isActive = true
                 $0.rightAnchor.constraint(equalTo: right).isActive = true
+                $0.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
                 right = $0.leftAnchor
             }
             
@@ -87,13 +85,11 @@ final class Home: UIView {
             
             walking.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
             walking.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-            walking.rightAnchor.constraint(equalTo: centerXAnchor, constant: -10).isActive = true
+            walking.rightAnchor.constraint(equalTo: centerXAnchor, constant: -5).isActive = true
             
             driving.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
-            driving.leftAnchor.constraint(equalTo: centerXAnchor, constant: 10).isActive = true
+            driving.leftAnchor.constraint(equalTo: centerXAnchor, constant: 5).isActive = true
             driving.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
-            
-            bottomAnchor.constraint(equalTo: navigate.bottomAnchor).isActive = true
         }
         
         func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
@@ -158,6 +154,7 @@ final class Home: UIView {
             label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
             
             base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
+            bottomAnchor.constraint(greaterThanOrEqualTo: base.bottomAnchor, constant: 60).isActive = true
             
             return base
         }
@@ -257,9 +254,6 @@ final class Home: UIView {
     }
     
     func refresh() {
-        if app.session.items.isEmpty {
-            
-        }
         scroll.clear()
         var top = scroll.topAnchor
         app.session.items.reversed().forEach {
@@ -287,7 +281,7 @@ final class Home: UIView {
             top = item.bottomAnchor
         }
         if top != scroll.topAnchor {
-            scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top, constant: 10).isActive = true
+            scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top, constant: 20).isActive = true
         }
     }
     

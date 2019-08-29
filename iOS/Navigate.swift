@@ -192,7 +192,7 @@ final class Navigate: World {
             previous = item
         }
         
-        list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? bottomAnchor, constant: 20).isActive = true
+        list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? bottomAnchor, constant: 30).isActive = true
     }
     
     private func zoom(_ valid: Bool) {

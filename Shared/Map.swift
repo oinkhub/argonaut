@@ -23,7 +23,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         delegate = self
         
         var region = MKCoordinateRegion()
-        region.center = userLocation.location == nil ? self.region.center : userLocation.coordinate
+        region.center = userLocation.location == nil ? centerCoordinate : userLocation.coordinate
         region.span.latitudeDelta = 0.005
         region.span.longitudeDelta = 0.005
         setRegion(region, animated: false)
