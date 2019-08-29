@@ -70,7 +70,7 @@ final class Navigate: World {
     init(_ item: Session.Item, project: (Plan, Cart)) {
         super.init()
         map.addOverlay(Tiler(project.1), level: .aboveLabels)
-        map.merge(project.0)
+        map.add(project.0)
         map.zoom = { [weak self] in self?.zoom($0) }
         map.user = { [weak self] in self?.user($0) }
         map.drag = false

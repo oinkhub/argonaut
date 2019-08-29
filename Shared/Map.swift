@@ -6,11 +6,10 @@ final class Map: MKMapView, MKMapViewDelegate {
     var user: ((CLLocation) -> Void)?
     var zoom: ((Bool) -> Void)?
     var drag = true
+    private(set) var plan = Plan()
     private(set) var _follow = true
     private(set) var _walking = true
     private(set) var _driving = true
-    let plan = Plan()
-    private var last: CLLocation?
     private let geocoder = CLGeocoder()
     
     required init?(coder: NSCoder) { return nil }
@@ -33,9 +32,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
         guard let location = didUpdate.location else { return }
         if _follow {
-            var region = self.region
-            region.center = location.coordinate
-            setRegion(region, animated: false)
+            setCenter(location.coordinate, animated: true)
         }
         user?(location)
     }
@@ -63,18 +60,16 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, rendererFor: MKOverlay) -> MKOverlayRenderer {
-        if let tiler = rendererFor as? Tiler {
-            return MKTileOverlayRenderer(tileOverlay: tiler)
-        } else if let line = rendererFor as? Line {
+        if let line = rendererFor as? Line {
             return Liner(line)
         } else {
-            return MKOverlayRenderer()
+            return MKTileOverlayRenderer(tileOverlay: rendererFor as! Tiler)
         }
     }
     
     func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
-        let level = log2(visibleMapRect.width / Double(bounds.width / 100) )
-        zoom?(level > 7.2 && level < 13.2)
+        let level = round(log2(360 * Double(frame.width) / Argonaut.tile / region.span.longitudeDelta))
+        zoom?(level <= 18 && level >= 13)
     }
     
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.isSelected = false }
@@ -115,8 +110,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func merge(_ plan: Plan) {
-        self.plan.path.append(contentsOf: plan.path)
+    func add(_ plan: Plan) {
+        self.plan = plan
         addAnnotations(plan.path.map { Mark($0) })
         filter()
     }

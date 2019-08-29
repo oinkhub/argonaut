@@ -8,6 +8,7 @@ final class Tiler: MKTileOverlay {
         self.cart = cart
         super.init(urlTemplate: nil)
         tileSize = .init(width: Argonaut.tile * 2, height: Argonaut.tile * 2)
+        canReplaceMapContent = true
     }
     
     override func loadTile(at: MKTileOverlayPath, result: @escaping(Data?, Error?) -> Void) {

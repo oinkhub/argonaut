@@ -139,15 +139,11 @@ class World: NSWindow {
     }
     
     @objc func up() {
-        var region = map.region
-        region.center.latitude = min(region.center.latitude + region.span.latitudeDelta / 2, 90)
-        map.setRegion(region, animated: true)
+        map.setCenter(.init(latitude: min(map.centerCoordinate.latitude + map.region.span.latitudeDelta / 2, 90), longitude: map.centerCoordinate.longitude), animated: true)
     }
     
     @objc func down() {
-        var region = map.region
-        region.center.latitude = max(region.center.latitude - region.span.latitudeDelta / 2, -90)
-        map.setRegion(region, animated: true)
+        map.setCenter(.init(latitude: max(map.centerCoordinate.latitude - map.region.span.latitudeDelta / 2, -90), longitude: map.centerCoordinate.longitude), animated: true)
     }
     
     @objc func `in`() {
@@ -165,15 +161,11 @@ class World: NSWindow {
     }
     
     @objc func left() {
-        var region = map.region
-        region.center.longitude = max(region.center.longitude - region.span.longitudeDelta / 2, -180)
-        map.setRegion(region, animated: true)
+        map.setCenter(.init(latitude: map.centerCoordinate.latitude, longitude: max(map.centerCoordinate.longitude - map.region.span.longitudeDelta / 2, -180)), animated: true)
     }
     
     @objc func right() {
-        var region = map.region
-        region.center.longitude = min(region.center.longitude + region.span.longitudeDelta / 2, 180)
-        map.setRegion(region, animated: true)
+        map.setCenter(.init(latitude: map.centerCoordinate.latitude, longitude: min(map.centerCoordinate.longitude + map.region.span.longitudeDelta / 2, 180)), animated: true)
     }
     
     @objc final func follow() {
