@@ -61,6 +61,6 @@ final class TestPlan: XCTestCase {
         XCTAssertEqual(45.9, new.path[1].latitude)
         XCTAssertEqual(90.1, new.path[1].longitude)
         XCTAssertEqual(1, new.path[1].options.count)
-//        XCTAssertEqual(1, new.path[1].options[0].points.count)
+        XCTAssertEqual(1, new.path[1].options[0].points.count)
     }
 }
