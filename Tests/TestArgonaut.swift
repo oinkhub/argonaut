@@ -84,12 +84,12 @@ final class TestArgonaut: XCTestCase {
         XCTAssertEqual(-40, loaded.0.path[0].options[0].points[3].1)
         XCTAssertEqual("hello", loaded.0.path[0].name)
         XCTAssertEqual("adasdsadas dadskjnaslkdas sakmdasklmdas asmdkaslmdlksama sdksamdklasmklsa asdsaasd\n sdadas", loaded.0.path[1].name)
-        _ = loaded.1.tile(87, 76) {
-            XCTAssertEqual("hello world", String(decoding: loaded.1.tile(87, 76)!, as: UTF8.self))
+        loaded.1.tile(87, 76) {
+            XCTAssertEqual("hello world", String(decoding: $0!, as: UTF8.self))
             expectA.fulfill()
         }
-        _ = loaded.1.tile(45, 12) {
-            XCTAssertEqual("lorem ipsum dolec", String(decoding: loaded.1.tile(45, 12)!, as: UTF8.self))
+        loaded.1.tile(45, 12) {
+            XCTAssertEqual("lorem ipsum dolec", String(decoding: $0!, as: UTF8.self))
             expectB.fulfill()
         }
         waitForExpectations(timeout: 1)

@@ -23,12 +23,12 @@ final class TestCart: XCTestCase {
         factory.item.id = "abc"
         Argonaut.save(factory)
         cart = Argonaut.load("abc").1
-        _ = cart.tile(87, 76) {
-            XCTAssertEqual("hello world", String(decoding: self.cart.tile(87, 76)!, as: UTF8.self))
+        cart.tile(87, 76) {
+            XCTAssertEqual("hello world", String(decoding: $0!, as: UTF8.self))
             expectA.fulfill()
         }
-        _ = cart.tile(45, 12) {
-            XCTAssertEqual("lorem ipsum", String(decoding: self.cart.tile(45, 12)!, as: UTF8.self))
+        cart.tile(45, 12) {
+            XCTAssertEqual("lorem ipsum", String(decoding: $0!, as: UTF8.self))
             expectB.fulfill()
         }
         waitForExpectations(timeout: 1)
@@ -40,26 +40,8 @@ final class TestCart: XCTestCase {
         factory.item.id = "abc"
         Argonaut.save(factory)
         cart = Argonaut.load("abc").1
-        _ = cart.tile(320, 560) {
-            XCTAssertNil(self.cart.tile(320, 560))
-            expect.fulfill()
-        }
-        waitForExpectations(timeout: 1)
-    }
-    
-    func testCache() {
-        let expect = expectation(description: "")
-        factory.chunk(.init("hello world".utf8), x: 1, y: 1)
-        factory.chunk(.init("lorem ipsum".utf8), x: 2, y: 2)
-        factory.chunk(.init("lorem ipsum".utf8), x: 3, y: 3)
-        factory.item.id = "abc"
-        Argonaut.save(factory)
-        cart = Argonaut.load("abc").1
-        cart.limit = 2
-        _ = cart.tile(1, 1)
-        _ = cart.tile(2, 2)
-        _ = cart.tile(3, 3) {
-            XCTAssertEqual(2, self.cart.cache.count)
+        cart.tile(320, 560) {
+            XCTAssertNil($0)
             expect.fulfill()
         }
         waitForExpectations(timeout: 1)

@@ -64,7 +64,6 @@ final class Map: MKMapView, MKMapViewDelegate {
             return Liner(line)
         } else {
             return MKTileOverlayRenderer(tileOverlay: rendererFor as! Tiler)
-//            return Tiler2(overlay: rendererFor)
         }
     }
     
