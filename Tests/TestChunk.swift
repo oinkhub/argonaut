@@ -28,8 +28,8 @@ final class TestChunk: XCTestCase {
         Argonaut.save(factory)
         let cart = Argonaut.load("abc").1
         XCTAssertEqual(2, cart.map.keys.count)
-        cart.tile(87, 76) {
-            XCTAssertNotNil($0)
+        _ = cart.tile(87, 76) {
+            XCTAssertNotNil(cart.tile(87, 76))
             expect.fulfill()
         }
         waitForExpectations(timeout: 1)

@@ -63,8 +63,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         if let line = rendererFor as? Line {
             return Liner(line)
         } else {
-//            return MKTileOverlayRenderer(tileOverlay: rendererFor as! Tiler)
-            return Tiler2(overlay: rendererFor)
+            return MKTileOverlayRenderer(tileOverlay: rendererFor as! Tiler)
+//            return Tiler2(overlay: rendererFor)
         }
     }
     
