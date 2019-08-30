@@ -21,12 +21,17 @@ final class TestChunk: XCTestCase {
     }
     
     func testWrap() {
+        let expect = expectation(description: "")
         factory.chunk(.init("hello world".utf8), x: 87, y: 76)
         factory.chunk(.init("lorem ipsum".utf8), x: 34, y: 12)
         factory.item.id = "abc"
         Argonaut.save(factory)
         let cart = Argonaut.load("abc").1
         XCTAssertEqual(2, cart.map.keys.count)
-        XCTAssertNotNil(cart.tile(87, 76))
+        cart.tile(87, 76) {
+            XCTAssertNotNil($0)
+            expect.fulfill()
+        }
+        waitForExpectations(timeout: 1)
     }
 }

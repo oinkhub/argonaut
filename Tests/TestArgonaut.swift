@@ -61,6 +61,8 @@ final class TestArgonaut: XCTestCase {
     }
     
     func testLoad() {
+        let expectA = expectation(description: "")
+        let expectB = expectation(description: "")
         factory.chunk(.init("hello world".utf8), x: 87, y: 76)
         factory.chunk(.init("lorem ipsum dolec".utf8), x: 45, y: 12)
         factory.plan.path = [.init(), .init()]
@@ -72,8 +74,6 @@ final class TestArgonaut: XCTestCase {
         Argonaut.save(factory)
         factory = nil
         let loaded = Argonaut.load("abc")
-        XCTAssertEqual("hello world", String(decoding: loaded.1.tile(87, 76)!, as: UTF8.self))
-        XCTAssertEqual("lorem ipsum dolec", String(decoding: loaded.1.tile(45, 12)!, as: UTF8.self))
         XCTAssertEqual(-50, loaded.0.path[0].options[0].points[0].0)
         XCTAssertEqual(60, loaded.0.path[0].options[0].points[0].1)
         XCTAssertEqual(70, loaded.0.path[0].options[0].points[1].0)
@@ -84,6 +84,15 @@ final class TestArgonaut: XCTestCase {
         XCTAssertEqual(-40, loaded.0.path[0].options[0].points[3].1)
         XCTAssertEqual("hello", loaded.0.path[0].name)
         XCTAssertEqual("adasdsadas dadskjnaslkdas sakmdasklmdas asmdkaslmdlksama sdksamdklasmklsa asdsaasd\n sdadas", loaded.0.path[1].name)
+        loaded.1.tile(87, 76) {
+            XCTAssertEqual("hello world", String(decoding: $0!, as: UTF8.self))
+            expectA.fulfill()
+        }
+        loaded.1.tile(45, 12) {
+            XCTAssertEqual("lorem ipsum dolec", String(decoding: $0!, as: UTF8.self))
+            expectB.fulfill()
+        }
+        waitForExpectations(timeout: 1)
     }
     
     func testSaveRemovesTemporal() {

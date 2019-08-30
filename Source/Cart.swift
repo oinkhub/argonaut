@@ -1,9 +1,11 @@
 import Foundation
 
 public final class Cart {
-    var map = [String: (Int, Int)]()
+    #warning("remove public")
+    public var map = [String: (Int, Int)]()
     private let input: InputStream
     private let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Argonaut.size)
+    private let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
     
     init(_ url: URL) {
         input = InputStream(url: url)!
@@ -15,17 +17,23 @@ public final class Cart {
         input.close()
     }
     
-    public func tile(_ x: Int, _ y: Int) -> Data? {
-       map["\(x).\(y)"].map {
-           input.setProperty(NSNumber(value: $0.0), forKey: .fileCurrentOffsetKey)
-           var length = $0.1
-           var data = Data()
-           repeat {
-               let read = input.read(buffer, maxLength: min(Argonaut.size, length))
-               data.append(buffer, count: read)
-               length -= read
-           } while length > 0
-           return Argonaut.decode(data)
-       }
+    public func tile(_ x: Int, _ y: Int, _ result: @escaping((Data?) -> Void)) {
+        queue.async { [weak self] in
+            guard let self = self else { return }
+            result(self.map["\(x).\(y)"].map {
+                self.input.setProperty(NSNumber(value: $0.0), forKey: .fileCurrentOffsetKey)
+                var length = $0.1
+                var data = Data()
+                repeat {
+                    let read = self.input.read(self.buffer, maxLength: min(Argonaut.size, length))
+                    data.append(self.buffer, count: read)
+                    length -= read
+                } while length > 0
+                 
+                 let decoded = Argonaut.decode(data)
+                 print("x: \(x), y: \(y) result: \(decoded.count)")
+                return decoded
+            })
+        }
     }
 }
