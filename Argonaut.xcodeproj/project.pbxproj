@@ -20,6 +20,7 @@
 		CE0FE65423056F490058386B /* Scroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0FE65323056F490058386B /* Scroll.swift */; };
 		CE0FE656230571D70058386B /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0FE655230571D70058386B /* Field.swift */; };
 		CE18343E23080B260046E496 /* Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE18343D23080B260046E496 /* Create.swift */; };
+		CE25B85F231A830B007538E2 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE25B85E231A830B007538E2 /* Settings.swift */; };
 		CE26CE0522F4679C0007441D /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE422E1E1620082D91C /* Mark.swift */; };
 		CE26CE0622F4679C0007441D /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE26CDF822F4039F0007441D /* Line.swift */; };
 		CE26CE0722F467A40007441D /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE422E1E1620082D91C /* Mark.swift */; };
@@ -126,6 +127,7 @@
 		CE0FE65323056F490058386B /* Scroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scroll.swift; sourceTree = "<group>"; };
 		CE0FE655230571D70058386B /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		CE18343D23080B260046E496 /* Create.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Create.swift; sourceTree = "<group>"; };
+		CE25B85E231A830B007538E2 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		CE26CDF822F4039F0007441D /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		CE2A863C22F7F7C000AC8190 /* Argonaut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Argonaut.swift; sourceTree = "<group>"; };
 		CE2F61462312963100A01CF6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 				CE0FE651230555D40058386B /* New.swift */,
 				CEBB3A6323040F7200C5F61A /* Privacy.swift */,
 				CE0FE65323056F490058386B /* Scroll.swift */,
+				CE25B85E231A830B007538E2 /* Settings.swift */,
 				CED0E78D230E9ECA00D30D85 /* User.swift */,
 				CE0FE64F23053F340058386B /* World.swift */,
 			);
@@ -641,6 +644,7 @@
 				CEBB3A6423040F7200C5F61A /* Privacy.swift in Sources */,
 				CE0FE652230555D40058386B /* New.swift in Sources */,
 				CEDCC689230683C500AAF0C8 /* Button.swift in Sources */,
+				CE25B85F231A830B007538E2 /* Settings.swift in Sources */,
 				CEC2BA5C230BC26900FB4BA1 /* Gradient.swift in Sources */,
 				CECD5634231130490085E0C3 /* Navigate.swift in Sources */,
 				CE26CE0722F467A40007441D /* Mark.swift in Sources */,

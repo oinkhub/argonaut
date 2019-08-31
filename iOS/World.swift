@@ -9,12 +9,7 @@ class World: UIView, CLLocationManagerDelegate {
     private(set) weak var _close: UIButton!
     private(set) weak var top: Gradient.Top!
     private weak var _down: Button!
-    private weak var _walking: Button!
-    private weak var _driving: Button!
-    private weak var _follow: Button!
     private weak var listTop: NSLayoutConstraint!
-    private weak var walkingRight: NSLayoutConstraint!
-    private weak var drivingRight: NSLayoutConstraint!
     private var formatter: Any!
     private let manager = CLLocationManager()
     
@@ -62,20 +57,6 @@ class World: UIView, CLLocationManagerDelegate {
         addSubview(_close)
         self._close = _close
         
-        let _walking = Button("walking")
-        _walking.accessibilityLabel = .key("World.walking")
-        _walking.addTarget(self, action: #selector(walking), for: .touchUpInside)
-        _walking.isHidden = true
-        addSubview(_walking)
-        self._walking = _walking
-        
-        let _driving = Button("driving")
-        _driving.accessibilityLabel = .key("World.driving")
-        _driving.addTarget(self, action: #selector(driving), for: .touchUpInside)
-        _driving.isHidden = true
-        addSubview(_driving)
-        self._driving = _driving
-        
         let _down = Button("down")
         _down.accessibilityLabel = .key("World.down")
         _down.addTarget(self, action: #selector(down), for: .touchUpInside)
@@ -89,13 +70,10 @@ class World: UIView, CLLocationManagerDelegate {
         addSubview(_up)
         self._up = _up
         
-        let _follow = Button("follow")
-        _follow.accessibilityLabel = .key("World.follow")
-        _follow.addTarget(self, action: #selector(follow), for: .touchUpInside)
-        _follow.isEnabled = false
-        _follow.active = false
-        addSubview(_follow)
-        self._follow = _follow
+        let _settings = Button("settings")
+        _settings.accessibilityLabel = .key("World.settings")
+        _settings.addTarget(self, action: #selector(settings), for: .touchUpInside)
+        addSubview(_settings)
         
         let list = Scroll()
         list.backgroundColor = .black
@@ -122,16 +100,8 @@ class World: UIView, CLLocationManagerDelegate {
         _down.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
         _down.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
         
-        _follow.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
-        _follow.rightAnchor.constraint(equalTo: _walking.leftAnchor).isActive = true
-        
-        _walking.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
-        walkingRight = _walking.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
-        walkingRight.isActive = true
-        
-        _driving.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
-        drivingRight = _driving.centerXAnchor.constraint(equalTo: _up.centerXAnchor)
-        drivingRight.isActive = true
+        _settings.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        _settings.rightAnchor.constraint(equalTo: _up.leftAnchor).isActive = true
         
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -155,7 +125,7 @@ class World: UIView, CLLocationManagerDelegate {
         switch didChangeAuthorization {
             case .denied: app.alert(.key("Error"), message: .key("Error.location"))
             case .notDetermined: manager.requestWhenInUseAuthorization()
-            default: initial()
+            default: break
         }
     }
     
@@ -175,34 +145,8 @@ class World: UIView, CLLocationManagerDelegate {
         return "\(Int(distance))" + .key("New.distance")
     }
     
-    private func initial() {
-        _follow.isEnabled = true
-        _follow.active = app.session.settings.follow
-    }
-    
-    @objc final func follow() {
-        map.follow()
-        _follow.active = app.session.settings.follow
-    }
-    
-    @objc final func walking() {
-        map.walking()
-        _walking.active = app.session.settings.walking
-        refresh()
-    }
-    
-    @objc final func driving() {
-        map.driving()
-        _driving.active = app.session.settings.driving
-        refresh()
-    }
-    
     @objc private func up() {
         listTop.constant = -list.frame.height
-        walkingRight.constant = -140
-        drivingRight.constant = -70
-        _walking.isHidden = false
-        _driving.isHidden = false
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
@@ -213,15 +157,15 @@ class World: UIView, CLLocationManagerDelegate {
     
     @objc private func down() {
         listTop.constant = 0
-        walkingRight.constant = 0
-        drivingRight.constant = 0
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
-            self?._walking.isHidden = true
-            self?._driving.isHidden = true
             self?._up.isHidden = false
             self?._down.isHidden = true
         }
+    }
+    
+    @objc private func settings() {
+        
     }
 }

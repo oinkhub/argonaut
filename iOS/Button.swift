@@ -2,7 +2,7 @@ import UIKit
 
 final class Button: UIControl {
     override var isHighlighted: Bool { didSet { hover() } }
-    var active = true { didSet { hover() } }
+    override var isSelected: Bool { didSet { hover() } }
     private weak var icon: UIImageView!
     
     required init?(coder: NSCoder) { return nil }
@@ -33,7 +33,5 @@ final class Button: UIControl {
         heightAnchor.constraint(equalToConstant: 70).isActive = true
     }
     
-    private func hover() { icon.alpha = active && !isHighlighted ? 1 : 0.4 }
-    @objc private func highlight() { isHighlighted = true }
-    @objc private func unhighlight() { isHighlighted = false }
+    private func hover() { icon.alpha = isHighlighted || isSelected ? 0.4 : 1 }
 }
