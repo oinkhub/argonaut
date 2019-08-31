@@ -177,25 +177,23 @@ class World: UIView, CLLocationManagerDelegate {
     
     private func initial() {
         _follow.isEnabled = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.follow()
-        }
+        _follow.active = app.session.settings.follow
     }
     
     @objc final func follow() {
         map.follow()
-        _follow.active = map._follow
+        _follow.active = app.session.settings.follow
     }
     
     @objc final func walking() {
         map.walking()
-        _walking.active = map._walking
+        _walking.active = app.session.settings.walking
         refresh()
     }
     
     @objc final func driving() {
         map.driving()
-        _driving.active = map._driving
+        _driving.active = app.session.settings.driving
         refresh()
     }
     

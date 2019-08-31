@@ -151,17 +151,17 @@ final class Navigate: World {
             if previous == nil {
                 item.topAnchor.constraint(equalTo: list.topAnchor).isActive = true
             } else {
-                if !map._walking && !map._driving {
+                if !app.session.settings.walking && !app.session.settings.driving {
                     item.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
                 } else {
-                    if map._walking, let option = previous!.path?.options.first(where: { $0.mode == .walking }) {
+                    if app.session.settings.walking, let option = previous!.path?.options.first(where: { $0.mode == .walking }) {
                         let walking = make("walking", total: measure(option.distance) + ": " + dater.string(from: option.duration)!)
                         walking.backgroundColor = .walking
                         
                         walking.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
                         walking.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
                         
-                        if map._driving {
+                        if app.session.settings.driving {
                             walking.rightAnchor.constraint(equalTo: list.content.centerXAnchor, constant: -5).isActive = true
                         } else {
                             walking.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
@@ -169,14 +169,14 @@ final class Navigate: World {
                         
                         item.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor).isActive = true
                     }
-                    if map._driving, let option = previous!.path?.options.first(where: { $0.mode == .driving }) {
+                    if app.session.settings.driving, let option = previous!.path?.options.first(where: { $0.mode == .driving }) {
                         let driving = make("driving", total: measure(option.distance) + ": " + dater.string(from: option.duration)!)
                         driving.backgroundColor = .driving
                         
                         driving.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
                         driving.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
                         
-                        if map._walking {
+                        if app.session.settings.walking {
                             driving.leftAnchor.constraint(equalTo: list.content.centerXAnchor, constant: 5).isActive = true
                         } else {
                             driving.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true

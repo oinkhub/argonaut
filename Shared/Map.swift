@@ -7,9 +7,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     var zoom: ((Bool) -> Void)?
     var drag = true
     private(set) var plan = Plan()
-    private(set) var _follow = true
-    private(set) var _walking = true
-    private(set) var _driving = true
+    private var first = true
     private let geocoder = CLGeocoder()
     
     required init?(coder: NSCoder) { return nil }
@@ -31,8 +29,9 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
         guard let location = didUpdate.location else { return }
-        if _follow {
-            setCenter(location.coordinate, animated: true)
+        if app.session.settings.follow {
+            setCenter(location.coordinate, animated: first ? false : true)
+            first = false
         }
         user?(location)
     }
@@ -122,8 +121,9 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     @objc func follow() {
-        _follow.toggle()
-        if _follow {
+        app.session.settings.follow.toggle()
+        app.session.save()
+        if app.session.settings.follow {
             if annotations.contains(where: { $0 === userLocation }) {
                 selectAnnotation(userLocation, animated: true)
             }
@@ -133,12 +133,14 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     @objc func walking() {
-        _walking.toggle()
+        app.session.settings.walking.toggle()
+        app.session.save()
         filter()
     }
     
     @objc func driving() {
-        _driving.toggle()
+        app.session.settings.driving.toggle()
+        app.session.save()
         filter()
     }
     
@@ -193,7 +195,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 path.options += options
                 DispatchQueue.main.async { [weak self] in
                     self?.refresh()
-                    if (transport == .automobile && self?._driving == true) || (transport == .walking && self?._walking == true) {
+                    if (transport == .automobile && app.session.settings.driving) || (transport == .walking && app.session.settings.walking) {
                         self?.addOverlays(options.map { Line(path, option: $0) }, level: .aboveLabels)
                     }
                 }
@@ -203,6 +205,8 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     private func filter() {
         removeOverlays(overlays.filter { $0 is Line })
-        addOverlays(plan.path.flatMap { path in path.options.filter { ($0.mode == .walking && _walking) || ($0.mode == .driving && _driving) }.map { Line(path, option: $0) } }, level: .aboveLabels)
+        addOverlays(plan.path.flatMap { path in path.options
+            .filter { ($0.mode == .walking && app.session.settings.walking) || ($0.mode == .driving && app.session.settings.driving) }
+            .map { Line(path, option: $0) } }, level: .aboveLabels)
     }
 }
