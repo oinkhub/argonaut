@@ -38,7 +38,7 @@ final class About: UIView {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.clipsToBounds = true
-        image.contentMode = .scaleAspectFit
+        image.contentMode = .center
         image.image = UIImage(named: "logo")
         scroll.content.addSubview(image)
         
@@ -47,8 +47,8 @@ final class About: UIView {
         version.isAccessibilityElement = true
         version.text = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
         version.textColor = .halo
-        version.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
-        scroll.content.addSubview(version)
+        version.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize + 1, weight: .bold)
+        addSubview(version)
         
         border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -68,13 +68,13 @@ final class About: UIView {
         close.widthAnchor.constraint(equalToConstant: 60).isActive = true
         close.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        image.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 40).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 220).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 220).isActive = true
+        image.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 20).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 200).isActive = true
         image.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
         
-        version.topAnchor.constraint(equalTo: image.bottomAnchor, constant: -40).isActive = true
-        version.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
+        version.centerYAnchor.constraint(equalTo: title.centerYAnchor).isActive = true
+        version.leftAnchor.constraint(equalTo: title.rightAnchor, constant: 6).isActive = true
         
         if #available(iOS 11.0, *) {
             border.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 65).isActive = true

@@ -1,6 +1,12 @@
 import Foundation
 
 public class Session: Codable {
+    public enum Map: String, Codable {
+        case argonaut
+        case apple
+        case hybrid
+    }
+    
     public struct Travel: Codable {
         public var duration = 0.0
         public var distance = 0.0
@@ -17,14 +23,12 @@ public class Session: Codable {
         public init() { }
     }
     
-    public struct Onboard: Codable {
-        public var first = true
-        public var created = true
-        public var newDown = true
-        public var newUp = true
-        public var navigateDown = true
-        public var navigateUp = true
-        public var added = true
+    public struct Settings: Codable {
+        public var map = Map.hybrid
+        public var marks = true
+        public var driving = true
+        public var walking = true
+        public var follow = true
     }
     
     public static func load(_ result: @escaping((Session) -> Void)) {
@@ -38,7 +42,8 @@ public class Session: Codable {
     
     private static let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
     public var items = [Item]()
-    public var onboard = Onboard()
+    public var settings = Settings()
+    public var onboard = [String: Bool]()
     public var rating = Calendar.current.date(byAdding: {
         var d = DateComponents()
         d.day = 3
