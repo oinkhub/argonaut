@@ -165,7 +165,5 @@ class World: UIView, CLLocationManagerDelegate {
         }
     }
     
-    @objc private func settings() {
-        
-    }
+    @objc private func settings() { Settings.show() }
 }

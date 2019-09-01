@@ -45,6 +45,7 @@
 		CE9301D922EEF9C000EACBD4 /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301D822EEF9C000EACBD4 /* Navigate.swift */; };
 		CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301DA22EF09AF00EACBD4 /* Tiler.swift */; };
 		CE9301DC22EF09AF00EACBD4 /* Tiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301DA22EF09AF00EACBD4 /* Tiler.swift */; };
+		CE9AEC93231B9521009596FE /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9AEC92231B9521009596FE /* Settings.swift */; };
 		CEA0D91023002B4B001FD8B8 /* icons.icns in Resources */ = {isa = PBXBuildFile; fileRef = CEA0D90F23002B4B001FD8B8 /* icons.icns */; };
 		CEAB0F0822D73C5800320F4F /* New.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0722D73C5800320F4F /* New.swift */; };
 		CEAB0F0A22D742D900320F4F /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0922D742D900320F4F /* Map.swift */; };
@@ -148,6 +149,7 @@
 		CE7EACE422E1E1620082D91C /* Mark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mark.swift; sourceTree = "<group>"; };
 		CE9301D822EEF9C000EACBD4 /* Navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
 		CE9301DA22EF09AF00EACBD4 /* Tiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tiler.swift; sourceTree = "<group>"; };
+		CE9AEC92231B9521009596FE /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		CEA0D90F23002B4B001FD8B8 /* icons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icons.icns; sourceTree = "<group>"; };
 		CEAB0F0622D7396900320F4F /* Argonaut.sketch */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argonaut.sketch; sourceTree = "<group>"; };
 		CEAB0F0722D73C5800320F4F /* New.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = New.swift; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 				CE9301D822EEF9C000EACBD4 /* Navigate.swift */,
 				CEAB0F0722D73C5800320F4F /* New.swift */,
 				CE088B8422FEDE810001BEE4 /* Privacy.swift */,
+				CE9AEC92231B9521009596FE /* Settings.swift */,
 				CE2F61462312963100A01CF6 /* User.swift */,
 				CE734F7B22F1A2F7009799BE /* World.swift */,
 			);
@@ -614,6 +617,7 @@
 				CECECD7C22F469F2006AE0C8 /* Liner.swift in Sources */,
 				CE088B8722FEE7A80001BEE4 /* Help.swift in Sources */,
 				CE734F7C22F1A2F7009799BE /* World.swift in Sources */,
+				CE9AEC93231B9521009596FE /* Settings.swift in Sources */,
 				CE26CE0622F4679C0007441D /* Line.swift in Sources */,
 				CEE2BF9922EAF5400080C111 /* Create.swift in Sources */,
 				CE26CE0522F4679C0007441D /* Mark.swift in Sources */,
