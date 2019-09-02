@@ -169,22 +169,22 @@ class World: NSWindow {
     }
     
     @objc final func follow() {
-        map.follow()
-        app.follow.state = map._follow ? .on : .off
-        _follow.image.alphaValue = map._follow ? 1 : 0.6
+//        map.follow()
+//        app.follow.state = map._follow ? .on : .off
+//        _follow.image.alphaValue = map._follow ? 1 : 0.6
     }
     
     @objc final func walking() {
-        map.walking()
-        app.walking.state = map._walking ? .on : .off
-        _walking.image.alphaValue = map._walking ? 1 : 0.6
-        refresh()
+//        map.walking()
+//        app.walking.state = map._walking ? .on : .off
+//        _walking.image.alphaValue = map._walking ? 1 : 0.6
+//        refresh()
     }
     
     @objc final func driving() {
-        map.driving()
-        app.driving.state = map._driving ? .on : .off
-        _driving.image.alphaValue = map._driving ? 1 : 0.6
-        refresh()
+//        map.driving()
+//        app.driving.state = map._driving ? .on : .off
+//        _driving.image.alphaValue = map._driving ? 1 : 0.6
+//        refresh()
     }
 }

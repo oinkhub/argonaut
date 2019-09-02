@@ -366,27 +366,27 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             item.rightAnchor.constraint(equalTo: list.rightAnchor).isActive = true
             item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.documentView!.topAnchor).isActive = true
             
-            if previous != nil {
-                if map._walking, let _walking = previous!.path?.options.first(where: { $0.mode == .walking }) {
-                    walking.0 += _walking.distance
-                    walking.1 += _walking.duration
-                    previous!.add(.walking, measure(_walking.distance) + ": " + dater.string(from: _walking.duration)!)
-                }
-                if map._driving, let _driving = previous!.path?.options.first(where: { $0.mode == .driving }) {
-                    driving.0 += _driving.distance
-                    driving.1 += _driving.duration
-                    previous!.add(.driving, measure(_driving.distance) + ": " + dater.string(from: _driving.duration)!)
-                }
-            }
+//            if previous != nil {
+//                if map._walking, let _walking = previous!.path?.options.first(where: { $0.mode == .walking }) {
+//                    walking.0 += _walking.distance
+//                    walking.1 += _walking.duration
+//                    previous!.add(.walking, measure(_walking.distance) + ": " + dater.string(from: _walking.duration)!)
+//                }
+//                if map._driving, let _driving = previous!.path?.options.first(where: { $0.mode == .driving }) {
+//                    driving.0 += _driving.distance
+//                    driving.1 += _driving.duration
+//                    previous!.add(.driving, measure(_driving.distance) + ": " + dater.string(from: _driving.duration)!)
+//                }
+//            }
             previous = item
         }
         
         total.subviews.forEach { $0.removeFromSuperview() }
         var items = [(String, String, NSColor)]()
-        if map.plan.path.count > 1 {
-            if map._walking { items.append(("walking", measure(walking.0) + ": " + dater.string(from: walking.1)!, .walking)) }
-            if map._driving { items.append(("driving", measure(driving.0) + ": " + dater.string(from: driving.1)!, .driving)) }
-        }
+//        if map.plan.path.count > 1 {
+//            if map._walking { items.append(("walking", measure(walking.0) + ": " + dater.string(from: walking.1)!, .walking)) }
+//            if map._driving { items.append(("driving", measure(driving.0) + ": " + dater.string(from: driving.1)!, .driving)) }
+//        }
         
         var top = total.topAnchor
         items.forEach {
