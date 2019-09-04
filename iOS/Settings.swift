@@ -34,14 +34,30 @@ final class Settings: UIView {
         base.layer.cornerRadius = 6
         addSubview(base)
         
+        let done = UIButton()
+        done.translatesAutoresizingMaskIntoConstraints = false
+        done.isAccessibilityElement = true
+        done.accessibilityLabel = .key("Settings.done")
+        done.setImage(UIImage(named: "done"), for: .normal)
+        done.imageView!.clipsToBounds = true
+        done.imageView!.contentMode = .center
+        done.imageEdgeInsets.top = 20
+        done.addTarget(self, action: #selector(self.done), for: .touchUpInside)
+        base.addSubview(done)
+        
         base.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
         base.heightAnchor.constraint(equalToConstant: 480).isActive = true
         top = base.topAnchor.constraint(equalTo: topAnchor, constant: -490)
         top.isActive = true
+        
+        done.bottomAnchor.constraint(equalTo: base.bottomAnchor).isActive = true
+        done.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        done.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        done.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
     }
     
-    @objc private func close() {
+    @objc private func done() {
         top.constant = -490
         UIView.animate(withDuration: 0.4, animations: { [weak self] in
             app.view.layoutIfNeeded()

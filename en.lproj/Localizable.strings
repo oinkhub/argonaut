@@ -41,6 +41,7 @@ List.cancel="Cancel";
 List.confirm="Delete";
 List.field="Map";
 Load.label="Loading...";
+Settings.done="Close";
 Menu.argonaut="Argonaut";
 Menu.about="About";
 Menu.privacy="Privacy";
