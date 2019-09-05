@@ -153,6 +153,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
+    var mode = Session.Mode.ground
     private weak var field: Field.Search!
     private weak var results: Scroll!
     private weak var _pin: Button!
@@ -386,6 +387,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             self?.list.contentOffset.y = max((self?.list.content.bounds.height ?? 0) - 300, 0)
         }
     }
+    
+    override func settings() { Settings.show(.new(mode)) }
     
     private func query() {
         if #available(iOS 9.3, *) {

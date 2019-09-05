@@ -1,6 +1,9 @@
+import Argonaut
 import UIKit
 
 final class Settings: UIView {
+    enum Style { case new(_ mode: Session.Mode), navigate }
+    
     private enum Item {
         case follow, walking, driving, marks
         
@@ -87,9 +90,9 @@ final class Settings: UIView {
         }
     }
     
-    class func show() {
+    class func show(_ style: Style) {
         guard !app.view.subviews.contains(where: { $0 is Settings }) else { return }
-        let settings = Settings()
+        let settings = Settings(style)
         app.view.addSubview(settings)
         
         settings.leftAnchor.constraint(equalTo: app.view.leftAnchor).isActive = true
@@ -105,9 +108,10 @@ final class Settings: UIView {
         }
     }
     
+    private var mode = Session.Mode.ground
     private weak var top: NSLayoutConstraint!
     required init?(coder: NSCoder) { return nil }
-    private init() {
+    private init(_ style: Style) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         accessibilityViewIsModal = true
@@ -134,16 +138,44 @@ final class Settings: UIView {
         done.addTarget(self, action: #selector(self.done), for: .touchUpInside)
         base.addSubview(done)
         
-        let map = UISegmentedControl(items: [.key("Settings.argonaut"), .key("Settings.apple"), "Settings.hybrid"])
-        map.translatesAutoresizingMaskIntoConstraints = false
-        map.tintColor = .halo
-        scroll.content.addSubview(map)
+        var top: NSLayoutYAxisAnchor
+        switch style {
+        case .navigate:
+            let map = UISegmentedControl(items: [String.key("Settings.argonaut"), .key("Settings.apple"), .key("Settings.hybrid")])
+            map.translatesAutoresizingMaskIntoConstraints = false
+            map.tintColor = .halo
+            map.addTarget(self, action: #selector(self.map(_:)), for: .valueChanged)
+            scroll.content.addSubview(map)
+            
+            switch app.session.settings.map {
+            case .argonaut: map.selectedSegmentIndex = 0
+            case .apple: map.selectedSegmentIndex = 1
+            case .hybrid: map.selectedSegmentIndex = 2
+            }
+            
+            map.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 10).isActive = true
+            map.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
+            
+            top = map.bottomAnchor
+        case .new(let _mode):
+            let mode = UISegmentedControl(items: [String.key("Settings.ground"), .key("Settings.flight")])
+            mode.translatesAutoresizingMaskIntoConstraints = false
+            mode.tintColor = .halo
+            mode.addTarget(self, action: #selector(self.map(_:)), for: .valueChanged)
+            mode.selectedSegmentIndex = _mode == .ground ? 0 : 1
+            scroll.content.addSubview(mode)
+            
+            mode.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 10).isActive = true
+            mode.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
+            
+            top = mode.bottomAnchor
+        }
         
         base.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-        base.heightAnchor.constraint(equalToConstant: 480).isActive = true
-        top = base.topAnchor.constraint(equalTo: topAnchor, constant: -490)
-        top.isActive = true
+        base.heightAnchor.constraint(equalToConstant: 410).isActive = true
+        self.top = base.topAnchor.constraint(equalTo: topAnchor, constant: -420)
+        self.top.isActive = true
         
         scroll.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: base.rightAnchor).isActive = true
@@ -154,17 +186,13 @@ final class Settings: UIView {
         done.widthAnchor.constraint(equalToConstant: 60).isActive = true
         done.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
         
-        map.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 10).isActive = true
-        map.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
-        
-        var top = map.bottomAnchor
         ([.follow, .walking, .driving, .marks] as [Item]).forEach {
             let button = Button($0)
             button.addTarget(self, action: #selector(change(_:)), for: .touchUpInside)
             scroll.content.addSubview(button)
             update(button)
             
-            button.topAnchor.constraint(equalTo: top).isActive = true
+            button.topAnchor.constraint(equalTo: top, constant: $0 == .follow ? 20 : 0).isActive = true
             button.leftAnchor.constraint(equalTo: scroll.content.leftAnchor).isActive = true
             button.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
             top = button.bottomAnchor
@@ -179,7 +207,7 @@ final class Settings: UIView {
     }
     
     @objc private func done() {
-        top.constant = -490
+        top.constant = -420
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
             app.view.layoutIfNeeded()
             self?.alpha = 0
@@ -204,5 +232,14 @@ final class Settings: UIView {
         case .driving: button.value = app.session.settings.driving
         case .marks: button.value = app.session.settings.marks
         }
+    }
+    
+    @objc private func map(_ segmented: UISegmentedControl) {
+        switch segmented.selectedSegmentIndex {
+        case 0: app.session.settings.map = .argonaut
+        case 1: app.session.settings.map = .apple
+        default: app.session.settings.map = .hybrid
+        }
+        app.session.save()
     }
 }

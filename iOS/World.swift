@@ -145,6 +145,8 @@ class World: UIView, CLLocationManagerDelegate {
         return "\(Int(distance))" + .key("New.distance")
     }
     
+    @objc func settings() { }
+    
     @objc private func up() {
         listTop.constant = -list.frame.height
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
@@ -164,6 +166,4 @@ class World: UIView, CLLocationManagerDelegate {
             self?._down.isHidden = true
         }
     }
-    
-    @objc private func settings() { Settings.show() }
 }
