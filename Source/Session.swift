@@ -1,10 +1,15 @@
 import Foundation
 
 public class Session: Codable {
-    public enum Map: String, Codable {
+    public enum Map: Int, Codable {
         case argonaut
         case apple
         case hybrid
+    }
+    
+    public enum Mode: Int, Codable {
+        case flight
+        case ground
     }
     
     public struct Travel: Codable {
@@ -17,6 +22,7 @@ public class Session: Codable {
         public var title = ""
         public var origin = ""
         public var destination = ""
+        public var mode = Mode.ground
         public var walking = Travel()
         public var driving = Travel()
         
