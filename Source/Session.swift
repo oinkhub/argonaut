@@ -1,16 +1,8 @@
 import Foundation
 
 public class Session: Codable {
-    public enum Map: Int, Codable {
-        case argonaut
-        case apple
-        case hybrid
-    }
-    
-    public enum Mode: Int, Codable {
-        case flight
-        case ground
-    }
+    public enum Map: Int, Codable { case argonaut, apple, hybrid }
+    public enum Mode: Int, Codable { case flight, ground }
     
     public struct Travel: Codable {
         public var duration = 0.0

@@ -2,8 +2,7 @@ import Foundation
 
 public final class Plan {
     public enum Mode: UInt8 {
-        case walking
-        case driving
+        case walking, driving
     }
     
     public class Option {
