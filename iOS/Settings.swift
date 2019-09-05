@@ -134,6 +134,11 @@ final class Settings: UIView {
         done.addTarget(self, action: #selector(self.done), for: .touchUpInside)
         base.addSubview(done)
         
+        let map = UISegmentedControl(items: [.key("Settings.argonaut"), .key("Settings.apple"), "Settings.hybrid"])
+        map.translatesAutoresizingMaskIntoConstraints = false
+        map.tintColor = .halo
+        scroll.content.addSubview(map)
+        
         base.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
         base.heightAnchor.constraint(equalToConstant: 480).isActive = true
@@ -149,7 +154,10 @@ final class Settings: UIView {
         done.widthAnchor.constraint(equalToConstant: 60).isActive = true
         done.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
         
-        var top = scroll.content.topAnchor
+        map.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 10).isActive = true
+        map.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
+        
+        var top = map.bottomAnchor
         ([.follow, .walking, .driving, .marks] as [Item]).forEach {
             let button = Button($0)
             button.addTarget(self, action: #selector(change(_:)), for: .touchUpInside)
