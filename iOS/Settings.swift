@@ -108,15 +108,17 @@ final class Settings: UIView {
         }
     }
     
-    private var mode = Session.Mode.ground
     private weak var top: NSLayoutConstraint!
+    private weak var info: UILabel!
+    private var mode = Session.Mode.ground
+    
     required init?(coder: NSCoder) { return nil }
     private init(_ style: Style) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         accessibilityViewIsModal = true
         alpha = 0
-        backgroundColor = .init(white: 0, alpha: 0.6)
+        backgroundColor = .init(white: 0, alpha: 0.7)
         
         let base = UIView()
         base.translatesAutoresizingMaskIntoConstraints = false
@@ -138,7 +140,14 @@ final class Settings: UIView {
         done.addTarget(self, action: #selector(self.done), for: .touchUpInside)
         base.addSubview(done)
         
-        var top: NSLayoutYAxisAnchor
+        let info = UILabel()
+        info.translatesAutoresizingMaskIntoConstraints = false
+        info.numberOfLines = 0
+        info.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
+        info.textColor = .white
+        scroll.content.addSubview(info)
+        self.info = info
+        
         switch style {
         case .navigate:
             let map = UISegmentedControl(items: [String.key("Settings.argonaut"), .key("Settings.apple"), .key("Settings.hybrid")])
@@ -156,7 +165,7 @@ final class Settings: UIView {
             map.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 10).isActive = true
             map.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
             
-            top = map.bottomAnchor
+            info.topAnchor.constraint(equalTo: map.bottomAnchor, constant: 10).isActive = true
         case .new(let _mode):
             let mode = UISegmentedControl(items: [String.key("Settings.ground"), .key("Settings.flight")])
             mode.translatesAutoresizingMaskIntoConstraints = false
@@ -168,7 +177,7 @@ final class Settings: UIView {
             mode.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 10).isActive = true
             mode.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
             
-            top = mode.bottomAnchor
+            info.topAnchor.constraint(equalTo: mode.bottomAnchor, constant: 10).isActive = true
         }
         
         base.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
@@ -186,6 +195,10 @@ final class Settings: UIView {
         done.widthAnchor.constraint(equalToConstant: 60).isActive = true
         done.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
         
+        info.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        info.widthAnchor.constraint(lessThanOrEqualToConstant: 240).isActive = true
+        
+        var top = info.bottomAnchor
         ([.follow, .walking, .driving, .marks] as [Item]).forEach {
             let button = Button($0)
             button.addTarget(self, action: #selector(change(_:)), for: .touchUpInside)
