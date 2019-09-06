@@ -195,6 +195,12 @@ final class Navigate: World {
         list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? bottomAnchor, constant: 30).isActive = true
     }
     
+    override func settings() {
+        let settings = Settings(.navigate)
+        app.view.addSubview(settings)
+        settings.show()
+    }
+    
     private func zoom(_ valid: Bool) {
         UIView.animate(withDuration: 0.3) { [weak self] in
             self?._zoom.alpha = valid ? 0 : 0.8

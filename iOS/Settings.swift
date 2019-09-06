@@ -90,30 +90,13 @@ final class Settings: UIView {
         }
     }
     
-    class func show(_ style: Style) {
-        guard !app.view.subviews.contains(where: { $0 is Settings }) else { return }
-        let settings = Settings(style)
-        app.view.addSubview(settings)
-        
-        settings.leftAnchor.constraint(equalTo: app.view.leftAnchor).isActive = true
-        settings.rightAnchor.constraint(equalTo: app.view.rightAnchor).isActive = true
-        settings.topAnchor.constraint(equalTo: app.view.topAnchor).isActive = true
-        settings.bottomAnchor.constraint(equalTo: app.view.bottomAnchor).isActive = true
-        
-        app.view.layoutIfNeeded()
-        settings.top.constant = -10
-        UIView.animate(withDuration: 0.4) {
-            settings.alpha = 1
-            app.view.layoutIfNeeded()
-        }
-    }
-    
+    var delegate: ((Session.Mode) -> Void)!
     private weak var top: NSLayoutConstraint!
     private weak var info: UILabel!
     private var mode = Session.Mode.ground
     
     required init?(coder: NSCoder) { return nil }
-    private init(_ style: Style) {
+    init(_ style: Style) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         accessibilityViewIsModal = true
@@ -148,6 +131,11 @@ final class Settings: UIView {
         scroll.content.addSubview(info)
         self.info = info
         
+        leftAnchor.constraint(equalTo: app.view.leftAnchor).isActive = true
+        rightAnchor.constraint(equalTo: app.view.rightAnchor).isActive = true
+        topAnchor.constraint(equalTo: app.view.topAnchor).isActive = true
+        bottomAnchor.constraint(equalTo: app.view.bottomAnchor).isActive = true
+        
         switch style {
         case .navigate:
             let map = UISegmentedControl(items: [String.key("Settings.argonaut"), .key("Settings.apple"), .key("Settings.hybrid")])
@@ -170,7 +158,7 @@ final class Settings: UIView {
             let mode = UISegmentedControl(items: [String.key("Settings.ground"), .key("Settings.flight")])
             mode.translatesAutoresizingMaskIntoConstraints = false
             mode.tintColor = .halo
-            mode.addTarget(self, action: #selector(self.map(_:)), for: .valueChanged)
+            mode.addTarget(self, action: #selector(self.delegate(_:)), for: .valueChanged)
             mode.selectedSegmentIndex = _mode == .ground ? 0 : 1
             scroll.content.addSubview(mode)
             
@@ -219,6 +207,15 @@ final class Settings: UIView {
         }
     }
     
+    func show() {
+        app.view.layoutIfNeeded()
+        top.constant = -10
+        UIView.animate(withDuration: 0.4) { [weak self] in
+            self?.alpha = 1
+            app.view.layoutIfNeeded()
+        }
+    }
+    
     @objc private func done() {
         top.constant = -420
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
@@ -249,10 +246,28 @@ final class Settings: UIView {
     
     @objc private func map(_ segmented: UISegmentedControl) {
         switch segmented.selectedSegmentIndex {
-        case 0: app.session.settings.map = .argonaut
-        case 1: app.session.settings.map = .apple
-        default: app.session.settings.map = .hybrid
+        case 0:
+            app.session.settings.map = .argonaut
+            info.text = .key("Settings.map.argonaut")
+        case 1:
+            app.session.settings.map = .apple
+            info.text = .key("Settings.map.apple")
+        default:
+            app.session.settings.map = .hybrid
+            info.text = .key("Settings.map.hybrid")
         }
         app.session.save()
+    }
+    
+    @objc private func delegate(_ segmented: UISegmentedControl) {
+        switch segmented.selectedSegmentIndex {
+        case 0:
+            mode = .ground
+            info.text = .key("Settings.mode.ground")
+        default:
+            mode = .flight
+            info.text = .key("Settings.mode.flight")
+        }
+        delegate(mode)
     }
 }

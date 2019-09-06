@@ -388,7 +388,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    override func settings() { Settings.show(.new(mode)) }
+    override func settings() {
+        let settings = Settings(.new(mode))
+        settings.delegate = { [weak self] in self?.mode = $0 }
+        app.view.addSubview(settings)
+        settings.show()
+    }
     
     private func query() {
         if #available(iOS 9.3, *) {
