@@ -163,7 +163,7 @@ final class Home: UIView {
         @objc private func share() { Load.share(item) }
         
         @objc private func remove() {
-            let alert = UIAlertController(title: .key("Home.deleteTitle") + item.title, message: nil, preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: .key("Home.deleteTitle") + (item.title.isEmpty ? .key("Home.deleteUnanmed") : item.title), message: nil, preferredStyle: .actionSheet)
             alert.addAction(.init(title: .key("Home.deleteConfirm"), style: .destructive) { [weak self] _ in
                 if let item = self?.item { app.delete(item) }
             })

@@ -13,13 +13,13 @@ public final class Factory {
     public var plan = Plan()
     public var rect = MKMapRect()
     public var valid: Bool { return rect.width < max && rect.height < max }
-    var range = (13 ... 18)
+    var range = (12 ... 18)
     private(set) var item = Session.Item()
     private(set) var shots = [Shot]()
     let id = UUID().uuidString
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
-    private let margin = 0.002
+    private let margin = 0.004
     private let max = 150000.0
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
@@ -92,7 +92,7 @@ public final class Factory {
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let shot = self.shots.last else { return }
             self.progress((self.total - Float(self.shots.count)) / self.total)
-            self.timer.schedule(deadline: .now() + 9)
+            self.timer.schedule(deadline: .now() + 15)
             let shooter = MKMapSnapshotter(options: shot.options)
             self.shooter = shooter
             shooter.start(with: self.queue) { [weak self] in

@@ -12,3 +12,7 @@ extension CGColor {
     static let driving = UIColor.driving.cgColor
     static let black = UIColor.black.cgColor
 }
+
+extension Tiler {
+    var outside: Data { UIImage(named: "outside")!.pngData()! }
+}

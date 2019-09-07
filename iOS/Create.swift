@@ -47,7 +47,7 @@ final class Create: UIView {
         label.accessibilityTraits = .staticText
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.textColor = .init(white: 0.6, alpha: 1)
+        label.textColor = .init(white: 0.65, alpha: 1)
         label.attributedText = {
             $0.append(.init(string: .key("Create.title"), attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .bold)]))
             $0.append(.init(string: .key("Create.info"), attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)]))
