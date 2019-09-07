@@ -3,6 +3,7 @@ import CoreLocation
 
 class World: UIView, CLLocationManagerDelegate {
     let dater = DateComponentsFormatter()
+    private(set) var style = Settings.Style.navigate
     private(set) weak var map: Map!
     private(set) weak var list: Scroll!
     private(set) weak var _up: Button!
@@ -13,6 +14,7 @@ class World: UIView, CLLocationManagerDelegate {
     private var formatter: Any!
     private let manager = CLLocationManager()
     
+    deinit { print("world gone") }
     required init?(coder: NSCoder) { return nil }
     init() {
         super.init(frame: .zero)
@@ -145,6 +147,9 @@ class World: UIView, CLLocationManagerDelegate {
     }
     
     func refresh() { }
+    func update(_ settings: Settings) {
+        map.filter()
+    }
     
     final func measure(_ distance: CLLocationDistance) -> String {
         if #available(iOS 10, *) {
@@ -152,8 +157,6 @@ class World: UIView, CLLocationManagerDelegate {
         }
         return "\(Int(distance))" + .key("New.distance")
     }
-    
-    @objc func settings() { }
     
     @objc private func up() {
         listTop.constant = -list.frame.height
@@ -173,5 +176,12 @@ class World: UIView, CLLocationManagerDelegate {
             self?._up.isHidden = false
             self?._down.isHidden = true
         }
+    }
+    
+    @objc private func settings() {
+        let settings = Settings(style)
+        settings.delegate = { [weak self] in self?.update($0) }
+        app.view.addSubview(settings)
+        settings.show()
     }
 }

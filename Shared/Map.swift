@@ -5,6 +5,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
     var user: ((CLLocation) -> Void)?
     var zoom: ((CGFloat) -> Void)?
+    var route = true
     var drag = true
     private(set) var plan = Plan()
     private var first = true
@@ -114,6 +115,13 @@ final class Map: MKMapView, MKMapViewDelegate {
         filter()
     }
     
+    func filter() {
+        removeOverlays(overlays.filter { $0 is Line })
+        addOverlays(plan.path.flatMap { path in path.options
+            .filter { ($0.mode == .walking && app.session.settings.walking) || ($0.mode == .driving && app.session.settings.driving) }
+            .map { Line(path, option: $0) } }, level: .aboveLabels)
+    }
+    
     @objc func pin() {
         guard !geocoder.isGeocoding else { return }
         add(centerCoordinate)
@@ -123,18 +131,6 @@ final class Map: MKMapView, MKMapViewDelegate {
         if annotations.contains(where: { $0 === userLocation }) {
             setCenter(userLocation.coordinate, animated: true)
         }
-    }
-    
-    @objc func walking() {
-        app.session.settings.walking.toggle()
-        app.session.save()
-        filter()
-    }
-    
-    @objc func driving() {
-        app.session.settings.driving.toggle()
-        app.session.save()
-        filter()
     }
     
     private func locate(_ mark: Mark) {
@@ -162,11 +158,13 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     private func direction(_ path: Plan.Path, destination: Plan.Path) {
-        removeOverlays(overlays.filter { ($0 as? Line)?.path === path })
-        path.options = []
-        DispatchQueue.main.async { [weak self] in
-            self?.direction(.walking, path: path, destination: destination)
-            self?.direction(.automobile, path: path, destination: destination)
+        if route {
+            removeOverlays(overlays.filter { ($0 as? Line)?.path === path })
+            path.options = []
+            DispatchQueue.main.async { [weak self] in
+                self?.direction(.walking, path: path, destination: destination)
+                self?.direction(.automobile, path: path, destination: destination)
+            }
         }
     }
     
@@ -194,12 +192,5 @@ final class Map: MKMapView, MKMapViewDelegate {
                 }
             }
         }
-    }
-    
-    private func filter() {
-        removeOverlays(overlays.filter { $0 is Line })
-        addOverlays(plan.path.flatMap { path in path.options
-            .filter { ($0.mode == .walking && app.session.settings.walking) || ($0.mode == .driving && app.session.settings.driving) }
-            .map { Line(path, option: $0) } }, level: .aboveLabels)
     }
 }

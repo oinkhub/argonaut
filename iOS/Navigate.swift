@@ -65,11 +65,15 @@ final class Navigate: World {
     }
     
     private weak var zoom: Zoom!
+    private let tiler: Tiler
     
     required init?(coder: NSCoder) { return nil }
     init(_ item: Session.Item, project: (Plan, Cart)) {
+        tiler = Tiler(project.1)
         super.init()
-        map.addOverlay(Tiler(project.1), level: .aboveLabels)
+        if app.session.settings.map != .apple {
+            map.addOverlay(tiler, level: .aboveLabels)
+        }
         map.add(project.0)
         map.zoom = { [weak self] in self?.zoom.update($0) }
         map.user = { [weak self] in self?.user($0) }
@@ -168,10 +172,16 @@ final class Navigate: World {
         list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? bottomAnchor, constant: 30).isActive = true
     }
     
-    override func settings() {
-        let settings = Settings(.navigate)
-        app.view.addSubview(settings)
-        settings.show()
+    override func update(_ settings: Settings) {
+        map.removeOverlay(tiler)
+        switch app.session.settings.map {
+        case .argonaut, .hybrid:
+            tiler.canReplaceMapContent = app.session.settings.map == .argonaut
+            map.addOverlay(tiler, level: .aboveLabels)
+        case .apple: break
+        }
+        
+        super.update(settings)
     }
     
     private func user(_ location: CLLocation) {

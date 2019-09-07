@@ -90,10 +90,12 @@ final class Settings: UIView {
         }
     }
     
-    var delegate: ((Session.Mode) -> Void)?
+    var delegate: ((Settings) -> Void)!
+    private(set) var mode = Session.Mode.ground
     private weak var top: NSLayoutConstraint!
     private weak var info: UILabel!
-    private var mode = Session.Mode.ground
+    
+    deinit { print("settings gone") }
     
     required init?(coder: NSCoder) { return nil }
     init(_ style: Style) {
@@ -136,7 +138,7 @@ final class Settings: UIView {
             let map = UISegmentedControl(items: [String.key("Settings.argonaut"), .key("Settings.apple"), .key("Settings.hybrid")])
             map.translatesAutoresizingMaskIntoConstraints = false
             map.tintColor = .halo
-            map.addTarget(self, action: #selector(self.map(_:)), for: .valueChanged)
+            map.addTarget(self, action: #selector(mapped(_:)), for: .valueChanged)
             scroll.content.addSubview(map)
             
             switch app.session.settings.map {
@@ -145,7 +147,7 @@ final class Settings: UIView {
             case .hybrid: map.selectedSegmentIndex = 2
             }
             
-            self.map(map)
+            mapInfo()
             map.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 15).isActive = true
             map.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
             
@@ -154,10 +156,10 @@ final class Settings: UIView {
             let mode = UISegmentedControl(items: [String.key("Settings.ground"), .key("Settings.flight")])
             mode.translatesAutoresizingMaskIntoConstraints = false
             mode.tintColor = .halo
-            mode.addTarget(self, action: #selector(self.delegate(_:)), for: .valueChanged)
+            mode.addTarget(self, action: #selector(moded(_:)), for: .valueChanged)
             mode.selectedSegmentIndex = _mode == .ground ? 0 : 1
             scroll.content.addSubview(mode)
-            delegate(mode)
+            modeInfo()
             
             mode.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 15).isActive = true
             mode.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
@@ -218,6 +220,21 @@ final class Settings: UIView {
         }
     }
     
+    private func mapInfo() {
+        switch app.session.settings.map {
+        case .argonaut: info.text = .key("Settings.map.argonaut")
+        case .apple: info.text = .key("Settings.map.apple")
+        case .hybrid: info.text = .key("Settings.map.hybrid")
+        }
+    }
+    
+    private func modeInfo() {
+        switch mode {
+        case .ground: info.text = .key("Settings.mode.ground")
+        case .flight: info.text = .key("Settings.mode.flight")
+        }
+    }
+    
     @objc private func done() {
         top.constant = -450
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
@@ -235,6 +252,7 @@ final class Settings: UIView {
         }
         update(button)
         app.session.save()
+        delegate(self)
     }
     
     @objc private func update(_ button: Button) {
@@ -246,30 +264,23 @@ final class Settings: UIView {
         }
     }
     
-    @objc private func map(_ segmented: UISegmentedControl) {
+    @objc private func mapped(_ segmented: UISegmentedControl) {
         switch segmented.selectedSegmentIndex {
-        case 0:
-            app.session.settings.map = .argonaut
-            info.text = .key("Settings.map.argonaut")
-        case 1:
-            app.session.settings.map = .apple
-            info.text = .key("Settings.map.apple")
-        default:
-            app.session.settings.map = .hybrid
-            info.text = .key("Settings.map.hybrid")
+        case 0: app.session.settings.map = .argonaut
+        case 1: app.session.settings.map = .apple
+        default: app.session.settings.map = .hybrid
         }
+        mapInfo()
         app.session.save()
+        delegate(self)
     }
     
-    @objc private func delegate(_ segmented: UISegmentedControl) {
+    @objc private func moded(_ segmented: UISegmentedControl) {
         switch segmented.selectedSegmentIndex {
-        case 0:
-            mode = .ground
-            info.text = .key("Settings.mode.ground")
-        default:
-            mode = .flight
-            info.text = .key("Settings.mode.flight")
+        case 0: mode = .ground
+        default: mode = .flight
         }
-        delegate?(mode)
+        modeInfo()
+        delegate(self)
     }
 }

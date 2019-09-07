@@ -160,6 +160,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var _save: UIButton!
     private weak var resultsHeight: NSLayoutConstraint!
     private var completer: Any?
+    override var style: Settings.Style { get { .new(mode) } }
     
     required init?(coder: NSCoder) { return nil }
     override init() {
@@ -379,6 +380,9 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                     _driving.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
                 }
             }
+            
+            // add flight
+            
         } else if let previous = previous {
             list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous.bottomAnchor, constant: 20).isActive = true
         }
@@ -388,11 +392,13 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    override func settings() {
-        let settings = Settings(.new(mode))
-        settings.delegate = { [weak self] in self?.mode = $0 }
-        app.view.addSubview(settings)
-        settings.show()
+    override func update(_ settings: Settings) {
+        if mode != settings.mode {
+            mode = settings.mode
+            map.route = mode == .ground
+            map.plan.path.forEach { map.remove($0) }
+        }
+        super.update(settings)
     }
     
     private func query() {
