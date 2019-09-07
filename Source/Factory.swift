@@ -13,7 +13,7 @@ public final class Factory {
     public var plan = Plan()
     public var rect = MKMapRect()
     public var valid: Bool { return rect.width < max && rect.height < max }
-    var range = (12 ... 18)
+    var range = (11 ... 18)
     private(set) var item = Session.Item()
     private(set) var shots = [Shot]()
     let id = UUID().uuidString

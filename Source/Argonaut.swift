@@ -13,8 +13,9 @@ public final class Argonaut {
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
         let input = InputStream(url: url(id))!
         input.open()
-        input.read(buffer, maxLength: 1)
-        (0 ..< buffer.pointee).forEach { _ in
+        input.read(buffer, maxLength: 3)
+        cart.zoom = (Int(buffer.pointee) ... Int(buffer.advanced(by: 1).pointee))
+        (0 ..< buffer.advanced(by: 2).pointee).forEach { _ in
             let item = Plan.Path()
             input.read(buffer, maxLength: 1)
             let length = Int(buffer.pointee)
@@ -110,7 +111,7 @@ public final class Argonaut {
         prepare()
         let out = OutputStream(url: url(factory.item.id), append: false)!
         out.open()
-        _ = withUnsafeBytes(of: UInt8(factory.plan.path.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
+        _ = [UInt8(factory.range.min()!), UInt8(factory.range.max()!), UInt8(factory.plan.path.count)].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 3) }
         factory.plan.path.forEach {
             let name = Data($0.name.utf8)
             _ = withUnsafeBytes(of: UInt8(name.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }

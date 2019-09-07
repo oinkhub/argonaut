@@ -34,6 +34,13 @@ final class TestCart: XCTestCase {
         waitForExpectations(timeout: 1)
     }
     
+    func testZoom() {
+        factory.item.id = "abc"
+        factory.range = (55 ... 57)
+        Argonaut.save(factory)
+        XCTAssertEqual((55 ... 57), Argonaut.load("abc").1.zoom)
+    }
+    
     func testNil() {
         let expect = expectation(description: "")
         factory.chunk(.init("hello world".utf8), x: 160, y: 280)
