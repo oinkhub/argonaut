@@ -29,11 +29,11 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
         guard let location = didUpdate.location else { return }
-        if app.session.settings.follow {
+        if first || app.session.settings.follow {
             setCenter(location.coordinate, animated: first ? false : true)
-            first = false
         }
         user?(location)
+        first = false
     }
     
     func mapView(_: MKMapView, viewFor: MKAnnotation) -> MKAnnotationView? {
@@ -119,15 +119,9 @@ final class Map: MKMapView, MKMapViewDelegate {
         add(centerCoordinate)
     }
     
-    @objc func follow() {
-        app.session.settings.follow.toggle()
-        app.session.save()
-        if app.session.settings.follow {
-            if annotations.contains(where: { $0 === userLocation }) {
-                selectAnnotation(userLocation, animated: true)
-            }
-        } else {
-            selectedAnnotations.first(where: { $0 is MKUserLocation }).map { deselectAnnotation($0, animated: true) }
+    @objc func me() {
+        if annotations.contains(where: { $0 === userLocation }) {
+            setCenter(userLocation.coordinate, animated: true)
         }
     }
     

@@ -75,6 +75,11 @@ class World: UIView, CLLocationManagerDelegate {
         _settings.addTarget(self, action: #selector(settings), for: .touchUpInside)
         addSubview(_settings)
         
+        let _user = Button("follow")
+        _user.accessibilityLabel = .key("World.user")
+        _user.addTarget(map, action: #selector(map.me), for: .touchUpInside)
+        addSubview(_user)
+        
         let list = Scroll()
         list.backgroundColor = .black
         addSubview(list)
@@ -102,6 +107,9 @@ class World: UIView, CLLocationManagerDelegate {
         
         _settings.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
         _settings.rightAnchor.constraint(equalTo: _up.leftAnchor).isActive = true
+        
+        _user.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        _user.rightAnchor.constraint(equalTo: _settings.leftAnchor).isActive = true
         
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true

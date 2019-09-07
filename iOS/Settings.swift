@@ -167,8 +167,8 @@ final class Settings: UIView {
         
         base.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-        base.heightAnchor.constraint(equalToConstant: 420).isActive = true
-        self.top = base.topAnchor.constraint(equalTo: topAnchor, constant: -430)
+        base.heightAnchor.constraint(equalToConstant: 440).isActive = true
+        self.top = base.topAnchor.constraint(equalTo: topAnchor, constant: -450)
         self.top.isActive = true
         
         scroll.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
@@ -219,7 +219,7 @@ final class Settings: UIView {
     }
     
     @objc private func done() {
-        top.constant = -430
+        top.constant = -450
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
             app.view.layoutIfNeeded()
             self?.alpha = 0

@@ -94,10 +94,11 @@ final class Navigate: World {
         list.heightAnchor.constraint(equalToConstant: 180).isActive = true
         
         zoom.centerXAnchor.constraint(equalTo: map.centerXAnchor).isActive = true
-        zoom.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        zoom.centerYAnchor.constraint(equalTo: _close.centerYAnchor).isActive = true
         
         title.centerYAnchor.constraint(equalTo: _close.centerYAnchor).isActive = true
         title.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+        title.leftAnchor.constraint(greaterThanOrEqualTo: zoom.rightAnchor, constant: 5).isActive = true
         
         if #available(iOS 11.0, *) {
             map.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 44).isActive = true
