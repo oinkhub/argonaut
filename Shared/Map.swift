@@ -4,7 +4,7 @@ import MapKit
 final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
     var user: ((CLLocation) -> Void)?
-    var zoom: ((Bool) -> Void)?
+    var zoom: ((CGFloat) -> Void)?
     var drag = true
     private(set) var plan = Plan()
     private var first = true
@@ -67,8 +67,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
-        let level = round(log2(360 * Double(frame.width) / Argonaut.tile / region.span.longitudeDelta))
-        zoom?(level <= 18 && level >= 13)
+        zoom?(.init(round(log2(360 * Double(frame.width) / Argonaut.tile / region.span.longitudeDelta))))
     }
     
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.isSelected = false }

@@ -1,8 +1,8 @@
 import Foundation
 
 public final class Cart {
+    public internal(set) var zoom = (0 ... 0)
     var map = [String: (Int, Int)]()
-    var zoom = (0 ... 0)
     private let input: InputStream
     private let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: Argonaut.size)
     private let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))

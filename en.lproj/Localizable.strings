@@ -33,7 +33,6 @@ Create.cancel="Cancel";
 Create.title="Creating map";
 Create.info="\nThis process is done only once but might take a few minutes, please wait.\nArgo apologises for any inconvenience.";
 Map.mark="Pin";
-Navigate.zoom="Zoom not supported";
 Navigate.title="map with no name";
 List.distance=" metres";
 List.view="Navigate";

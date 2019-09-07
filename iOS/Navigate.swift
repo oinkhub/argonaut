@@ -64,38 +64,20 @@ final class Navigate: World {
         }
     }
     
-    private weak var _zoom: UIView!
+    private weak var zoom: Zoom!
     
     required init?(coder: NSCoder) { return nil }
     init(_ item: Session.Item, project: (Plan, Cart)) {
         super.init()
         map.addOverlay(Tiler(project.1), level: .aboveLabels)
         map.add(project.0)
-        map.zoom = { [weak self] in self?.zoom($0) }
+        map.zoom = { [weak self] in self?.zoom.update($0) }
         map.user = { [weak self] in self?.user($0) }
         map.drag = false
         
-        let _zoom = UIView()
-        _zoom.translatesAutoresizingMaskIntoConstraints = false
-        _zoom.isUserInteractionEnabled = false
-        _zoom.backgroundColor = .black
-        _zoom.layer.cornerRadius = 4
-        _zoom.alpha = 0
-        addSubview(_zoom)
-        self._zoom = _zoom
-        
-        let icon = UIImageView(image: UIImage(named: "error"))
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.contentMode = .center
-        icon.clipsToBounds = true
-        _zoom.addSubview(icon)
-        
-        let warning = UILabel()
-        warning.translatesAutoresizingMaskIntoConstraints = false
-        warning.text = .key("Navigate.zoom")
-        warning.textColor = .white
-        warning.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
-        _zoom.addSubview(warning)
+        let zoom = Zoom(project.1.zoom)
+        addSubview(zoom)
+        self.zoom = zoom
         
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
@@ -111,18 +93,8 @@ final class Navigate: World {
         
         list.heightAnchor.constraint(equalToConstant: 180).isActive = true
         
-        _zoom.leftAnchor.constraint(equalTo: icon.leftAnchor, constant: -5).isActive = true
-        _zoom.rightAnchor.constraint(equalTo: warning.rightAnchor, constant: 15).isActive = true
-        _zoom.topAnchor.constraint(equalTo: warning.topAnchor, constant: -12).isActive = true
-        _zoom.bottomAnchor.constraint(equalTo: warning.bottomAnchor, constant: 12).isActive = true
-        
-        icon.centerYAnchor.constraint(equalTo: warning.centerYAnchor, constant: -1).isActive = true
-        icon.rightAnchor.constraint(equalTo: warning.leftAnchor).isActive = true
-        icon.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        warning.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 15).isActive = true
-        warning.topAnchor.constraint(equalTo: map.topAnchor, constant: 20).isActive = true
+        zoom.centerXAnchor.constraint(equalTo: map.centerXAnchor).isActive = true
+        zoom.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
         
         title.centerYAnchor.constraint(equalTo: _close.centerYAnchor).isActive = true
         title.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
@@ -199,12 +171,6 @@ final class Navigate: World {
         let settings = Settings(.navigate)
         app.view.addSubview(settings)
         settings.show()
-    }
-    
-    private func zoom(_ valid: Bool) {
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            self?._zoom.alpha = valid ? 0 : 0.8
-        }
     }
     
     private func user(_ location: CLLocation) {
