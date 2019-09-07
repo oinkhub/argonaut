@@ -47,3 +47,7 @@ final class Scroll: NSScrollView {
 }
 
 final class Flipped: NSView { override var isFlipped: Bool { return true } }
+
+extension Tiler {
+    var outside: Data { NSBitmapImageRep(cgImage: NSImage(named: "outside")!.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])! }
+}
