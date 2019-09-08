@@ -10,7 +10,7 @@ public final class Factory {
     public var error: ((Error) -> Void)!
     public var progress: ((Float) -> Void)!
     public var complete: ((Session.Item) -> Void)!
-    public var plan = Plan()
+    public var path = [Path]()
     public var rect = MKMapRect()
     public var valid: Bool { return rect.width < max && rect.height < max }
     var range = (11 ... 18)
@@ -49,7 +49,7 @@ public final class Factory {
                    MKMapPoint(.init(latitude: $0.last!.0 - margin, longitude: $1.last!.1 + margin))) as MKMapRect
                 return rect
             } ($0.sorted { $0.0 > $1.0 }, $0.sorted { $0.1 < $1.1 })
-        } (plan.path.flatMap { $0.options.flatMap { $0.points } })
+        } (path.flatMap { $0.options.flatMap { $0.points } })
     }
     
     public func divide() {
@@ -73,17 +73,12 @@ public final class Factory {
     
     public func register() {
         item.id = id
-        item.origin = plan.path.first?.name ?? ""
-        item.destination = plan.path.last?.name ?? ""
-        plan.path.forEach {
+        item.origin = path.first?.name ?? ""
+        item.destination = path.last?.name ?? ""
+        path.forEach {
             $0.options.forEach {
-                if $0.mode == .walking {
-                    item.walking.duration += $0.duration
-                    item.walking.distance += $0.distance
-                } else {
-                    item.driving.duration += $0.duration
-                    item.driving.distance += $0.distance
-                }
+                item.duration += $0.duration
+                item.distance += $0.distance
             }
         }
     }

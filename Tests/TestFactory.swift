@@ -19,9 +19,9 @@ final class TestFactory: XCTestCase {
     }
     
     func testMeasure() {
-        factory.plan.path = [.init()]
-        factory.plan.path[0].options = [.init()]
-        factory.plan.path[0].options[0].points = [(-50, 60), (70, -80), (-30, 20), (82, -40)]
+        factory.path = [.init()]
+        factory.path[0].options = [.init()]
+        factory.path[0].options[0].points = [(-50, 60), (70, -80), (-30, 20), (82, -40)]
         factory.measure()
         XCTAssertEqual(-80.004, factory.rect.origin.coordinate.longitude, accuracy: 0.00001)
         XCTAssertEqual(82.004, factory.rect.origin.coordinate.latitude, accuracy: 0.00001)
@@ -76,21 +76,21 @@ final class TestFactory: XCTestCase {
     }
     
     func testRegister() {
-        factory.plan.path = [.init(), .init()]
-        factory.plan.path[0].name = "hello"
-        factory.plan.path[0].options = [.init()]
-        factory.plan.path[0].options[0].duration = 1
-        factory.plan.path[0].options[0].distance = 2
-        factory.plan.path[1].name = "world"
-        factory.plan.path[1].options = [.init()]
-        factory.plan.path[1].options[0].duration = 1
-        factory.plan.path[1].options[0].distance = 2
+        factory.path = [.init(), .init()]
+        factory.path[0].name = "hello"
+        factory.path[0].options = [.init()]
+        factory.path[0].options[0].duration = 1
+        factory.path[0].options[0].distance = 2
+        factory.path[1].name = "world"
+        factory.path[1].options = [.init()]
+        factory.path[1].options[0].duration = 1
+        factory.path[1].options[0].distance = 2
         factory.register()
         XCTAssertEqual(factory.item.id, factory.id)
         XCTAssertEqual("hello", factory.item.origin)
         XCTAssertEqual("world", factory.item.destination)
-        XCTAssertEqual(2, factory.item.walking.duration)
-        XCTAssertEqual(4, factory.item.walking.distance)
+        XCTAssertEqual(2, factory.item.duration)
+        XCTAssertEqual(4, factory.item.distance)
     }
     
     func testRegisterEmpty() {

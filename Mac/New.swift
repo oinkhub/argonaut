@@ -78,13 +78,13 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     private final class Item: NSView {
-        weak var path: Plan.Path?
-        var delete: ((Plan.Path) -> Void)?
+        weak var path: Path?
+        var delete: ((Path) -> Void)?
         private weak var top: NSLayoutYAxisAnchor!
         private weak var bottom: NSLayoutConstraint! { didSet { oldValue.isActive = false; bottom.isActive = true } }
         
         required init?(coder: NSCoder) { return nil }
-        init(_ path: (Int, Plan.Path)) {
+        init(_ path: (Int, Path)) {
             self.path = path.1
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
@@ -357,7 +357,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         var previous: Item?
         var walking = (CLLocationDistance(), TimeInterval())
         var driving = (CLLocationDistance(), TimeInterval())
-        map.plan.path.enumerated().forEach {
+        map.path.enumerated().forEach {
             let item = Item($0)
             item.delete = { [weak self] in self?.map.remove($0) }
             list.documentView!.addSubview(item)
@@ -480,7 +480,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     @objc func save() {
-        Create(map.plan, rect: map.visibleMapRect).makeKeyAndOrderFront(nil)
+        Create(map.path, rect: map.visibleMapRect).makeKeyAndOrderFront(nil)
         close()
     }
     

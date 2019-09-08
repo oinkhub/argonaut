@@ -7,7 +7,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     var zoom: ((CGFloat) -> Void)?
     var route = true
     var drag = true
-    private(set) var plan = Plan()
+    private(set) var path = [Path]()
     private var first = true
     private let geocoder = CLGeocoder()
     
@@ -44,7 +44,7 @@ final class Map: MKMapView, MKMapViewDelegate {
             view = dequeueReusableAnnotationView(withIdentifier: "User") as? User ?? User()
         case is Mark:
             view = dequeueReusableAnnotationView(withIdentifier: "Marker") as? Marker ?? Marker(drag)
-            (view as! Marker).index = "\(plan.path.firstIndex { $0 === (viewFor as! Mark).path }! + 1)"
+            (view as! Marker).index = "\(path.firstIndex { $0 === (viewFor as! Mark).path }! + 1)"
         default: break
         }
         view?.annotation = viewFor
@@ -80,44 +80,44 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func add(_ coordinate: CLLocationCoordinate2D) {
-        let path = Plan.Path()
-        path.latitude = coordinate.latitude
-        path.longitude = coordinate.longitude
-        plan.path.append(path)
-        let mark = Mark(path)
+        let item = Path()
+        item.latitude = coordinate.latitude
+        item.longitude = coordinate.longitude
+        path.append(item)
+        let mark = Mark(item)
         addAnnotation(mark)
         selectAnnotation(mark, animated: true)
         locate(mark)
     }
     
-    func remove(_ path: Plan.Path) {
+    func remove(_ path: Path) {
         selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
         removeAnnotations(annotations.filter { ($0 as? Mark)?.path === path })
         DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let self = self, let index = self.plan.path.firstIndex(where: { $0 === path }) else { return }
+            guard let self = self, let index = self.path.firstIndex(where: { $0 === path }) else { return }
             self.removeOverlays(self.overlays.filter { ($0 as? Line)?.path === path } )
             if index > 0 {
-                if index < self.plan.path.count - 1 {
-                    self.direction(self.plan.path[index - 1], destination: self.plan.path[index + 1])
+                if index < self.path.count - 1 {
+                    self.direction(self.path[index - 1], destination: self.path[index + 1])
                 } else {
-                    self.removeOverlays(self.overlays.filter { ($0 as? Line)?.path === self.plan.path[index - 1] } )
-                    self.plan.path[index - 1].options = []
+                    self.removeOverlays(self.overlays.filter { ($0 as? Line)?.path === self.path[index - 1] } )
+                    self.path[index - 1].options = []
                 }
             }
-            self.plan.path.remove(at: index)
+            self.path.remove(at: index)
             DispatchQueue.main.async { [weak self] in self?.refresh() }
         }
     }
     
-    func add(_ plan: Plan) {
-        self.plan = plan
-        addAnnotations(plan.path.map { Mark($0) })
+    func add(_ path: [Path]) {
+        self.path = path
+        addAnnotations(path.map { Mark($0) })
         filter()
     }
     
     func filter() {
         removeOverlays(overlays.filter { $0 is Line })
-        addOverlays(plan.path.flatMap { path in path.options
+        addOverlays(path.flatMap { path in path.options
             .filter { ($0.mode == .walking && app.session.settings.walking) || ($0.mode == .driving && app.session.settings.driving) }
             .map { Line(path, option: $0) } }, level: .aboveLabels)
     }
@@ -143,12 +143,12 @@ final class Map: MKMapView, MKMapViewDelegate {
                     self.refresh()
                     DispatchQueue.global(qos: .background).async { [weak self] in
                         guard let self = self else { return }
-                        if let index = self.plan.path.firstIndex(where: { $0 === mark.path }) {
+                        if let index = self.path.firstIndex(where: { $0 === mark.path }) {
                             if index > 0 {
-                                self.direction(self.plan.path[index - 1], destination: mark.path)
+                                self.direction(self.path[index - 1], destination: mark.path)
                             }
-                            if index < self.plan.path.count - 1 {
-                                self.direction(self.plan.path[index], destination: self.plan.path[index + 1])
+                            if index < self.path.count - 1 {
+                                self.direction(self.path[index], destination: self.path[index + 1])
                             }
                         }
                     }
@@ -157,7 +157,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    private func direction(_ path: Plan.Path, destination: Plan.Path) {
+    private func direction(_ path: Path, destination: Path) {
         if route {
             removeOverlays(overlays.filter { ($0 as? Line)?.path === path })
             path.options = []
@@ -168,7 +168,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    private func direction(_ transport: MKDirectionsTransportType, path: Plan.Path, destination: Plan.Path) {
+    private func direction(_ transport: MKDirectionsTransportType, path: Path, destination: Path) {
         let request = MKDirections.Request()
         request.transportType = transport
         request.source = .init(placemark: .init(coordinate: .init(latitude: path.latitude, longitude: path.longitude), addressDictionary: nil))
@@ -176,13 +176,13 @@ final class Map: MKMapView, MKMapViewDelegate {
         MKDirections(request: request).calculate { [weak self] in
             if $1 == nil, let paths = $0?.routes {
                 let options = paths.map {
-                    let option = Plan.Option()
+                    let option = Path.Option()
                     option.mode = $0.transportType == .walking ? .walking : .driving
                     option.distance = $0.distance
                     option.duration = $0.expectedTravelTime
                     option.points = UnsafeBufferPointer(start: $0.polyline.points(), count: $0.polyline.pointCount).map { ($0.coordinate.latitude, $0.coordinate.longitude) }
                     return option
-                } as [Plan.Option]
+                } as [Path.Option]
                 path.options += options
                 DispatchQueue.main.async { [weak self] in
                     self?.refresh()

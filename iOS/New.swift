@@ -152,8 +152,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             return base
         }
     }
-    
-    var mode = Session.Mode.ground
+
     private weak var field: Field.Search!
     private weak var results: Scroll!
     private weak var _pin: Button!

@@ -2,13 +2,13 @@ import Argonaut
 import MapKit
 
 final class Line: NSObject, MKOverlay {
-    private(set) weak var path: Plan.Path!
-    private(set) weak var option: Plan.Option!
+    private(set) weak var path: Path!
+    private(set) weak var option: Path.Option!
     let point: [MKMapPoint]
     let coordinate: CLLocationCoordinate2D
     let boundingMapRect: MKMapRect
     
-    init(_ path: Plan.Path, option: Plan.Option) {
+    init(_ path: Path, option: Path.Option) {
         self.path = path
         self.option = option
         point = option.points.map { .init(.init(latitude: $0.0, longitude: $0.1)) }

@@ -1,22 +1,17 @@
 import Foundation
 
-public class Session: Codable {
+public final class Session: Codable {
     public enum Map: Int, Codable { case argonaut, apple, hybrid }
-    public enum Mode: Int, Codable { case flight, ground }
+    public enum Mode: UInt8, Codable { case walking, driving, flying }
     
-    public struct Travel: Codable {
-        public var duration = 0.0
-        public var distance = 0.0
-    }
-    
-    public class Item: Codable {
+    public final class Item: Codable {
         public var id = ""
         public var title = ""
         public var origin = ""
         public var destination = ""
-        public var mode = Mode.ground
-        public var walking = Travel()
-        public var driving = Travel()
+        public var duration = 0.0
+        public var distance = 0.0
+        public var mode = Mode.walking
         
         public init() { }
     }

@@ -4,7 +4,7 @@ import AppKit
 final class Navigate: World {
     private weak var zoom: NSView!
     
-    init(_ project: (Plan, Cart)) {
+    init(_ project: ([Path], Cart)) {
         super.init()
         map.addOverlay(Tiler(project.1), level: .aboveLabels)
         map.add(project.0)
@@ -14,7 +14,7 @@ final class Navigate: World {
             NSAnimationContext.runAnimationGroup({
                 $0.duration = 0.3
                 $0.allowsImplicitAnimation = true
-                self?.zoom.alphaValue = valid ? 0 : 0.7
+//                self?.zoom.alphaValue = valid ? 0 : 0.7
             }) { }
         }
         

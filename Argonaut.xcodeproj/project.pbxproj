@@ -38,8 +38,8 @@
 		CE6AE1FA22F6BE5C0040B205 /* Cart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6AE1F822F6BE5C0040B205 /* Cart.swift */; };
 		CE6AE1FC22F6BEAE0040B205 /* TestCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6AE1FB22F6BEAE0040B205 /* TestCart.swift */; };
 		CE734F7C22F1A2F7009799BE /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7B22F1A2F7009799BE /* World.swift */; };
-		CE734F7E22F1BDAF009799BE /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Plan.swift */; };
-		CE734F7F22F1BDAF009799BE /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Plan.swift */; };
+		CE734F7E22F1BDAF009799BE /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Path.swift */; };
+		CE734F7F22F1BDAF009799BE /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Path.swift */; };
 		CE734F8122F1BE24009799BE /* TestChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F8022F1BE24009799BE /* TestChunk.swift */; };
 		CE7EACE322E1B9A40082D91C /* Callout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE222E1B9A40082D91C /* Callout.swift */; };
 		CE8D430C2324FEBF00CE9B5F /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8D430B2324FEBF00CE9B5F /* List.swift */; };
@@ -91,7 +91,7 @@
 		CEDE111822D7207800DD796B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEDE111522D7207800DD796B /* Localizable.strings */; };
 		CEE098312302E3E200321C07 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE098302302E3E200321C07 /* About.swift */; };
 		CEE2BF9922EAF5400080C111 /* Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE2BF9822EAF5400080C111 /* Create.swift */; };
-		CEF5514922F2F3D900A16265 /* TestPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5514822F2F3D900A16265 /* TestPlan.swift */; };
+		CEF5514922F2F3D900A16265 /* TestPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5514822F2F3D900A16265 /* TestPath.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,7 +145,7 @@
 		CE6AE1F822F6BE5C0040B205 /* Cart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cart.swift; sourceTree = "<group>"; };
 		CE6AE1FB22F6BEAE0040B205 /* TestCart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCart.swift; sourceTree = "<group>"; };
 		CE734F7B22F1A2F7009799BE /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
-		CE734F7D22F1BDAF009799BE /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
+		CE734F7D22F1BDAF009799BE /* Path.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
 		CE734F8022F1BE24009799BE /* TestChunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestChunk.swift; sourceTree = "<group>"; };
 		CE7EACE222E1B9A40082D91C /* Callout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Callout.swift; sourceTree = "<group>"; };
 		CE7EACE422E1E1620082D91C /* Mark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mark.swift; sourceTree = "<group>"; };
@@ -197,7 +197,7 @@
 		CEDE111A22D720A500DD796B /* Argonaut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argonaut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE098302302E3E200321C07 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		CEE2BF9822EAF5400080C111 /* Create.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Create.swift; sourceTree = "<group>"; };
-		CEF5514822F2F3D900A16265 /* TestPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPlan.swift; sourceTree = "<group>"; };
+		CEF5514822F2F3D900A16265 /* TestPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPath.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -358,7 +358,7 @@
 				CEC5A3C922EAFE3200CE3B07 /* Factory.swift */,
 				CE3256B723029C4200D95A31 /* HelperiOS.swift */,
 				CE3256B523029C2400D95A31 /* HelperMac.swift */,
-				CE734F7D22F1BDAF009799BE /* Plan.swift */,
+				CE734F7D22F1BDAF009799BE /* Path.swift */,
 				CEDE110B22D71FA300DD796B /* Session.swift */,
 			);
 			path = Source;
@@ -371,7 +371,7 @@
 				CE6AE1FB22F6BEAE0040B205 /* TestCart.swift */,
 				CE734F8022F1BE24009799BE /* TestChunk.swift */,
 				CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */,
-				CEF5514822F2F3D900A16265 /* TestPlan.swift */,
+				CEF5514822F2F3D900A16265 /* TestPath.swift */,
 				CEDE111022D71FB200DD796B /* TestSession.swift */,
 			);
 			path = Tests;
@@ -566,7 +566,7 @@
 			files = (
 				CEABFA3722ED9401000ABB7E /* Extensions.swift in Sources */,
 				CE6AE1F922F6BE5C0040B205 /* Cart.swift in Sources */,
-				CE734F7E22F1BDAF009799BE /* Plan.swift in Sources */,
+				CE734F7E22F1BDAF009799BE /* Path.swift in Sources */,
 				CE2A863D22F7F7C000AC8190 /* Argonaut.swift in Sources */,
 				CEC5A3CA22EAFE3200CE3B07 /* Factory.swift in Sources */,
 				CE3256B623029C2400D95A31 /* HelperMac.swift in Sources */,
@@ -580,7 +580,7 @@
 			files = (
 				CEABFA3822ED9401000ABB7E /* Extensions.swift in Sources */,
 				CE6AE1FA22F6BE5C0040B205 /* Cart.swift in Sources */,
-				CE734F7F22F1BDAF009799BE /* Plan.swift in Sources */,
+				CE734F7F22F1BDAF009799BE /* Path.swift in Sources */,
 				CE2A863E22F7F7C000AC8190 /* Argonaut.swift in Sources */,
 				CE3256B823029C4200D95A31 /* HelperiOS.swift in Sources */,
 				CEC5A3CB22EAFE3200CE3B07 /* Factory.swift in Sources */,
@@ -597,7 +597,7 @@
 				CE6AE1FC22F6BEAE0040B205 /* TestCart.swift in Sources */,
 				CEDE111122D71FB200DD796B /* TestSession.swift in Sources */,
 				CE633A2122FD525E00846455 /* TestArgonaut.swift in Sources */,
-				CEF5514922F2F3D900A16265 /* TestPlan.swift in Sources */,
+				CEF5514922F2F3D900A16265 /* TestPath.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

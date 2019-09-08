@@ -7,8 +7,8 @@ public final class Argonaut {
     static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
     static let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("map.argonaut")
     
-    public class func load(_ id: String) -> (Plan, Cart) {
-        let plan = Plan()
+    public class func load(_ id: String) -> ([Path], Cart) {
+        var path = [Path]()
         let cart = Cart(url(id))
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
         let input = InputStream(url: url(id))!
@@ -16,7 +16,7 @@ public final class Argonaut {
         input.read(buffer, maxLength: 3)
         cart.zoom = (Int(buffer.pointee) ... Int(buffer.advanced(by: 1).pointee))
         (0 ..< buffer.advanced(by: 2).pointee).forEach { _ in
-            let item = Plan.Path()
+            let item = Path()
             input.read(buffer, maxLength: 1)
             let length = Int(buffer.pointee)
             input.read(buffer, maxLength: length)
@@ -28,9 +28,9 @@ public final class Argonaut {
             }
             input.read(buffer, maxLength: 1)
             (0 ..< buffer.pointee).forEach { _ in
-                let option = Plan.Option()
+                let option = Path.Option()
                 input.read(buffer, maxLength: 1)
-                option.mode = Plan.Mode(rawValue: buffer.pointee)!
+                option.mode = Session.Mode(rawValue: buffer.pointee)!
                 input.read(buffer, maxLength: 16)
                 buffer.withMemoryRebound(to: Double.self, capacity: 2) {
                     option.duration = $0[0]
@@ -43,7 +43,7 @@ public final class Argonaut {
                 }
                 item.options.append(option)
             }
-            plan.path.append(item)
+            path.append(item)
         }
         while input.hasBytesAvailable && input.read(buffer, maxLength: 12) == 12 {
             let info = buffer.withMemoryRebound(to: UInt32.self, capacity: 3) { $0 }
@@ -53,7 +53,7 @@ public final class Argonaut {
         }
         buffer.deallocate()
         input.close()
-        return (plan, cart)
+        return (path, cart)
     }
     
     public class func delete(_ id: String) {
@@ -111,8 +111,8 @@ public final class Argonaut {
         prepare()
         let out = OutputStream(url: url(factory.item.id), append: false)!
         out.open()
-        _ = [UInt8(factory.range.min()!), UInt8(factory.range.max()!), UInt8(factory.plan.path.count)].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 3) }
-        factory.plan.path.forEach {
+        _ = [UInt8(factory.range.min()!), UInt8(factory.range.max()!), UInt8(factory.path.count)].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 3) }
+        factory.path.forEach {
             let name = Data($0.name.utf8)
             _ = withUnsafeBytes(of: UInt8(name.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
             _ = name.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: name.count) }

@@ -4,7 +4,7 @@ import AppKit
 final class List: NSWindow {
     private final class Travel: NSView {
         required init?(coder: NSCoder) { return nil }
-        init(_ image: String, value: Session.Travel) {
+        init(_ image: String, distance: Double, duration: Double) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             
@@ -29,12 +29,12 @@ final class List: NSWindow {
                 formatter.unitStyle = .long
                 formatter.unitOptions = .naturalScale
                 formatter.numberFormatter.maximumFractionDigits = 1
-                label.stringValue = formatter.string(from: .init(value: value.distance, unit: UnitLength.meters))
+                label.stringValue = formatter.string(from: .init(value: distance, unit: UnitLength.meters))
             } else {
-                label.stringValue = "\(Int(value.distance))" + .key("List.distance")
+                label.stringValue = "\(Int(distance))" + .key("List.distance")
             }
             
-            label.stringValue += ": " + dater.string(from: value.duration)!
+            label.stringValue += ": " + dater.string(from: duration)!
             addSubview(label)
             
             bottomAnchor.constraint(greaterThanOrEqualTo: label.bottomAnchor, constant: 1).isActive = true
@@ -66,12 +66,9 @@ final class List: NSWindow {
             field.delegate = self
             addSubview(field)
             self.field = field
-            
-            let walking = Travel("walking", value: item.walking)
-            addSubview(walking)
-            
-            let driving = Travel("driving", value: item.driving)
-            addSubview(driving)
+            /*
+            let travel = Travel("walking", distance: item.distance, duration: item.duration)
+            addSubview(travel)
             
             let origin = Label(item.origin)
             let destination = Label(item.destination)
@@ -169,7 +166,7 @@ final class List: NSWindow {
             cancel.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
             cancel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
             cancel.widthAnchor.constraint(equalTo: confirm.widthAnchor).isActive = true
-            cancel.heightAnchor.constraint(equalTo: confirm.heightAnchor).isActive = true
+            cancel.heightAnchor.constraint(equalTo: confirm.heightAnchor).isActive = true*/
         }
         
         override func viewDidEndLiveResize() {
