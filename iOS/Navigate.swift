@@ -95,8 +95,6 @@ final class Navigate: World {
         
         _close.centerYAnchor.constraint(equalTo: map.topAnchor, constant: -22).isActive = true
         
-        list.heightAnchor.constraint(equalToConstant: 180).isActive = true
-        
         zoom.centerXAnchor.constraint(equalTo: map.centerXAnchor).isActive = true
         zoom.centerYAnchor.constraint(equalTo: _close.centerYAnchor).isActive = true
         
@@ -110,66 +108,7 @@ final class Navigate: World {
             map.topAnchor.constraint(equalTo: topAnchor, constant: 44).isActive = true
         }
         
-        refresh()
-    }
-    
-    override func refresh() {
-        list.clear()
-        var previous: Item?
-        map.plan.path.enumerated().forEach {
-            let item = Item($0)
-            item.addTarget(self, action: #selector(focus(_:)), for: .touchUpInside)
-            if let user = map.annotations.first(where: { $0 is MKUserLocation })?.coordinate {
-                item.distance.text = measure(CLLocation(latitude: user.latitude, longitude: user.longitude).distance(from: .init(latitude: $0.1.latitude, longitude: $0.1.longitude)))
-            }
-            
-            list.content.addSubview(item)
-            
-            if previous == nil {
-                item.topAnchor.constraint(equalTo: list.topAnchor).isActive = true
-            } else {
-                if !app.session.settings.walking && !app.session.settings.driving {
-                    item.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-                } else {
-                    if app.session.settings.walking, let option = previous!.path?.options.first(where: { $0.mode == .walking }) {
-                        let walking = make("walking", total: measure(option.distance) + ": " + dater.string(from: option.duration)!)
-                        walking.backgroundColor = .walking
-                        
-                        walking.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-                        walking.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
-                        
-                        if app.session.settings.driving {
-                            walking.rightAnchor.constraint(equalTo: list.content.centerXAnchor, constant: -5).isActive = true
-                        } else {
-                            walking.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
-                        }
-                        
-                        item.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor).isActive = true
-                    }
-                    if app.session.settings.driving, let option = previous!.path?.options.first(where: { $0.mode == .driving }) {
-                        let driving = make("driving", total: measure(option.distance) + ": " + dater.string(from: option.duration)!)
-                        driving.backgroundColor = .driving
-                        
-                        driving.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-                        driving.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
-                        
-                        if app.session.settings.walking {
-                            driving.leftAnchor.constraint(equalTo: list.content.centerXAnchor, constant: 5).isActive = true
-                        } else {
-                            driving.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
-                        }
-                        
-                        item.topAnchor.constraint(greaterThanOrEqualTo: driving.bottomAnchor).isActive = true
-                    }
-                }
-            }
-            
-            item.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
-            item.widthAnchor.constraint(equalTo: list.widthAnchor).isActive = true
-            previous = item
-        }
-        
-        list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? bottomAnchor, constant: 30).isActive = true
+        list.refresh()
     }
     
     override func update(_ settings: Settings) {
@@ -185,45 +124,9 @@ final class Navigate: World {
     }
     
     private func user(_ location: CLLocation) {
-        list.content.subviews.compactMap { $0 as? Item }.forEach {
-            $0.distance.text = measure(location.distance(from: .init(latitude: $0.path.latitude, longitude: $0.path.longitude)))
-        }
-    }
-    
-    private func make(_ image: String, total: String) -> UIView {
-        let base = UIView()
-        base.isUserInteractionEnabled = false
-        base.translatesAutoresizingMaskIntoConstraints = false
-        base.layer.cornerRadius = 4
-        list.content.addSubview(base)
-        
-        let icon = UIImageView(image: UIImage(named: image)!.withRenderingMode(.alwaysTemplate))
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.tintColor = .black
-        icon.contentMode = .center
-        icon.clipsToBounds = true
-        base.addSubview(icon)
-        
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.text = total
-        label.textColor = .black
-        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
-        base.addSubview(label)
-        
-        icon.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 5).isActive = true
-        icon.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
-        icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        
-        label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
-        label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 4).isActive = true
-        label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
-        
-        base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
-        
-        return base
+//        list.content.subviews.compactMap { $0 as? Item }.forEach {
+//            $0.distance.text = measure(location.distance(from: .init(latitude: $0.path.latitude, longitude: $0.path.longitude)))
+//        }
     }
     
     @objc private func focus(_ item: Item) {

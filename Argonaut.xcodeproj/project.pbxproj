@@ -42,6 +42,7 @@
 		CE734F7F22F1BDAF009799BE /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F7D22F1BDAF009799BE /* Plan.swift */; };
 		CE734F8122F1BE24009799BE /* TestChunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE734F8022F1BE24009799BE /* TestChunk.swift */; };
 		CE7EACE322E1B9A40082D91C /* Callout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7EACE222E1B9A40082D91C /* Callout.swift */; };
+		CE8D430C2324FEBF00CE9B5F /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8D430B2324FEBF00CE9B5F /* List.swift */; };
 		CE9301D922EEF9C000EACBD4 /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301D822EEF9C000EACBD4 /* Navigate.swift */; };
 		CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301DA22EF09AF00EACBD4 /* Tiler.swift */; };
 		CE9301DC22EF09AF00EACBD4 /* Tiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301DA22EF09AF00EACBD4 /* Tiler.swift */; };
@@ -148,6 +149,7 @@
 		CE734F8022F1BE24009799BE /* TestChunk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestChunk.swift; sourceTree = "<group>"; };
 		CE7EACE222E1B9A40082D91C /* Callout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Callout.swift; sourceTree = "<group>"; };
 		CE7EACE422E1E1620082D91C /* Mark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mark.swift; sourceTree = "<group>"; };
+		CE8D430B2324FEBF00CE9B5F /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		CE9301D822EEF9C000EACBD4 /* Navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
 		CE9301DA22EF09AF00EACBD4 /* Tiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tiler.swift; sourceTree = "<group>"; };
 		CE9AEC92231B9521009596FE /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 				CE0FE655230571D70058386B /* Field.swift */,
 				CEC2BA5B230BC26900FB4BA1 /* Gradient.swift */,
 				CE0BA3232302CBEC004E6660 /* Home.swift */,
+				CE8D430B2324FEBF00CE9B5F /* List.swift */,
 				CECD5635231131AD0085E0C3 /* Load.swift */,
 				CEACFC56230950A4008E76A9 /* Marker.swift */,
 				CECD5633231130490085E0C3 /* Navigate.swift */,
@@ -650,6 +653,7 @@
 				CEDB36202302A5630078E521 /* Alert.swift in Sources */,
 				CE0FE656230571D70058386B /* Field.swift in Sources */,
 				CEBB3A6423040F7200C5F61A /* Privacy.swift in Sources */,
+				CE8D430C2324FEBF00CE9B5F /* List.swift in Sources */,
 				CE0FE652230555D40058386B /* New.swift in Sources */,
 				CEDCC689230683C500AAF0C8 /* Button.swift in Sources */,
 				CE25B85F231A830B007538E2 /* Settings.swift in Sources */,

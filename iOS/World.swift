@@ -5,12 +5,11 @@ class World: UIView, CLLocationManagerDelegate {
     let dater = DateComponentsFormatter()
     private(set) var style = Settings.Style.navigate
     private(set) weak var map: Map!
-    private(set) weak var list: Scroll!
+    private(set) weak var list: List!
     private(set) weak var _up: Button!
     private(set) weak var _close: UIButton!
     private(set) weak var top: Gradient.Top!
     private weak var _down: Button!
-    private weak var listTop: NSLayoutConstraint!
     private var formatter: Any!
     private let manager = CLLocationManager()
     
@@ -36,7 +35,7 @@ class World: UIView, CLLocationManagerDelegate {
         }
         
         let map = Map()
-        map.refresh = { [weak self] in self?.refresh() }
+        map.refresh = { [weak self] in self?.list.refresh() }
         map.setUserTrackingMode(.followWithHeading, animated: true)
         addSubview(map)
         self.map = map
@@ -82,8 +81,7 @@ class World: UIView, CLLocationManagerDelegate {
         _user.addTarget(map, action: #selector(map.me), for: .touchUpInside)
         addSubview(_user)
         
-        let list = Scroll()
-        list.backgroundColor = .black
+        let list = List()
         addSubview(list)
         self.list = list
         
@@ -115,8 +113,8 @@ class World: UIView, CLLocationManagerDelegate {
         
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        listTop = list.topAnchor.constraint(greaterThanOrEqualTo: bottomAnchor)
-        listTop.isActive = true
+        list.top = list.topAnchor.constraint(greaterThanOrEqualTo: bottomAnchor)
+        list.top.isActive = true
         
         if #available(iOS 11.0, *) {
             _up.bottomAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
@@ -146,9 +144,9 @@ class World: UIView, CLLocationManagerDelegate {
         }
     }
     
-    func refresh() { }
     func update(_ settings: Settings) {
         map.filter()
+        list.refresh()
     }
     
     final func measure(_ distance: CLLocationDistance) -> String {
@@ -159,8 +157,8 @@ class World: UIView, CLLocationManagerDelegate {
     }
     
     @objc private func up() {
-        listTop.constant = -list.frame.height
-        UIView.animate(withDuration: 0.5, animations: { [weak self] in
+        list.top.constant = -list.frame.height
+        UIView.animate(withDuration: 0.6, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?._up.isHidden = true
@@ -169,8 +167,8 @@ class World: UIView, CLLocationManagerDelegate {
     }
     
     @objc private func down() {
-        listTop.constant = 0
-        UIView.animate(withDuration: 0.5, animations: { [weak self] in
+        list.top.constant = 0
+        UIView.animate(withDuration: 0.6, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?._up.isHidden = false

@@ -32,9 +32,9 @@ final class Home: UIView {
             destination.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
             destination.text = item.destination
             
-            let walking = make("walk", travel: item.walking)
+            let walking = make("walking", travel: item.walking)
             
-            let driving = make("drive", travel: item.driving)
+            let driving = make("driving", travel: item.driving)
             
             let navigate = UIButton()
             navigate.setImage(UIImage(named: "directions"), for: .normal)

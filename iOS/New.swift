@@ -216,8 +216,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         
-        list.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        
         results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         results.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         results.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -306,7 +304,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         UIView.animate(withDuration: 0.4) { [weak self] in self?.layoutIfNeeded() }
     }
     
-    override func refresh() {
+    /*override func refresh() {
         list.clear()
         var previous: Item?
         var walking = (CLLocationDistance(), TimeInterval())
@@ -390,7 +388,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         UIView.animate(withDuration: 0.5) { [weak self] in
             self?.list.contentOffset.y = max((self?.list.content.bounds.height ?? 0) - 300, 0)
         }
-    }
+    }*/
     
     override func update(_ settings: Settings) {
         if mode != settings.mode {
@@ -412,7 +410,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     private func make(_ image: String, total: String) -> UIView {
-        let base = UIView()
+        let base = UIView()/*
         base.isUserInteractionEnabled = false
         base.translatesAutoresizingMaskIntoConstraints = false
         base.layer.cornerRadius = 4
@@ -443,7 +441,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
         
         base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
-        
+        */
         return base
     }
     

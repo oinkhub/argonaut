@@ -67,10 +67,10 @@ final class List: NSWindow {
             addSubview(field)
             self.field = field
             
-            let walking = Travel("walk", value: item.walking)
+            let walking = Travel("walking", value: item.walking)
             addSubview(walking)
             
-            let driving = Travel("drive", value: item.driving)
+            let driving = Travel("driving", value: item.driving)
             addSubview(driving)
             
             let origin = Label(item.origin)
