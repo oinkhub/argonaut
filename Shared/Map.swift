@@ -5,9 +5,9 @@ final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
     var user: ((CLLocation) -> Void)?
     var zoom: ((CGFloat) -> Void)?
-    var route = true
     var drag = true
     private(set) var path = [Path]()
+    private var tiler: Tiler!
     private var first = true
     private let geocoder = CLGeocoder()
     
@@ -23,9 +23,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         
         var region = MKCoordinateRegion()
         region.center = userLocation.location == nil ? centerCoordinate : userLocation.coordinate
-        region.span.latitudeDelta = 0.005
-        region.span.longitudeDelta = 0.005
         setRegion(region, animated: false)
+        rezoom()
     }
     
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
@@ -109,17 +108,40 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func add(_ path: [Path]) {
-        self.path = path
+    func tile(_ project: ([Path], Cart)) {
+        tiler = Tiler(project.1)
+        retile()
+        self.path = project.0
         addAnnotations(path.map { Mark($0) })
         filter()
     }
     
+    func retile() {
+        removeOverlay(tiler)
+        if app.session.settings.map != .apple {
+            tiler.canReplaceMapContent = app.session.settings.map == .argonaut
+            addOverlay(tiler, level: .aboveLabels)
+        }
+    }
+    
     func filter() {
         removeOverlays(overlays.filter { $0 is Line })
-        addOverlays(path.flatMap { path in path.options
-            .filter { ($0.mode == .walking && app.session.settings.walking) || ($0.mode == .driving && app.session.settings.driving) }
+        if app.session.settings.directions {
+            addOverlays(path.flatMap { path in path.options.filter { $0.mode == app.session.settings.mode }
             .map { Line(path, option: $0) } }, level: .aboveLabels)
+        }
+    }
+    
+    func rezoom() {
+        var region = self.region
+        if app.session.settings.mode == .flying {
+            region.span.latitudeDelta = 10
+            region.span.longitudeDelta = 10
+        } else {
+            region.span.latitudeDelta = 0.005
+            region.span.longitudeDelta = 0.005
+        }
+        setRegion(region, animated: true)
     }
     
     @objc func pin() {
@@ -158,38 +180,50 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     private func direction(_ path: Path, destination: Path) {
-        if route {
-            removeOverlays(overlays.filter { ($0 as? Line)?.path === path })
-            path.options = []
-            DispatchQueue.main.async { [weak self] in
-                self?.direction(.walking, path: path, destination: destination)
-                self?.direction(.automobile, path: path, destination: destination)
-            }
+        removeOverlays(overlays.filter { ($0 as? Line)?.path === path })
+        path.options = []
+        DispatchQueue.main.async { [weak self] in
+            self?.direction(.walking, path: path, destination: destination)
+            self?.direction(.driving, path: path, destination: destination)
+            self?.fly(path, destination: destination)
         }
     }
     
-    private func direction(_ transport: MKDirectionsTransportType, path: Path, destination: Path) {
+    private func direction(_ mode: Session.Mode, path: Path, destination: Path) {
         let request = MKDirections.Request()
-        request.transportType = transport
+        request.transportType = mode == .driving ? .automobile : .walking
         request.source = .init(placemark: .init(coordinate: .init(latitude: path.latitude, longitude: path.longitude), addressDictionary: nil))
         request.destination = .init(placemark: .init(coordinate: .init(latitude: destination.latitude, longitude: destination.longitude), addressDictionary: nil))
         MKDirections(request: request).calculate { [weak self] in
             if $1 == nil, let paths = $0?.routes {
                 let options = paths.map {
                     let option = Path.Option()
-                    option.mode = $0.transportType == .walking ? .walking : .driving
+                    option.mode = mode
                     option.distance = $0.distance
                     option.duration = $0.expectedTravelTime
                     option.points = UnsafeBufferPointer(start: $0.polyline.points(), count: $0.polyline.pointCount).map { ($0.coordinate.latitude, $0.coordinate.longitude) }
                     return option
                 } as [Path.Option]
                 path.options += options
-                DispatchQueue.main.async { [weak self] in
-                    self?.refresh()
-                    if (transport == .automobile && app.session.settings.driving) || (transport == .walking && app.session.settings.walking) {
-                        self?.addOverlays(options.map { Line(path, option: $0) }, level: .aboveLabels)
-                    }
-                }
+                self?.filter(mode)
+            }
+        }
+    }
+    
+    private func fly(_ path: Path, destination: Path) {
+        let option = Path.Option()
+        option.mode = .flying
+        option.distance = CLLocation(latitude: path.latitude, longitude: path.longitude).distance(from: .init(latitude: destination.latitude, longitude: destination.longitude))
+        option.points = [(path.latitude, path.longitude), (destination.latitude, destination.longitude)]
+        path.options.append(option)
+        filter(.flying)
+    }
+    
+    private func filter(_ mode: Session.Mode) {
+        DispatchQueue.main.async { [weak self] in
+            if app.session.settings.mode == mode {
+                self?.refresh()
+                self?.filter()
             }
         }
     }

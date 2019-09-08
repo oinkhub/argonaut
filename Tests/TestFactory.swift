@@ -76,17 +76,21 @@ final class TestFactory: XCTestCase {
     }
     
     func testRegister() {
+        factory.mode = .flying
         factory.path = [.init(), .init()]
         factory.path[0].name = "hello"
         factory.path[0].options = [.init()]
         factory.path[0].options[0].duration = 1
         factory.path[0].options[0].distance = 2
+        factory.path[0].options[0].mode = .flying
         factory.path[1].name = "world"
         factory.path[1].options = [.init()]
         factory.path[1].options[0].duration = 1
         factory.path[1].options[0].distance = 2
+        factory.path[1].options[0].mode = .flying
         factory.register()
-        XCTAssertEqual(factory.item.id, factory.id)
+        XCTAssertEqual(factory.id, factory.item.id)
+        XCTAssertEqual(.flying, factory.item.mode)
         XCTAssertEqual("hello", factory.item.origin)
         XCTAssertEqual("world", factory.item.destination)
         XCTAssertEqual(2, factory.item.duration)
@@ -97,5 +101,17 @@ final class TestFactory: XCTestCase {
         factory.register()
         XCTAssertEqual("", factory.item.origin)
         XCTAssertEqual("", factory.item.destination)
+    }
+    
+    func testRange() {
+        factory.mode = .driving
+        factory.filter()
+        XCTAssertEqual(11, factory.range.min()!)
+        XCTAssertEqual(18, factory.range.max()!)
+        
+        factory.mode = .flying
+        factory.filter()
+        XCTAssertEqual(0, factory.range.min()!)
+        XCTAssertEqual(12, factory.range.max()!)
     }
 }

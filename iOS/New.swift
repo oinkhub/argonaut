@@ -41,12 +41,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     private final class Item: UIControl {
-        weak var path: Plan.Path?
+        weak var path: Path?
         private(set) weak var delete: UIButton!
         override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.5 : 1 } }
         
         required init?(coder: NSCoder) { return nil }
-        init(_ path: (Int, Plan.Path), walking: String?, driving: String?) {
+        init(_ path: (Int, Path), walking: String?, driving: String?) {
             self.path = path.1
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
@@ -159,7 +159,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var _save: UIButton!
     private weak var resultsHeight: NSLayoutConstraint!
     private var completer: Any?
-    override var style: Settings.Style { get { .new(mode) } }
+    override var style: Settings.Style { get { .new } }
     
     required init?(coder: NSCoder) { return nil }
     override init() {
@@ -389,15 +389,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }*/
     
-    override func update(_ settings: Settings) {
-        if mode != settings.mode {
-            mode = settings.mode
-            map.route = mode == .ground
-            map.plan.path.forEach { map.remove($0) }
-        }
-        super.update(settings)
-    }
-    
     private func query() {
         if #available(iOS 9.3, *) {
             (completer as! MKLocalSearchCompleter).cancel()
@@ -444,7 +435,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         return base
     }
     
-    @objc private func save() { app.replace(Create(map.plan, rect: map.visibleMapRect)) }
+    @objc private func save() { app.replace(Create(map.path, rect: map.visibleMapRect)) }
     @objc private func remove(_ item: UIView) { if let path = (item.superview as! Item).path { map.remove(path) } }
     @available(iOS 9.3, *) @objc private func edit(_ gesture: UILongPressGestureRecognizer) { field.field.text = (gesture.view as! Result).search.title }
     

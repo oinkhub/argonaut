@@ -18,9 +18,9 @@ public final class Session: Codable {
     
     public struct Settings: Codable {
         public var map = Map.hybrid
-        public var marks = true
-        public var driving = true
-        public var walking = true
+        public var mode = Mode.walking
+        public var pins = true
+        public var directions = true
         public var follow = true
     }
     

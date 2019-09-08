@@ -75,6 +75,7 @@ final class Create: NSWindow {
     }
     
     private func start() {
+        factory.filter()
         factory.measure()
         factory.divide()
         factory.register()

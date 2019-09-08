@@ -4,11 +4,11 @@ import UIKit
 final class List: UIView {
     private final class Item: UIControl {
         override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.3 : 1 } }
-        private(set) weak var path: Plan.Path!
+        private(set) weak var path: Path!
         private(set) weak var distance: UILabel!
         
         required init?(coder: NSCoder) { return nil }
-        init(_ item: (Int, Plan.Path)) {
+        init(_ item: (Int, Path)) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             isAccessibilityElement = true
@@ -65,16 +65,37 @@ final class List: UIView {
     }
     
     weak var top: NSLayoutConstraint!
+    weak var map: Map!
+    private weak var scroll: Scroll!
+    private weak var empty: UILabel!
     
     required init?(coder: NSCoder) { return nil }
     init() {
         super.init(frame: .zero)
         backgroundColor = .black
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        let scroll = Scroll()
+        addSubview(scroll)
+        self.scroll = scroll
+        
+        let empty = UILabel()
+        empty.translatesAutoresizingMaskIntoConstraints = false
+        empty.textColor = .white
+        empty.text = .key("List.empty")
+        empty.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
+        addSubview(empty)
+        self.empty = empty
         
         heightAnchor.constraint(equalToConstant: 300).isActive = true
+        
+        empty.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        empty.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
     }
     
     func refresh() {
+        scroll.clear()
+        empty.isHidden = !map.path.isEmpty
         /*
         list.clear()
         var previous: Item?

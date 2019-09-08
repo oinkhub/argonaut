@@ -121,8 +121,8 @@ public final class Argonaut {
                 _ = name.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: name.count) }
             }
             _ = [$0.latitude, $0.longitude].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
-            _ = withUnsafeBytes(of: UInt8($0.options.filter { $0.mode == factory.mode }.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
-            $0.options.filter { $0.mode == factory.mode }.forEach {
+            _ = withUnsafeBytes(of: UInt8($0.options.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
+            $0.options.forEach {
                 _ = withUnsafeBytes(of: UInt8($0.mode.rawValue)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
                 _ = [$0.duration, $0.distance].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
                 _ = withUnsafeBytes(of: UInt16($0.points.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 2) }

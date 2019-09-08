@@ -13,7 +13,7 @@ public final class Factory {
     public var path = [Path]()
     public var rect = MKMapRect()
     public var mode = Session.Mode.walking
-    var range = (11 ... 18)
+    var range = (0 ... 0)
     private(set) var item = Session.Item()
     private(set) var shots = [Shot]()
     let id = UUID().uuidString
@@ -34,8 +34,15 @@ public final class Factory {
         }
     }
     
-    deinit {
-        out.close()
+    deinit { out.close() }
+    
+    public func filter() {
+        path.forEach { $0.options.removeAll { $0.mode != mode } }
+        if mode == .flying {
+            range = (0 ... 12)
+        } else {
+            range = (11 ... 18)
+        }
     }
     
     public func measure() {
@@ -72,6 +79,7 @@ public final class Factory {
     
     public func register() {
         item.id = id
+        item.mode = mode
         item.origin = path.first?.name ?? ""
         item.destination = path.last?.name ?? ""
         path.forEach {

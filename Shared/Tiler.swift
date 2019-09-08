@@ -11,7 +11,6 @@ final class Tiler: MKTileOverlay {
         super.init(urlTemplate: nil)
         fallback = outside
         tileSize = .init(width: Argonaut.tile * 2, height: Argonaut.tile * 2)
-        canReplaceMapContent = app.session.settings.map == .argonaut
     }
     
     override func loadTile(at: MKTileOverlayPath, result: @escaping(Data?, Error?) -> Void) {

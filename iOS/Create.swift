@@ -10,7 +10,7 @@ final class Create: UIView {
     private let factory = Factory()
     
     required init?(coder: NSCoder) { return nil }
-    init(_ plan: Plan, rect: MKMapRect) {
+    init(_ path: [Path], rect: MKMapRect) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .init(white: 0.1333, alpha: 1)
@@ -131,7 +131,8 @@ final class Create: UIView {
             cancel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30).isActive = true
         }
         
-        factory.plan = plan
+        factory.mode = app.session.settings.mode
+        factory.path = path
         factory.rect = rect
         factory.error = { [weak self] in
             app.alert(.key("Error"), message: $0.localizedDescription)
@@ -148,17 +149,11 @@ final class Create: UIView {
     }
     
     private func start() {
+        factory.filter()
         factory.measure()
-        if factory.valid {
-            factory.divide()
-            factory.register()
-            DispatchQueue.main.async { [weak self] in self?.retry() }
-        } else {
-            app.alert(.key("Error"), message: .key("Error.max"))
-            DispatchQueue.main.async { [weak self] in
-                self?.close()
-            }
-        }
+        factory.divide()
+        factory.register()
+        DispatchQueue.main.async { [weak self] in self?.retry() }
     }
     
     private func complete(_ item: Session.Item) {

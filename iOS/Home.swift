@@ -32,12 +32,11 @@ final class Home: UIView {
             destination.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
             destination.text = item.destination
             
-            let walking = make("walking", travel: item.walking)
             
-            let driving = make("driving", travel: item.driving)
+            let travel = make("walking", distance: item.distance, duration: item.duration)
             
             let navigate = UIButton()
-            navigate.setImage(UIImage(named: "directions"), for: .normal)
+            navigate.setImage(UIImage(named: "navigate"), for: .normal)
             navigate.accessibilityLabel = .key("List.view")
             navigate.addTarget(self, action: #selector(self.navigate), for: .touchUpInside)
             
@@ -83,13 +82,9 @@ final class Home: UIView {
             origin.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
             destination.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 2).isActive = true
             
-            walking.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
-            walking.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-            walking.rightAnchor.constraint(equalTo: centerXAnchor, constant: -5).isActive = true
-            
-            driving.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
-            driving.leftAnchor.constraint(equalTo: centerXAnchor, constant: 5).isActive = true
-            driving.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+            travel.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
+            travel.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+            travel.rightAnchor.constraint(equalTo: centerXAnchor, constant: -5).isActive = true
         }
         
         func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
@@ -111,7 +106,7 @@ final class Home: UIView {
             app.session.save()
         }
         
-        private func make(_ image: String, travel: Session.Travel) -> UIView {
+        private func make(_ image: String, distance: Double, duration: Double) -> UIView {
             let base = UIView()
             base.isUserInteractionEnabled = false
             base.translatesAutoresizingMaskIntoConstraints = false
@@ -136,12 +131,12 @@ final class Home: UIView {
                 formatter.unitStyle = .long
                 formatter.unitOptions = .naturalScale
                 formatter.numberFormatter.maximumFractionDigits = 1
-                label.text = formatter.string(from: .init(value: travel.distance, unit: UnitLength.meters))
+                label.text = formatter.string(from: .init(value: distance, unit: UnitLength.meters))
             } else {
-                label.text = "\(Int(travel.distance))" + .key("List.distance")
+                label.text = "\(Int(distance))" + .key("List.distance")
             }
             
-            label.text = label.text! + ": " + dater.string(from: travel.duration)!
+            label.text = label.text! + ": " + dater.string(from: duration)!
             base.addSubview(label)
             
             icon.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 3).isActive = true

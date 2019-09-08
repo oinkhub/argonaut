@@ -2,26 +2,24 @@ import Argonaut
 import UIKit
 
 final class Settings: UIView {
-    enum Style { case new(_ mode: Session.Mode), navigate }
+    enum Style { case new, navigate }
     
     private enum Item {
-        case follow, walking, driving, marks
+        case follow, pins, directions
         
         var title: String {
             switch self {
             case .follow: return .key("Settings.follow")
-            case .walking: return .key("Settings.walking")
-            case .driving: return .key("Settings.driving")
-            case .marks: return .key("Settings.marks")
+            case .pins: return .key("Settings.pins")
+            case .directions: return .key("Settings.directions")
             }
         }
         
         var image: String {
             switch self {
             case .follow: return "follow"
-            case .walking: return "walking"
-            case .driving: return "driving"
-            case .marks: return "pin"
+            case .pins: return "pin"
+            case .directions: return "directions"
             }
         }
     }
@@ -58,7 +56,7 @@ final class Settings: UIView {
             label.textColor = .black
             addSubview(label)
             
-            let image = UIImageView(image: UIImage(named: item.image)?.withRenderingMode(.alwaysTemplate))
+            let image = UIImageView(image: UIImage(named: item.image)!.withRenderingMode(.alwaysTemplate))
             image.translatesAutoresizingMaskIntoConstraints = false
             image.contentMode = .center
             image.clipsToBounds = true
@@ -90,8 +88,8 @@ final class Settings: UIView {
         }
     }
     
-    var delegate: ((Settings) -> Void)!
-    private(set) var mode = Session.Mode.ground
+    var delegate: (() -> Void)!
+    weak var map: Map!
     private weak var top: NSLayoutConstraint!
     private weak var info: UILabel!
     
@@ -152,12 +150,16 @@ final class Settings: UIView {
             map.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
             
             info.topAnchor.constraint(equalTo: map.bottomAnchor, constant: 15).isActive = true
-        case .new(let _mode):
-            let mode = UISegmentedControl(items: [String.key("Settings.ground"), .key("Settings.flight")])
+        case .new:
+            let mode = UISegmentedControl(items: [String.key("Settings.walking"), .key("Settings.driving"), .key("Settings.flying")])
             mode.translatesAutoresizingMaskIntoConstraints = false
             mode.tintColor = .halo
+            switch app.session.settings.mode {
+            case .walking: mode.selectedSegmentIndex = 0
+            case .driving: mode.selectedSegmentIndex = 1
+            case .flying: mode.selectedSegmentIndex = 2
+            }
             mode.addTarget(self, action: #selector(moded(_:)), for: .valueChanged)
-            mode.selectedSegmentIndex = _mode == .ground ? 0 : 1
             scroll.content.addSubview(mode)
             modeInfo()
             
@@ -169,8 +171,8 @@ final class Settings: UIView {
         
         base.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-        base.heightAnchor.constraint(equalToConstant: 440).isActive = true
-        self.top = base.topAnchor.constraint(equalTo: topAnchor, constant: -450)
+        base.heightAnchor.constraint(equalToConstant: 370).isActive = true
+        self.top = base.topAnchor.constraint(equalTo: topAnchor, constant: -380)
         self.top.isActive = true
         
         scroll.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
@@ -186,7 +188,7 @@ final class Settings: UIView {
         info.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
         
         var top = info.bottomAnchor
-        ([.follow, .walking, .driving, .marks] as [Item]).forEach {
+        ([.follow, .pins, .directions] as [Item]).forEach {
             let button = Button($0)
             button.addTarget(self, action: #selector(change(_:)), for: .touchUpInside)
             scroll.content.addSubview(button)
@@ -229,14 +231,15 @@ final class Settings: UIView {
     }
     
     private func modeInfo() {
-        switch mode {
-        case .ground: info.text = .key("Settings.mode.ground")
-        case .flight: info.text = .key("Settings.mode.flight")
+        switch app.session.settings.mode {
+        case .walking: info.text = .key("Settings.mode.walking")
+        case .driving: info.text = .key("Settings.mode.driving")
+        case .flying: info.text = .key("Settings.mode.flying")
         }
     }
     
     @objc private func done() {
-        top.constant = -450
+        top.constant = -380
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
             app.view.layoutIfNeeded()
             self?.alpha = 0
@@ -246,21 +249,19 @@ final class Settings: UIView {
     @objc private func change(_ button: Button) {
         switch button.item {
         case .follow:  app.session.settings.follow.toggle()
-        case .walking: app.session.settings.walking.toggle()
-        case .driving: app.session.settings.driving.toggle()
-        case .marks: app.session.settings.marks.toggle()
+        case .pins: app.session.settings.pins.toggle()
+        case .directions: app.session.settings.directions.toggle()
         }
         update(button)
         app.session.save()
-        delegate(self)
+        delegate()
     }
     
     @objc private func update(_ button: Button) {
         switch button.item {
         case .follow: button.value = app.session.settings.follow
-        case .walking: button.value = app.session.settings.walking
-        case .driving: button.value = app.session.settings.driving
-        case .marks: button.value = app.session.settings.marks
+        case .pins: button.value = app.session.settings.pins
+        case .directions: button.value = app.session.settings.directions
         }
     }
     
@@ -270,17 +271,21 @@ final class Settings: UIView {
         case 1: app.session.settings.map = .apple
         default: app.session.settings.map = .hybrid
         }
-        mapInfo()
         app.session.save()
-        delegate(self)
+        mapInfo()
+        delegate()
+        map.retile()
     }
     
     @objc private func moded(_ segmented: UISegmentedControl) {
         switch segmented.selectedSegmentIndex {
-        case 0: mode = .ground
-        default: mode = .flight
+        case 0: app.session.settings.mode = .walking
+        case 1: app.session.settings.mode = .driving
+        default: app.session.settings.mode = .flying
         }
+        app.session.save()
         modeInfo()
-        delegate(self)
+        delegate()
+        map.rezoom()
     }
 }

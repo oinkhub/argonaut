@@ -4,11 +4,11 @@ import MapKit
 final class Navigate: World {
     private final class Item: UIControl {
         override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.3 : 1 } }
-        private(set) weak var path: Plan.Path!
+        private(set) weak var path: Path!
         private(set) weak var distance: UILabel!
         
         required init?(coder: NSCoder) { return nil }
-        init(_ item: (Int, Plan.Path)) {
+        init(_ item: (Int, Path)) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             isAccessibilityElement = true
@@ -65,16 +65,11 @@ final class Navigate: World {
     }
     
     private weak var zoom: Zoom!
-    private let tiler: Tiler
     
     required init?(coder: NSCoder) { return nil }
-    init(_ item: Session.Item, project: (Plan, Cart)) {
-        tiler = Tiler(project.1)
+    init(_ item: Session.Item, project: ([Path], Cart)) {
         super.init()
-        if app.session.settings.map != .apple {
-            map.addOverlay(tiler, level: .aboveLabels)
-        }
-        map.add(project.0)
+        map.tile(project)
         map.zoom = { [weak self] in self?.zoom.update($0) }
         map.user = { [weak self] in self?.user($0) }
         map.drag = false
@@ -109,18 +104,6 @@ final class Navigate: World {
         }
         
         list.refresh()
-    }
-    
-    override func update(_ settings: Settings) {
-        map.removeOverlay(tiler)
-        switch app.session.settings.map {
-        case .argonaut, .hybrid:
-            tiler.canReplaceMapContent = app.session.settings.map == .argonaut
-            map.addOverlay(tiler, level: .aboveLabels)
-        case .apple: break
-        }
-        
-        super.update(settings)
     }
     
     private func user(_ location: CLLocation) {

@@ -82,6 +82,7 @@ final class TestPath: XCTestCase {
         old.path[0].options[0].mode = .driving
         old.path[0].options[1].mode = .walking
         old.path[0].options[2].mode = .flying
+        old.filter()
         Argonaut.save(old)
         let new = Argonaut.load("a").0
         XCTAssertEqual(1, new[0].options.count)

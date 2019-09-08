@@ -82,6 +82,7 @@ class World: UIView, CLLocationManagerDelegate {
         addSubview(_user)
         
         let list = List()
+        list.map = map
         addSubview(list)
         self.list = list
         
@@ -144,11 +145,6 @@ class World: UIView, CLLocationManagerDelegate {
         }
     }
     
-    func update(_ settings: Settings) {
-        map.filter()
-        list.refresh()
-    }
-    
     final func measure(_ distance: CLLocationDistance) -> String {
         if #available(iOS 10, *) {
             return (formatter as! MeasurementFormatter).string(from: .init(value: distance, unit: UnitLength.meters))
@@ -178,7 +174,11 @@ class World: UIView, CLLocationManagerDelegate {
     
     @objc private func settings() {
         let settings = Settings(style)
-        settings.delegate = { [weak self] in self?.update($0) }
+        settings.delegate = { [weak self] in
+            self?.map.filter()
+            self?.list.refresh()
+        }
+        settings.map = map
         app.view.addSubview(settings)
         settings.show()
     }
