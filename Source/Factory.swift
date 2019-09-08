@@ -12,7 +12,7 @@ public final class Factory {
     public var complete: ((Session.Item) -> Void)!
     public var path = [Path]()
     public var rect = MKMapRect()
-    public var valid: Bool { return rect.width < max && rect.height < max }
+    public var mode = Session.Mode.walking
     var range = (11 ... 18)
     private(set) var item = Session.Item()
     private(set) var shots = [Shot]()
@@ -20,7 +20,6 @@ public final class Factory {
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
     private let margin = 0.004
-    private let max = 150000.0
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
     private let out = OutputStream(url: Argonaut.temporal, append: false)!

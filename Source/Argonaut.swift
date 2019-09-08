@@ -19,8 +19,10 @@ public final class Argonaut {
             let item = Path()
             input.read(buffer, maxLength: 1)
             let length = Int(buffer.pointee)
-            input.read(buffer, maxLength: length)
-            item.name = String(decoding: Data(bytes: buffer, count: length), as: UTF8.self)
+            if length > 0 {
+                input.read(buffer, maxLength: length)
+                item.name = String(decoding: Data(bytes: buffer, count: length), as: UTF8.self)
+            }
             input.read(buffer, maxLength: 16)
             buffer.withMemoryRebound(to: Double.self, capacity: 2) {
                 item.latitude = $0[0]
@@ -115,10 +117,12 @@ public final class Argonaut {
         factory.path.forEach {
             let name = Data($0.name.utf8)
             _ = withUnsafeBytes(of: UInt8(name.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
-            _ = name.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: name.count) }
+            if !name.isEmpty {
+                _ = name.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: name.count) }
+            }
             _ = [$0.latitude, $0.longitude].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
-            _ = withUnsafeBytes(of: UInt8($0.options.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
-            $0.options.forEach {
+            _ = withUnsafeBytes(of: UInt8($0.options.filter { $0.mode == factory.mode }.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
+            $0.options.filter { $0.mode == factory.mode }.forEach {
                 _ = withUnsafeBytes(of: UInt8($0.mode.rawValue)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
                 _ = [$0.duration, $0.distance].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
                 _ = withUnsafeBytes(of: UInt16($0.points.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 2) }
