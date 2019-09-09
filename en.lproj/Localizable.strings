@@ -1,7 +1,6 @@
 Close="Close";
 New="New";
 New.save="Save";
-New.distance=" metres";
 New.pin="Drop pin";
 Home.info="Help";
 Home.new="Create map";

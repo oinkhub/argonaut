@@ -2,7 +2,6 @@ import UIKit
 import CoreLocation
 
 class World: UIView, CLLocationManagerDelegate {
-    let dater = DateComponentsFormatter()
     private(set) var style = Settings.Style.navigate
     private(set) weak var map: Map!
     private(set) weak var list: List!
@@ -10,7 +9,6 @@ class World: UIView, CLLocationManagerDelegate {
     private(set) weak var _close: UIButton!
     private(set) weak var top: Gradient.Top!
     private weak var _down: Button!
-    private var formatter: Any!
     private let manager = CLLocationManager()
     
     deinit { print("world gone") }
@@ -20,19 +18,10 @@ class World: UIView, CLLocationManagerDelegate {
         translatesAutoresizingMaskIntoConstraints = false
         accessibilityViewIsModal = true
         backgroundColor = .black
-        dater.unitsStyle = .full
-        dater.allowedUnits = [.minute, .hour]
+        
         manager.delegate = self
         manager.stopUpdatingHeading()
         manager.startUpdatingHeading()
-        
-        if #available(iOS 10, *) {
-            let formatter = MeasurementFormatter()
-            formatter.unitStyle = .long
-            formatter.unitOptions = .naturalScale
-            formatter.numberFormatter.maximumFractionDigits = 1
-            self.formatter = formatter
-        }
         
         let map = Map()
         map.refresh = { [weak self] in self?.list.refresh() }
@@ -143,13 +132,6 @@ class World: UIView, CLLocationManagerDelegate {
         UIView.animate(withDuration: 0.5) {
             view.heading?.transform = .init(rotationAngle: .init(didUpdateHeading.trueHeading) * .pi / 180)
         }
-    }
-    
-    final func measure(_ distance: CLLocationDistance) -> String {
-        if #available(iOS 10, *) {
-            return (formatter as! MeasurementFormatter).string(from: .init(value: distance, unit: UnitLength.meters))
-        }
-        return "\(Int(distance))" + .key("New.distance")
     }
     
     @objc private func up() {
