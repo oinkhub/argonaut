@@ -24,7 +24,7 @@ final class Settings: UIView {
         }
     }
     
-    private class Button: UIControl {
+    private final class Button: UIControl {
         var value = false { didSet { hover() } }
         override var isHighlighted: Bool { didSet { hover() } }
         override var isSelected: Bool { didSet { hover() } }

@@ -14,29 +14,33 @@ final class List: UIView {
             isAccessibilityElement = true
             accessibilityTraits = .button
             accessibilityLabel = item.1.name
-            self.path = item.1
-            
-            let base = UIView()
-            base.translatesAutoresizingMaskIntoConstraints = false
-            base.isUserInteractionEnabled = false
-            base.backgroundColor = .init(white: 0.1333, alpha: 1)
-            base.layer.cornerRadius = 4
-            addSubview(base)
-            
-            let _index = UILabel()
-            _index.translatesAutoresizingMaskIntoConstraints = false
-            _index.textColor = .white
-            _index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize, weight: .bold)
-            _index.text = "\(item.0 + 1)"
-            addSubview(_index)
+            path = item.1
             
             let name = UILabel()
             name.translatesAutoresizingMaskIntoConstraints = false
+            name.numberOfLines = 0
+            name.text = item.1.name
             name.textColor = .white
             name.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
-            name.text = item.1.name
-            name.numberOfLines = 0
+            name.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             addSubview(name)
+            
+            let index = UILabel()
+            index.translatesAutoresizingMaskIntoConstraints = false
+            index.text = "\(item.0 + 1)"
+            index.textColor = .halo
+            index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .bold)
+            addSubview(index)
+            
+            let delete = UIButton()
+            delete.translatesAutoresizingMaskIntoConstraints = false
+            delete.isAccessibilityElement = true
+            delete.accessibilityTraits = .button
+            delete.accessibilityLabel = .key("List.delete")
+            delete.setImage(UIImage(named: "delete"), for: .normal)
+            delete.imageView!.clipsToBounds = true
+            delete.imageView!.contentMode = .center
+            addSubview(delete)
             
             let distance = UILabel()
             distance.translatesAutoresizingMaskIntoConstraints = false
@@ -45,27 +49,36 @@ final class List: UIView {
             addSubview(distance)
             self.distance = distance
             
-            bottomAnchor.constraint(equalTo: base.bottomAnchor, constant: 10).isActive = true
+            bottomAnchor.constraint(equalTo: name.bottomAnchor, constant: 30).isActive = true
             
-            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-            base.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
-            base.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-            base.bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 10).isActive = true
+            name.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
+            name.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
+            name.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
             
-            _index.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            _index.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 15).isActive = true
+            delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            delete.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            delete.widthAnchor.constraint(equalToConstant: 60).isActive = true
+            delete.heightAnchor.constraint(equalToConstant: 60).isActive = true
             
-            name.leftAnchor.constraint(equalTo: _index.rightAnchor, constant: 12).isActive = true
-            name.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
-            name.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
+            index.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            index.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 10).isActive = true
             
-            distance.leftAnchor.constraint(equalTo: _index.rightAnchor, constant: 12).isActive = true
+            distance.leftAnchor.constraint(equalTo: name.leftAnchor).isActive = true
             distance.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 2).isActive = true
+        }
+    }
+    
+    private final class Travel: UIView {
+        required init?(coder: NSCoder) { return nil }
+        init(_  origin: Path, destination: Path) {
+            super.init(frame: .zero)
+            translatesAutoresizingMaskIntoConstraints = false
         }
     }
     
     weak var top: NSLayoutConstraint!
     weak var map: Map!
+    var animate = false
     private weak var scroll: Scroll!
     private weak var empty: UILabel!
     
@@ -83,11 +96,16 @@ final class List: UIView {
         empty.translatesAutoresizingMaskIntoConstraints = false
         empty.textColor = .white
         empty.text = .key("List.empty")
-        empty.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
+        empty.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
         addSubview(empty)
         self.empty = empty
         
         heightAnchor.constraint(equalToConstant: 300).isActive = true
+        
+        scroll.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         empty.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         empty.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -96,63 +114,42 @@ final class List: UIView {
     func refresh() {
         scroll.clear()
         empty.isHidden = !map.path.isEmpty
-        /*
-        list.clear()
         var previous: Item?
-        map.plan.path.enumerated().forEach {
+        map.path.enumerated().forEach {
             let item = Item($0)
-            item.addTarget(self, action: #selector(focus(_:)), for: .touchUpInside)
-            if let user = map.annotations.first(where: { $0 is MKUserLocation })?.coordinate {
-                item.distance.text = measure(CLLocation(latitude: user.latitude, longitude: user.longitude).distance(from: .init(latitude: $0.1.latitude, longitude: $0.1.longitude)))
-            }
-            
-            list.content.addSubview(item)
+            scroll.content.addSubview(item)
             
             if previous == nil {
-                item.topAnchor.constraint(equalTo: list.topAnchor).isActive = true
+                item.topAnchor.constraint(equalTo: scroll.content.topAnchor).isActive = true
             } else {
-                if !app.session.settings.walking && !app.session.settings.driving {
-                    item.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-                } else {
-                    if app.session.settings.walking, let option = previous!.path?.options.first(where: { $0.mode == .walking }) {
-                        let walking = make("walking", total: measure(option.distance) + ": " + dater.string(from: option.duration)!)
-                        walking.backgroundColor = .walking
-                        
-                        walking.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-                        walking.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
-                        
-                        if app.session.settings.driving {
-                            walking.rightAnchor.constraint(equalTo: list.content.centerXAnchor, constant: -5).isActive = true
-                        } else {
-                            walking.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
-                        }
-                        
-                        item.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor).isActive = true
-                    }
-                    if app.session.settings.driving, let option = previous!.path?.options.first(where: { $0.mode == .driving }) {
-                        let driving = make("driving", total: measure(option.distance) + ": " + dater.string(from: option.duration)!)
-                        driving.backgroundColor = .driving
-                        
-                        driving.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-                        driving.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
-                        
-                        if app.session.settings.walking {
-                            driving.leftAnchor.constraint(equalTo: list.content.centerXAnchor, constant: 5).isActive = true
-                        } else {
-                            driving.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
-                        }
-                        
-                        item.topAnchor.constraint(greaterThanOrEqualTo: driving.bottomAnchor).isActive = true
-                    }
-                }
+                let travel = Travel(previous!.path, destination: $0.1)
+                scroll.content.addSubview(travel)
+                
+                travel.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
+                travel.leftAnchor.constraint(equalTo: scroll.content.leftAnchor).isActive = true
+                travel.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
+                
+                item.topAnchor.constraint(equalTo: travel.bottomAnchor).isActive = true
             }
             
-            item.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
-            item.widthAnchor.constraint(equalTo: list.widthAnchor).isActive = true
+            item.leftAnchor.constraint(equalTo: scroll.content.leftAnchor).isActive = true
+            item.widthAnchor.constraint(equalTo: scroll.content.widthAnchor).isActive = true
             previous = item
         }
         
-        list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous?.bottomAnchor ?? bottomAnchor, constant: 30).isActive = true*/
+        if previous != nil {
+            scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous!.bottomAnchor).isActive = true
+            if animate {
+                animate = false
+                scroll.content.layoutIfNeeded()
+                let offset = previous!.frame.minY
+                if offset > scroll.frame.height - 50 {
+                    UIView.animate(withDuration: 0.3) { [weak self] in
+                        self?.scroll.contentOffset.y = offset
+                    }
+                }
+            }
+        }
     }
     
     private func make(_ image: String, total: String) -> UIView {

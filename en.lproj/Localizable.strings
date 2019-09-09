@@ -36,6 +36,7 @@ Create.info="\nThis process is done only once but might take a few minutes, plea
 Map.mark="Pin";
 Navigate.title="map with no name";
 List.empty="No pins added";
+List.delete="Delete";
 List.distance=" metres";
 List.view="Navigate";
 List.warning="Delete this map?";

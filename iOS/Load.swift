@@ -33,7 +33,7 @@ final class Load: UIView {
         }
     }
     
-    private class func modal(_ perform: @escaping(() -> Void)) {
+    private final class func modal(_ perform: @escaping(() -> Void)) {
         guard view == nil else { return }
         let view = Load()
         self.view = view

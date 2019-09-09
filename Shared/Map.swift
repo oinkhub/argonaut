@@ -23,8 +23,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         
         var region = MKCoordinateRegion()
         region.center = userLocation.location == nil ? centerCoordinate : userLocation.coordinate
+        region.span = span()
         setRegion(region, animated: false)
-        rezoom()
     }
     
     func mapView(_: MKMapView, didUpdate: MKUserLocation) {
@@ -134,13 +134,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func rezoom() {
         var region = self.region
-        if app.session.settings.mode == .flying {
-            region.span.latitudeDelta = 10
-            region.span.longitudeDelta = 10
-        } else {
-            region.span.latitudeDelta = 0.005
-            region.span.longitudeDelta = 0.005
-        }
+        region.span = span()
         setRegion(region, animated: true)
     }
     
@@ -226,5 +220,9 @@ final class Map: MKMapView, MKMapViewDelegate {
                 self?.filter()
             }
         }
+    }
+    
+    private func span() -> MKCoordinateSpan {
+        .init(latitudeDelta: app.session.settings.mode == .flying ? 10 : 0.005, longitudeDelta: app.session.settings.mode == .flying ? 10 : 0.005)
     }
 }
