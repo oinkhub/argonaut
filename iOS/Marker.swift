@@ -16,7 +16,7 @@ final class Marker: MKAnnotationView {
         super.init(annotation: nil, reuseIdentifier: nil)
         isDraggable = drag
         canShowCallout = false
-        frame = .init(x: 0, y: 0, width: 60, height: 60)
+        frame = .init(x: 0, y: 0, width: 50, height: 50)
         
         let off = UIImageView(image: UIImage(named: "markOff"))
         self.off = off
@@ -34,7 +34,7 @@ final class Marker: MKAnnotationView {
             $0.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
             $0.bottomAnchor.constraint(equalTo: centerYAnchor).isActive = true
             $0.widthAnchor.constraint(equalToConstant: 36).isActive = true
-            $0.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 40).isActive = true
         }
         
         let _index = UILabel()
@@ -45,7 +45,7 @@ final class Marker: MKAnnotationView {
         self._index = _index
         
         _index.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        _index.bottomAnchor.constraint(equalTo: centerYAnchor, constant: -19).isActive = true
+        _index.bottomAnchor.constraint(equalTo: centerYAnchor, constant: -14.5).isActive = true
         
         let base = UIView()
         base.isUserInteractionEnabled = false
@@ -75,6 +75,7 @@ final class Marker: MKAnnotationView {
     func refresh() {
         title?.text = isSelected ? (annotation as? Mark)?.path.name ?? "" : ""
         UIView.animate(withDuration: 0.3) { [weak self] in
+            self?.off?.alpha = self?.isSelected == true ? 0 : 1
             self?.on?.alpha = self?.isSelected == true ? 1 : 0
             self?.base?.alpha = self?.isSelected == true && self?.title?.text?.isEmpty == false ? 1 : 0
             self?.base?.layoutIfNeeded()
