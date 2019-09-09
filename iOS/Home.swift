@@ -32,8 +32,21 @@ final class Home: UIView {
             destination.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
             destination.text = item.destination
             
+            let base = UIView()
+            base.translatesAutoresizingMaskIntoConstraints = false
+            base.isUserInteractionEnabled = false
+            base.backgroundColor = .init(white: 0.1333, alpha: 1)
+            base.layer.cornerRadius = 4
+            addSubview(base)
             
-            let travel = make("walking", distance: item.distance, duration: item.duration)
+            let travel = UILabel()
+            travel.translatesAutoresizingMaskIntoConstraints = false
+            travel.textColor = .black
+            travel.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .light)
+            travel.numberOfLines = 0
+            travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+            travel.text = "measure(option.distance, option.duration)"
+            base.addSubview(travel)
             
             let navigate = UIButton()
             navigate.setImage(UIImage(named: "navigate"), for: .normal)
@@ -75,6 +88,20 @@ final class Home: UIView {
                 right = $0.leftAnchor
             }
             
+            switch item.mode {
+            case .walking:
+                base.backgroundColor = .walking
+//                icon.image = UIImage(named: "walking")!.withRenderingMode(.alwaysTemplate)
+            case .driving:
+                base.backgroundColor = .driving
+//                icon.image = UIImage(named: "driving")!.withRenderingMode(.alwaysTemplate)
+            case .flying:
+                base.backgroundColor = .flying
+//                icon.image = UIImage(named: "flying")!.withRenderingMode(.alwaysTemplate)
+            }
+            
+            bottomAnchor.constraint(greaterThanOrEqualTo: base.bottomAnchor, constant: 60).isActive = true
+            
             field.topAnchor.constraint(equalTo: topAnchor).isActive = true
             field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -82,9 +109,14 @@ final class Home: UIView {
             origin.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
             destination.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 2).isActive = true
             
-            travel.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
-            travel.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-            travel.rightAnchor.constraint(equalTo: centerXAnchor, constant: -5).isActive = true
+            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
+            base.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
+            base.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
+            base.bottomAnchor.constraint(equalTo: travel.bottomAnchor, constant: 10).isActive = true
+            
+            travel.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
+            travel.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 12).isActive = true
+            travel.rightAnchor.constraint(lessThanOrEqualTo: base.rightAnchor, constant: -12).isActive = true
         }
         
         func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
@@ -104,54 +136,6 @@ final class Home: UIView {
         func textViewDidEndEditing(_: UITextView) {
             item.title = field.text
             app.session.save()
-        }
-        
-        private func make(_ image: String, distance: Double, duration: Double) -> UIView {
-            let base = UIView()
-            base.isUserInteractionEnabled = false
-            base.translatesAutoresizingMaskIntoConstraints = false
-            base.layer.cornerRadius = 4
-            base.backgroundColor = .init(white: 0.1333, alpha: 1)
-            addSubview(base)
-            
-            let icon = UIImageView(image: UIImage(named: image))
-            icon.translatesAutoresizingMaskIntoConstraints = false
-            icon.contentMode = .center
-            icon.clipsToBounds = true
-            base.addSubview(icon)
-            
-            let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.numberOfLines = 0
-            label.textColor = .init(white: 0.8, alpha: 1)
-            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
-            
-            if #available(iOS 10, *) {
-                let formatter = MeasurementFormatter()
-                formatter.unitStyle = .long
-                formatter.unitOptions = .naturalScale
-                formatter.numberFormatter.maximumFractionDigits = 1
-                label.text = formatter.string(from: .init(value: distance, unit: UnitLength.meters))
-            } else {
-                label.text = "\(Int(distance))" + .key("List.distance")
-            }
-            
-            label.text = label.text! + ": " + dater.string(from: duration)!
-            base.addSubview(label)
-            
-            icon.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 3).isActive = true
-            icon.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 25).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 25).isActive = true
-            
-            label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
-            label.leftAnchor.constraint(equalTo: icon.rightAnchor).isActive = true
-            label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
-            
-            base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
-            bottomAnchor.constraint(greaterThanOrEqualTo: base.bottomAnchor, constant: 60).isActive = true
-            
-            return base
         }
         
         @objc private func navigate() { Load.navigate(item) }

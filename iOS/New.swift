@@ -4,7 +4,8 @@ import MapKit
 final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     @available(iOS 9.3, *) private final class Result: UIControl {
         let search: MKLocalSearchCompletion
-        override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.5 : 1 } }
+        override var isHighlighted: Bool { didSet { hover() } }
+        override var isSelected: Bool { didSet { hover() } }
         
         required init?(coder: NSCoder) { return nil }
         init(_ search: MKLocalSearchCompletion) {
@@ -38,119 +39,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             label.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             label.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
         }
-    }
-    
-    private final class Item: UIControl {
-        weak var path: Path?
-        private(set) weak var delete: UIButton!
-        override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.5 : 1 } }
         
-        required init?(coder: NSCoder) { return nil }
-        init(_ path: (Int, Path), walking: String?, driving: String?) {
-            self.path = path.1
-            super.init(frame: .zero)
-            translatesAutoresizingMaskIntoConstraints = false
-            isAccessibilityElement = true
-            accessibilityTraits = .button
-            accessibilityLabel = path.1.name
-            
-            let title = UILabel()
-            title.translatesAutoresizingMaskIntoConstraints = false
-            title.textColor = .white
-            title.attributedText = {
-                $0.append(.init(string: "\(path.0 + 1): ", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)]))
-                $0.append(.init(string: path.1.name, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)]))
-                return $0
-            } (NSMutableAttributedString())
-            addSubview(title)
-            
-            let border = UIView()
-            border.isUserInteractionEnabled = false
-            border.translatesAutoresizingMaskIntoConstraints = false
-            border.backgroundColor = .init(white: 1, alpha: 0.2)
-            addSubview(border)
-            
-            let delete = UIButton()
-            delete.translatesAutoresizingMaskIntoConstraints = false
-            delete.setImage(UIImage(named: "delete"), for: .normal)
-            delete.imageView!.clipsToBounds = true
-            delete.imageView!.contentMode = .center
-            delete.imageEdgeInsets.left = 8
-            addSubview(delete)
-            self.delete = delete
-            
-            if walking == nil && driving == nil {
-                title.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
-            }
-            
-            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-            title.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 12).isActive = true
-            
-            border.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 2).isActive = true
-            border.leftAnchor.constraint(equalTo: title.leftAnchor).isActive = true
-            border.rightAnchor.constraint(equalTo: title.rightAnchor).isActive = true
-            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
-            
-            delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            delete.centerYAnchor.constraint(equalTo: border.centerYAnchor).isActive = true
-            delete.widthAnchor.constraint(equalToConstant: 65).isActive = true
-            delete.heightAnchor.constraint(equalToConstant: 65).isActive = true
-            
-            bottomAnchor.constraint(equalTo: border.bottomAnchor, constant: 35).isActive = true
-            
-            if let walking = walking {
-                let walking = make(walking)
-                walking.backgroundColor = .walking
-                walking.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-                
-                if driving == nil {
-                    walking.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
-                } else {
-                    walking.rightAnchor.constraint(equalTo: centerXAnchor, constant: -5).isActive = true
-                }
-                
-                title.topAnchor.constraint(greaterThanOrEqualTo: walking.bottomAnchor, constant: 25).isActive = true
-            }
-            
-            if let driving = driving {
-                let driving = make(driving)
-                driving.backgroundColor = .driving
-                driving.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
-                
-                if walking == nil {
-                    driving.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-                } else {
-                    driving.leftAnchor.constraint(equalTo: centerXAnchor, constant: 5).isActive = true
-                }
-                
-                title.topAnchor.constraint(greaterThanOrEqualTo: driving.bottomAnchor, constant: 25).isActive = true
-            }
-        }
-        
-        private func make(_ string: String) -> UIView {
-            let base = UIView()
-            base.isUserInteractionEnabled = false
-            base.translatesAutoresizingMaskIntoConstraints = false
-            base.layer.cornerRadius = 4
-            addSubview(base)
-            
-            let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.numberOfLines = 0
-            label.text = string
-            label.textColor = .black
-            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
-            addSubview(label)
-            
-            label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
-            label.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
-            label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
-            
-            base.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
-            
-            return base
-        }
+        private func hover() { alpha = isHighlighted || isSelected ? 0.3 : 1 }
     }
 
     private weak var field: Field.Search!
@@ -303,92 +193,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         UIView.animate(withDuration: 0.4) { [weak self] in self?.layoutIfNeeded() }
     }
     
-    /*override func refresh() {
-        list.clear()
-        var previous: Item?
-        var walking = (CLLocationDistance(), TimeInterval())
-        var driving = (CLLocationDistance(), TimeInterval())
-        map.plan.path.enumerated().forEach {
-            var walk: String?
-            var drive: String?
-            if previous != nil {
-                if app.session.settings.walking, let _walking = previous!.path?.options.first(where: { $0.mode == .walking }) {
-                    walking.0 += _walking.distance
-                    walking.1 += _walking.duration
-                    walk = measure(_walking.distance) + ": " + dater.string(from: _walking.duration)!
-                }
-                if app.session.settings.driving, let _driving = previous!.path?.options.first(where: { $0.mode == .driving }) {
-                    driving.0 += _driving.distance
-                    driving.1 += _driving.duration
-                    drive = measure(_driving.distance) + ": " + dater.string(from: _driving.duration)!
-                }
-            }
-            
-            let item = Item($0, walking: walk, driving: drive)
-            item.delete.addTarget(self, action: #selector(remove(_:)), for: .touchUpInside)
-            item.addTarget(self, action: #selector(focus(_:)), for: .touchUpInside)
-            list.content.addSubview(item)
-            
-            item.topAnchor.constraint(equalTo: previous?.bottomAnchor ?? list.topAnchor).isActive = true
-            item.leftAnchor.constraint(equalTo: list.leftAnchor).isActive = true
-            item.widthAnchor.constraint(equalTo: list.widthAnchor).isActive = true
-
-            previous = item
-        }
-        
-        if map.plan.path.count > 1 {
-            let border = UIView()
-            border.isUserInteractionEnabled = false
-            border.translatesAutoresizingMaskIntoConstraints = false
-            border.backgroundColor = .halo
-            list.content.addSubview(border)
-            
-            border.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-            border.leftAnchor.constraint(equalTo: list.leftAnchor, constant: 20).isActive = true
-            border.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
-            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
-            
-            list.content.bottomAnchor.constraint(greaterThanOrEqualTo: border.bottomAnchor, constant: 20).isActive = true
-            
-            if app.session.settings.walking {
-                let _walking = make("walking", total: measure(walking.0) + ": " + dater.string(from: walking.1)!)
-                _walking.backgroundColor = .walking
-                _walking.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 20).isActive = true
-                _walking.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
-                list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _walking.bottomAnchor, constant: 20).isActive = true
-                
-                if app.session.settings.driving {
-                    _walking.rightAnchor.constraint(equalTo: list.content.centerXAnchor, constant: -5).isActive = true
-                } else {
-                    _walking.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
-                }
-            }
-            
-            if app.session.settings.driving {
-                let _driving = make("driving", total: measure(driving.0) + ": " + dater.string(from: driving.1)!)
-                _driving.backgroundColor = .driving
-                _driving.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 20).isActive = true
-                _driving.rightAnchor.constraint(equalTo: list.content.rightAnchor, constant: -20).isActive = true
-                list.content.bottomAnchor.constraint(greaterThanOrEqualTo: _driving.bottomAnchor, constant: 20).isActive = true
-                
-                if app.session.settings.walking {
-                    _driving.leftAnchor.constraint(equalTo: list.content.centerXAnchor, constant: 5).isActive = true
-                } else {
-                    _driving.leftAnchor.constraint(equalTo: list.content.leftAnchor, constant: 20).isActive = true
-                }
-            }
-            
-            // add flight
-            
-        } else if let previous = previous {
-            list.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous.bottomAnchor, constant: 20).isActive = true
-        }
-        list.layoutIfNeeded()
-        UIView.animate(withDuration: 0.5) { [weak self] in
-            self?.list.contentOffset.y = max((self?.list.content.bounds.height ?? 0) - 300, 0)
-        }
-    }*/
-    
     private func query() {
         if #available(iOS 9.3, *) {
             (completer as! MKLocalSearchCompleter).cancel()
@@ -399,53 +203,10 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    private func make(_ image: String, total: String) -> UIView {
-        let base = UIView()/*
-        base.isUserInteractionEnabled = false
-        base.translatesAutoresizingMaskIntoConstraints = false
-        base.layer.cornerRadius = 4
-        list.content.addSubview(base)
-        
-        let icon = UIImageView(image: UIImage(named: image)!.withRenderingMode(.alwaysTemplate))
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.tintColor = .black
-        icon.contentMode = .center
-        icon.clipsToBounds = true
-        base.addSubview(icon)
-        
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.text = total
-        label.textColor = .black
-        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .regular)
-        base.addSubview(label)
-        
-        icon.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 5).isActive = true
-        icon.centerYAnchor.constraint(equalTo: label.centerYAnchor).isActive = true
-        icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        
-        label.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
-        label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 4).isActive = true
-        label.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
-        
-        base.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
-        */
-        return base
-    }
-    
     @objc private func save() { app.replace(Create(map.path, rect: map.visibleMapRect)) }
-    @objc private func remove(_ item: UIView) { if let path = (item.superview as! Item).path { map.remove(path) } }
+    
     @available(iOS 9.3, *) @objc private func edit(_ gesture: UILongPressGestureRecognizer) { field.field.text = (gesture.view as! Result).search.title }
-    
-    @objc private func focus(_ item: Item) {
-        map.selectedAnnotations.forEach { map.deselectAnnotation($0, animated: true) }
-        if let mark = map.annotations.first(where: { ($0 as? Mark)?.path === item.path }) {
-            map.selectAnnotation(mark, animated: true)
-        }
-    }
-    
+
     @available(iOS 9.3, *) @objc private func search(_ result: Result) {
         app.window!.endEditing(true)
         field.field.text = ""

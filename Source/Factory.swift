@@ -39,9 +39,9 @@ public final class Factory {
     public func filter() {
         path.forEach { $0.options.removeAll { $0.mode != mode } }
         if mode == .flying {
-            range = (0 ... 12)
+            range = (2 ... 9)
         } else {
-            range = (11 ... 18)
+            range = (9 ... 18)
         }
     }
     

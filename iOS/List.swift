@@ -4,13 +4,14 @@ import CoreLocation
 
 final class List: UIView {
     private final class Item: UIControl {
-        override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.3 : 1 } }
+        override var isHighlighted: Bool { didSet { hover() } }
+        override var isSelected: Bool { didSet { hover() } }
+        private(set) weak var delete: UIButton?
         private(set) weak var path: Path!
         private(set) weak var distance: UILabel!
-        private(set) weak var delete: UIButton!
         
         required init?(coder: NSCoder) { return nil }
-        init(_ item: (Int, Path)) {
+        init(_ item: (Int, Path), deletable: Bool) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             isAccessibilityElement = true
@@ -31,19 +32,7 @@ final class List: UIView {
             index.translatesAutoresizingMaskIntoConstraints = false
             index.text = "\(item.0 + 1)"
             index.textColor = .halo
-            index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .bold)
             addSubview(index)
-            
-            let delete = UIButton()
-            delete.translatesAutoresizingMaskIntoConstraints = false
-            delete.isAccessibilityElement = true
-            delete.accessibilityTraits = .button
-            delete.accessibilityLabel = .key("List.delete")
-            delete.setImage(UIImage(named: "delete"), for: .normal)
-            delete.imageView!.clipsToBounds = true
-            delete.imageView!.contentMode = .center
-            addSubview(delete)
-            self.delete = delete
             
             let distance = UILabel()
             distance.translatesAutoresizingMaskIntoConstraints = false
@@ -52,28 +41,51 @@ final class List: UIView {
             addSubview(distance)
             self.distance = distance
             
+            if deletable {
+                index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .bold)
+                
+                let delete = UIButton()
+                delete.translatesAutoresizingMaskIntoConstraints = false
+                delete.isAccessibilityElement = true
+                delete.accessibilityTraits = .button
+                delete.accessibilityLabel = .key("List.delete")
+                delete.setImage(UIImage(named: "delete"), for: .normal)
+                delete.imageView!.clipsToBounds = true
+                delete.imageView!.contentMode = .center
+                addSubview(delete)
+                self.delete = delete
+                
+                delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+                delete.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+                delete.widthAnchor.constraint(equalToConstant: 60).isActive = true
+                delete.heightAnchor.constraint(equalToConstant: 60).isActive = true
+                
+                index.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 10).isActive = true
+            } else {
+                index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .bold)
+                
+                index.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
+            }
+            
             bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 30).isActive = true
             
             name.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
             name.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
             name.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
             
-            delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            delete.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            delete.widthAnchor.constraint(equalToConstant: 60).isActive = true
-            delete.heightAnchor.constraint(equalToConstant: 60).isActive = true
-            
             index.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            index.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 10).isActive = true
             
             distance.leftAnchor.constraint(equalTo: name.leftAnchor).isActive = true
             distance.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 2).isActive = true
             distance.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
         }
+        
+        private func hover() { alpha = isHighlighted || isSelected ? 0.2 : 1 }
     }
     
     weak var top: NSLayoutConstraint!
     weak var map: Map!
+    var deletable = true
     private weak var scroll: Scroll!
     private weak var empty: UILabel!
     private weak var header: UIView!
@@ -101,7 +113,6 @@ final class List: UIView {
         }
         
         let scroll = Scroll()
-        scroll.contentInset.bottom = 30
         addSubview(scroll)
         self.scroll = scroll
         
@@ -156,7 +167,7 @@ final class List: UIView {
         icon.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
         total.centerYAnchor.constraint(equalTo: header.centerYAnchor).isActive = true
-        total.leftAnchor.constraint(equalTo: icon.rightAnchor).isActive = true
+        total.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: -8).isActive = true
         total.rightAnchor.constraint(lessThanOrEqualTo: header.rightAnchor, constant: -20).isActive = true
         
         update()
@@ -170,9 +181,10 @@ final class List: UIView {
         var duration = 0.0
         var previous: Item?
         map.path.enumerated().forEach {
-            let item = Item($0)
+            let item = Item($0, deletable: deletable)
             item.distance.text = location == nil ? " " : measure(location!.distance(from: .init(latitude: $0.1.latitude, longitude: $0.1.longitude)), 0)
-            item.delete.addTarget(self, action: #selector(remove(_:)), for: .touchUpInside)
+            item.addTarget(self, action: #selector(focus(_:)), for: .touchUpInside)
+            item.delete?.addTarget(self, action: #selector(remove(_:)), for: .touchUpInside)
             scroll.content.addSubview(item)
             
             if let option = previous?.path.options.first(where: { $0.mode == app.session.settings.mode }) {
@@ -215,7 +227,7 @@ final class List: UIView {
         }
         
         if previous != nil {
-            scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous!.bottomAnchor).isActive = true
+            scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous!.bottomAnchor, constant: 20).isActive = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
                 self?.scroll.content.layoutIfNeeded()
                 UIView.animate(withDuration: 0.3) { [weak self] in
@@ -265,6 +277,13 @@ final class List: UIView {
             }
         }
         return result
+    }
+    
+    @objc private func focus(_ item: Item) {
+        map.selectedAnnotations.forEach { map.deselectAnnotation($0, animated: true) }
+        if let mark = map.annotations.first(where: { ($0 as? Mark)?.path === item.path }) {
+            map.selectAnnotation(mark, animated: true)
+        }
     }
     
     @objc private func remove(_ button: UIButton) { map.remove((button.superview as! Item).path) }
