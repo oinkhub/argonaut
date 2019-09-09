@@ -190,7 +190,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         let _pin = Button("pin")
         _pin.accessibilityLabel = .key("New.pin")
-        _pin.addTarget(self, action: #selector(pin), for: .touchUpInside)
+        _pin.addTarget(map, action: #selector(map.pin), for: .touchUpInside)
         addSubview(_pin)
         self._pin = _pin
         
@@ -444,11 +444,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         if let mark = map.annotations.first(where: { ($0 as? Mark)?.path === item.path }) {
             map.selectAnnotation(mark, animated: true)
         }
-    }
-    
-    @objc private func pin() {
-        list.animate = true
-        map.pin()
     }
     
     @available(iOS 9.3, *) @objc private func search(_ result: Result) {

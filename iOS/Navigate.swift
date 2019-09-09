@@ -71,7 +71,6 @@ final class Navigate: World {
         super.init()
         map.tile(project)
         map.zoom = { [weak self] in self?.zoom.update($0) }
-        map.user = { [weak self] in self?.user($0) }
         map.drag = false
         
         let zoom = Zoom(project.1.zoom)
@@ -104,12 +103,6 @@ final class Navigate: World {
         }
         
         list.refresh()
-    }
-    
-    private func user(_ location: CLLocation) {
-//        list.content.subviews.compactMap { $0 as? Item }.forEach {
-//            $0.distance.text = measure(location.distance(from: .init(latitude: $0.path.latitude, longitude: $0.path.longitude)))
-//        }
     }
     
     @objc private func focus(_ item: Item) {

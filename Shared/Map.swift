@@ -104,7 +104,15 @@ final class Map: MKMapView, MKMapViewDelegate {
                 }
             }
             self.path.remove(at: index)
-            DispatchQueue.main.async { [weak self] in self?.refresh() }
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.refresh()
+                self.annotations.compactMap { $0 as? Mark }.compactMap { self.view(for: $0) as? Marker }.forEach { marker in
+                    if let index = self.path.firstIndex(where: { $0 === (marker.annotation as? Mark)?.path }) {
+                        marker.index = "\(index + 1)"
+                    }
+                }
+            }
         }
     }
     

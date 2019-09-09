@@ -25,6 +25,7 @@ class World: UIView, CLLocationManagerDelegate {
         
         let map = Map()
         map.refresh = { [weak self] in self?.list.refresh() }
+        map.user = { [weak self] in self?.list.user($0) }
         map.setUserTrackingMode(.followWithHeading, animated: true)
         addSubview(map)
         self.map = map

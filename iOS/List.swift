@@ -1,11 +1,13 @@
 import Argonaut
 import UIKit
+import CoreLocation
 
 final class List: UIView {
     private final class Item: UIControl {
         override var isHighlighted: Bool { didSet { alpha = isHighlighted ? 0.3 : 1 } }
         private(set) weak var path: Path!
         private(set) weak var distance: UILabel!
+        private(set) weak var delete: UIButton!
         
         required init?(coder: NSCoder) { return nil }
         init(_ item: (Int, Path)) {
@@ -41,15 +43,16 @@ final class List: UIView {
             delete.imageView!.clipsToBounds = true
             delete.imageView!.contentMode = .center
             addSubview(delete)
+            self.delete = delete
             
             let distance = UILabel()
             distance.translatesAutoresizingMaskIntoConstraints = false
-            distance.textColor = .white
-            distance.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
+            distance.textColor = .init(white: 1, alpha: 0.6)
+            distance.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
             addSubview(distance)
             self.distance = distance
             
-            bottomAnchor.constraint(equalTo: name.bottomAnchor, constant: 30).isActive = true
+            bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 30).isActive = true
             
             name.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
             name.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
@@ -65,18 +68,19 @@ final class List: UIView {
             
             distance.leftAnchor.constraint(equalTo: name.leftAnchor).isActive = true
             distance.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 2).isActive = true
+            distance.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
         }
     }
     
     weak var top: NSLayoutConstraint!
     weak var map: Map!
-    var animate = false
     private weak var scroll: Scroll!
     private weak var empty: UILabel!
     private weak var header: UIView!
     private weak var icon: UIImageView!
     private weak var total: UILabel!
     private var formatter: Any!
+    private var location: CLLocation?
     private let dater = DateComponentsFormatter()
     
     required init?(coder: NSCoder) { return nil }
@@ -159,6 +163,7 @@ final class List: UIView {
     }
     
     func refresh() {
+        scroll.alpha = 0
         scroll.clear()
         empty.isHidden = !map.path.isEmpty
         var distance = 0.0
@@ -166,11 +171,14 @@ final class List: UIView {
         var previous: Item?
         map.path.enumerated().forEach {
             let item = Item($0)
+            item.distance.text = location == nil ? " " : measure(location!.distance(from: .init(latitude: $0.1.latitude, longitude: $0.1.longitude)), 0)
+            item.delete.addTarget(self, action: #selector(remove(_:)), for: .touchUpInside)
             scroll.content.addSubview(item)
             
             if let option = previous?.path.options.first(where: { $0.mode == app.session.settings.mode }) {
                 distance += option.distance
                 duration += option.duration
+                
                 let base = UIView()
                 base.translatesAutoresizingMaskIntoConstraints = false
                 base.isUserInteractionEnabled = false
@@ -208,14 +216,12 @@ final class List: UIView {
         
         if previous != nil {
             scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous!.bottomAnchor).isActive = true
-            if animate {
-                animate = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-                    self?.scroll.content.layoutIfNeeded()
-                    UIView.animate(withDuration: 0.3) { [weak self] in
-                        if let scroll = self?.scroll {
-                            scroll.contentOffset.y = scroll.content.frame.height - 259
-                        }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.scroll.content.layoutIfNeeded()
+                UIView.animate(withDuration: 0.3) { [weak self] in
+                    if let scroll = self?.scroll {
+                        scroll.contentOffset.y = scroll.content.frame.height - 259
+                        scroll.alpha = 1
                     }
                 }
             }
@@ -223,6 +229,13 @@ final class List: UIView {
         
         total.text = measure(distance, duration)
         update()
+    }
+    
+    func user(_ location: CLLocation) {
+        self.location = location
+        scroll.content.subviews.compactMap { $0 as? Item }.forEach {
+            $0.distance.text = measure(location.distance(from: .init(latitude: $0.path.latitude, longitude: $0.path.longitude)), 0)
+        }
     }
     
     private func update() {
@@ -253,4 +266,6 @@ final class List: UIView {
         }
         return result
     }
+    
+    @objc private func remove(_ button: UIButton) { map.remove((button.superview as! Item).path) }
 }
