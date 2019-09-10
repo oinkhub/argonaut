@@ -54,6 +54,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         if didChange == .ending {
             if let mark = annotationView.annotation as? Mark {
                 locate(mark)
+                direct(mark)
             }
         }
     }
@@ -78,7 +79,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
-    func add(_ coordinate: CLLocationCoordinate2D) {
+    func add(_ coordinate: CLLocationCoordinate2D) -> Mark {
         let item = Path()
         item.latitude = coordinate.latitude
         item.longitude = coordinate.longitude
@@ -86,7 +87,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         let mark = Mark(item)
         addAnnotation(mark)
         selectAnnotation(mark, animated: true)
-        locate(mark)
+        direct(mark)
+        return mark
     }
     
     func remove(_ path: Path) {
@@ -152,7 +154,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     @objc func pin() {
         guard !geocoder.isGeocoding else { return }
-        add(centerCoordinate)
+        locate(add(centerCoordinate))
     }
     
     @objc func me() {
@@ -162,25 +164,22 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     private func locate(_ mark: Mark) {
-        geocoder.reverseGeocodeLocation(.init(latitude: mark.path.latitude, longitude: mark.path.longitude)) {
-            if $1 == nil {
-                mark.path.name = $0?.first?.name ?? .key("Map.mark")
-                DispatchQueue.main.async { [weak self, weak mark] in
-                    guard let self = self, let mark = mark else { return }
-                    (self.view(for: mark) as? Marker)?.refresh()
-                    self.refresh()
-                    DispatchQueue.global(qos: .background).async { [weak self] in
-                        guard let self = self else { return }
-                        if let index = self.path.firstIndex(where: { $0 === mark.path }) {
-                            if index > 0 {
-                                self.direction(self.path[index - 1], destination: mark.path)
-                            }
-                            if index < self.path.count - 1 {
-                                self.direction(self.path[index], destination: self.path[index + 1])
-                            }
-                        }
-                    }
-                }
+        geocoder.reverseGeocodeLocation(.init(latitude: mark.path.latitude, longitude: mark.path.longitude)) { [weak self, weak mark] in
+            if $1 == nil, let mark = mark {
+                mark.path.name = $0?.first?.name ?? ""
+                (self?.view(for: mark) as? Marker)?.refresh()
+                self?.refresh()
+            }
+        }
+    }
+    
+    private func direct(_ mark: Mark) {
+        if let index = path.firstIndex(where: { $0 === mark.path }) {
+            if index > 0 {
+                direction(path[index - 1], destination: mark.path)
+            }
+            if index < path.count - 1 {
+                direction(path[index], destination: path[index + 1])
             }
         }
     }
@@ -188,11 +187,9 @@ final class Map: MKMapView, MKMapViewDelegate {
     private func direction(_ path: Path, destination: Path) {
         removeOverlays(overlays.filter { ($0 as? Line)?.path === path })
         path.options = []
-        DispatchQueue.main.async { [weak self] in
-            self?.direction(.walking, path: path, destination: destination)
-            self?.direction(.driving, path: path, destination: destination)
-            self?.fly(path, destination: destination)
-        }
+        direction(.walking, path: path, destination: destination)
+        direction(.driving, path: path, destination: destination)
+        fly(path, destination: destination)
     }
     
     private func direction(_ mode: Session.Mode, path: Path, destination: Path) {

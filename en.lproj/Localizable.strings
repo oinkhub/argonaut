@@ -34,7 +34,6 @@ Create.retry="Try again";
 Create.cancel="Cancel";
 Create.title="Creating map";
 Create.info="\nThis process is done only once but might take a few minutes, please wait.\nArgo apologises for any inconvenience.";
-Map.mark="Pin";
 Navigate.title="map with no name";
 List.empty="No pins added";
 List.delete="Delete";

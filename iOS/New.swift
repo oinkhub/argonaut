@@ -211,8 +211,9 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         app.window!.endEditing(true)
         field.field.text = ""
         MKLocalSearch(request: .init(completion: result.search)).start { [weak self] in
-            guard $1 == nil, let coordinate = $0?.mapItems.first?.placemark.coordinate else { return }
-            self?.map.add(coordinate)
+            guard $1 == nil, let placemark = $0?.mapItems.first?.placemark, let mark = self?.map.add(placemark.coordinate) else { return }
+            mark.path.name = placemark.name ?? placemark.title ?? ""
+            (self?.map.view(for: mark) as? Marker)?.refresh()
         }
     }
 }
