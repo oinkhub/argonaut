@@ -1,9 +1,8 @@
 import MapKit
 
 final class User: MKAnnotationView {
-    override var isSelected: Bool { didSet {
-        UIView.animate(withDuration: 0.5) { [weak self] in self?.me?.alpha = self?.isSelected == true ? 1 : 0 }
-    } }
+    override var isHighlighted: Bool { didSet { hover() } }
+    override var isSelected: Bool { didSet { hover() } }
     
     override var annotation: MKAnnotation? { didSet {
         if halo?.animation(forKey: "halo") == nil {
@@ -54,9 +53,16 @@ final class User: MKAnnotationView {
         heading.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         heading.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        me.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        me.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        me.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        me.heightAnchor.constraint(equalToConstant: 28).isActive = true
         me.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         me.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+    }
+    
+    private func hover() {
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.me?.alpha = self?.isSelected == true || self?.isHighlighted == true ? 1 : 0
+            self?.halo?.fillColor = self?.isSelected == true || self?.isHighlighted == true ? .black : .halo
+        }
     }
 }

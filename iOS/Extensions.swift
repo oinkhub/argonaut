@@ -2,9 +2,9 @@ import UIKit
 
 extension UIColor {
     static let halo = #colorLiteral(red: 0.231372549, green: 0.7215686275, blue: 1, alpha: 1)
-    static let walking = #colorLiteral(red: 0.802871919, green: 0.7154764525, blue: 1, alpha: 1)
-    static let driving = #colorLiteral(red: 0, green: 0.8377037809, blue: 0.7416605177, alpha: 1)
-    static let flying = #colorLiteral(red: 1, green: 0.3775033011, blue: 0.2141560299, alpha: 1)
+    static let walking = #colorLiteral(red: 0.8039215686, green: 0.7137254902, blue: 1, alpha: 1)
+    static let driving = #colorLiteral(red: 0.4862745098, green: 0.8, blue: 0.5333333333, alpha: 1)
+    static let flying = #colorLiteral(red: 1, green: 0.5459220779, blue: 0.4609899387, alpha: 1)
 }
 
 extension CGColor {
