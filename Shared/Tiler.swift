@@ -5,7 +5,6 @@ final class Tiler: MKTileOverlay {
     private var fallback: Data!
     private let cart: Cart
     
-    deinit { print("tiler gone") }
     init(_ cart: Cart) {
         self.cart = cart
         super.init(urlTemplate: nil)

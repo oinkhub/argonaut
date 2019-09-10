@@ -8,7 +8,7 @@ final class Home: UIView {
         private let dater = DateComponentsFormatter()
         
         required init?(coder: NSCoder) { return nil }
-        init(_ item: Session.Item) {
+        init(_ item: Session.Item, measure: String) {
             self.item = item
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
@@ -25,28 +25,34 @@ final class Home: UIView {
             self.field = field
             
             let origin = UILabel()
-            origin.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .medium)
+            origin.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
             origin.text = item.origin
             
             let destination = UILabel()
-            destination.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
+            destination.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
             destination.text = item.destination
             
             let base = UIView()
             base.translatesAutoresizingMaskIntoConstraints = false
             base.isUserInteractionEnabled = false
-            base.backgroundColor = .init(white: 0.1333, alpha: 1)
-            base.layer.cornerRadius = 4
+            base.layer.cornerRadius = 18
             addSubview(base)
+            
+            let icon = UIImageView()
+            icon.translatesAutoresizingMaskIntoConstraints = false
+            icon.clipsToBounds = true
+            icon.contentMode = .center
+            icon.tintColor = .black
+            base.addSubview(icon)
             
             let travel = UILabel()
             travel.translatesAutoresizingMaskIntoConstraints = false
-            travel.textColor = .black
+            travel.textColor = .white
             travel.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .light)
             travel.numberOfLines = 0
             travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            travel.text = "measure(option.distance, option.duration)"
-            base.addSubview(travel)
+            travel.text = measure
+            addSubview(travel)
             
             let navigate = UIButton()
             navigate.setImage(UIImage(named: "navigate"), for: .normal)
@@ -84,23 +90,29 @@ final class Home: UIView {
                 $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
                 $0.widthAnchor.constraint(equalToConstant: 60).isActive = true
                 $0.rightAnchor.constraint(equalTo: right).isActive = true
-                $0.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+                
+                if measure.isEmpty {
+                    $0.centerYAnchor.constraint(equalTo: icon.centerYAnchor).isActive = true
+                } else {
+                    $0.topAnchor.constraint(equalTo: travel.bottomAnchor).isActive = true
+                }
+                
                 right = $0.leftAnchor
             }
             
             switch item.mode {
             case .walking:
                 base.backgroundColor = .walking
-//                icon.image = UIImage(named: "walking")!.withRenderingMode(.alwaysTemplate)
+                icon.image = UIImage(named: "walking")!.withRenderingMode(.alwaysTemplate)
             case .driving:
                 base.backgroundColor = .driving
-//                icon.image = UIImage(named: "driving")!.withRenderingMode(.alwaysTemplate)
+                icon.image = UIImage(named: "driving")!.withRenderingMode(.alwaysTemplate)
             case .flying:
                 base.backgroundColor = .flying
-//                icon.image = UIImage(named: "flying")!.withRenderingMode(.alwaysTemplate)
+                icon.image = UIImage(named: "flying")!.withRenderingMode(.alwaysTemplate)
             }
             
-            bottomAnchor.constraint(greaterThanOrEqualTo: base.bottomAnchor, constant: 60).isActive = true
+            bottomAnchor.constraint(greaterThanOrEqualTo: navigate.bottomAnchor).isActive = true
             
             field.topAnchor.constraint(equalTo: topAnchor).isActive = true
             field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -109,14 +121,19 @@ final class Home: UIView {
             origin.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
             destination.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 2).isActive = true
             
-            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
-            base.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
+            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             base.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
-            base.bottomAnchor.constraint(equalTo: travel.bottomAnchor, constant: 10).isActive = true
+            base.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            base.heightAnchor.constraint(equalToConstant: 36).isActive = true
             
-            travel.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
-            travel.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 12).isActive = true
-            travel.rightAnchor.constraint(lessThanOrEqualTo: base.rightAnchor, constant: -12).isActive = true
+            icon.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
+            icon.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            
+            travel.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
+            travel.leftAnchor.constraint(equalTo: base.rightAnchor, constant: 10).isActive = true
+            travel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         }
         
         func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
@@ -154,11 +171,33 @@ final class Home: UIView {
     }
     
     private(set) weak var scroll: Scroll!
+    private weak var empty: UILabel!
+    private var formatter: Any!
+    private let dater = DateComponentsFormatter()
     
     required init?(coder: NSCoder) { return nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
+        
+        dater.unitsStyle = .full
+        dater.allowedUnits = [.minute, .hour]
+        
+        if #available(iOS 10, *) {
+            let formatter = MeasurementFormatter()
+            formatter.unitStyle = .long
+            formatter.unitOptions = .naturalScale
+            formatter.numberFormatter.maximumFractionDigits = 1
+            self.formatter = formatter
+        }
+        
+        let empty = UILabel()
+        empty.translatesAutoresizingMaskIntoConstraints = false
+        empty.textColor = .white
+        empty.text = .key("Home.empty")
+        empty.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
+        addSubview(empty)
+        self.empty = empty
         
         let scroll = Scroll()
         addSubview(scroll)
@@ -199,6 +238,9 @@ final class Home: UIView {
             $0.heightAnchor.constraint(equalToConstant: 70).isActive = true
         }
         
+        empty.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        empty.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         let bottom = scroll.bottomAnchor.constraint(equalTo: border.topAnchor, constant: -1)
@@ -233,6 +275,7 @@ final class Home: UIView {
     }
     
     func refresh() {
+        empty.isHidden = !app.session.items.isEmpty
         scroll.clear()
         var top = scroll.topAnchor
         app.session.items.reversed().forEach {
@@ -250,7 +293,7 @@ final class Home: UIView {
                 top = border.bottomAnchor
             }
             
-            let item = Item($0)
+            let item = Item($0, measure: measure($0.distance, $0.duration))
             scroll.content.addSubview(item)
             
             item.topAnchor.constraint(equalTo: top).isActive = true
@@ -262,6 +305,24 @@ final class Home: UIView {
         if top != scroll.topAnchor {
             scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top, constant: 20).isActive = true
         }
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            self?.scroll.contentOffset.y = 0
+        }
+    }
+    
+    private func measure(_ distance: Double, _ duration: Double) -> String {
+        var result = ""
+        if distance > 0 {
+            if #available(iOS 10, *) {
+                result = (formatter as! MeasurementFormatter).string(from: .init(value: distance, unit: UnitLength.meters))
+            } else {
+                result = "\(Int(distance))" + .key("Home.distance")
+            }
+            if duration > 0 {
+                result += ": " + dater.string(from: duration)!
+            }
+        }
+        return result
     }
     
     @objc private func info() { app.push(About()) }

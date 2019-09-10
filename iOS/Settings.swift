@@ -93,8 +93,6 @@ final class Settings: UIView {
     private weak var top: NSLayoutConstraint!
     private weak var info: UILabel!
     
-    deinit { print("settings gone") }
-    
     required init?(coder: NSCoder) { return nil }
     init(_ style: Style) {
         super.init(frame: .zero)
@@ -273,8 +271,8 @@ final class Settings: UIView {
         }
         app.session.save()
         mapInfo()
-        delegate()
         map.retile()
+        delegate()
     }
     
     @objc private func moded(_ segmented: UISegmentedControl) {

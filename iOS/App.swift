@@ -12,7 +12,7 @@ private(set) weak var app: App!
     
     func application(_: UIApplication, willFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         app = self
-        
+
         let window = UIWindow()
         window.rootViewController = self
         window.backgroundColor = .black

@@ -11,7 +11,6 @@ class World: UIView, CLLocationManagerDelegate {
     private weak var _down: Button!
     private let manager = CLLocationManager()
     
-    deinit { print("world gone") }
     required init?(coder: NSCoder) { return nil }
     init() {
         super.init(frame: .zero)
