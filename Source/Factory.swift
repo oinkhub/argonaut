@@ -6,6 +6,16 @@ public final class Factory {
         var x = 0
         var y = 0
         var z = 0
+        
+        mutating func update(_ x: Int, _ y: Int, _ z: Int, proportion: Double) {
+            self.x = x
+            self.y = y
+            self.z = z
+            options.dark()
+            options.mapType = .standard
+            options.size = .init(width: Argonaut.tile, height: Argonaut.tile)
+            options.mapRect = .init(x: Double(x) * proportion, y: Double(y) * proportion, width: proportion, height: proportion)
+        }
     }
     
     public var error: ((Error) -> Void)!
@@ -40,9 +50,9 @@ public final class Factory {
     public func filter() {
         path.forEach { $0.options.removeAll { $0.mode != mode } }
         if mode == .flying {
-            range = (0 ... 3)
+            range = (1 ... 7)
         } else {
-            range = (11 ... 18)
+            range = (12 ... 18)
         }
     }
     
@@ -62,19 +72,22 @@ public final class Factory {
     public func divide() {
         range.forEach { z in
             let proportion = MKMapRect.world.width / pow(2, Double(z))
-            (Int(rect.minX / proportion) ..< Int(ceil(rect.maxX / proportion))).forEach { x in
-                (Int(rect.minY / proportion) ..< Int(ceil(rect.maxY / proportion))).forEach { y in
-                    
-                    var shot = Shot()
-                    shot.x = x
-                    shot.y = y
-                    shot.z = z
-                    shot.options.dark()
-                    shot.options.mapType = .standard
-                    shot.options.size = .init(width: Argonaut.tile, height: Argonaut.tile)
-                    shot.options.mapRect = .init(x: Double(x) * proportion, y: Double(y) * proportion, width: proportion, height: proportion)
-                    print("x: \(x), y: \(y), z: \(z) p: \(proportion) \(shot.options.mapRect.minX), \(shot.options.mapRect.minY)")
-                    shots.append(shot)
+            if z == 1 {
+                let count = Int(pow(2, Double(z)))
+                (0 ..< count).forEach { x in
+                    (0 ..< count).forEach { y in
+                        var shot = Shot()
+                        shot.update(x, y, z, proportion: proportion)
+                        shots.append(shot)
+                    }
+                }
+            } else {
+                (Int(rect.minX / proportion) ..< Int(ceil(rect.maxX / proportion))).forEach { x in
+                    (Int(rect.minY / proportion) ..< Int(ceil(rect.maxY / proportion))).forEach { y in
+                        var shot = Shot()
+                        shot.update(x, y, z, proportion: proportion)
+                        shots.append(shot)
+                    }
                 }
             }
         }

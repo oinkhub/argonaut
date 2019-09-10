@@ -106,12 +106,22 @@ final class TestFactory: XCTestCase {
     func testRange() {
         factory.mode = .driving
         factory.filter()
-        XCTAssertEqual(11, factory.range.min()!)
+        XCTAssertEqual(12, factory.range.min()!)
         XCTAssertEqual(18, factory.range.max()!)
         
         factory.mode = .flying
         factory.filter()
-        XCTAssertEqual(0, factory.range.min()!)
-        XCTAssertEqual(8, factory.range.max()!)
+        XCTAssertEqual(1, factory.range.min()!)
+        XCTAssertEqual(7, factory.range.max()!)
+    }
+    
+    func testDivideFlight1() {
+        factory.rect.size.width = 1
+        factory.rect.size.height = 1
+        factory.range = (1 ... 1)
+        factory.divide()
+        XCTAssertEqual(4, factory.shots.count)
+        XCTAssertEqual(0, factory.shots.first?.options.mapRect.minX)
+        XCTAssertEqual(0, factory.shots.first?.options.mapRect.minY)
     }
 }
