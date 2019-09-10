@@ -9,6 +9,7 @@ final class Marker: MKAnnotationView {
     private weak var title: UILabel?
     private weak var off: UIImageView?
     private weak var on: UIImageView?
+    private weak var indexY: NSLayoutConstraint?
     override var reuseIdentifier: String? { "Marker" }
     
     required init?(coder: NSCoder) { return nil }
@@ -26,34 +27,14 @@ final class Marker: MKAnnotationView {
         on.alpha = 0
         self.on = on
         
-        [off, on].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.contentMode = .center
-            $0.clipsToBounds = true
-            addSubview($0)
-            
-            $0.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-            $0.bottomAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            $0.widthAnchor.constraint(equalToConstant: 36).isActive = true
-            $0.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        }
-        
-        let _index = UILabel()
-        _index.translatesAutoresizingMaskIntoConstraints = false
-        _index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .bold)
-        _index.textColor = .black
-        addSubview(_index)
-        self._index = _index
-        
-        _index.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        _index.bottomAnchor.constraint(equalTo: centerYAnchor, constant: -14.5).isActive = true
-        
         let base = UIView()
         base.isUserInteractionEnabled = false
         base.translatesAutoresizingMaskIntoConstraints = false
         base.alpha = 0
-        base.backgroundColor = UIColor(white: 0, alpha: 0.8)
-        base.layer.cornerRadius = 4
+        base.backgroundColor = .black
+        base.layer.cornerRadius = 5
+        base.layer.borderColor = UIColor(white: 0.1333, alpha: 1).cgColor
+        base.layer.borderWidth = 1
         addSubview(base)
         self.base = base
         
@@ -64,6 +45,34 @@ final class Marker: MKAnnotationView {
         base.addSubview(title)
         self.title = title
         
+        [off, on].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.contentMode = .center
+            $0.clipsToBounds = true
+            addSubview($0)
+            
+            $0.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        }
+        
+        let _index = UILabel()
+        _index.translatesAutoresizingMaskIntoConstraints = false
+        _index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .medium)
+        _index.textColor = .black
+        addSubview(_index)
+        self._index = _index
+        
+        _index.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        indexY = _index.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 0.5)
+        indexY!.isActive = true
+        
+        off.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        off.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        off.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        on.bottomAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        on.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        on.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        
         base.topAnchor.constraint(equalTo: centerYAnchor, constant: 4).isActive = true
         base.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         base.heightAnchor.constraint(equalToConstant: title.font.pointSize + 16).isActive = true
@@ -71,15 +80,20 @@ final class Marker: MKAnnotationView {
         title.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
         title.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
         title.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
+        
+        layoutIfNeeded()
     }
     
     func refresh() {
         title?.text = isSelected ? (annotation as? Mark)?.path.name ?? "" : ""
+        indexY?.constant = isSelected ? -24 : 0.5
         UIView.animate(withDuration: 0.3) { [weak self] in
+            self?._index?.textColor = self?.isSelected == true ? .halo : .black
+            self?._index?.font = self?.isSelected == true ? .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold) : .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .medium)
             self?.off?.alpha = self?.isSelected == true ? 0 : 1
             self?.on?.alpha = self?.isSelected == true ? 1 : 0
             self?.base?.alpha = self?.isSelected == true && self?.title?.text?.isEmpty == false ? 1 : 0
-            self?.base?.layoutIfNeeded()
+            self?.layoutIfNeeded()
         }
     }
 }

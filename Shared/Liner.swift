@@ -30,7 +30,7 @@ final class Liner: MKOverlayRenderer {
         context.addPath(path)
         context.drawPath(using: .stroke)
         
-        context.setLineWidth(size * 0.95)
+        context.setLineWidth(size * 0.9)
         context.setStrokeColor(color)
         context.addPath(path)
         context.drawPath(using: .stroke)
