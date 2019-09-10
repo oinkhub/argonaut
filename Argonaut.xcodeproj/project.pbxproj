@@ -713,6 +713,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = Argonaut;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_REFLECTION_METADATA_LEVEL = none;
 				SWIFT_VERSION = 5.0;
@@ -1198,7 +1199,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = argonaut.mac;
 				PRODUCT_MODULE_NAME = ArgonautMac;
 				SDKROOT = macosx;
-				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
 		};
@@ -1327,7 +1327,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = iturbide.Argonaut;
 				PRODUCT_MODULE_NAME = ArgonautiOS;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
