@@ -24,18 +24,10 @@ final class Home: UIView {
             addSubview(field)
             self.field = field
             
-            let origin = UILabel()
-            origin.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
-            origin.text = item.origin
-            
-            let destination = UILabel()
-            destination.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
-            destination.text = item.destination
-            
             let base = UIView()
             base.translatesAutoresizingMaskIntoConstraints = false
             base.isUserInteractionEnabled = false
-            base.layer.cornerRadius = 18
+            base.layer.cornerRadius = 19
             addSubview(base)
             
             let icon = UIImageView()
@@ -47,11 +39,20 @@ final class Home: UIView {
             
             let travel = UILabel()
             travel.translatesAutoresizingMaskIntoConstraints = false
-            travel.textColor = .white
-            travel.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .light)
             travel.numberOfLines = 0
             travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            travel.text = measure
+            travel.attributedText = {
+                if !item.origin.isEmpty {
+                    $0.append(.init(string: item.origin, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize + 1, weight: .light), .foregroundColor: UIColor.white]))
+                }
+                if !item.destination.isEmpty {
+                    $0.append(.init(string: "\n" + item.destination, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize + 1, weight: .light), .foregroundColor: UIColor.white]))
+                }
+                if !measure.isEmpty {
+                    $0.append(.init(string: "\n" + measure, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize - 1, weight: .light), .foregroundColor: UIColor(white: 1, alpha: 0.6)]))
+                }
+                return $0
+            } (NSMutableAttributedString())
             addSubview(travel)
             
             let navigate = UIButton()
@@ -69,16 +70,6 @@ final class Home: UIView {
             delete.accessibilityLabel = .key("Home.delete")
             delete.addTarget(self, action: #selector(remove), for: .touchUpInside)
             
-            [origin, destination].forEach {
-                $0.translatesAutoresizingMaskIntoConstraints = false
-                $0.textColor = .white
-                $0.numberOfLines = 0
-                addSubview($0)
-                
-                $0.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-                $0.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
-            }
-            
             var right = rightAnchor
             [navigate, share, delete].forEach {
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +82,7 @@ final class Home: UIView {
                 $0.widthAnchor.constraint(equalToConstant: 60).isActive = true
                 $0.rightAnchor.constraint(equalTo: right).isActive = true
                 
-                if measure.isEmpty {
+                if travel.attributedText?.string.isEmpty == true {
                     $0.centerYAnchor.constraint(equalTo: icon.centerYAnchor).isActive = true
                 } else {
                     $0.topAnchor.constraint(equalTo: travel.bottomAnchor).isActive = true
@@ -118,21 +109,18 @@ final class Home: UIView {
             field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             
-            origin.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
-            destination.topAnchor.constraint(equalTo: origin.bottomAnchor, constant: 2).isActive = true
-            
             base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-            base.topAnchor.constraint(equalTo: destination.bottomAnchor, constant: 10).isActive = true
-            base.widthAnchor.constraint(equalToConstant: 36).isActive = true
-            base.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            base.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
+            base.widthAnchor.constraint(equalToConstant: 38).isActive = true
+            base.heightAnchor.constraint(equalToConstant: 38).isActive = true
             
             icon.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
             icon.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 36).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 38).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 38).isActive = true
             
             travel.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
-            travel.leftAnchor.constraint(equalTo: base.rightAnchor, constant: 10).isActive = true
+            travel.leftAnchor.constraint(equalTo: base.rightAnchor, constant: 12).isActive = true
             travel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         }
         
@@ -282,7 +270,7 @@ final class Home: UIView {
             if top != scroll.topAnchor {
                 let border = UIView()
                 border.translatesAutoresizingMaskIntoConstraints = false
-                border.backgroundColor = .init(white: 0.1333, alpha: 1)
+                border.backgroundColor = .init(white: 1, alpha: 0.2)
                 border.isUserInteractionEnabled = false
                 scroll.content.addSubview(border)
                 
