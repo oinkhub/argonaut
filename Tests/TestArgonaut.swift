@@ -63,8 +63,8 @@ final class TestArgonaut: XCTestCase {
     func testLoad() {
         let expectA = expectation(description: "")
         let expectB = expectation(description: "")
-        factory.chunk(.init("hello world".utf8), x: 87, y: 76)
-        factory.chunk(.init("lorem ipsum dolec".utf8), x: 45, y: 12)
+        factory.chunk(.init("hello world".utf8), x: 87, y: 76, z: 1)
+        factory.chunk(.init("lorem ipsum dolec".utf8), x: 45, y: 12, z: 2)
         factory.path = [.init(), .init()]
         factory.path[0].name = "hello"
         factory.path[0].options = [.init()]
@@ -84,11 +84,11 @@ final class TestArgonaut: XCTestCase {
         XCTAssertEqual(-40, loaded.0[0].options[0].points[3].1)
         XCTAssertEqual("hello", loaded.0[0].name)
         XCTAssertEqual("adasdsadas dadskjnaslkdas sakmdasklmdas asmdkaslmdlksama sdksamdklasmklsa asdsaasd\n sdadas", loaded.0[1].name)
-        loaded.1.tile(87, 76) {
+        loaded.1.tile(87, 76, 1) {
             XCTAssertEqual("hello world", String(decoding: $0!, as: UTF8.self))
             expectA.fulfill()
         }
-        loaded.1.tile(45, 12) {
+        loaded.1.tile(45, 12, 2) {
             XCTAssertEqual("lorem ipsum dolec", String(decoding: $0!, as: UTF8.self))
             expectB.fulfill()
         }

@@ -231,6 +231,6 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     private func span() -> MKCoordinateSpan {
-        .init(latitudeDelta: app.session.settings.mode == .flying ? 10 : 0.005, longitudeDelta: app.session.settings.mode == .flying ? 10 : 0.005)
+        .init(latitudeDelta: app.session.settings.mode == .flying ? 20 : 0.005, longitudeDelta: app.session.settings.mode == .flying ? 20 : 0.005)
     }
 }

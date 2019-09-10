@@ -17,10 +17,10 @@ public final class Cart {
         input.close()
     }
     
-    public func tile(_ x: Int, _ y: Int, _ result: @escaping((Data?) -> Void)) {
+    public func tile(_ x: Int, _ y: Int, _ z: Int, _ result: @escaping((Data?) -> Void)) {
         queue.async { [weak self] in
             guard let self = self else { return }
-            result(self.map["\(x).\(y)"].map {
+            result(self.map["\(z).\(x).\(y)"].map {
                 self.input.setProperty(NSNumber(value: $0.0), forKey: .fileCurrentOffsetKey)
                 var length = $0.1
                 var data = Data()

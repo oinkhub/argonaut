@@ -47,11 +47,12 @@ public final class Argonaut {
             }
             path.append(item)
         }
-        while input.hasBytesAvailable && input.read(buffer, maxLength: 12) == 12 {
-            let info = buffer.withMemoryRebound(to: UInt32.self, capacity: 3) { $0 }
+        while input.hasBytesAvailable && input.read(buffer, maxLength: 13) == 13 {
+            let z = buffer.pointee
+            let info = buffer.advanced(by: 1).withMemoryRebound(to: UInt32.self, capacity: 3) { $0 }
             let index = (input.property(forKey: .fileCurrentOffsetKey) as! NSNumber).intValue
             input.setProperty(NSNumber(value: index + Int(info[2])), forKey: .fileCurrentOffsetKey)
-            cart.map["\(info[0]).\(info[1])"] = (index, Int(info[2]))
+            cart.map["\(z).\(info[0]).\(info[1])"] = (index, Int(info[2]))
         }
         buffer.deallocate()
         input.close()

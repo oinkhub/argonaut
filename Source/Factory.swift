@@ -5,6 +5,7 @@ public final class Factory {
         var options = MKMapSnapshotter.Options()
         var x = 0
         var y = 0
+        var z = 0
     }
     
     public var error: ((Error) -> Void)!
@@ -39,9 +40,9 @@ public final class Factory {
     public func filter() {
         path.forEach { $0.options.removeAll { $0.mode != mode } }
         if mode == .flying {
-            range = (2 ... 9)
+            range = (0 ... 3)
         } else {
-            range = (9 ... 18)
+            range = (11 ... 18)
         }
     }
     
@@ -59,17 +60,20 @@ public final class Factory {
     }
     
     public func divide() {
-        range.forEach {
-            let proportion = MKMapRect.world.width / pow(2, Double($0))
+        range.forEach { z in
+            let proportion = MKMapRect.world.width / pow(2, Double(z))
             (Int(rect.minX / proportion) ..< Int(ceil(rect.maxX / proportion))).forEach { x in
                 (Int(rect.minY / proportion) ..< Int(ceil(rect.maxY / proportion))).forEach { y in
+                    
                     var shot = Shot()
                     shot.x = x
                     shot.y = y
+                    shot.z = z
                     shot.options.dark()
                     shot.options.mapType = .standard
                     shot.options.size = .init(width: Argonaut.tile, height: Argonaut.tile)
                     shot.options.mapRect = .init(x: Double(x) * proportion, y: Double(y) * proportion, width: proportion, height: proportion)
+                    print("x: \(x), y: \(y), z: \(z) p: \(proportion) \(shot.options.mapRect.minX), \(shot.options.mapRect.minY)")
                     shots.append(shot)
                 }
             }
@@ -106,7 +110,7 @@ public final class Factory {
                     } else if let result = $0 {
                         self.shots.removeLast()
                         self.shoot()
-                        self.chunk(result.data, x: shot.x, y: shot.y)
+                        self.chunk(result.data, x: shot.x, y: shot.y, z: shot.z)
                         if self.shots.isEmpty {
                             self.out.close()
                             Argonaut.save(self)
@@ -125,8 +129,9 @@ public final class Factory {
         }
     }
     
-    func chunk(_ bits: Data, x: Int, y: Int) {
+    func chunk(_ bits: Data, x: Int, y: Int, z: Int) {
         let chunk = Argonaut.code(bits)
+        _ = withUnsafeBytes(of: UInt8(z)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
         _ = [UInt32(x), UInt32(y), UInt32(chunk.count)].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 12) }
         _ = chunk.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
     }

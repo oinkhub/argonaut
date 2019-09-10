@@ -18,16 +18,16 @@ final class TestCart: XCTestCase {
     func testTiles() {
         let expectA = expectation(description: "")
         let expectB = expectation(description: "")
-        factory.chunk(.init("hello world".utf8), x: 87, y: 76)
-        factory.chunk(.init("lorem ipsum".utf8), x: 45, y: 12)
+        factory.chunk(.init("hello world".utf8), x: 87, y: 76, z: 1)
+        factory.chunk(.init("lorem ipsum".utf8), x: 45, y: 12, z: 2)
         factory.item.id = "abc"
         Argonaut.save(factory)
         cart = Argonaut.load("abc").1
-        cart.tile(87, 76) {
+        cart.tile(87, 76, 1) {
             XCTAssertEqual("hello world", String(decoding: $0!, as: UTF8.self))
             expectA.fulfill()
         }
-        cart.tile(45, 12) {
+        cart.tile(45, 12, 2) {
             XCTAssertEqual("lorem ipsum", String(decoding: $0!, as: UTF8.self))
             expectB.fulfill()
         }
@@ -43,11 +43,11 @@ final class TestCart: XCTestCase {
     
     func testNil() {
         let expect = expectation(description: "")
-        factory.chunk(.init("hello world".utf8), x: 160, y: 280)
+        factory.chunk(.init("hello world".utf8), x: 160, y: 280, z: 1)
         factory.item.id = "abc"
         Argonaut.save(factory)
         cart = Argonaut.load("abc").1
-        cart.tile(320, 560) {
+        cart.tile(320, 560, 0) {
             XCTAssertNil($0)
             expect.fulfill()
         }

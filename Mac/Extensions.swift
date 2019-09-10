@@ -4,12 +4,14 @@ extension NSColor {
     static let halo = #colorLiteral(red: 0.231372549, green: 0.7215686275, blue: 1, alpha: 1)
     static let walking = #colorLiteral(red: 0.802871919, green: 0.7154764525, blue: 1, alpha: 1)
     static let driving = #colorLiteral(red: 0, green: 0.8377037809, blue: 0.7416605177, alpha: 1)
+    static let flying = #colorLiteral(red: 1, green: 0.3775033011, blue: 0.2141560299, alpha: 1)
 }
 
 extension CGColor {
     static let halo = NSColor.halo.cgColor
     static let walking = NSColor.walking.cgColor
     static let driving = NSColor.driving.cgColor
+    static let flying = NSColor.flying.cgColor
 }
 
 final class Label: NSTextField {

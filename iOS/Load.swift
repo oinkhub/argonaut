@@ -12,6 +12,7 @@ final class Load: UIView {
                     view?.alpha = 0
                 }) { _ in
                     view?.removeFromSuperview()
+                    app.session.settings.mode = item.mode
                     app.push(Navigate(item, project: project))
                 }
             }
