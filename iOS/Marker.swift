@@ -17,6 +17,7 @@ final class Marker: MKAnnotationView {
         isDraggable = drag
         canShowCallout = false
         frame = .init(x: 0, y: 0, width: 50, height: 50)
+        isHidden = !app.session.settings.pins
         
         let off = UIImageView(image: UIImage(named: "markOff"))
         self.off = off

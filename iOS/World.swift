@@ -159,6 +159,7 @@ class World: UIView, CLLocationManagerDelegate {
         let settings = Settings(style)
         settings.delegate = { [weak self] in
             self?.map.filter()
+            self?.map.remark()
             self?.list.refresh()
         }
         settings.map = map

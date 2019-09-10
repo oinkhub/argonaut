@@ -132,6 +132,10 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
     }
     
+    func remark() {
+        annotations.filter { $0 is Mark }.forEach { view(for: $0)?.isHidden = !app.session.settings.pins }
+    }
+    
     func filter() {
         removeOverlays(overlays.filter { $0 is Line })
         if app.session.settings.directions {
