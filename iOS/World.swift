@@ -23,7 +23,7 @@ class World: UIView, CLLocationManagerDelegate {
         manager.startUpdatingHeading()
         
         let map = Map()
-        map.refresh = { [weak self] in self?.list.refresh() }
+        map.refresh = { [weak self] in self?.refresh() }
         map.user = { [weak self] in self?.list.user($0) }
         map.setUserTrackingMode(.followWithHeading, animated: true)
         addSubview(map)
@@ -115,11 +115,11 @@ class World: UIView, CLLocationManagerDelegate {
         }
     }
     
-    func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool { true }
-    func locationManager(_: CLLocationManager, didFailWithError: Error) { }
-    func locationManager(_: CLLocationManager, didFinishDeferredUpdatesWithError: Error?) { }
-    func locationManager(_: CLLocationManager, didUpdateLocations: [CLLocation]) { }
-    func locationManager(_: CLLocationManager, didChangeAuthorization: CLAuthorizationStatus) {
+    final func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool { true }
+    final func locationManager(_: CLLocationManager, didFailWithError: Error) { }
+    final func locationManager(_: CLLocationManager, didFinishDeferredUpdatesWithError: Error?) { }
+    final func locationManager(_: CLLocationManager, didUpdateLocations: [CLLocation]) { }
+    final func locationManager(_: CLLocationManager, didChangeAuthorization: CLAuthorizationStatus) {
         switch didChangeAuthorization {
             case .denied: app.alert(.key("Error"), message: .key("Error.location"))
             case .notDetermined: manager.requestWhenInUseAuthorization()
@@ -127,30 +127,37 @@ class World: UIView, CLLocationManagerDelegate {
         }
     }
     
-    func locationManager(_: CLLocationManager, didUpdateHeading: CLHeading) {
+    final func locationManager(_: CLLocationManager, didUpdateHeading: CLHeading) {
         guard didUpdateHeading.headingAccuracy >= 0, didUpdateHeading.trueHeading >= 0, let user = map.annotations.first(where: { $0 === map.userLocation }), let view = map.view(for: user) as? User else { return }
         UIView.animate(withDuration: 0.5) {
             view.heading?.transform = .init(rotationAngle: .init(didUpdateHeading.trueHeading) * .pi / 180)
         }
     }
     
-    @objc private func up() {
-        list.top.constant = -list.frame.height
-        UIView.animate(withDuration: 0.6, animations: { [weak self] in
-            self?.layoutIfNeeded()
-        }) { [weak self] _ in
-            self?._up.isHidden = true
-            self?._down.isHidden = false
-        }
-    }
-    
-    @objc private func down() {
+    @objc final func down() {
         list.top.constant = 0
         UIView.animate(withDuration: 0.6, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?._up.isHidden = false
             self?._down.isHidden = true
+        }
+    }
+    
+    private func refresh() {
+        list.refresh()
+        if !map.path.isEmpty && list.top.constant == -40 || map.path.isEmpty && list.top.constant == -list.frame.height {
+            up()
+        }
+    }
+    
+    @objc private func up() {
+        list.top.constant = map.path.isEmpty ? -40 : -list.frame.height
+        UIView.animate(withDuration: 0.6, animations: { [weak self] in
+            self?.layoutIfNeeded()
+        }) { [weak self] _ in
+            self?._up.isHidden = true
+            self?._down.isHidden = false
         }
     }
     

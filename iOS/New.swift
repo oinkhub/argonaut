@@ -137,6 +137,9 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?.query()
+            if self?._up.isHidden == true {
+                self?.down()
+            }
         }
     }
     

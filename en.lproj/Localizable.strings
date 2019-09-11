@@ -36,7 +36,6 @@ Create.cancel="Cancel";
 Create.title="Creating map\n";
 Create.info="\nThis process is done only once but might take a few minutes, please wait. Argo apologises for any inconvenience.";
 Navigate.title="Map";
-List.empty="No pins added";
 List.delete="Delete";
 List.distance=" metres";
 List.warning="Delete this map?";

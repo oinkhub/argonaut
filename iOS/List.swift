@@ -87,7 +87,6 @@ final class List: UIView {
     weak var map: Map!
     var deletable = true
     private weak var scroll: Scroll!
-    private weak var empty: UILabel!
     private weak var header: UIView!
     private weak var icon: UIImageView!
     private weak var total: UILabel!
@@ -138,23 +137,12 @@ final class List: UIView {
         header.addSubview(total)
         self.total = total
         
-        let empty = UILabel()
-        empty.translatesAutoresizingMaskIntoConstraints = false
-        empty.textColor = .white
-        empty.text = .key("List.empty")
-        empty.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
-        addSubview(empty)
-        self.empty = empty
-        
         heightAnchor.constraint(equalToConstant: 300).isActive = true
         
         scroll.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 1).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
-        empty.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        empty.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         header.topAnchor.constraint(equalTo: topAnchor).isActive = true
         header.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -176,7 +164,6 @@ final class List: UIView {
     func refresh() {
         scroll.alpha = 0
         scroll.clear()
-        empty.isHidden = !map.path.isEmpty
         var distance = 0.0
         var duration = 0.0
         var previous: Item?
