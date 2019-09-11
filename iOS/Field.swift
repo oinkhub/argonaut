@@ -115,8 +115,8 @@ class Field: UITextView {
         required init?(coder: NSCoder) { return nil }
         override init() {
             super.init()
-            textContainerInset = .init(top: 22, left: 15, bottom: 15, right: 15)
-            heightAnchor.constraint(greaterThanOrEqualToConstant: 59).isActive = true
+            textContainerInset = .init(top: 18, left: 5, bottom: 18, right: 15)
+            heightAnchor.constraint(greaterThanOrEqualToConstant: 58).isActive = true
             accessibilityLabel = .key("Field.name")
             font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize, weight: .bold)
         }

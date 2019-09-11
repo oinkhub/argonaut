@@ -21,13 +21,14 @@ final class Home: UIView {
             let field = Field.Name()
             field.text = item.title.isEmpty ? .key("List.field") : item.title
             field.delegate = self
+            field.isUserInteractionEnabled = false
             addSubview(field)
             self.field = field
             
             let base = UIView()
             base.translatesAutoresizingMaskIntoConstraints = false
             base.isUserInteractionEnabled = false
-            base.layer.cornerRadius = 19
+            base.layer.cornerRadius = 4
             addSubview(base)
             
             let icon = UIImageView()
@@ -53,7 +54,7 @@ final class Home: UIView {
                 }
                 return $0
             } (NSMutableAttributedString())
-            addSubview(travel)
+            insertSubview(travel, belowSubview: field)
             
             let navigate = UIButton()
             navigate.setImage(UIImage(named: "navigate"), for: .normal)
@@ -83,7 +84,7 @@ final class Home: UIView {
                 $0.rightAnchor.constraint(equalTo: right).isActive = true
                 
                 if travel.attributedText?.string.isEmpty == true {
-                    $0.centerYAnchor.constraint(equalTo: icon.centerYAnchor).isActive = true
+                    $0.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
                 } else {
                     $0.topAnchor.constraint(equalTo: travel.bottomAnchor).isActive = true
                 }
@@ -106,21 +107,21 @@ final class Home: UIView {
             bottomAnchor.constraint(greaterThanOrEqualTo: navigate.bottomAnchor).isActive = true
             
             field.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            field.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            field.leftAnchor.constraint(equalTo: base.rightAnchor).isActive = true
             field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             
-            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-            base.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
-            base.widthAnchor.constraint(equalToConstant: 38).isActive = true
-            base.heightAnchor.constraint(equalToConstant: 38).isActive = true
+            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+            base.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+            base.widthAnchor.constraint(equalToConstant: 26).isActive = true
+            base.heightAnchor.constraint(equalToConstant: 26).isActive = true
             
             icon.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
             icon.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 38).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 38).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
+            icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
             
-            travel.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
-            travel.leftAnchor.constraint(equalTo: base.rightAnchor, constant: 12).isActive = true
+            travel.topAnchor.constraint(equalTo: field.bottomAnchor, constant: -15).isActive = true
+            travel.leftAnchor.constraint(equalTo: field.leftAnchor, constant: 12).isActive = true
             travel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         }
         
@@ -194,7 +195,7 @@ final class Home: UIView {
         let border = UIView()
         border.translatesAutoresizingMaskIntoConstraints = false
         border.isUserInteractionEnabled = false
-        border.backgroundColor = .halo
+        border.backgroundColor = .init(white: 0.1333, alpha: 1)
         addSubview(border)
         
         let info = UIButton()
@@ -231,12 +232,12 @@ final class Home: UIView {
         
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        let bottom = scroll.bottomAnchor.constraint(equalTo: border.topAnchor, constant: -1)
+        let bottom = scroll.bottomAnchor.constraint(equalTo: border.topAnchor)
         bottom.isActive = true
         
         border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        border.heightAnchor.constraint(equalToConstant: 3).isActive = true
         
         new.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
@@ -270,13 +271,13 @@ final class Home: UIView {
             if top != scroll.topAnchor {
                 let border = UIView()
                 border.translatesAutoresizingMaskIntoConstraints = false
-                border.backgroundColor = .init(white: 1, alpha: 0.2)
+                border.backgroundColor = UIColor.halo.withAlphaComponent(0.3)
                 border.isUserInteractionEnabled = false
                 scroll.content.addSubview(border)
                 
                 border.topAnchor.constraint(equalTo: top).isActive = true
-                border.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 20).isActive = true
-                border.rightAnchor.constraint(equalTo: scroll.content.rightAnchor, constant: -20).isActive = true
+                border.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 48).isActive = true
+                border.rightAnchor.constraint(equalTo: scroll.content.rightAnchor).isActive = true
                 border.heightAnchor.constraint(equalToConstant: 1).isActive = true
                 top = border.bottomAnchor
             }

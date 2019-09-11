@@ -49,8 +49,8 @@ final class Create: UIView {
         label.numberOfLines = 0
         label.attributedText = {
             $0.append(.init(string: .key("Create.title"), attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title1).pointSize, weight: .bold), .foregroundColor: UIColor.halo]))
-            $0.append(.init(string: (path.first?.name ?? "") + "\n", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .medium), .foregroundColor: UIColor.white]))
-            $0.append(.init(string: (path.last?.name ?? "") + "\n", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .light), .foregroundColor: UIColor.white]))
+            $0.append(.init(string: (path.first?.name ?? "") + "\n", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium), .foregroundColor: UIColor.white]))
+            $0.append(.init(string: (path.last?.name ?? "") + "\n", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light), .foregroundColor: UIColor.white]))
             $0.append(.init(string: .key("Create.info"), attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .light), .foregroundColor: UIColor.init(white: 0.6, alpha: 1)]))
             return $0
         } (NSMutableAttributedString())
