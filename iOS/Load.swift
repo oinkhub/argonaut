@@ -8,7 +8,7 @@ final class Load: UIView {
         modal {
             let project = Argonaut.load(item.id)
             DispatchQueue.main.async {
-                UIView.animate(withDuration: 0.3, animations: {
+                UIView.animate(withDuration: 0.2, animations: {
                     view?.alpha = 0
                 }) { _ in
                     view?.removeFromSuperview()
@@ -22,7 +22,7 @@ final class Load: UIView {
     class func share(_ item: Session.Item) {
         modal {
             Argonaut.share(item) { url in
-                UIView.animate(withDuration: 0.3, animations: {
+                UIView.animate(withDuration: 0.2, animations: {
                     view?.alpha = 0
                 }) { _ in
                     view?.removeFromSuperview()
@@ -45,9 +45,9 @@ final class Load: UIView {
         view.leftAnchor.constraint(equalTo: app.view.leftAnchor).isActive = true
         view.rightAnchor.constraint(equalTo: app.view.rightAnchor).isActive = true
         
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: 0.15, animations: {
             view.alpha = 1
-        }) { _ in /*perform()*/ }
+        }) { _ in DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { perform() } }
     }
     
     required init?(coder: NSCoder) { return nil }

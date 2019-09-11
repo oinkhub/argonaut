@@ -4,19 +4,29 @@ import UIKit
 final class Project: UIControl, UITextViewDelegate {
     private weak var item: Session.Item!
     private weak var field: Field.Name!
-    private let dater = DateComponentsFormatter()
+    private weak var rename: UIView!
+    private weak var base: UIView!
+    private weak var left: NSLayoutConstraint!
     
     required init?(coder: NSCoder) { return nil }
     init(_ item: Session.Item, measure: String) {
         self.item = item
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
+        accessibilityTraits = .button
         isAccessibilityElement = true
         accessibilityLabel = item.title
+        clipsToBounds = true
         addTarget(self, action: #selector(navigate), for: .touchUpInside)
-
-        dater.unitsStyle = .full
-        dater.allowedUnits = [.minute, .hour]
+        
+        let rename = UIView()
+        rename.translatesAutoresizingMaskIntoConstraints = false
+        rename.backgroundColor = UIColor.halo.withAlphaComponent(0.3)
+        rename.layer.cornerRadius = 4
+        rename.isUserInteractionEnabled = false
+        rename.isHidden = true
+        addSubview(rename)
+        self.rename = rename
         
         let field = Field.Name()
         field.text = item.title.isEmpty ? .key("List.field") : item.title
@@ -30,6 +40,7 @@ final class Project: UIControl, UITextViewDelegate {
         base.isUserInteractionEnabled = false
         base.layer.cornerRadius = 4
         addSubview(base)
+        self.base = base
         
         let icon = UIImageView()
         icon.translatesAutoresizingMaskIntoConstraints = false
@@ -56,12 +67,6 @@ final class Project: UIControl, UITextViewDelegate {
         } (NSMutableAttributedString())
         insertSubview(travel, belowSubview: field)
         
-        /*
-        let navigate = UIButton()
-        navigate.setImage(UIImage(named: "navigate"), for: .normal)
-        navigate.accessibilityLabel = .key("List.view")
-        navigate.addTarget(self, action: #selector(self.navigate), for: .touchUpInside)
-        
         let share = UIButton()
         share.setImage(UIImage(named: "share"), for: .normal)
         share.accessibilityLabel = .key("Home.share")
@@ -72,8 +77,7 @@ final class Project: UIControl, UITextViewDelegate {
         delete.accessibilityLabel = .key("Home.delete")
         delete.addTarget(self, action: #selector(remove), for: .touchUpInside)
         
-        var right = rightAnchor
-        [navigate, share, delete].forEach {
+        [share, delete].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.imageView!.clipsToBounds = true
             $0.imageView!.contentMode = .center
@@ -82,17 +86,9 @@ final class Project: UIControl, UITextViewDelegate {
             
             $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
             $0.widthAnchor.constraint(equalToConstant: 60).isActive = true
-            $0.rightAnchor.constraint(equalTo: right).isActive = true
-            
-            if travel.attributedText?.string.isEmpty == true {
-                $0.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
-            } else {
-                $0.topAnchor.constraint(equalTo: travel.bottomAnchor).isActive = true
-            }
-            
-            right = $0.leftAnchor
+            $0.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         }
-        */
+        
         switch item.mode {
         case .walking:
             base.backgroundColor = .walking
@@ -105,15 +101,20 @@ final class Project: UIControl, UITextViewDelegate {
             icon.image = UIImage(named: "flying")!.withRenderingMode(.alwaysTemplate)
         }
         
-        if travel.attributedText?.string.isEmpty == true {
+        if travel.attributedText!.string.isEmpty {
             bottomAnchor.constraint(equalTo: field.bottomAnchor, constant: 2).isActive = true
         } else {
             bottomAnchor.constraint(equalTo: travel.bottomAnchor, constant: 16).isActive = true
         }
         
+        rename.topAnchor.constraint(equalTo: field.topAnchor, constant: 16).isActive = true
+        rename.bottomAnchor.constraint(equalTo: field.bottomAnchor, constant: -16).isActive = true
+        rename.leftAnchor.constraint(equalTo: field.leftAnchor).isActive = true
+        rename.rightAnchor.constraint(equalTo: field.rightAnchor, constant: -10).isActive = true
+        
         field.topAnchor.constraint(equalTo: topAnchor).isActive = true
         field.leftAnchor.constraint(equalTo: base.rightAnchor).isActive = true
-        field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        field.rightAnchor.constraint(equalTo: delete.leftAnchor).isActive = true
         
         base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
         base.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
@@ -128,6 +129,11 @@ final class Project: UIControl, UITextViewDelegate {
         travel.topAnchor.constraint(equalTo: field.bottomAnchor, constant: -15).isActive = true
         travel.leftAnchor.constraint(equalTo: field.leftAnchor, constant: 12).isActive = true
         travel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
+        
+        left = delete.leftAnchor.constraint(equalTo: rightAnchor)
+        left.isActive = true
+        
+        share.leftAnchor.constraint(equalTo: delete.rightAnchor).isActive = true
     }
     
     func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
@@ -149,9 +155,25 @@ final class Project: UIControl, UITextViewDelegate {
         app.session.save()
     }
     
-    @objc private func navigate() { Load.navigate(item) }
+    func edit() {
+        field.isUserInteractionEnabled = true
+        left.constant = -120
+        rename.isHidden = false
+        base.isHidden = true
+    }
     
+    func done() {
+        field.isUserInteractionEnabled = false
+        left.constant = 0
+        rename.isHidden = true
+        base.isHidden = false
+    }
     
+    @objc private func navigate() {
+        if !app.home._edit.isSelected {
+            Load.navigate(item)
+        }
+    }
     
     @objc private func share() { Load.share(item) }
     
