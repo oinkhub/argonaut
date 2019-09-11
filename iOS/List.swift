@@ -4,8 +4,6 @@ import CoreLocation
 
 final class List: UIView {
     private final class Item: UIControl {
-        override var isHighlighted: Bool { didSet { hover() } }
-        override var isSelected: Bool { didSet { hover() } }
         private(set) weak var delete: UIButton?
         private(set) weak var path: Path!
         private(set) weak var distance: UILabel!
@@ -17,6 +15,8 @@ final class List: UIView {
             isAccessibilityElement = true
             accessibilityTraits = .button
             accessibilityLabel = item.1.name
+            addTarget(self, action: #selector(down), for: .touchDown)
+            addTarget(self, action: #selector(up), for: [.touchUpInside, .touchUpOutside, .touchCancel])
             path = item.1
             
             let name = UILabel()
@@ -36,8 +36,8 @@ final class List: UIView {
             
             let distance = UILabel()
             distance.translatesAutoresizingMaskIntoConstraints = false
-            distance.textColor = .init(white: 1, alpha: 0.6)
-            distance.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
+            distance.textColor = .init(white: 1, alpha: 0.8)
+            distance.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .light)
             addSubview(distance)
             self.distance = distance
             
@@ -69,7 +69,7 @@ final class List: UIView {
             
             bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 30).isActive = true
             
-            name.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
+            name.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             name.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
             name.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
             
@@ -80,7 +80,8 @@ final class List: UIView {
             distance.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
         }
         
-        private func hover() { alpha = isHighlighted || isSelected ? 0.2 : 1 }
+        @objc private func down() { backgroundColor = UIColor.halo.withAlphaComponent(0.5) }
+        @objc private func up() { UIView.animate(withDuration: 0.3) { [weak self] in self?.backgroundColor = .clear } }
     }
     
     weak var top: NSLayoutConstraint!
@@ -182,26 +183,25 @@ final class List: UIView {
                 base.translatesAutoresizingMaskIntoConstraints = false
                 base.isUserInteractionEnabled = false
                 base.backgroundColor = .init(white: 0.1333, alpha: 1)
-                base.layer.cornerRadius = 4
                 scroll.content.addSubview(base)
                 
                 let travel = UILabel()
                 travel.translatesAutoresizingMaskIntoConstraints = false
-                travel.textColor = .init(white: 1, alpha: 0.8)
-                travel.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .light)
+                travel.textColor = .white
+                travel.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .regular)
                 travel.numberOfLines = 0
                 travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
                 travel.text = measure(option.distance, option.duration)
                 base.addSubview(travel)
                 
-                base.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 16).isActive = true
-                base.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -32).isActive = true
+                base.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
+                base.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
                 base.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
                 base.bottomAnchor.constraint(equalTo: travel.bottomAnchor, constant: 10).isActive = true
                 
                 travel.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
-                travel.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 12).isActive = true
-                travel.rightAnchor.constraint(lessThanOrEqualTo: base.rightAnchor, constant: -12).isActive = true
+                travel.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 20).isActive = true
+                travel.rightAnchor.constraint(lessThanOrEqualTo: base.rightAnchor, constant: -20).isActive = true
                 
                 item.topAnchor.constraint(equalTo: base.bottomAnchor).isActive = true
             } else {

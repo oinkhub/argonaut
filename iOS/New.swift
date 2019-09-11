@@ -4,8 +4,6 @@ import MapKit
 final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     @available(iOS 9.3, *) private final class Result: UIControl {
         let search: MKLocalSearchCompletion
-        override var isHighlighted: Bool { didSet { hover() } }
-        override var isSelected: Bool { didSet { hover() } }
         
         required init?(coder: NSCoder) { return nil }
         init(_ search: MKLocalSearchCompletion) {
@@ -16,6 +14,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             accessibilityTraits = .button
             accessibilityLabel = search.title
             clipsToBounds = true
+            addTarget(self, action: #selector(down), for: .touchDown)
+            addTarget(self, action: #selector(up), for: [.touchUpOutside, .touchCancel])
             
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -26,8 +26,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                         string.addAttribute(.foregroundColor, value: UIColor.halo, range: $0 as! NSRange)
                     }
                     return string
-                } (NSMutableAttributedString(string: search.title + (search.subtitle.isEmpty ? "" : "\n"), attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .medium), .foregroundColor: UIColor.white])))
-                $0.append(.init(string: search.subtitle, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light), .foregroundColor: UIColor(white: 1, alpha: 0.7)]))
+                } (NSMutableAttributedString(string: search.title + (search.subtitle.isEmpty ? "" : "\n"), attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold), .foregroundColor: UIColor.white])))
+                $0.append(.init(string: search.subtitle, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .light), .foregroundColor: UIColor(white: 1, alpha: 0.85)]))
                 return $0
             } (NSMutableAttributedString())
             addSubview(label)
@@ -40,7 +40,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             label.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
         }
         
-        private func hover() { alpha = isHighlighted || isSelected ? 0.3 : 1 }
+        @objc private func down() { backgroundColor = UIColor.halo.withAlphaComponent(0.7) }
+        @objc private func up() { backgroundColor = .clear }
     }
 
     private weak var field: Field.Search!
@@ -147,15 +148,14 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         if #available(iOS 9.3, *) {
             (completer as! MKLocalSearchCompleter).cancel()
         }
-        results.clear()
         field.width.constant = 160
         resultsHeight.constant = 0
-        UIView.animate(withDuration: 0.45) { [weak self] in
+        UIView.animate(withDuration: 0.6, animations: { [weak self] in
             self?.field._cancel.alpha = 0
             self?._close.alpha = 1
             self?._save.alpha = 1
             self?.layoutIfNeeded()
-        }
+        }) { [weak self] _ in self?.results.clear() }
     }
     
     @available(iOS 9.3, *) func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
@@ -171,12 +171,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                 let border = UIView()
                 border.translatesAutoresizingMaskIntoConstraints = false
                 border.isUserInteractionEnabled = false
-                border.backgroundColor = .init(white: 1, alpha: 0.2)
+                border.backgroundColor = .init(white: 1, alpha: 0.3)
                 results.content.addSubview(border)
                 
                 border.topAnchor.constraint(equalTo: top).isActive = true
-                border.leftAnchor.constraint(equalTo: result.leftAnchor, constant: 15).isActive = true
-                border.rightAnchor.constraint(equalTo: result.rightAnchor, constant: -15).isActive = true
+                border.leftAnchor.constraint(equalTo: result.leftAnchor, constant: 20).isActive = true
+                border.rightAnchor.constraint(equalTo: result.rightAnchor, constant: -20).isActive = true
                 border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             }
             
@@ -185,15 +185,19 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             result.topAnchor.constraint(equalTo: top).isActive = true
             top = result.bottomAnchor
         }
+        var animation = 0.4
         if top == results.topAnchor {
             resultsHeight.constant = 0
         } else {
+            if resultsHeight.constant != 0 {
+                animation = 0.1
+            }
             resultsHeight.constant = results.bounds.height
             results.layoutIfNeeded()
             resultsHeight.constant = 220
             results.content.bottomAnchor.constraint(equalTo: top).isActive = true
         }
-        UIView.animate(withDuration: 0.4) { [weak self] in self?.layoutIfNeeded() }
+        UIView.animate(withDuration: animation) { [weak self] in self?.layoutIfNeeded() }
     }
     
     private func query() {

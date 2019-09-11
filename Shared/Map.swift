@@ -152,10 +152,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         setRegion(region, animated: true)
     }
     
-    @objc func pin() {
-        guard !geocoder.isGeocoding else { return }
-        locate(add(centerCoordinate))
-    }
+    @objc func pin() { locate(add(centerCoordinate)) }
     
     @objc func me() {
         if annotations.contains(where: { $0 === userLocation }) {
