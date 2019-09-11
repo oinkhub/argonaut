@@ -2,165 +2,14 @@ import Argonaut
 import UIKit
 
 final class Home: UIView {
-    private final class Item: UIView, UITextViewDelegate {
-        private weak var item: Session.Item!
-        private weak var field: Field.Name!
-        private let dater = DateComponentsFormatter()
-        
-        required init?(coder: NSCoder) { return nil }
-        init(_ item: Session.Item, measure: String) {
-            self.item = item
-            super.init(frame: .zero)
-            translatesAutoresizingMaskIntoConstraints = false
-            isAccessibilityElement = true
-            accessibilityLabel = item.title
-
-            dater.unitsStyle = .full
-            dater.allowedUnits = [.minute, .hour]
-            
-            let field = Field.Name()
-            field.text = item.title.isEmpty ? .key("List.field") : item.title
-            field.delegate = self
-            field.isUserInteractionEnabled = false
-            addSubview(field)
-            self.field = field
-            
-            let base = UIView()
-            base.translatesAutoresizingMaskIntoConstraints = false
-            base.isUserInteractionEnabled = false
-            base.layer.cornerRadius = 4
-            addSubview(base)
-            
-            let icon = UIImageView()
-            icon.translatesAutoresizingMaskIntoConstraints = false
-            icon.clipsToBounds = true
-            icon.contentMode = .center
-            icon.tintColor = .black
-            base.addSubview(icon)
-            
-            let travel = UILabel()
-            travel.translatesAutoresizingMaskIntoConstraints = false
-            travel.numberOfLines = 0
-            travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            travel.attributedText = {
-                if !item.origin.isEmpty {
-                    $0.append(.init(string: item.origin, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize + 1, weight: .light), .foregroundColor: UIColor.white]))
-                }
-                if !item.destination.isEmpty {
-                    $0.append(.init(string: "\n" + item.destination, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize + 1, weight: .light), .foregroundColor: UIColor.white]))
-                }
-                if !measure.isEmpty {
-                    $0.append(.init(string: "\n" + measure, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize - 1, weight: .light), .foregroundColor: UIColor(white: 1, alpha: 0.6)]))
-                }
-                return $0
-            } (NSMutableAttributedString())
-            insertSubview(travel, belowSubview: field)
-            
-            let navigate = UIButton()
-            navigate.setImage(UIImage(named: "navigate"), for: .normal)
-            navigate.accessibilityLabel = .key("List.view")
-            navigate.addTarget(self, action: #selector(self.navigate), for: .touchUpInside)
-            
-            let share = UIButton()
-            share.setImage(UIImage(named: "share"), for: .normal)
-            share.accessibilityLabel = .key("Home.share")
-            share.addTarget(self, action: #selector(self.share), for: .touchUpInside)
-            
-            let delete = UIButton()
-            delete.setImage(UIImage(named: "delete"), for: .normal)
-            delete.accessibilityLabel = .key("Home.delete")
-            delete.addTarget(self, action: #selector(remove), for: .touchUpInside)
-            
-            var right = rightAnchor
-            [navigate, share, delete].forEach {
-                $0.translatesAutoresizingMaskIntoConstraints = false
-                $0.imageView!.clipsToBounds = true
-                $0.imageView!.contentMode = .center
-                $0.isAccessibilityElement = true
-                addSubview($0)
-                
-                $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
-                $0.widthAnchor.constraint(equalToConstant: 60).isActive = true
-                $0.rightAnchor.constraint(equalTo: right).isActive = true
-                
-                if travel.attributedText?.string.isEmpty == true {
-                    $0.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
-                } else {
-                    $0.topAnchor.constraint(equalTo: travel.bottomAnchor).isActive = true
-                }
-                
-                right = $0.leftAnchor
-            }
-            
-            switch item.mode {
-            case .walking:
-                base.backgroundColor = .walking
-                icon.image = UIImage(named: "walking")!.withRenderingMode(.alwaysTemplate)
-            case .driving:
-                base.backgroundColor = .driving
-                icon.image = UIImage(named: "driving")!.withRenderingMode(.alwaysTemplate)
-            case .flying:
-                base.backgroundColor = .flying
-                icon.image = UIImage(named: "flying")!.withRenderingMode(.alwaysTemplate)
-            }
-            
-            bottomAnchor.constraint(greaterThanOrEqualTo: navigate.bottomAnchor).isActive = true
-            
-            field.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            field.leftAnchor.constraint(equalTo: base.rightAnchor).isActive = true
-            field.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            
-            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-            base.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
-            base.widthAnchor.constraint(equalToConstant: 26).isActive = true
-            base.heightAnchor.constraint(equalToConstant: 26).isActive = true
-            
-            icon.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
-            icon.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
-            
-            travel.topAnchor.constraint(equalTo: field.bottomAnchor, constant: -15).isActive = true
-            travel.leftAnchor.constraint(equalTo: field.leftAnchor, constant: 12).isActive = true
-            travel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
-        }
-        
-        func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
-            if replacementText == "\n" {
-                app.window!.endEditing(true)
-                return false
-            }
-            return true
-        }
-        
-        func textViewDidBeginEditing(_: UITextView) {
-            UIView.animate(withDuration: 0.6) {
-                app.home.scroll.contentOffset.y = app.home.scroll.convert(.init(x: 0, y: self.field.frame.minY), from: self).y
-            }
-        }
-        
-        func textViewDidEndEditing(_: UITextView) {
-            item.title = field.text
-            app.session.save()
-        }
-        
-        @objc private func navigate() { Load.navigate(item) }
-        @objc private func share() { Load.share(item) }
-        
-        @objc private func remove() {
-            let alert = UIAlertController(title: .key("Home.deleteTitle") + (item.title.isEmpty ? .key("Home.deleteUnanmed") : item.title), message: nil, preferredStyle: .actionSheet)
-            alert.addAction(.init(title: .key("Home.deleteConfirm"), style: .destructive) { [weak self] _ in
-                if let item = self?.item { app.delete(item) }
-            })
-            alert.addAction(.init(title: .key("Home.deleteCancel"), style: .cancel))
-            alert.popoverPresentationController?.sourceView = self
-            alert.popoverPresentationController?.sourceRect = .init(x: frame.midX, y: frame.maxY, width: 1, height: 1)
-            app.present(alert, animated: true)
-        }
-    }
-    
     private(set) weak var scroll: Scroll!
     private weak var empty: UILabel!
+    private weak var screenTop: UIView!
+    private weak var screenBottom: UIView!
+    private weak var borderTop: UIView!
+    private weak var borderBottom: UIView!
+    private weak var screenTopBottom: NSLayoutConstraint!
+    private weak var screenBottomTop: NSLayoutConstraint!
     private var formatter: Any!
     private let dater = DateComponentsFormatter()
     
@@ -192,11 +41,11 @@ final class Home: UIView {
         addSubview(scroll)
         self.scroll = scroll
         
-        let border = UIView()
-        border.translatesAutoresizingMaskIntoConstraints = false
-        border.isUserInteractionEnabled = false
-        border.backgroundColor = .init(white: 0.1333, alpha: 1)
-        addSubview(border)
+        let borderBottom = UIView()
+        self.borderBottom = borderBottom
+        
+        let borderTop = UIView()
+        self.borderTop = borderTop
         
         let info = UIButton()
         info.isAccessibilityElement = true
@@ -216,47 +65,80 @@ final class Home: UIView {
         privacy.setImage(UIImage(named: "privacy"), for: .normal)
         privacy.addTarget(self, action: #selector(self.privacy), for: .touchUpInside)
         
+        [borderBottom, borderTop].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.isUserInteractionEnabled = false
+            $0.backgroundColor = .init(white: 0.1333, alpha: 1)
+            addSubview($0)
+            
+            $0.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            $0.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 3).isActive = true
+        }
+        
         [info, new, privacy].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.imageView!.clipsToBounds = true
             $0.imageView!.contentMode = .center
             addSubview($0)
             
-            $0.topAnchor.constraint(equalTo: border.bottomAnchor).isActive = true
+            $0.topAnchor.constraint(equalTo: borderBottom.bottomAnchor).isActive = true
             $0.widthAnchor.constraint(equalToConstant: 70).isActive = true
             $0.heightAnchor.constraint(equalToConstant: 70).isActive = true
         }
         
+        let screenTop = UIView()
+        self.screenTop = screenTop
+        
+        let screenBottom = UIView()
+        self.screenBottom = screenBottom
+        
+        [screenTop, screenBottom].forEach {
+            $0.isUserInteractionEnabled = false
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = .init(white: 0, alpha: 0.85)
+            $0.alpha = 0
+            addSubview($0)
+            
+            $0.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            $0.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        }
+        
+        screenTop.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        screenTopBottom = screenTop.bottomAnchor.constraint(equalTo: topAnchor)
+        screenTopBottom.isActive = true
+        
+        screenBottom.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        screenBottomTop = screenBottom.topAnchor.constraint(equalTo: topAnchor)
+        screenBottomTop.isActive = true
+        
         empty.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         empty.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
+        scroll.topAnchor.constraint(equalTo: borderTop.bottomAnchor).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        let bottom = scroll.bottomAnchor.constraint(equalTo: border.topAnchor)
+        let bottom = scroll.bottomAnchor.constraint(equalTo: borderBottom.topAnchor)
         bottom.isActive = true
-        
-        border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        border.heightAnchor.constraint(equalToConstant: 3).isActive = true
         
         new.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         if #available(iOS 11.0, *) {
-            scroll.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+            borderTop.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
             
-            border.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -70).isActive = true
+            borderBottom.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -70).isActive = true
             info.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 10).isActive = true
             privacy.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
         } else {
-            scroll.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            borderTop.topAnchor.constraint(equalTo: topAnchor, constant: 70).isActive = true
             
-            border.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -70).isActive = true
+            borderBottom.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -70).isActive = true
             info.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
             privacy.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         }
         
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) {
-            bottom.constant = { $0.minY < self.bounds.height ? -($0.height - (self.bounds.height - border.frame.minY)) : -1 } (($0.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue)
+            bottom.constant = { $0.minY < self.bounds.height ? -($0.height - (self.bounds.height - borderBottom.frame.minY)) : -1 } (($0.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue)
             UIView.animate(withDuration: ($0.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue) {
                 self.layoutIfNeeded()
             }
@@ -271,7 +153,7 @@ final class Home: UIView {
             if top != scroll.topAnchor {
                 let border = UIView()
                 border.translatesAutoresizingMaskIntoConstraints = false
-                border.backgroundColor = UIColor.halo.withAlphaComponent(0.3)
+                border.backgroundColor = UIColor.halo.withAlphaComponent(0.2)
                 border.isUserInteractionEnabled = false
                 scroll.content.addSubview(border)
                 
@@ -282,7 +164,9 @@ final class Home: UIView {
                 top = border.bottomAnchor
             }
             
-            let item = Item($0, measure: measure($0.distance, $0.duration))
+            let item = Project($0, measure: measure($0.distance, $0.duration))
+            item.addTarget(self, action: #selector(down(_:)), for: .touchDown)
+            item.addTarget(self, action: #selector(up(_:)), for: [.touchUpInside, .touchUpOutside, .touchCancel])
             scroll.content.addSubview(item)
             
             item.topAnchor.constraint(equalTo: top).isActive = true
@@ -294,9 +178,7 @@ final class Home: UIView {
         if top != scroll.topAnchor {
             scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top, constant: 20).isActive = true
         }
-        UIView.animate(withDuration: 0.3) { [weak self] in
-            self?.scroll.contentOffset.y = 0
-        }
+        UIView.animate(withDuration: 0.3) { self.scroll.contentOffset.y = 0 }
     }
     
     private func measure(_ distance: Double, _ duration: Double) -> String {
@@ -317,4 +199,23 @@ final class Home: UIView {
     @objc private func info() { app.push(About()) }
     @objc private func new() { app.push(New()) }
     @objc private func privacy() { app.push(Privacy()) }
+    
+    @objc private func down(_ project: Project) {
+        screenTopBottom.constant = max(convert(project.bounds, from: project).minY, convert(borderTop.bounds, from: borderTop).maxY)
+        screenBottomTop.constant = min(convert(project.bounds, from: project).maxY, convert(borderBottom.bounds, from: borderBottom).minY)
+        UIView.animate(withDuration: 0.2) {
+            self.screenTop.alpha = 1
+            self.screenBottom.alpha = 1
+        }
+    }
+    
+    @objc private func up(_ project: Project) {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.screenTop.alpha = 0
+            self.screenBottom.alpha = 0
+        }) { _ in
+            self.screenTopBottom.constant = 0
+            self.screenBottomTop.constant = 0
+        }
+    }
 }

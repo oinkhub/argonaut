@@ -47,6 +47,7 @@
 		CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301DA22EF09AF00EACBD4 /* Tiler.swift */; };
 		CE9301DC22EF09AF00EACBD4 /* Tiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9301DA22EF09AF00EACBD4 /* Tiler.swift */; };
 		CE9AEC93231B9521009596FE /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9AEC92231B9521009596FE /* Settings.swift */; };
+		CE9D6BB12328CD46001B4E87 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9D6BB02328CD46001B4E87 /* Project.swift */; };
 		CE9F3FEE2323D11600F221D8 /* Zoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9F3FED2323D11600F221D8 /* Zoom.swift */; };
 		CEA0D91023002B4B001FD8B8 /* icons.icns in Resources */ = {isa = PBXBuildFile; fileRef = CEA0D90F23002B4B001FD8B8 /* icons.icns */; };
 		CEAB0F0822D73C5800320F4F /* New.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAB0F0722D73C5800320F4F /* New.swift */; };
@@ -153,6 +154,7 @@
 		CE9301D822EEF9C000EACBD4 /* Navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
 		CE9301DA22EF09AF00EACBD4 /* Tiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tiler.swift; sourceTree = "<group>"; };
 		CE9AEC92231B9521009596FE /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		CE9D6BB02328CD46001B4E87 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		CE9F3FED2323D11600F221D8 /* Zoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zoom.swift; sourceTree = "<group>"; };
 		CEA0D90F23002B4B001FD8B8 /* icons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icons.icns; sourceTree = "<group>"; };
 		CEAB0F0622D7396900320F4F /* Argonaut.sketch */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argonaut.sketch; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				CECD5633231130490085E0C3 /* Navigate.swift */,
 				CE0FE651230555D40058386B /* New.swift */,
 				CEBB3A6323040F7200C5F61A /* Privacy.swift */,
+				CE9D6BB02328CD46001B4E87 /* Project.swift */,
 				CE0FE65323056F490058386B /* Scroll.swift */,
 				CE25B85E231A830B007538E2 /* Settings.swift */,
 				CED0E78D230E9ECA00D30D85 /* User.swift */,
@@ -662,6 +665,7 @@
 				CE26CE0722F467A40007441D /* Mark.swift in Sources */,
 				CE18343E23080B260046E496 /* Create.swift in Sources */,
 				CEACFC57230950A4008E76A9 /* Marker.swift in Sources */,
+				CE9D6BB12328CD46001B4E87 /* Project.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
