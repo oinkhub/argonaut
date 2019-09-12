@@ -49,7 +49,7 @@ final class Home: UIView {
         _done.accessibilityLabel = .key("Home.done")
         _done.titleLabel!.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
         _done.setTitleColor(.halo, for: .normal)
-        _done.setTitleColor(UIColor.halo.withAlphaComponent(0.3), for: .highlighted)
+        _done.setTitleColor(.dark, for: .highlighted)
         _done.addTarget(self, action: #selector(done), for: .touchUpInside)
         addSubview(_done)
         self._done = _done
@@ -170,7 +170,7 @@ final class Home: UIView {
             if top != scroll.topAnchor {
                 let border = UIView()
                 border.translatesAutoresizingMaskIntoConstraints = false
-                border.backgroundColor = UIColor.halo.withAlphaComponent(0.2)
+                border.backgroundColor = .dark
                 border.isUserInteractionEnabled = false
                 scroll.content.addSubview(border)
                 

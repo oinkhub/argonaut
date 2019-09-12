@@ -40,7 +40,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             label.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
         }
         
-        @objc private func down() { backgroundColor = UIColor.halo.withAlphaComponent(0.7) }
+        @objc private func down() { backgroundColor = .dark }
         @objc private func up() { backgroundColor = .clear }
     }
 
@@ -171,12 +171,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
                 let border = UIView()
                 border.translatesAutoresizingMaskIntoConstraints = false
                 border.isUserInteractionEnabled = false
-                border.backgroundColor = .init(white: 1, alpha: 0.3)
+                border.backgroundColor = .dark
                 results.content.addSubview(border)
                 
                 border.topAnchor.constraint(equalTo: top).isActive = true
                 border.leftAnchor.constraint(equalTo: result.leftAnchor, constant: 20).isActive = true
-                border.rightAnchor.constraint(equalTo: result.rightAnchor, constant: -20).isActive = true
+                border.rightAnchor.constraint(equalTo: result.rightAnchor).isActive = true
                 border.heightAnchor.constraint(equalToConstant: 1).isActive = true
             }
             

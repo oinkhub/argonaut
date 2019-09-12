@@ -95,26 +95,21 @@ final class Map: MKMapView, MKMapViewDelegate {
     func remove(_ path: Path) {
         selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
         removeAnnotations(annotations.filter { ($0 as? Mark)?.path === path })
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let self = self, let index = self.path.firstIndex(where: { $0 === path }) else { return }
-            self.removeOverlays(self.overlays.filter { ($0 as? Line)?.path === path } )
-            if index > 0 {
-                if index < self.path.count - 1 {
-                    self.direction(self.path[index - 1], destination: self.path[index + 1])
-                } else {
-                    self.removeOverlays(self.overlays.filter { ($0 as? Line)?.path === self.path[index - 1] } )
-                    self.path[index - 1].options = []
-                }
+        guard let index = self.path.firstIndex(where: { $0 === path }) else { return }
+        removeOverlays(self.overlays.filter { ($0 as? Line)?.path === path } )
+        if index > 0 {
+            if index < self.path.count - 1 {
+                direction(self.path[index - 1], destination: self.path[index + 1])
+            } else {
+                removeOverlays(overlays.filter { ($0 as? Line)?.path === self.path[index - 1] } )
+                self.path[index - 1].options = []
             }
-            self.path.remove(at: index)
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.refresh()
-                self.annotations.compactMap { $0 as? Mark }.compactMap { self.view(for: $0) as? Marker }.forEach { marker in
-                    if let index = self.path.firstIndex(where: { $0 === (marker.annotation as? Mark)?.path }) {
-                        marker.index = "\(index + 1)"
-                    }
-                }
+        }
+        self.path.remove(at: index)
+        refresh()
+        annotations.compactMap { $0 as? Mark }.compactMap { view(for: $0) as? Marker }.forEach { marker in
+            if let index = self.path.firstIndex(where: { $0 === (marker.annotation as? Mark)?.path }) {
+                marker.index = "\(index + 1)"
             }
         }
     }
@@ -175,6 +170,8 @@ final class Map: MKMapView, MKMapViewDelegate {
         if let index = path.firstIndex(where: { $0 === mark.path }) {
             if index > 0 {
                 direction(path[index - 1], destination: mark.path)
+            } else {
+                refresh()
             }
             if index < path.count - 1 {
                 direction(path[index], destination: path[index + 1])

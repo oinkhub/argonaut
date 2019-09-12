@@ -4,8 +4,8 @@ import CoreLocation
 
 final class List: UIView {
     private final class Item: UIControl {
+        private(set) weak var path: Path?
         private(set) weak var delete: UIButton?
-        private(set) weak var path: Path!
         private(set) weak var distance: UILabel!
         private(set) weak var name: UILabel!
         
@@ -82,7 +82,7 @@ final class List: UIView {
             distance.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
         }
         
-        @objc private func down() { backgroundColor = UIColor.halo.withAlphaComponent(0.5) }
+        @objc private func down() { backgroundColor = .dark }
         @objc private func up() { UIView.animate(withDuration: 0.3) { [weak self] in self?.backgroundColor = .clear } }
     }
     
@@ -121,15 +121,15 @@ final class List: UIView {
         
         let total = UILabel()
         total.translatesAutoresizingMaskIntoConstraints = false
-        total.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .regular)
+        total.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .medium)
         total.textColor = .black
         total.numberOfLines = 0
         header.addSubview(total)
         self.total = total
         
-        heightAnchor.constraint(equalToConstant: 300).isActive = true
+        heightAnchor.constraint(equalToConstant: 250).isActive = true
         
-        scroll.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 1).isActive = true
+        scroll.topAnchor.constraint(equalTo: header.bottomAnchor).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -163,37 +163,64 @@ final class List: UIView {
             item.delete?.addTarget(self, action: #selector(remove(_:)), for: .touchUpInside)
             scroll.content.addSubview(item)
             
-            if let option = previous?.path.options.first(where: { $0.mode == app.session.settings.mode }) {
-                distance += option.distance
-                duration += option.duration
-                
-                let base = UIView()
-                base.translatesAutoresizingMaskIntoConstraints = false
-                base.isUserInteractionEnabled = false
-                base.backgroundColor = .init(white: 0.1333, alpha: 1)
-                scroll.content.addSubview(base)
-                
-                let travel = UILabel()
-                travel.translatesAutoresizingMaskIntoConstraints = false
-                travel.textColor = .white
-                travel.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .regular)
-                travel.numberOfLines = 0
-                travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-                travel.text = app.measure(option.distance, option.duration)
-                base.addSubview(travel)
-                
-                base.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
-                base.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
-                base.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
-                base.bottomAnchor.constraint(equalTo: travel.bottomAnchor, constant: 10).isActive = true
-                
-                travel.topAnchor.constraint(equalTo: base.topAnchor, constant: 10).isActive = true
-                travel.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 20).isActive = true
-                travel.rightAnchor.constraint(lessThanOrEqualTo: base.rightAnchor, constant: -20).isActive = true
-                
-                item.topAnchor.constraint(equalTo: base.bottomAnchor).isActive = true
-            } else {
+            if previous == nil {
                 item.topAnchor.constraint(equalTo: scroll.content.topAnchor).isActive = true
+            } else {
+                if let option = previous?.path?.options.first(where: { $0.mode == app.session.settings.mode }), option.distance > 0 {
+                    distance += option.distance
+                    duration += option.duration
+                    
+                    let base = UIView()
+                    base.translatesAutoresizingMaskIntoConstraints = false
+                    base.isUserInteractionEnabled = false
+                    base.backgroundColor = .dark
+                    base.layer.cornerRadius = 4
+                    scroll.content.addSubview(base)
+                    
+                    let line = UIView()
+                    line.translatesAutoresizingMaskIntoConstraints = false
+                    line.isUserInteractionEnabled = false
+                    line.backgroundColor = .dark
+                    scroll.content.addSubview(line)
+                    
+                    let travel = UILabel()
+                    travel.translatesAutoresizingMaskIntoConstraints = false
+                    travel.textColor = .white
+                    travel.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .regular)
+                    travel.numberOfLines = 0
+                    travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+                    travel.text = "+" + app.measure(option.distance, option.duration)
+                    base.addSubview(travel)
+                    
+                    base.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 20).isActive = true
+                    base.rightAnchor.constraint(equalTo: travel.rightAnchor, constant: 10).isActive = true
+                    base.centerYAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
+                    base.bottomAnchor.constraint(equalTo: travel.bottomAnchor, constant: 7).isActive = true
+                    
+                    line.heightAnchor.constraint(equalToConstant: 1).isActive = true
+                    line.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
+                    line.leftAnchor.constraint(equalTo: base.rightAnchor).isActive = true
+                    line.rightAnchor.constraint(equalTo: item.rightAnchor).isActive = true
+                    
+                    travel.topAnchor.constraint(equalTo: base.topAnchor, constant: 8).isActive = true
+                    travel.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
+                    travel.widthAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
+                    
+                    item.topAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
+                } else {
+                    let line = UIView()
+                    line.translatesAutoresizingMaskIntoConstraints = false
+                    line.isUserInteractionEnabled = false
+                    line.backgroundColor = .dark
+                    scroll.content.addSubview(line)
+                    
+                    line.heightAnchor.constraint(equalToConstant: 1).isActive = true
+                    line.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
+                    line.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 20).isActive = true
+                    line.rightAnchor.constraint(equalTo: item.rightAnchor).isActive = true
+                    
+                    item.topAnchor.constraint(equalTo: line.bottomAnchor).isActive = true
+                }
             }
             
             item.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
@@ -206,7 +233,7 @@ final class List: UIView {
             scroll.content.layoutIfNeeded()
             UIView.animate(withDuration: 0.3) { [weak self] in
                 if let scroll = self?.scroll {
-                    scroll.contentOffset.y = scroll.content.frame.height - 259
+                    scroll.contentOffset.y = scroll.content.frame.height - 209
                     scroll.alpha = 1
                 }
             }
@@ -219,11 +246,16 @@ final class List: UIView {
     func user(_ location: CLLocation) {
         self.location = location
         scroll.content.subviews.compactMap { $0 as? Item }.forEach {
-            $0.distance.text = app.measure(location.distance(from: .init(latitude: $0.path.latitude, longitude: $0.path.longitude)), 0)
+            guard let path = $0.path else { return }
+            $0.distance.text = app.measure(location.distance(from: .init(latitude: path.latitude, longitude: path.longitude)), 0)
         }
     }
     
-    func rename(_ path: Path) { scroll.content.subviews.compactMap { $0 as? Item }.first(where: { $0.path === path })?.name.text = path.name }
+    func rename(_ path: Path) {
+        DispatchQueue.main.async { [weak self] in
+            self?.scroll.content.subviews.compactMap { $0 as? Item }.first(where: { $0.path === path })?.name.text = path.name
+        }
+    }
     
     private func update() {
         switch app.session.settings.mode {
@@ -246,5 +278,8 @@ final class List: UIView {
         }
     }
     
-    @objc private func remove(_ button: UIButton) { map.remove((button.superview as! Item).path) }
+    @objc private func remove(_ button: UIButton) {
+        guard let path = (button.superview as! Item).path else { return }
+        map.remove(path)
+    }
 }

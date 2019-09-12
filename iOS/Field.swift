@@ -35,7 +35,7 @@ class Field: UITextView {
             
             let background = UIView()
             background.translatesAutoresizingMaskIntoConstraints = false
-            background.backgroundColor = UIColor.halo.withAlphaComponent(0.3)
+            background.backgroundColor = .dark
             background.isUserInteractionEnabled = false
             background.layer.cornerRadius = 4
             addSubview(background)

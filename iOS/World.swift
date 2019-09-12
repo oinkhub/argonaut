@@ -147,9 +147,12 @@ class World: UIView, CLLocationManagerDelegate {
     }
     
     private func refresh() {
-        list.refresh()
-        if !map.path.isEmpty && list.top.constant == -40 || map.path.isEmpty && list.top.constant == -list.frame.height {
-            up()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.list.refresh()
+            if !self.map.path.isEmpty && self.list.top.constant == -40 || self.map.path.isEmpty && self.list.top.constant == -self.list.frame.height {
+                self.up()
+            }
         }
     }
     

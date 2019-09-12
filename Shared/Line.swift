@@ -2,7 +2,7 @@ import Argonaut
 import MapKit
 
 final class Line: NSObject, MKOverlay {
-    private(set) weak var path: Path!
+    private(set) weak var path: Path?
     private(set) weak var option: Path.Option!
     let point: [MKMapPoint]
     let coordinate: CLLocationCoordinate2D

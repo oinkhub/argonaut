@@ -21,7 +21,7 @@ final class Project: UIControl, UITextViewDelegate {
         
         let rename = UIView()
         rename.translatesAutoresizingMaskIntoConstraints = false
-        rename.backgroundColor = UIColor.halo.withAlphaComponent(0.3)
+        rename.backgroundColor = .dark
         rename.layer.cornerRadius = 4
         rename.isUserInteractionEnabled = false
         rename.isHidden = true
