@@ -32,9 +32,8 @@ final class TestArgonaut: XCTestCase {
         try! Data("hello world".utf8).write(to: url)
         let item = Session.Item()
         item.id = "lorem"
-        item.title = "hello world and lorem ipsum"
-        item.origin = "alpha"
-        item.destination = "beta"
+        item.name = "hello world and lorem ipsum"
+        item.points = ["alpha", "beta"]
         item.distance = 8.8
         item.duration = 7.5
         Argonaut.share(item) { shared in
@@ -47,9 +46,9 @@ final class TestArgonaut: XCTestCase {
                 Argonaut.receive(shared) {
                     XCTAssertEqual(.main, Thread.current)
                     XCTAssertEqual(item.id, $0.id)
-                    XCTAssertEqual(item.title, $0.title)
-                    XCTAssertEqual(item.origin, $0.origin)
-                    XCTAssertEqual(item.destination, $0.destination)
+                    XCTAssertEqual("hello world and lorem ipsum", $0.name)
+                    XCTAssertEqual("alpha", $0.points[0])
+                    XCTAssertEqual("beta", $0.points[1])
                     XCTAssertEqual(item.distance, $0.distance)
                     XCTAssertEqual(item.duration, $0.duration)
                     XCTAssertEqual("hello world", String(decoding: try! Data(contentsOf: url), as: UTF8.self))

@@ -4,7 +4,8 @@ import Compression
 public final class Argonaut {
     public static let tile = 512.0
     static let size = 100_000
-    static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("maps")
+    static let root = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    static let url = root.appendingPathComponent("maps")
     static let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("map.argonaut")
     
     public class func load(_ id: String) -> ([Path], Cart) {

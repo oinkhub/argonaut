@@ -6,12 +6,11 @@ public final class Session: Codable {
     
     public final class Item: Codable {
         public var id = ""
-        public var title = ""
-        public var origin = ""
-        public var destination = ""
+        public var name = ""
         public var duration = 0.0
         public var distance = 0.0
         public var mode = Mode.walking
+        public var points = [String]()
         
         public init() { }
     }
@@ -28,11 +27,12 @@ public final class Session: Codable {
         queue.async {
             let session = {
                 $0 == nil ? Session() : (try? JSONDecoder().decode(Session.self, from: $0!)) ?? Session()
-            } (UserDefaults.standard.data(forKey: "session"))
+            } (try? Data(contentsOf: url))
             DispatchQueue.main.async { result(session) }
         }
     }
     
+    static let url = Argonaut.root.appendingPathComponent("session.argonaut")
     private static let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
     public var items = [Item]()
     public var settings = Settings()
@@ -45,7 +45,7 @@ public final class Session: Codable {
     
     public func save() {
         Session.queue.async {
-            UserDefaults.standard.set(try! JSONEncoder().encode(self), forKey: "session")
+            try? JSONEncoder().encode(self).write(to: Session.url, options: .atomic)
         }
     }
     

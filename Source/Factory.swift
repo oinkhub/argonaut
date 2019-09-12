@@ -97,8 +97,8 @@ public final class Factory {
     public func register() {
         item.id = id
         item.mode = mode
-        item.origin = path.first?.name ?? ""
-        item.destination = path.last?.name ?? ""
+        item.points = path.compactMap { $0.name }
+//        item.points = path.compactMap { $0.name.isEmpty ? nil : $0.name }
         path.forEach {
             $0.options.forEach {
                 item.duration += $0.duration

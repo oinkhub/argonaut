@@ -62,7 +62,7 @@ final class List: NSWindow {
             translatesAutoresizingMaskIntoConstraints = false
             
             let field = Field.Name()
-            field.string = item.title.isEmpty ? .key("List.field") : item.title
+            field.string = item.name.isEmpty ? .key("List.field") : item.name
             field.delegate = self
             addSubview(field)
             self.field = field
@@ -177,7 +177,7 @@ final class List: NSWindow {
         func textDidChange(_: Notification) { field.adjust() }
         
         func textDidEndEditing(_: Notification) {
-            item.title = field.string
+            item.name = field.string
             app.session.save()
         }
         

@@ -23,7 +23,7 @@ final class Navigate: World {
         title.isAccessibilityElement = true
         title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
         title.textColor = .white
-        title.text = item.title.isEmpty ? .key("Navigate.title") : item.title
+        title.text = item.name.isEmpty ? .key("Navigate.title") : item.name
         addSubview(title)
         
         top.topAnchor.constraint(equalTo: map.topAnchor).isActive = true

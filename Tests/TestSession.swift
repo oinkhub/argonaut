@@ -3,12 +3,13 @@ import XCTest
 
 final class TestSession: XCTestCase {
     override func setUp() {
-        UserDefaults.standard.removeObject(forKey: "session")
+        try? FileManager.default.removeItem(at: Session.url)
     }
     
     override func tearDown() {
         try? FileManager.default.removeItem(at: Argonaut.url)
         try? FileManager.default.removeItem(at: Argonaut.temporal)
+        try? FileManager.default.removeItem(at: Session.url)
     }
     
     func testLoad() {

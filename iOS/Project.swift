@@ -15,7 +15,7 @@ final class Project: UIControl, UITextViewDelegate {
         translatesAutoresizingMaskIntoConstraints = false
         accessibilityTraits = .button
         isAccessibilityElement = true
-        accessibilityLabel = item.title
+        accessibilityLabel = item.name
         clipsToBounds = true
         addTarget(self, action: #selector(navigate), for: .touchUpInside)
         
@@ -29,7 +29,7 @@ final class Project: UIControl, UITextViewDelegate {
         self.rename = rename
         
         let field = Field.Name()
-        field.text = item.title.isEmpty ? .key("Project.field") : item.title
+        field.text = item.name.isEmpty ? .key("Project.field") : item.name
         field.delegate = self
         field.isUserInteractionEnabled = false
         addSubview(field)
@@ -53,17 +53,14 @@ final class Project: UIControl, UITextViewDelegate {
         travel.translatesAutoresizingMaskIntoConstraints = false
         travel.numberOfLines = 0
         travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        travel.attributedText = {
-            if !item.origin.isEmpty {
-                $0.append(.init(string: item.origin, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .ultraLight), .foregroundColor: UIColor.white]))
-            }
-            if !item.destination.isEmpty {
-                $0.append(.init(string: "\n" + item.destination, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .ultraLight), .foregroundColor: UIColor.white]))
+        travel.attributedText = { string in
+            item.points.forEach {
+                string.append(.init(string: (string.string.isEmpty ? "" : "\n") + $0, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .ultraLight), .foregroundColor: UIColor.white]))
             }
             if !measure.isEmpty {
-                $0.append(.init(string: "\n" + measure, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .ultraLight), .foregroundColor: UIColor(white: 1, alpha: 0.8)]))
+                string.append(.init(string: "\n" + measure, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .ultraLight), .foregroundColor: UIColor(white: 1, alpha: 0.8)]))
             }
-            return $0
+            return string
         } (NSMutableAttributedString())
         insertSubview(travel, belowSubview: field)
         
@@ -151,7 +148,7 @@ final class Project: UIControl, UITextViewDelegate {
     }
     
     func textViewDidEndEditing(_: UITextView) {
-        item.title = field.text
+        item.name = field.text
         app.session.save()
     }
     
@@ -178,7 +175,7 @@ final class Project: UIControl, UITextViewDelegate {
     @objc private func share() { Load.share(item) }
     
     @objc private func remove() {
-        let alert = UIAlertController(title: .key("Project.deleteTitle") + (item.title.isEmpty ? .key("Project.deleteUnanmed") : item.title), message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: .key("Project.deleteTitle") + (item.name.isEmpty ? .key("Project.deleteUnanmed") : item.name), message: nil, preferredStyle: .actionSheet)
         alert.addAction(.init(title: .key("Project.deleteConfirm"), style: .destructive) { [weak self] _ in
             if let item = self?.item { app.delete(item) }
         })
