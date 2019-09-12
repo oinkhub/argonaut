@@ -3,6 +3,7 @@ import MapKit
 
 final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
+    var rename: ((Path) -> Void)!
     var user: ((CLLocation) -> Void)?
     var zoom: ((CGFloat) -> Void)?
     var drag = true
@@ -165,7 +166,7 @@ final class Map: MKMapView, MKMapViewDelegate {
             if $1 == nil, let mark = mark {
                 mark.path.name = $0?.first?.name ?? ""
                 (self?.view(for: mark) as? Marker)?.refresh()
-                self?.refresh()
+                self?.rename(mark.path)
             }
         }
     }

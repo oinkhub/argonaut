@@ -29,7 +29,7 @@ final class Project: UIControl, UITextViewDelegate {
         self.rename = rename
         
         let field = Field.Name()
-        field.text = item.title.isEmpty ? .key("List.field") : item.title
+        field.text = item.title.isEmpty ? .key("Project.field") : item.title
         field.delegate = self
         field.isUserInteractionEnabled = false
         addSubview(field)
@@ -69,12 +69,12 @@ final class Project: UIControl, UITextViewDelegate {
         
         let share = UIButton()
         share.setImage(UIImage(named: "share"), for: .normal)
-        share.accessibilityLabel = .key("Home.share")
+        share.accessibilityLabel = .key("Project.share")
         share.addTarget(self, action: #selector(self.share), for: .touchUpInside)
         
         let delete = UIButton()
         delete.setImage(UIImage(named: "delete"), for: .normal)
-        delete.accessibilityLabel = .key("Home.delete")
+        delete.accessibilityLabel = .key("Project.delete")
         delete.addTarget(self, action: #selector(remove), for: .touchUpInside)
         
         [share, delete].forEach {
@@ -178,11 +178,11 @@ final class Project: UIControl, UITextViewDelegate {
     @objc private func share() { Load.share(item) }
     
     @objc private func remove() {
-        let alert = UIAlertController(title: .key("Home.deleteTitle") + (item.title.isEmpty ? .key("Home.deleteUnanmed") : item.title), message: nil, preferredStyle: .actionSheet)
-        alert.addAction(.init(title: .key("Home.deleteConfirm"), style: .destructive) { [weak self] _ in
+        let alert = UIAlertController(title: .key("Project.deleteTitle") + (item.title.isEmpty ? .key("Project.deleteUnanmed") : item.title), message: nil, preferredStyle: .actionSheet)
+        alert.addAction(.init(title: .key("Project.deleteConfirm"), style: .destructive) { [weak self] _ in
             if let item = self?.item { app.delete(item) }
         })
-        alert.addAction(.init(title: .key("Home.deleteCancel"), style: .cancel))
+        alert.addAction(.init(title: .key("Project.deleteCancel"), style: .cancel))
         alert.popoverPresentationController?.sourceView = self
         alert.popoverPresentationController?.sourceRect = .init(x: frame.midX, y: frame.maxY, width: 1, height: 1)
         app.present(alert, animated: true)

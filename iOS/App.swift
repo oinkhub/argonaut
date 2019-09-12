@@ -9,6 +9,8 @@ private(set) weak var app: App!
     private(set) weak var home: Home!
     private(set) var session: Session!
     private var stack = [NSLayoutConstraint]()
+    private var formatter: Any!
+    private let dater = DateComponentsFormatter()
     
     func application(_: UIApplication, willFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         app = self
@@ -41,6 +43,17 @@ private(set) weak var app: App!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        dater.unitsStyle = .full
+        dater.allowedUnits = [.minute, .hour]
+        
+        if #available(iOS 10, *) {
+            let formatter = MeasurementFormatter()
+            formatter.unitStyle = .long
+            formatter.unitOptions = .naturalScale
+            formatter.numberFormatter.maximumFractionDigits = 1
+            self.formatter = formatter
+        }
         
         let home = Home()
         view.addSubview(home)
@@ -181,6 +194,21 @@ private(set) weak var app: App!
         session.save()
         home.refresh()
         Argonaut.delete(item.id)
+    }
+    
+    func measure(_ distance: Double, _ duration: Double) -> String {
+        var result = ""
+        if distance > 0 {
+            if #available(iOS 10, *) {
+                result = (formatter as! MeasurementFormatter).string(from: .init(value: distance, unit: UnitLength.meters))
+            } else {
+                result = "\(Int(distance))" + .key("App.distance")
+            }
+            if duration > 0 {
+                result += ": " + dater.string(from: duration)!
+            }
+        }
+        return result
     }
     
     @objc func pop() {

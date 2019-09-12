@@ -131,7 +131,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     
     func textViewDidBeginEditing(_: UITextView) {
         field.width.constant = bounds.width
-        UIView.animate(withDuration: 0.45, animations: { [weak self] in
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
             self?.field._cancel.alpha = 1
             self?._close.alpha = 0
             self?._save.alpha = 0
@@ -150,7 +150,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
         field.width.constant = 160
         resultsHeight.constant = 0
-        UIView.animate(withDuration: 0.6, animations: { [weak self] in
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
             self?.field._cancel.alpha = 0
             self?._close.alpha = 1
             self?._save.alpha = 1

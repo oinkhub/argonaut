@@ -11,24 +11,11 @@ final class Home: UIView {
     private weak var _done: UIButton!
     private weak var screenTopBottom: NSLayoutConstraint!
     private weak var screenBottomTop: NSLayoutConstraint!
-    private var formatter: Any!
-    private let dater = DateComponentsFormatter()
     
     required init?(coder: NSCoder) { return nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        
-        dater.unitsStyle = .full
-        dater.allowedUnits = [.minute, .hour]
-        
-        if #available(iOS 10, *) {
-            let formatter = MeasurementFormatter()
-            formatter.unitStyle = .long
-            formatter.unitOptions = .naturalScale
-            formatter.numberFormatter.maximumFractionDigits = 1
-            self.formatter = formatter
-        }
         
         let scroll = Scroll()
         addSubview(scroll)
@@ -194,7 +181,7 @@ final class Home: UIView {
                 top = border.bottomAnchor
             }
             
-            let item = Project($0, measure: measure($0.distance, $0.duration))
+            let item = Project($0, measure: app.measure($0.distance, $0.duration))
             item.addTarget(self, action: #selector(down(_:)), for: .touchDown)
             item.addTarget(self, action: #selector(up(_:)), for: [.touchUpInside, .touchUpOutside, .touchCancel])
             scroll.content.addSubview(item)
@@ -209,21 +196,6 @@ final class Home: UIView {
             scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top, constant: 20).isActive = true
         }
         UIView.animate(withDuration: 0.3) { self.scroll.contentOffset.y = 0 }
-    }
-    
-    private func measure(_ distance: Double, _ duration: Double) -> String {
-        var result = ""
-        if distance > 0 {
-            if #available(iOS 10, *) {
-                result = (formatter as! MeasurementFormatter).string(from: .init(value: distance, unit: UnitLength.meters))
-            } else {
-                result = "\(Int(distance))" + .key("Home.distance")
-            }
-            if duration > 0 {
-                result += ": " + dater.string(from: duration)!
-            }
-        }
-        return result
     }
     
     @objc private func info() { app.push(About()) }

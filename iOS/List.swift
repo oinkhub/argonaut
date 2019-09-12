@@ -7,6 +7,7 @@ final class List: UIView {
         private(set) weak var delete: UIButton?
         private(set) weak var path: Path!
         private(set) weak var distance: UILabel!
+        private(set) weak var name: UILabel!
         
         required init?(coder: NSCoder) { return nil }
         init(_ item: (Int, Path), deletable: Bool) {
@@ -27,6 +28,7 @@ final class List: UIView {
             name.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .medium)
             name.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             addSubview(name)
+            self.name = name
             
             let index = UILabel()
             index.translatesAutoresizingMaskIntoConstraints = false
@@ -91,26 +93,13 @@ final class List: UIView {
     private weak var header: UIView!
     private weak var icon: UIImageView!
     private weak var total: UILabel!
-    private var formatter: Any!
     private var location: CLLocation?
-    private let dater = DateComponentsFormatter()
     
     required init?(coder: NSCoder) { return nil }
     init() {
         super.init(frame: .zero)
         backgroundColor = .black
         translatesAutoresizingMaskIntoConstraints = false
-        
-        dater.unitsStyle = .full
-        dater.allowedUnits = [.minute, .hour]
-        
-        if #available(iOS 10, *) {
-            let formatter = MeasurementFormatter()
-            formatter.unitStyle = .long
-            formatter.unitOptions = .naturalScale
-            formatter.numberFormatter.maximumFractionDigits = 1
-            self.formatter = formatter
-        }
         
         let scroll = Scroll()
         addSubview(scroll)
@@ -163,14 +152,13 @@ final class List: UIView {
     }
     
     func refresh() {
-        scroll.alpha = 0
         scroll.clear()
         var distance = 0.0
         var duration = 0.0
         var previous: Item?
         map.path.enumerated().forEach {
             let item = Item($0, deletable: deletable)
-            item.distance.text = location == nil ? " " : measure(location!.distance(from: .init(latitude: $0.1.latitude, longitude: $0.1.longitude)), 0)
+            item.distance.text = location == nil ? " " : app.measure(location!.distance(from: .init(latitude: $0.1.latitude, longitude: $0.1.longitude)), 0)
             item.addTarget(self, action: #selector(focus(_:)), for: .touchUpInside)
             item.delete?.addTarget(self, action: #selector(remove(_:)), for: .touchUpInside)
             scroll.content.addSubview(item)
@@ -191,7 +179,7 @@ final class List: UIView {
                 travel.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .regular)
                 travel.numberOfLines = 0
                 travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-                travel.text = measure(option.distance, option.duration)
+                travel.text = app.measure(option.distance, option.duration)
                 base.addSubview(travel)
                 
                 base.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
@@ -215,27 +203,27 @@ final class List: UIView {
         
         if previous != nil {
             scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: previous!.bottomAnchor, constant: 20).isActive = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-                self?.scroll.content.layoutIfNeeded()
-                UIView.animate(withDuration: 0.3) { [weak self] in
-                    if let scroll = self?.scroll {
-                        scroll.contentOffset.y = scroll.content.frame.height - 259
-                        scroll.alpha = 1
-                    }
+            scroll.content.layoutIfNeeded()
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                if let scroll = self?.scroll {
+                    scroll.contentOffset.y = scroll.content.frame.height - 259
+                    scroll.alpha = 1
                 }
             }
         }
         
-        total.text = measure(distance, duration)
+        total.text = app.measure(distance, duration)
         update()
     }
     
     func user(_ location: CLLocation) {
         self.location = location
         scroll.content.subviews.compactMap { $0 as? Item }.forEach {
-            $0.distance.text = measure(location.distance(from: .init(latitude: $0.path.latitude, longitude: $0.path.longitude)), 0)
+            $0.distance.text = app.measure(location.distance(from: .init(latitude: $0.path.latitude, longitude: $0.path.longitude)), 0)
         }
     }
+    
+    func rename(_ path: Path) { scroll.content.subviews.compactMap { $0 as? Item }.first(where: { $0.path === path })?.name.text = path.name }
     
     private func update() {
         switch app.session.settings.mode {
@@ -249,21 +237,6 @@ final class List: UIView {
             header.backgroundColor = .flying
             icon.image = UIImage(named: "flying")!.withRenderingMode(.alwaysTemplate)
         }
-    }
-    
-    private func measure(_ distance: Double, _ duration: Double) -> String {
-        var result = ""
-        if distance > 0 {
-            if #available(iOS 10, *) {
-                result = (formatter as! MeasurementFormatter).string(from: .init(value: distance, unit: UnitLength.meters))
-            } else {
-                result = "\(Int(distance))" + .key("List.distance")
-            }
-            if duration > 0 {
-                result += ": " + dater.string(from: duration)!
-            }
-        }
-        return result
     }
     
     @objc private func focus(_ item: Item) {
