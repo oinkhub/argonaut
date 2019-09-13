@@ -66,8 +66,8 @@ final class Marker: MKAnnotationView {
         indexY!.isActive = true
         
         off.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        off.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        off.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        off.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        off.heightAnchor.constraint(equalToConstant: 32).isActive = true
         
         on.bottomAnchor.constraint(equalTo: centerYAnchor).isActive = true
         on.widthAnchor.constraint(equalToConstant: 36).isActive = true
@@ -88,7 +88,6 @@ final class Marker: MKAnnotationView {
         title?.text = isSelected ? (annotation as? Mark)?.path.name ?? "" : ""
         indexY?.constant = isSelected ? -24 : 0.5
         UIView.animate(withDuration: 0.3) { [weak self] in
-            self?._index?.textColor = self?.isSelected == true ? .halo : .black
             self?._index?.font = self?.isSelected == true ? .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold) : .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .medium)
             self?.off?.alpha = self?.isSelected == true ? 0 : 1
             self?.on?.alpha = self?.isSelected == true ? 1 : 0

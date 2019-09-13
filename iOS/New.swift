@@ -220,7 +220,8 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         MKLocalSearch(request: .init(completion: result.search)).start { [weak self] in
             guard $1 == nil, let placemark = $0?.mapItems.first?.placemark, let mark = self?.map.add(placemark.coordinate) else { return }
             mark.path.name = placemark.name ?? placemark.title ?? ""
-            (self?.map.view(for: mark) as? Marker)?.refresh()
+            self?.map.selectAnnotation(mark, animated: true)
+            self?.refresh()
         }
     }
 }

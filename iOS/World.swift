@@ -136,9 +136,16 @@ class World: UIView, CLLocationManagerDelegate {
         }
     }
     
+    final func refresh() {
+        list.refresh()
+        if !map.path.isEmpty && list.top.constant == -40 || map.path.isEmpty && list.top.constant == -list.frame.height {
+            up()
+        }
+    }
+    
     @objc final func down() {
         list.top.constant = 0
-        UIView.animate(withDuration: 0.6, animations: { [weak self] in
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?._up.isHidden = false
@@ -146,19 +153,9 @@ class World: UIView, CLLocationManagerDelegate {
         }
     }
     
-    private func refresh() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.list.refresh()
-            if !self.map.path.isEmpty && self.list.top.constant == -40 || self.map.path.isEmpty && self.list.top.constant == -self.list.frame.height {
-                self.up()
-            }
-        }
-    }
-    
     @objc private func up() {
         list.top.constant = map.path.isEmpty ? -40 : -list.frame.height
-        UIView.animate(withDuration: 0.6, animations: { [weak self] in
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?._up.isHidden = true
@@ -169,8 +166,8 @@ class World: UIView, CLLocationManagerDelegate {
     @objc private func settings() {
         let settings = Settings(style)
         settings.delegate = { [weak self] in
-            self?.map.filter()
             self?.map.remark()
+            self?.map.line()
             self?.list.refresh()
         }
         settings.map = map

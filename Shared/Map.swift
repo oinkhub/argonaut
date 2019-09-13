@@ -52,8 +52,9 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func mapView(_: MKMapView, annotationView: MKAnnotationView, didChange: MKAnnotationView.DragState, fromOldState: MKAnnotationView.DragState) {
-        if didChange == .ending {
+        if didChange == .ending && fromOldState == .starting {
             if let mark = annotationView.annotation as? Mark {
+                refresh()
                 locate(mark)
                 direct(mark)
             }
@@ -87,7 +88,6 @@ final class Map: MKMapView, MKMapViewDelegate {
         path.append(item)
         let mark = Mark(item)
         addAnnotation(mark)
-        selectAnnotation(mark, animated: true)
         direct(mark)
         return mark
     }
@@ -104,8 +104,8 @@ final class Map: MKMapView, MKMapViewDelegate {
             }
         }
         self.path.remove(at: index)
+        line()
         refresh()
-        filter()
         annotations.compactMap { $0 as? Mark }.compactMap { view(for: $0) as? Marker }.forEach { marker in
             if let index = self.path.firstIndex(where: { $0 === (marker.annotation as? Mark)?.path }) {
                 marker.index = "\(index + 1)"
@@ -118,7 +118,6 @@ final class Map: MKMapView, MKMapViewDelegate {
         retile()
         self.path = project.0
         addAnnotations(path.map { Mark($0) })
-        filter()
     }
     
     func retile() {
@@ -133,7 +132,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         annotations.filter { $0 is Mark }.forEach { view(for: $0)?.isHidden = !app.session.settings.pins }
     }
     
-    func filter() {
+    func line() {
         removeOverlays(overlays.filter { $0 is Line })
         if app.session.settings.directions { addOverlay(Line(path), level: .aboveLabels) }
     }
@@ -144,7 +143,12 @@ final class Map: MKMapView, MKMapViewDelegate {
         setRegion(region, animated: true)
     }
     
-    @objc func pin() { locate(add(centerCoordinate)) }
+    @objc func pin() {
+        let mark = add(centerCoordinate)
+        selectAnnotation(mark, animated: true)
+        refresh()
+        locate(mark)
+    }
     
     @objc func me() {
         selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
@@ -167,17 +171,15 @@ final class Map: MKMapView, MKMapViewDelegate {
         if let index = path.firstIndex(where: { $0 === mark.path }) {
             if index > 0 {
                 direction(path[index - 1], destination: mark.path)
-            } else {
-                refresh()
             }
             if index < path.count - 1 {
                 direction(path[index], destination: path[index + 1])
             }
         }
+        line()
     }
     
     private func direction(_ path: Path, destination: Path) {
-        filter()
         path.options = []
         direction(.walking, path: path, destination: destination)
         direction(.driving, path: path, destination: destination)
@@ -200,7 +202,10 @@ final class Map: MKMapView, MKMapViewDelegate {
                     return option
                 } as [Path.Option]
                 path.options += options
-                self?.filter(mode)
+                if app.session.settings.mode == mode {
+                    self?.line()
+                    self?.refresh()
+                }
             }
         }
     }
@@ -211,15 +216,9 @@ final class Map: MKMapView, MKMapViewDelegate {
         option.distance = CLLocation(latitude: path.latitude, longitude: path.longitude).distance(from: .init(latitude: destination.latitude, longitude: destination.longitude))
         option.points = [(path.latitude, path.longitude), (destination.latitude, destination.longitude)]
         path.options.append(option)
-        filter(.flying)
-    }
-    
-    private func filter(_ mode: Session.Mode) {
-        DispatchQueue.main.async { [weak self] in
-            if app.session.settings.mode == mode {
-                self?.refresh()
-                self?.filter()
-            }
+        if app.session.settings.mode == .flying {
+            line()
+            refresh()
         }
     }
     
