@@ -3,19 +3,7 @@ import MapKit
 final class User: MKAnnotationView {
     override var isHighlighted: Bool { didSet { hover() } }
     override var isSelected: Bool { didSet { hover() } }
-    
-    override var annotation: MKAnnotation? { didSet {
-        if halo?.animation(forKey: "halo") == nil {
-            halo?.add({
-                $0.fromValue = { $0.addEllipse(in: .init(x: 1, y: 1, width: 20, height: 20)); return $0 } (CGMutablePath())
-                $0.toValue = { $0.addEllipse(in: .init(x: 8, y: 8, width: 6, height: 6)); return $0 } (CGMutablePath())
-                $0.repeatCount = .infinity
-                $0.autoreverses = true
-                $0.duration = 5
-                return $0
-            } (CABasicAnimation(keyPath: "path")), forKey: "halo")
-        }
-    } }
+    override var annotation: MKAnnotation? { didSet { animate() } }
     
     private(set) weak var heading: UIImageView?
     private weak var me: UIImageView?
@@ -57,12 +45,32 @@ final class User: MKAnnotationView {
         me.heightAnchor.constraint(equalToConstant: 28).isActive = true
         me.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         me.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { [weak self] _ in
+            self?.halo?.removeAnimation(forKey: "halo")
+            self?.animate()
+        }
     }
+    
+    deinit { NotificationCenter.default.removeObserver(self) }
     
     private func hover() {
         UIView.animate(withDuration: 0.5) { [weak self] in
             self?.me?.alpha = self?.isSelected == true || self?.isHighlighted == true ? 1 : 0
             self?.halo?.fillColor = self?.isSelected == true || self?.isHighlighted == true ? .black : .halo
+        }
+    }
+    
+    private func animate() {
+        if halo?.animation(forKey: "halo") == nil {
+            halo?.add({
+                $0.fromValue = { $0.addEllipse(in: .init(x: 1, y: 1, width: 20, height: 20)); return $0 } (CGMutablePath())
+                $0.toValue = { $0.addEllipse(in: .init(x: 8, y: 8, width: 6, height: 6)); return $0 } (CGMutablePath())
+                $0.repeatCount = .infinity
+                $0.autoreverses = true
+                $0.duration = 5
+                return $0
+            } (CABasicAnimation(keyPath: "path")), forKey: "halo")
         }
     }
 }

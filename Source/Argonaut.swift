@@ -165,11 +165,11 @@ public final class Argonaut {
     }
     
     private static func prepare() {
-        var url = self.url
-        try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        var root = self.root
         var resources = URLResourceValues()
         resources.isExcludedFromBackup = true
-        try! url.setResourceValues(resources)
+        try! root.setResourceValues(resources)
+        try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
     }
     
     private static func url(_ id: String) -> URL { return url.appendingPathComponent(id + ".argonaut") }
