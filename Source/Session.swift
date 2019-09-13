@@ -21,6 +21,7 @@ public final class Session: Codable {
         public var pins = true
         public var directions = true
         public var follow = true
+        public var heading = true
     }
     
     public static func load(_ result: @escaping((Session) -> Void)) {

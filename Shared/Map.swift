@@ -129,7 +129,13 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     func remark() {
-        annotations.filter { $0 is Mark }.forEach { view(for: $0)?.isHidden = !app.session.settings.pins }
+        annotations.forEach {
+            if let user = view(for: $0) as? User {
+                user.heading?.isHidden = !app.session.settings.heading
+            } else if let marker = view(for: $0) as? Marker {
+                marker.isHidden = !app.session.settings.pins
+            }
+        }
     }
     
     func line() {

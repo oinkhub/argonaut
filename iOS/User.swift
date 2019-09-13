@@ -26,6 +26,7 @@ final class User: MKAnnotationView {
         heading.translatesAutoresizingMaskIntoConstraints = false
         heading.contentMode = .center
         heading.clipsToBounds = true
+        heading.isHidden = !app.session.settings.heading
         addSubview(heading)
         self.heading = heading
         

@@ -5,11 +5,12 @@ final class Settings: UIView {
     enum Style { case new, navigate }
     
     private enum Item {
-        case follow, pins, directions
+        case follow, heading, pins, directions
         
         var title: String {
             switch self {
             case .follow: return .key("Settings.follow")
+            case .heading: return .key("Settings.heading")
             case .pins: return .key("Settings.pins")
             case .directions: return .key("Settings.directions")
             }
@@ -18,6 +19,7 @@ final class Settings: UIView {
         var image: String {
             switch self {
             case .follow: return "follow"
+            case .heading: return "head"
             case .pins: return "pin"
             case .directions: return "directions"
             }
@@ -104,7 +106,6 @@ final class Settings: UIView {
         let base = UIView()
         base.translatesAutoresizingMaskIntoConstraints = false
         base.backgroundColor = .black
-        base.layer.cornerRadius = 6
         addSubview(base)
         
         let scroll = Scroll()
@@ -166,10 +167,10 @@ final class Settings: UIView {
         }
         scroll.content.addSubview(segmented)
         
-        base.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
-        base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-        base.heightAnchor.constraint(equalToConstant: 370).isActive = true
-        self.top = base.topAnchor.constraint(equalTo: topAnchor, constant: -380)
+        base.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        base.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        base.heightAnchor.constraint(equalToConstant: 440).isActive = true
+        self.top = base.topAnchor.constraint(equalTo: topAnchor, constant: -440)
         self.top.isActive = true
         
         scroll.leftAnchor.constraint(equalTo: base.leftAnchor).isActive = true
@@ -186,7 +187,7 @@ final class Settings: UIView {
         info.topAnchor.constraint(equalTo: segmented.bottomAnchor, constant: 15).isActive = true
         
         var top = info.bottomAnchor
-        ([.follow, .pins, .directions] as [Item]).forEach {
+        [Item.follow, .heading, .pins, .directions].forEach {
             let button = Button($0)
             button.addTarget(self, action: #selector(change(_:)), for: .touchUpInside)
             scroll.content.addSubview(button)
@@ -216,8 +217,8 @@ final class Settings: UIView {
         bottomAnchor.constraint(equalTo: app.view.bottomAnchor).isActive = true
         app.view.layoutIfNeeded()
         
-        top.constant = -10
-        UIView.animate(withDuration: 0.4) { [weak self] in
+        top.constant = 0
+        UIView.animate(withDuration: 0.35) { [weak self] in
             self?.alpha = 1
             app.view.layoutIfNeeded()
         }
@@ -240,8 +241,8 @@ final class Settings: UIView {
     }
     
     @objc private func done() {
-        top.constant = -380
-        UIView.animate(withDuration: 0.5, animations: { [weak self] in
+        top.constant = -440
+        UIView.animate(withDuration: 0.35, animations: { [weak self] in
             app.view.layoutIfNeeded()
             self?.alpha = 0
         }) { [weak self] _ in self?.removeFromSuperview() }
@@ -249,7 +250,8 @@ final class Settings: UIView {
     
     @objc private func change(_ button: Button) {
         switch button.item {
-        case .follow:  app.session.settings.follow.toggle()
+        case .follow: app.session.settings.follow.toggle()
+        case .heading: app.session.settings.heading.toggle()
         case .pins: app.session.settings.pins.toggle()
         case .directions: app.session.settings.directions.toggle()
         }
@@ -261,6 +263,7 @@ final class Settings: UIView {
     @objc private func update(_ button: Button) {
         switch button.item {
         case .follow: button.value = app.session.settings.follow
+        case .heading: button.value = app.session.settings.heading
         case .pins: button.value = app.session.settings.pins
         case .directions: button.value = app.session.settings.directions
         }

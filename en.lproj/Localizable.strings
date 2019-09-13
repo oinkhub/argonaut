@@ -44,6 +44,7 @@ List.confirm="Delete";
 Load.label="Loading...";
 Settings.done="Close";
 Settings.follow="Follow me";
+Settings.heading="Heading";
 Settings.pins="Pins";
 Settings.directions="Directions";
 Settings.argonaut="Offline";
