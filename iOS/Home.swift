@@ -37,7 +37,6 @@ final class Home: UIView {
         _edit.imageView!.tintColor = .init(white: 1, alpha: 0.3)
         _edit.imageView!.clipsToBounds = true
         _edit.imageView!.contentMode = .center
-        _edit.imageEdgeInsets.right = 10
         addSubview(_edit)
         self._edit = _edit
         
@@ -121,11 +120,11 @@ final class Home: UIView {
         
         _edit.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         _edit.centerYAnchor.constraint(equalTo: borderTop.topAnchor, constant: -25).isActive = true
-        _edit.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        _edit.widthAnchor.constraint(equalToConstant: 68).isActive = true
         _edit.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         _done.centerYAnchor.constraint(equalTo: _edit.centerYAnchor).isActive = true
-        _done.leftAnchor.constraint(equalTo: _edit.rightAnchor, constant: -30).isActive = true
+        _done.leftAnchor.constraint(equalTo: _edit.rightAnchor, constant: -20).isActive = true
         _done.widthAnchor.constraint(equalToConstant: 80).isActive = true
         _done.heightAnchor.constraint(equalToConstant: 60).isActive = true
         

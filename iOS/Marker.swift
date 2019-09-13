@@ -31,9 +31,9 @@ final class Marker: MKAnnotationView {
         base.isUserInteractionEnabled = false
         base.translatesAutoresizingMaskIntoConstraints = false
         base.alpha = 0
-        base.backgroundColor = .black
+        base.backgroundColor = .init(white: 0.1333, alpha: 1)
         base.layer.cornerRadius = 5
-        base.layer.borderColor = UIColor(white: 0.1333, alpha: 1).cgColor
+        base.layer.borderColor = .black
         base.layer.borderWidth = 1
         addSubview(base)
         self.base = base
@@ -66,8 +66,8 @@ final class Marker: MKAnnotationView {
         indexY!.isActive = true
         
         off.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        off.widthAnchor.constraint(equalToConstant: 32).isActive = true
-        off.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        off.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        off.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         on.bottomAnchor.constraint(equalTo: centerYAnchor).isActive = true
         on.widthAnchor.constraint(equalToConstant: 36).isActive = true
@@ -75,10 +75,10 @@ final class Marker: MKAnnotationView {
         
         base.topAnchor.constraint(equalTo: centerYAnchor, constant: 4).isActive = true
         base.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        base.heightAnchor.constraint(equalToConstant: title.font.pointSize + 16).isActive = true
+        base.heightAnchor.constraint(equalToConstant: title.font.pointSize + 18).isActive = true
         
-        title.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 10).isActive = true
-        title.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -10).isActive = true
+        title.leftAnchor.constraint(equalTo: base.leftAnchor, constant: 12).isActive = true
+        title.rightAnchor.constraint(equalTo: base.rightAnchor, constant: -12).isActive = true
         title.centerYAnchor.constraint(equalTo: base.centerYAnchor).isActive = true
         
         layoutIfNeeded()

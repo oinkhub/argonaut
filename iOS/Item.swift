@@ -103,13 +103,13 @@ final class Item: UIControl {
         bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 30).isActive = true
         
         border.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        border.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         border.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
         name.leftAnchor.constraint(equalTo: border.leftAnchor).isActive = true
         name.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
-        name.topAnchor.constraint(equalTo: border.bottomAnchor, constant: 30).isActive = true
+        name.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
         
         index.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         

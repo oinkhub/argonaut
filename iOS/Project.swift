@@ -55,10 +55,10 @@ final class Project: UIControl, UITextViewDelegate {
         travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         travel.attributedText = { string in
             item.points.forEach {
-                string.append(.init(string: (string.string.isEmpty ? "" : "\n") + $0, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .ultraLight), .foregroundColor: UIColor.white]))
+                string.append(.init(string: (string.string.isEmpty ? "" : "\n") + $0, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light), .foregroundColor: UIColor.white]))
             }
             if !measure.isEmpty {
-                string.append(.init(string: "\n" + measure, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .ultraLight), .foregroundColor: UIColor(white: 1, alpha: 0.8)]))
+                string.append(.init(string: "\n" + measure, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .light), .foregroundColor: UIColor(white: 1, alpha: 0.8)]))
             }
             return string
         } (NSMutableAttributedString())
@@ -113,7 +113,7 @@ final class Project: UIControl, UITextViewDelegate {
         field.leftAnchor.constraint(equalTo: base.rightAnchor).isActive = true
         field.rightAnchor.constraint(equalTo: delete.leftAnchor).isActive = true
         
-        base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+        base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         base.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
         base.widthAnchor.constraint(equalToConstant: 26).isActive = true
         base.heightAnchor.constraint(equalToConstant: 26).isActive = true
@@ -124,7 +124,7 @@ final class Project: UIControl, UITextViewDelegate {
         icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
         
         travel.topAnchor.constraint(equalTo: field.bottomAnchor, constant: -15).isActive = true
-        travel.leftAnchor.constraint(equalTo: field.leftAnchor, constant: 12).isActive = true
+        travel.leftAnchor.constraint(equalTo: field.leftAnchor, constant: 15).isActive = true
         travel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
         left = delete.leftAnchor.constraint(equalTo: rightAnchor)
