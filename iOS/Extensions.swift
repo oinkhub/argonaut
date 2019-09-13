@@ -13,7 +13,9 @@ extension CGColor {
     static let walking = UIColor.walking.cgColor
     static let driving = UIColor.driving.cgColor
     static let flying = UIColor.flying.cgColor
+    static let white = UIColor.white.cgColor
     static let black = UIColor.black.cgColor
+    static let clear = UIColor.clear.cgColor
 }
 
 extension Tiler {

@@ -125,47 +125,46 @@ final class Settings: UIView {
         info.translatesAutoresizingMaskIntoConstraints = false
         info.numberOfLines = 0
         info.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
-        info.textColor = .white
+        info.textColor = UIColor(white: 1, alpha: 0.7)
         scroll.content.addSubview(info)
         self.info = info
         
+        let segmented: UISegmentedControl
+        
         switch style {
         case .navigate:
-            let map = UISegmentedControl(items: [String.key("Settings.argonaut"), .key("Settings.apple"), .key("Settings.hybrid")])
-            map.translatesAutoresizingMaskIntoConstraints = false
-            map.tintColor = .halo
-            map.addTarget(self, action: #selector(mapped(_:)), for: .valueChanged)
-            scroll.content.addSubview(map)
+            segmented = UISegmentedControl(items: [String.key("Settings.argonaut"), .key("Settings.apple"), .key("Settings.hybrid")])
+            segmented.addTarget(self, action: #selector(mapped(_:)), for: .valueChanged)
             
             switch app.session.settings.map {
-            case .argonaut: map.selectedSegmentIndex = 0
-            case .apple: map.selectedSegmentIndex = 1
-            case .hybrid: map.selectedSegmentIndex = 2
+            case .argonaut: segmented.selectedSegmentIndex = 0
+            case .apple: segmented.selectedSegmentIndex = 1
+            case .hybrid: segmented.selectedSegmentIndex = 2
             }
             
             mapInfo()
-            map.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 15).isActive = true
-            map.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
             
-            info.topAnchor.constraint(equalTo: map.bottomAnchor, constant: 15).isActive = true
         case .new:
-            let mode = UISegmentedControl(items: [String.key("Settings.walking"), .key("Settings.driving"), .key("Settings.flying")])
-            mode.translatesAutoresizingMaskIntoConstraints = false
-            mode.tintColor = .halo
+            segmented = UISegmentedControl(items: [String.key("Settings.walking"), .key("Settings.driving"), .key("Settings.flying")])
+            
             switch app.session.settings.mode {
-            case .walking: mode.selectedSegmentIndex = 0
-            case .driving: mode.selectedSegmentIndex = 1
-            case .flying: mode.selectedSegmentIndex = 2
+            case .walking: segmented.selectedSegmentIndex = 0
+            case .driving: segmented.selectedSegmentIndex = 1
+            case .flying: segmented.selectedSegmentIndex = 2
             }
-            mode.addTarget(self, action: #selector(moded(_:)), for: .valueChanged)
-            scroll.content.addSubview(mode)
+            segmented.addTarget(self, action: #selector(moded(_:)), for: .valueChanged)
+            
             modeInfo()
-            
-            mode.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 15).isActive = true
-            mode.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
-            
-            info.topAnchor.constraint(equalTo: mode.bottomAnchor, constant: 15).isActive = true
         }
+        
+        segmented.translatesAutoresizingMaskIntoConstraints = false
+        segmented.tintColor = .halo
+        segmented.setTitleTextAttributes([.foregroundColor: UIColor.halo.withAlphaComponent(0.6)], for: .normal)
+        segmented.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .selected)
+        if #available(iOS 13.0, *) {
+            segmented.selectedSegmentTintColor = .halo
+        }
+        scroll.content.addSubview(segmented)
         
         base.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         base.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
@@ -184,6 +183,7 @@ final class Settings: UIView {
         
         info.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         info.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
+        info.topAnchor.constraint(equalTo: segmented.bottomAnchor, constant: 15).isActive = true
         
         var top = info.bottomAnchor
         ([.follow, .pins, .directions] as [Item]).forEach {
@@ -198,6 +198,9 @@ final class Settings: UIView {
             top = button.bottomAnchor
         }
         scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top).isActive = true
+        
+        segmented.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 15).isActive = true
+        segmented.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
         
         if #available(iOS 11.0, *) {
             scroll.topAnchor.constraint(equalTo: base.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true

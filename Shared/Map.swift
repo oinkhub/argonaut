@@ -96,17 +96,16 @@ final class Map: MKMapView, MKMapViewDelegate {
         selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
         removeAnnotations(annotations.filter { ($0 as? Mark)?.path === path })
         guard let index = self.path.firstIndex(where: { $0 === path }) else { return }
-        removeOverlays(self.overlays.filter { ($0 as? Line)?.path === path } )
         if index > 0 {
             if index < self.path.count - 1 {
                 direction(self.path[index - 1], destination: self.path[index + 1])
             } else {
-                removeOverlays(overlays.filter { ($0 as? Line)?.path === self.path[index - 1] } )
                 self.path[index - 1].options = []
             }
         }
         self.path.remove(at: index)
         refresh()
+        filter()
         annotations.compactMap { $0 as? Mark }.compactMap { view(for: $0) as? Marker }.forEach { marker in
             if let index = self.path.firstIndex(where: { $0 === (marker.annotation as? Mark)?.path }) {
                 marker.index = "\(index + 1)"
@@ -136,10 +135,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func filter() {
         removeOverlays(overlays.filter { $0 is Line })
-        if app.session.settings.directions {
-            addOverlays(path.flatMap { path in path.options.filter { $0.mode == app.session.settings.mode }
-            .map { Line(path, option: $0) } }, level: .aboveLabels)
-        }
+        if app.session.settings.directions { addOverlay(Line(path), level: .aboveLabels) }
     }
     
     func rezoom() {
@@ -151,8 +147,9 @@ final class Map: MKMapView, MKMapViewDelegate {
     @objc func pin() { locate(add(centerCoordinate)) }
     
     @objc func me() {
-        if annotations.contains(where: { $0 === userLocation }) {
-            setCenter(userLocation.coordinate, animated: true)
+        selectedAnnotations.forEach { deselectAnnotation($0, animated: true) }
+        if let user = annotations.first(where: { $0 === userLocation }) {
+            selectAnnotation(user, animated: true)
         }
     }
     
@@ -180,7 +177,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     }
     
     private func direction(_ path: Path, destination: Path) {
-        removeOverlays(overlays.filter { ($0 as? Line)?.path === path })
+        filter()
         path.options = []
         direction(.walking, path: path, destination: destination)
         direction(.driving, path: path, destination: destination)
