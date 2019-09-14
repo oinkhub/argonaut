@@ -109,7 +109,7 @@ final class Create: UIView {
         label.widthAnchor.constraint(lessThanOrEqualToConstant: 300).isActive = true
         label.bottomAnchor.constraint(equalTo: cancel.topAnchor, constant: -40).isActive = true
         
-        logo.bottomAnchor.constraint(equalTo: label.topAnchor).isActive = true
+        logo.bottomAnchor.constraint(equalTo: label.topAnchor, constant: -20).isActive = true
         logo.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         logo.widthAnchor.constraint(equalToConstant: 120).isActive = true
         logo.heightAnchor.constraint(equalToConstant: 120).isActive = true
