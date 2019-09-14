@@ -118,6 +118,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         retile()
         self.path = project.0
         addAnnotations(path.map { Mark($0) })
+        line()
     }
     
     func retile() {

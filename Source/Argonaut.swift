@@ -68,7 +68,13 @@ public final class Argonaut {
     
     public class func share(_ item: Session.Item, result: @escaping((URL) -> Void)) {
         DispatchQueue.global(qos: .background).async {
-            let out = OutputStream(url: temporal, append: false)!
+            let location: URL
+            if item.name.isEmpty {
+                location = temporal
+            } else {
+                location = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(item.name).argonaut")
+            }
+            let out = OutputStream(url: location, append: false)!
             out.open()
             let coded = try! JSONEncoder().encode(item)
             _ = withUnsafeBytes(of: UInt16(coded.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 2) }
@@ -83,7 +89,7 @@ public final class Argonaut {
             input.close()
             out.close()
             DispatchQueue.main.async {
-                result(temporal)
+                result(location)
             }
         }
     }

@@ -23,10 +23,10 @@ final class TestFactory: XCTestCase {
         factory.path[0].options = [.init()]
         factory.path[0].options[0].points = [(-50, 60), (70, -80), (-30, 20), (82, -40)]
         factory.measure()
-        XCTAssertEqual(-80.004, factory.rect.origin.coordinate.longitude, accuracy: 0.00001)
-        XCTAssertEqual(82.004, factory.rect.origin.coordinate.latitude, accuracy: 0.00001)
-        XCTAssertEqual(60.004, MKMapPoint(x: factory.rect.maxX, y: 0).coordinate.longitude, accuracy: 0.00001)
-        XCTAssertEqual(-50.004, MKMapPoint(x: 0, y: factory.rect.maxY).coordinate.latitude, accuracy: 0.00001)
+        XCTAssertEqual(-80.002, factory.rect.origin.coordinate.longitude, accuracy: 0.00001)
+        XCTAssertEqual(82.002, factory.rect.origin.coordinate.latitude, accuracy: 0.00001)
+        XCTAssertEqual(60.002, MKMapPoint(x: factory.rect.maxX, y: 0).coordinate.longitude, accuracy: 0.00001)
+        XCTAssertEqual(-50.002, MKMapPoint(x: 0, y: factory.rect.maxY).coordinate.latitude, accuracy: 0.00001)
     }
     
     func testDivide1() {

@@ -42,6 +42,7 @@ final class TestArgonaut: XCTestCase {
             XCTAssertFalse(FileManager.default.fileExists(atPath: url.path))
             XCTAssertEqual(.main, Thread.current)
             XCTAssertTrue(FileManager.default.fileExists(atPath: shared.path))
+            XCTAssertEqual("hello world and lorem ipsum.argonaut", shared.lastPathComponent)
             DispatchQueue.global(qos: .background).async {
                 Argonaut.receive(shared) {
                     XCTAssertEqual(.main, Thread.current)
@@ -55,6 +56,20 @@ final class TestArgonaut: XCTestCase {
                     expect.fulfill()
                 }
             }
+        }
+        waitForExpectations(timeout: 1)
+    }
+    
+    func testShareNoName() {
+        let expect = expectation(description: "")
+        let url = Argonaut.url.appendingPathComponent("lorem.argonaut")
+        try! Data("hello world".utf8).write(to: url)
+        let item = Session.Item()
+        item.id = "lorem"
+        Argonaut.share(item) { shared in
+            XCTAssertTrue(FileManager.default.fileExists(atPath: shared.path))
+            XCTAssertEqual("map.argonaut", shared.lastPathComponent)
+            expect.fulfill()
         }
         waitForExpectations(timeout: 1)
     }

@@ -174,7 +174,7 @@ final class Home: UIView {
                 scroll.content.addSubview(border)
                 
                 border.topAnchor.constraint(equalTo: top).isActive = true
-                border.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 48).isActive = true
+                border.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 60).isActive = true
                 border.rightAnchor.constraint(equalTo: scroll.content.rightAnchor).isActive = true
                 border.heightAnchor.constraint(equalToConstant: 1).isActive = true
                 top = border.bottomAnchor
