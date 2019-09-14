@@ -48,7 +48,7 @@ final class Load: UIView {
     private init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = .init(white: 0, alpha: 0.85)
+        backgroundColor = .init(white: 0, alpha: 0.9)
         alpha = 0
         accessibilityViewIsModal = true
         
@@ -64,13 +64,13 @@ final class Load: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = .key("Load.label")
         label.textColor = .white
-        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
+        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .bold)
         addSubview(label)
         
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        label.topAnchor.constraint(equalTo: centerYAnchor, constant: 20).isActive = true
         
         icon.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        icon.bottomAnchor.constraint(equalTo: label.topAnchor).isActive = true
+        icon.bottomAnchor.constraint(equalTo: label.topAnchor, constant: -20).isActive = true
     }
 }
