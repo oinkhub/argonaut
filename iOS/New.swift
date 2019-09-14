@@ -210,7 +210,12 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
-    @objc private func save() { app.replace(Create(map.path, rect: map.visibleMapRect)) }
+    @objc private func save() {
+        app.push(Create(map.path, rect: map.visibleMapRect))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.removeFromSuperview()
+        }
+    }
     
     @available(iOS 9.3, *) @objc private func edit(_ gesture: UILongPressGestureRecognizer) { field.field.text = (gesture.view as! Result).search.title }
 

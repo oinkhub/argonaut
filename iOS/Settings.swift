@@ -31,7 +31,6 @@ final class Settings: UIView {
         override var isHighlighted: Bool { didSet { hover() } }
         override var isSelected: Bool { didSet { hover() } }
         override var accessibilityValue: String? { get { value.description } set { } }
-        
         let item: Item
         private weak var base: UIView!
         
@@ -67,15 +66,15 @@ final class Settings: UIView {
             
             heightAnchor.constraint(equalToConstant: 60).isActive = true
             
-            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-            base.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 40).isActive = true
+            base.rightAnchor.constraint(equalTo: rightAnchor, constant: -40).isActive = true
             base.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
             base.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
             
             label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 45).isActive = true
+            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 65).isActive = true
             
-            image.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
+            image.rightAnchor.constraint(equalTo: rightAnchor, constant: -50).isActive = true
             image.widthAnchor.constraint(equalToConstant: 30).isActive = true
             image.heightAnchor.constraint(equalToConstant: 30).isActive = true
             image.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -85,7 +84,7 @@ final class Settings: UIView {
             if value && !isSelected && !isHighlighted {
                 base.backgroundColor = .halo
             } else {
-                base.backgroundColor = .init(white: 1, alpha: 0.3)
+                base.backgroundColor = .dark
             }
         }
     }

@@ -30,6 +30,7 @@
 		CE2F61472312963100A01CF6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2F61462312963100A01CF6 /* User.swift */; };
 		CE3256B623029C2400D95A31 /* HelperMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3256B523029C2400D95A31 /* HelperMac.swift */; };
 		CE3256B823029C4200D95A31 /* HelperiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3256B723029C4200D95A31 /* HelperiOS.swift */; };
+		CE354514232D11B90022800F /* Bar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE354513232D11B90022800F /* Bar.swift */; };
 		CE3978A022F5B1E60045E1D7 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE39789F22F5B1E60045E1D7 /* Marker.swift */; };
 		CE4A547C22D85E1B00125A9C /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A547B22D85E1B00125A9C /* Button.swift */; };
 		CE633A2122FD525E00846455 /* TestArgonaut.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE633A2022FD525E00846455 /* TestArgonaut.swift */; };
@@ -138,6 +139,7 @@
 		CE2F61462312963100A01CF6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		CE3256B523029C2400D95A31 /* HelperMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperMac.swift; sourceTree = "<group>"; };
 		CE3256B723029C4200D95A31 /* HelperiOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperiOS.swift; sourceTree = "<group>"; };
+		CE354513232D11B90022800F /* Bar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bar.swift; sourceTree = "<group>"; };
 		CE39789F22F5B1E60045E1D7 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		CE4A547B22D85E1B00125A9C /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -294,6 +296,7 @@
 				CEE098302302E3E200321C07 /* About.swift */,
 				CEDB361F2302A5630078E521 /* Alert.swift */,
 				CEDE10FB22D71F2400DD796B /* App.swift */,
+				CE354513232D11B90022800F /* Bar.swift */,
 				CEDCC688230683C500AAF0C8 /* Button.swift */,
 				CE18343D23080B260046E496 /* Create.swift */,
 				CEDB361D2302A4140078E521 /* Extensions.swift */,
@@ -642,6 +645,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE354514232D11B90022800F /* Bar.swift in Sources */,
 				CEDE10FE22D71F2400DD796B /* App.swift in Sources */,
 				CEDB361E2302A4140078E521 /* Extensions.swift in Sources */,
 				CE9F3FEE2323D11600F221D8 /* Zoom.swift in Sources */,

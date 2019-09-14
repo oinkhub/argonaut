@@ -117,6 +117,11 @@ class World: UIView, CLLocationManagerDelegate {
         }
     }
     
+    override final func accessibilityPerformEscape() -> Bool {
+        app.pop()
+        return true
+    }
+    
     final func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool { true }
     final func locationManager(_: CLLocationManager, didFailWithError: Error) { }
     final func locationManager(_: CLLocationManager, didFinishDeferredUpdatesWithError: Error?) { }

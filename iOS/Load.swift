@@ -8,12 +8,10 @@ final class Load: UIView {
         modal {
             let project = Argonaut.load(item.id)
             DispatchQueue.main.async {
-                UIView.animate(withDuration: 0.2, animations: {
-                    view?.alpha = 0
-                }) { _ in
+                app.session.settings.mode = item.mode
+                app.push(Navigate(item, project: project))
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     view?.removeFromSuperview()
-                    app.session.settings.mode = item.mode
-                    app.push(Navigate(item, project: project))
                 }
             }
         }
@@ -21,15 +19,11 @@ final class Load: UIView {
     
     class func share(_ item: Session.Item) {
         modal {
-            Argonaut.share(item) { url in
-                UIView.animate(withDuration: 0.2, animations: {
-                    view?.alpha = 0
-                }) { _ in
-                    view?.removeFromSuperview()
-                    let share = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-                    share.popoverPresentationController?.sourceView = app.view
-                    app.present(share, animated: true)
-                }
+            Argonaut.share(item) {
+                view?.removeFromSuperview()
+                let share = UIActivityViewController(activityItems: [$0], applicationActivities: nil)
+                share.popoverPresentationController?.sourceView = app.view
+                app.present(share, animated: true)
             }
         }
     }

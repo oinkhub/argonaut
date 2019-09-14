@@ -8,7 +8,6 @@ private(set) weak var app: App!
     var window: UIWindow?
     private(set) weak var home: Home!
     private(set) var session: Session!
-    private var stack = [NSLayoutConstraint]()
     private var formatter: Any!
     private let dater = DateComponentsFormatter()
     
@@ -89,79 +88,21 @@ private(set) weak var app: App!
         }
     }
     
-    override func accessibilityPerformEscape() -> Bool {
-        if stack.isEmpty {
-            return false
-        }
-        pop()
-        return true
-    }
-    
     func push(_ screen: UIView) {
         window!.endEditing(true)
-        let previous = view.subviews.last
-        
-        let border = UIView()
-        border.translatesAutoresizingMaskIntoConstraints = false
-        border.isUserInteractionEnabled = false
-        border.backgroundColor = UIColor.shade.withAlphaComponent(0.7)
-        screen.addSubview(border)
-        
+        screen.alpha = 0
+        let previous = view.subviews.last!
         view.addSubview(screen)
         
-        border.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        border.bottomAnchor.constraint(equalTo: screen.topAnchor).isActive = true
-        border.leftAnchor.constraint(equalTo: screen.leftAnchor).isActive = true
-        border.rightAnchor.constraint(equalTo: screen.rightAnchor).isActive = true
-        
+        screen.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         screen.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         screen.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
         screen.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        let top = screen.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height)
-        top.isActive = true
-        stack.append(top)
         
-        view.layoutIfNeeded()
-        top.constant = 0
-        UIView.animate(withDuration: 0.45, delay: 0, options: .curveEaseIn, animations: {
-            previous?.alpha = 0
-            self.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
+            previous.alpha = 0
+            screen.alpha = 1
         })
-    }
-    
-    func replace(_ screen: UIView) {
-        window!.endEditing(true)
-        stack.removeLast()
-        let previous = view.subviews.last
-        
-        let border = UIView()
-        border.translatesAutoresizingMaskIntoConstraints = false
-        border.isUserInteractionEnabled = false
-        border.backgroundColor = UIColor.shade.withAlphaComponent(0.7)
-        screen.addSubview(border)
-        
-        view.addSubview(screen)
-        
-        border.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        border.bottomAnchor.constraint(equalTo: screen.topAnchor).isActive = true
-        border.leftAnchor.constraint(equalTo: screen.leftAnchor).isActive = true
-        border.rightAnchor.constraint(equalTo: screen.rightAnchor).isActive = true
-        
-        screen.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        screen.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
-        screen.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        let top = screen.topAnchor.constraint(equalTo: view.topAnchor, constant: view.bounds.height)
-        top.isActive = true
-        stack.append(top)
-        
-        view.layoutIfNeeded()
-        top.constant = 0
-        UIView.animate(withDuration: 0.45, delay: 0, options: .curveEaseIn, animations: { [weak previous] in
-            previous?.alpha = 0
-            self.view.layoutIfNeeded()
-        }) { [weak previous] _ in
-            previous?.removeFromSuperview()
-        }
     }
     
     func alert(_ title: String, message: String) {
@@ -213,16 +154,11 @@ private(set) weak var app: App!
     
     @objc func pop() {
         window!.endEditing(true)
-        if let top = stack.popLast() {
-            top.constant = view.bounds.height
-            let screen = view.subviews.last!
-            UIView.animate(withDuration: 0.4, animations: {
-                self.view.subviews[self.view.subviews.count - 2].alpha = 1
-                self.view.layoutIfNeeded()
-            }) { [weak screen] _ in
-                screen?.alpha = 0
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak screen] in screen?.removeFromSuperview() }
-            }
-        }
+        let screen = view.subviews.last!
+        let previous = view.subviews[view.subviews.count - 2]
+        UIView.animate(withDuration: 0.3, animations: {
+            screen.alpha = 0
+            previous.alpha = 1
+        }) { _ in screen.removeFromSuperview() }
     }
 }
