@@ -31,7 +31,7 @@ final class Marker: MKAnnotationView {
         base.isUserInteractionEnabled = false
         base.translatesAutoresizingMaskIntoConstraints = false
         base.alpha = 0
-        base.backgroundColor = .init(white: 0.1333, alpha: 1)
+        base.backgroundColor = .shade
         base.layer.cornerRadius = 5
         base.layer.borderColor = .black
         base.layer.borderWidth = 1

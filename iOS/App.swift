@@ -104,7 +104,7 @@ private(set) weak var app: App!
         let border = UIView()
         border.translatesAutoresizingMaskIntoConstraints = false
         border.isUserInteractionEnabled = false
-        border.backgroundColor = .init(white: 0.1333, alpha: 0.7)
+        border.backgroundColor = UIColor.shade.withAlphaComponent(0.7)
         screen.addSubview(border)
         
         view.addSubview(screen)
@@ -137,7 +137,7 @@ private(set) weak var app: App!
         let border = UIView()
         border.translatesAutoresizingMaskIntoConstraints = false
         border.isUserInteractionEnabled = false
-        border.backgroundColor = .init(white: 0.1333, alpha: 0.7)
+        border.backgroundColor = UIColor.shade.withAlphaComponent(0.7)
         screen.addSubview(border)
         
         view.addSubview(screen)

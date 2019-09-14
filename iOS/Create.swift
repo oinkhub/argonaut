@@ -13,7 +13,7 @@ final class Create: UIView {
     init(_ path: [Path], rect: MKMapRect) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = .init(white: 0.1333, alpha: 1)
+        backgroundColor = .shade
         accessibilityViewIsModal = true
         UIApplication.shared.isIdleTimerDisabled = true
         

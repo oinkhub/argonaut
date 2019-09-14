@@ -33,7 +33,7 @@ final class User: MKAnnotationView {
         let circle = UIView()
         circle.translatesAutoresizingMaskIntoConstraints = false
         circle.isUserInteractionEnabled = false
-        circle.backgroundColor = .init(white: 0.1333, alpha: 1)
+        circle.backgroundColor = .shade
         circle.layer.cornerRadius = 9
         circle.layer.borderColor = .white
         circle.layer.borderWidth = 1
@@ -60,7 +60,7 @@ final class User: MKAnnotationView {
     
     private func hover() {
         UIView.animate(withDuration: 0.3) { [weak self] in
-            self?.circle.backgroundColor = self?.isSelected == true || self?.isHighlighted == true ? .halo : .init(white: 0.1333, alpha: 1)
+            self?.circle.backgroundColor = self?.isSelected == true || self?.isHighlighted == true ? .halo : .shade
             self?.circle.layer.borderColor = self?.isSelected == true || self?.isHighlighted == true ? .black : .white
         }
     }

@@ -6,6 +6,7 @@ extension UIColor {
     static let driving = #colorLiteral(red: 0.7350077025, green: 0.9025363116, blue: 0.1398822623, alpha: 1)
     static let flying = #colorLiteral(red: 1, green: 0.5459220779, blue: 0.4609899387, alpha: 1)
     static let dark = #colorLiteral(red: 0.07843137255, green: 0.2352941176, blue: 0.3529411765, alpha: 1)
+    static let shade = #colorLiteral(red: 0.173407346, green: 0.173407346, blue: 0.173407346, alpha: 1)
 }
 
 extension CGColor {

@@ -18,6 +18,7 @@ final class Home: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         
         let scroll = Scroll()
+        scroll.backgroundColor = .shade
         addSubview(scroll)
         self.scroll = scroll
         
@@ -74,7 +75,7 @@ final class Home: UIView {
         [borderBottom, borderTop].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.isUserInteractionEnabled = false
-            $0.backgroundColor = .init(white: 0.1333, alpha: 1)
+            $0.backgroundColor = .shade
             addSubview($0)
             
             $0.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
