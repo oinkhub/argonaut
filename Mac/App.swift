@@ -59,7 +59,7 @@ private(set) weak var app: App!
         Argonaut.receive(url) {
             self.session.update($0)
             self.session.save()
-            self.list.refresh()
+//            self.list.refresh()
         }
     }
     
@@ -170,7 +170,7 @@ private(set) weak var app: App!
             $0.submenu = NSMenu(title: .key("Menu.window"))
             $0.submenu!.items = [
                 NSMenuItem(title: .key("Menu.minimize"), action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m"),
-                NSMenuItem(title: .key("Menu.zoom"), action: #selector(NSWindow.performZoom(_:)), keyEquivalent: "p"),
+                NSMenuItem(title: .key("Menu.zoom"), action: #selector(Window.zoom(_:)), keyEquivalent: "p"),
                 NSMenuItem.separator(),
                 NSMenuItem(title: .key("Menu.bringAllToFront"), action: #selector(arrangeInFront(_:)), keyEquivalent: ""),
                 NSMenuItem.separator(),
@@ -185,9 +185,12 @@ private(set) weak var app: App!
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         mainMenu = menu
         
-        let list = List()
-        list.makeKeyAndOrderFront(nil)
-        self.list = list
+//        let list = List()
+//        list.makeKeyAndOrderFront(nil)
+//        self.list = list
+        
+        let window = Window()
+        window.makeKeyAndOrderFront(nil)
         
         if #available(OSX 10.14, *) {
             UNUserNotificationCenter.current().delegate = self
@@ -202,10 +205,10 @@ private(set) weak var app: App!
         
         Session.load {
             self.session = $0
-            list.refresh()
+//            list.refresh()
             
             if $0.items.isEmpty {
-                self.help()
+//                self.help()
             }
             
             if Date() >= $0.rating {
