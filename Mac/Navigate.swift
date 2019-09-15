@@ -1,4 +1,4 @@
-import Argonaut
+/*import Argonaut
 import AppKit
 
 final class Navigate: World {
@@ -48,3 +48,4 @@ final class Navigate: World {
         warning.centerYAnchor.constraint(equalTo: zoom.centerYAnchor).isActive = true
     }
 }
+*/

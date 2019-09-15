@@ -6,6 +6,9 @@ import UserNotifications
 private(set) weak var app: App!
 @NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate {
     var session: Session!
+    
+    private(set) weak var window: Window!
+    
     private(set) weak var list: List!
     private(set) weak var follow: NSMenuItem!
     private(set) weak var walking: NSMenuItem!
@@ -82,23 +85,23 @@ private(set) weak var app: App!
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         
-        menu.addItem({
-            $0.submenu = NSMenu(title: .key("Menu.project"))
-            $0.submenu!.items = [
-                NSMenuItem(title: .key("Menu.new"), action: #selector(List.new), keyEquivalent: "n"),
-                NSMenuItem.separator(),
-                { $0.keyEquivalentModifierMask = []
-                    return $0
-                } (NSMenuItem(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p")),
-                { $0.keyEquivalentModifierMask = []
-                    return $0
-                } (NSMenuItem(title: .key("Menu.list"), action: #selector(New.handle), keyEquivalent: "l")),
-                NSMenuItem(title: .key("Menu.search"), action: #selector(New.search), keyEquivalent: "f"),
-                NSMenuItem.separator(),
-                NSMenuItem(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s")]
-            return $0
-        } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
-        
+//        menu.addItem({
+//            $0.submenu = NSMenu(title: .key("Menu.project"))
+//            $0.submenu!.items = [
+//                NSMenuItem(title: .key("Menu.new"), action: #selector(List.new), keyEquivalent: "n"),
+//                NSMenuItem.separator(),
+//                { $0.keyEquivalentModifierMask = []
+//                    return $0
+//                } (NSMenuItem(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p")),
+//                { $0.keyEquivalentModifierMask = []
+//                    return $0
+//                } (NSMenuItem(title: .key("Menu.list"), action: #selector(New.handle), keyEquivalent: "l")),
+//                NSMenuItem(title: .key("Menu.search"), action: #selector(New.search), keyEquivalent: "f"),
+//                NSMenuItem.separator(),
+//                NSMenuItem(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s")]
+//            return $0
+//        } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
+        /*
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.map"))
             $0.submenu!.items = [
@@ -138,7 +141,7 @@ private(set) weak var app: App!
                 } (NSMenuItem(title: .key("Menu.right"), action: #selector(World.right), keyEquivalent: String(Character(UnicodeScalar(NSRightArrowFunctionKey)!))))]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
-        
+        */
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.edit"))
             $0.submenu!.items = [
@@ -191,6 +194,7 @@ private(set) weak var app: App!
         
         let window = Window()
         window.makeKeyAndOrderFront(nil)
+        self.window = window
         
         if #available(OSX 10.14, *) {
             UNUserNotificationCenter.current().delegate = self
@@ -242,5 +246,5 @@ private(set) weak var app: App!
     private func order<W: NSWindow>(_ type: W.Type) { (windows.first(where: { $0 is W }) ?? W()).makeKeyAndOrderFront(nil) }
     @objc private func about() { order(About.self) }
     @objc private func privacy() { order(Privacy.self) }
-    @objc private func help() { order(Help.self) }
+    @objc private func help() { /*order(Help.self)*/ }
 }

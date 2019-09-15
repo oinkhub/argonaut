@@ -206,7 +206,7 @@ final class List: NSWindow {
         }
         
         @objc private func confirm() {
-            app.windows.filter { $0 is Navigate }.forEach { $0.close() }
+//            app.windows.filter { $0 is Navigate }.forEach { $0.close() }
             Argonaut.delete(item.id)
             app.session.items.removeAll(where: { $0.id == item.id })
             app.session.save()
@@ -341,10 +341,10 @@ final class List: NSWindow {
     }
     
     @objc func new() {
-        if let new = app.windows.first(where: { $0 is New }) {
-            new.orderFront(nil)
-        } else {
-            New().makeKeyAndOrderFront(nil)
-        }
+//        if let new = app.windows.first(where: { $0 is New }) {
+//            new.orderFront(nil)
+//        } else {
+//            New().makeKeyAndOrderFront(nil)
+//        }
     }
 }

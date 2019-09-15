@@ -34,6 +34,7 @@ class Field: NSTextView {
             textContainerInset.width = 40
             font = .systemFont(ofSize: 16, weight: .regular)
             layoutManager!.ensureLayout(for: textContainer!)
+            backgroundColor = .dark
             
             let icon = Button.Image(self, action: #selector(search))
             icon.image.image = NSImage(named: "search")
@@ -44,6 +45,7 @@ class Field: NSTextView {
             _cancel.image.image = NSImage(named: "delete")
             addSubview(_cancel)
             self._cancel = _cancel
+            
             
             icon.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             icon.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -57,13 +59,13 @@ class Field: NSTextView {
         }
         
         override func keyDown(with: NSEvent) {
-            switch with.keyCode {
-            case 36:
-                window!.makeFirstResponder(nil)
-                (window as! New).choose()
-            case 48, 53: window!.makeFirstResponder(nil)
-            default: super.keyDown(with: with)
-            }
+//            switch with.keyCode {
+//            case 36:
+//                window!.makeFirstResponder(nil)
+//                (window as! New).choose()
+//            case 48, 53: window!.makeFirstResponder(nil)
+//            default: super.keyDown(with: with)
+//            }
         }
         
         override func didChangeText() {
@@ -122,7 +124,6 @@ class Field: NSTextView {
         } (NSTextContainer(), Layout()))
         translatesAutoresizingMaskIntoConstraints = false
         allowsUndo = true
-        drawsBackground = false
         isRichText = false
         insertionPointColor = .halo
         isContinuousSpellCheckingEnabled = true

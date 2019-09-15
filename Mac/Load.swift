@@ -24,7 +24,7 @@ final class Load: NSWindow {
             DispatchQueue.main.async { [weak self] in
                 self?.close()
                 if app.isActive {
-                    Navigate(project).makeKeyAndOrderFront(nil)
+//                    Navigate(project).makeKeyAndOrderFront(nil)
                 }
             }
         }

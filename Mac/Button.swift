@@ -20,67 +20,27 @@ class Button: NSView {
         }
     }
     
-    final class Check: Button {
-        var checked = false { didSet {
-            if checked {
-                image.image = on
-            } else {
-                image.image = off
-            }
-        } }
-        var off: NSImage? { didSet { image.image = off } }
-        var on: NSImage?
-        private weak var image: NSImageView!
-        
-        required init?(coder: NSCoder) { return nil }
-        override init(_ target: AnyObject?, action: Selector?) {
-            super.init(target, action: action)
-            let image = NSImageView()
-            image.translatesAutoresizingMaskIntoConstraints = false
-            image.imageScaling = .scaleNone
-            addSubview(image)
-            self.image = image
-            
-            image.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-            image.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            image.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            image.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        }
-        
-        override func click() {
-            checked.toggle()
-            super.click()
-        }
-    }
-    
-    final class Yes: Text {
+    final class Background: Button {
         private(set) weak var width: NSLayoutConstraint!
-        
-        required init?(coder: NSCoder) { return nil }
-        override init(_ target: AnyObject?, action: Selector?) {
-            super.init(target, action: action)
-            wantsLayer = true
-            layer!.cornerRadius = 3
-            layer!.backgroundColor = .halo
-            label.alignment = .center
-            label.font = .systemFont(ofSize: 14, weight: .bold)
-            label.textColor = .black
-            
-            heightAnchor.constraint(equalToConstant: 28).isActive = true
-            width = widthAnchor.constraint(equalToConstant: 74)
-            width.isActive = true
-        }
-    }
-    
-    class Text: Button {
         private(set) weak var label: Label!
         
         required init?(coder: NSCoder) { return nil }
         override init(_ target: AnyObject?, action: Selector?) {
             super.init(target, action: action)
+            wantsLayer = true
+            layer!.cornerRadius = 12
+            layer!.backgroundColor = .halo
+            
             let label = Label()
+            label.alignment = .center
+            label.font = .systemFont(ofSize: 12, weight: .bold)
+            label.textColor = .black
             self.label = label
             addSubview(label)
+            
+            heightAnchor.constraint(equalToConstant: 24).isActive = true
+            width = widthAnchor.constraint(equalToConstant: 60)
+            width.isActive = true
             
             label.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             label.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -94,7 +54,7 @@ class Button: NSView {
     private var drag = CGFloat()
     final fileprivate var selected = false {
         didSet {
-            alphaValue = selected ? 0.5 : 1
+            alphaValue = selected ? 0.3 : 1
         }
     }
     

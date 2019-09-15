@@ -1,4 +1,4 @@
-import AppKit
+/*import AppKit
 
 final class Help: NSWindow {
     private final class Add: Item {
@@ -160,3 +160,4 @@ final class Help: NSWindow {
         scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: top, constant: 20).isActive = true
     }
 }
+*/
