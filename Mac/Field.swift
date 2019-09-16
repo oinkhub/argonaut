@@ -28,11 +28,11 @@ class Field: NSTextView {
         required init?(coder: NSCoder) { return nil }
         override init() {
             super.init()
-            textContainer!.size.height = 35
-            textContainer!.size.width = 370
-            textContainerInset.height = 9
-            textContainerInset.width = 40
-            font = .systemFont(ofSize: 16, weight: .regular)
+            textContainer!.size.height = 30
+            textContainer!.size.width = 700
+            textContainerInset.height = 5
+            textContainerInset.width = 30
+            font = .systemFont(ofSize: 14, weight: .regular)
             layoutManager!.ensureLayout(for: textContainer!)
             backgroundColor = .dark
             
@@ -49,23 +49,23 @@ class Field: NSTextView {
             
             icon.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             icon.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 45).isActive = true
+            icon.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            icon.widthAnchor.constraint(equalToConstant: 40).isActive = true
             
             _cancel.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             _cancel.topAnchor.constraint(equalTo: topAnchor).isActive = true
-            _cancel.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            _cancel.heightAnchor.constraint(equalToConstant: 45).isActive = true
+            _cancel.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            _cancel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
         
         override func keyDown(with: NSEvent) {
-//            switch with.keyCode {
-//            case 36:
-//                window!.makeFirstResponder(nil)
+            switch with.keyCode {
+            case 36:
+                window!.makeFirstResponder(nil)
 //                (window as! New).choose()
-//            case 48, 53: window!.makeFirstResponder(nil)
-//            default: super.keyDown(with: with)
-//            }
+            case 48, 53: window!.makeFirstResponder(nil)
+            default: super.keyDown(with: with)
+            }
         }
         
         override func didChangeText() {

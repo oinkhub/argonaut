@@ -66,4 +66,16 @@ final class Window: NSWindow {
             new.alphaValue = 1
         }) { }
     }
+    
+    override func keyDown(with: NSEvent) {
+        switch with.keyCode {
+        case 36, 48:
+            if let new = contentView!.subviews.compactMap({ $0 as? New }).first {
+                new.search()
+            } else {
+                super.keyDown(with: with)
+            }
+        default: super.keyDown(with: with)
+        }
+    }
 }
