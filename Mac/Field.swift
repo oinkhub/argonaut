@@ -28,12 +28,9 @@ class Field: NSTextView {
         required init?(coder: NSCoder) { return nil }
         override init() {
             super.init()
-            textContainer!.size.height = 30
-            textContainer!.size.width = 700
-            textContainerInset.height = 5
+            textContainerInset.height = 7
             textContainerInset.width = 30
             font = .systemFont(ofSize: 14, weight: .regular)
-            layoutManager!.ensureLayout(for: textContainer!)
             backgroundColor = .dark
             
             let icon = Button.Image(self, action: #selector(search))
@@ -46,7 +43,6 @@ class Field: NSTextView {
             addSubview(_cancel)
             self._cancel = _cancel
             
-            
             icon.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             icon.topAnchor.constraint(equalTo: topAnchor).isActive = true
             icon.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -58,15 +54,15 @@ class Field: NSTextView {
             _cancel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
         
-        override func keyDown(with: NSEvent) {
-            switch with.keyCode {
-            case 36:
-                window!.makeFirstResponder(nil)
-//                (window as! New).choose()
-            case 48, 53: window!.makeFirstResponder(nil)
-            default: super.keyDown(with: with)
-            }
-        }
+//        override func keyDown(with: NSEvent) {
+//            switch with.keyCode {
+//            case 36:
+//                window!.makeFirstResponder(nil)
+////                (window as! New).choose()
+//            case 48, 53: window!.makeFirstResponder(nil)
+//            default: super.keyDown(with: with)
+//            }
+//        }
         
         override func didChangeText() {
             super.didChangeText()
@@ -91,6 +87,7 @@ class Field: NSTextView {
             textContainerInset.height = 7
             textContainerInset.width = 10
             accepts = true
+            
             height = heightAnchor.constraint(greaterThanOrEqualToConstant: 40)
             height.isActive = true
         }
@@ -102,9 +99,8 @@ class Field: NSTextView {
             }
         }
         
-        func adjust() {
-            textContainer!.size.width = frame.width - (textContainerInset.width * 2) - 20
-            layoutManager!.ensureLayout(for: textContainer!)
+        override func adjust() {
+            super.adjust()
             height.constant = layoutManager!.usedRect(for: textContainer!).size.height + 14
         }
     }
@@ -133,9 +129,14 @@ class Field: NSTextView {
         }
     }
     
-    override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn: Bool) {
+    final override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn: Bool) {
         var rect = rect
-        rect.size.width += 3
+//        rect.size.width += 3
         super.drawInsertionPoint(in: rect, color: color, turnedOn: turnedOn)
+    }
+    
+    func adjust() {
+        textContainer!.size.width = frame.width - (textContainerInset.width * 2) - 20
+        layoutManager!.ensureLayout(for: textContainer!)
     }
 }

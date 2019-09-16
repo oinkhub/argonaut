@@ -28,6 +28,7 @@ final class New: World, NSTextViewDelegate {
     }
     
     func textDidChange(_: Notification) {
+        field.adjust()
         if #available(OSX 10.11.4, *) {
 //            (completer as! MKLocalSearchCompleter).cancel()
             if !field.string.isEmpty {
@@ -41,6 +42,11 @@ final class New: World, NSTextViewDelegate {
         if field.string.isEmpty {
 //            clear()
         }
+    }
+    
+    override func viewDidEndLiveResize() {
+        super.viewDidEndLiveResize()
+        field.adjust()
     }
     
     @objc func search() { app.window.makeFirstResponder(field) }
