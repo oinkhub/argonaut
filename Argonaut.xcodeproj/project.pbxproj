@@ -99,6 +99,7 @@
 		CEE098312302E3E200321C07 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE098302302E3E200321C07 /* About.swift */; };
 		CEE2BF9922EAF5400080C111 /* Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE2BF9822EAF5400080C111 /* Create.swift */; };
 		CEF5514922F2F3D900A16265 /* TestPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5514822F2F3D900A16265 /* TestPath.swift */; };
+		DAC775652331153E00EF4724 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC775642331153E00EF4724 /* Menu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -212,6 +213,7 @@
 		CEE098302302E3E200321C07 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		CEE2BF9822EAF5400080C111 /* Create.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Create.swift; sourceTree = "<group>"; };
 		CEF5514822F2F3D900A16265 /* TestPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPath.swift; sourceTree = "<group>"; };
+		DAC775642331153E00EF4724 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,6 +355,7 @@
 				CE9C6A36232E2B140020F982 /* Window.swift */,
 				CE734F7B22F1A2F7009799BE /* World_old.swift */,
 				CE9C6A3C232E65A90020F982 /* World.swift */,
+				DAC775642331153E00EF4724 /* Menu.swift */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -644,6 +647,7 @@
 				CEDE110822D71F5300DD796B /* Shared.swift in Sources */,
 				CEAB0F0822D73C5800320F4F /* New_old.swift in Sources */,
 				CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */,
+				DAC775652331153E00EF4724 /* Menu.swift in Sources */,
 				CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */,
 				CECECD7C22F469F2006AE0C8 /* Liner.swift in Sources */,
 				CE088B8722FEE7A80001BEE4 /* Help.swift in Sources */,

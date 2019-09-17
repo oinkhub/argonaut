@@ -61,8 +61,11 @@ final class New: World, NSTextViewDelegate {
         }
     }
     
-    override func keyDown(with event: NSEvent) {
-        print("key down")
+    override func keyDown(with: NSEvent) {
+        switch with.keyCode {
+        case 36, 48: search()
+        default: super.keyUp(with: with)
+        }
     }
     
     override func viewDidEndLiveResize() {
@@ -70,7 +73,16 @@ final class New: World, NSTextViewDelegate {
         field.adjust()
     }
     
+    func choose() {
+        if #available(OSX 10.11.4, *) {
+//            results.documentView!.subviews.map { $0 as! Result }.first(where: { $0.highlighted })?.click()
+        }
+    }
+    
     @objc func search() { app.window.makeFirstResponder(field) }
+    @objc func pin() { }
+    @objc func directions() { }
+    @objc func save() { }
     
     @objc private func clear() {
         field.string = ""

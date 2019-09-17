@@ -48,7 +48,7 @@ final class Window: NSWindow {
         new.heightAnchor.constraint(equalToConstant: 60).isActive = true
     }
     
-    @objc private func new() {
+    @objc func new() {
         base.isHidden = true
         NSCursor.arrow.set()
         
@@ -66,19 +66,7 @@ final class Window: NSWindow {
             $0.allowsImplicitAnimation = true
             new.alphaValue = 1
         }) { }
-    }
-    
-    override func keyDown(with: NSEvent) {
-        if !(firstResponder is Field) {
-            switch with.keyCode {
-            case 36, 48:
-                if let new = contentView!.subviews.compactMap({ $0 as? New }).first {
-                    new.search()
-                    return
-                }
-            default: break
-            }
-        }
-        super.keyDown(with: with)
+        (app.mainMenu as! Menu).new()
+        makeFirstResponder(new)
     }
 }

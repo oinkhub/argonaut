@@ -42,8 +42,10 @@ class World: NSView {
         close.widthAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
-    @objc private func close() {
+    @objc func close() {
+        app.window!.makeFirstResponder(nil)
         app.window.base.isHidden = false
+        (app.mainMenu as! Menu).base()
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.4
             $0.allowsImplicitAnimation = true

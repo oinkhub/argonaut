@@ -54,11 +54,12 @@ class Field: NSTextView {
         }
         
         override func keyDown(with: NSEvent) {
+            let new = window!.contentView!.subviews.compactMap({ $0 as? New }).first!
             switch with.keyCode {
             case 36:
-                window!.makeFirstResponder(nil)
-//                (window as! New).choose()
-            case 48, 53: window!.makeFirstResponder(nil)
+                window!.makeFirstResponder(new)
+                new.choose()
+            case 48, 53: window!.makeFirstResponder(new)
             default: super.keyDown(with: with)
             }
         }

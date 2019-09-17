@@ -55,4 +55,6 @@ final class Bar: NSView {
         line.heightAnchor.constraint(equalToConstant: 1).isActive = true
         line.topAnchor.constraint(equalTo: topAnchor, constant: 100).isActive = true
     }
+    
+    @objc func edit() { }
 }
