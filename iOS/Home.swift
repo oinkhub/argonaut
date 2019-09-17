@@ -14,7 +14,7 @@ final class Home: UIView {
     private weak var screenTopBottom: NSLayoutConstraint!
     private weak var screenBottomTop: NSLayoutConstraint!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

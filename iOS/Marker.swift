@@ -12,7 +12,7 @@ final class Marker: MKAnnotationView {
     private weak var indexY: NSLayoutConstraint?
     override var reuseIdentifier: String? { "Marker" }
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ drag: Bool) {
         super.init(annotation: nil, reuseIdentifier: nil)
         isDraggable = drag

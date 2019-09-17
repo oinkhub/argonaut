@@ -27,7 +27,7 @@ class Field: UITextView {
         private(set) weak var _cancel: UIButton!
         private(set) weak var width: NSLayoutConstraint!
         
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         init() {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +112,7 @@ class Field: UITextView {
     }
     
     final class Name: Field {
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         override init() {
             super.init()
             textContainerInset = .init(top: 18, left: 10, bottom: 18, right: 15)
@@ -122,7 +122,7 @@ class Field: UITextView {
         }
     }
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     private init() {
         let storage = NSTextStorage()
         super.init(frame: .zero, textContainer: {

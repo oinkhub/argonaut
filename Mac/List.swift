@@ -3,7 +3,7 @@ import AppKit
 
 final class List: NSWindow {
     private final class Travel: NSView {
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         init(_ image: String, distance: Double, duration: Double) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
@@ -55,7 +55,7 @@ final class List: NSWindow {
         private weak var field: Field.Name!
         private weak var item: Session.Item!
         
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         init(_ item: Session.Item) {
             self.item = item
             super.init(frame: .zero)
@@ -221,7 +221,7 @@ final class List: NSWindow {
     }
     
     private final class Scroll: NSScrollView {
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         init() {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false

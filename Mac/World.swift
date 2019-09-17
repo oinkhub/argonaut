@@ -4,7 +4,7 @@ class World: NSView {
     private(set) weak var map: Map!
     private(set) weak var top: NSView!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

@@ -5,7 +5,7 @@ final class Zoom: UIView {
     private weak var indicator: UIView!
     private let zoom: ClosedRange<Int>
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ zoom: ClosedRange<Int>) {
         self.zoom = zoom
         super.init(frame: .zero)

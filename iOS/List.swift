@@ -9,7 +9,7 @@ final class List: UIView {
     private weak var scroll: Scroll!
     private var location: CLLocation?
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         backgroundColor = .black

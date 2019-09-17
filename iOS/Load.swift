@@ -44,7 +44,7 @@ final class Load: UIView {
         }) { _ in DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { perform() } }
     }
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     private init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

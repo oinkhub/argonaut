@@ -1,7 +1,7 @@
 import UIKit
 
 final class Bar: UIView {
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ name: String) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

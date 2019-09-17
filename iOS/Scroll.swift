@@ -3,7 +3,7 @@ import UIKit
 final class Scroll: UIScrollView {
     private(set) weak var content: UIView!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

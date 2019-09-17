@@ -3,7 +3,7 @@ import AppKit
 final class New: World, NSTextViewDelegate {
     private weak var field: Field.Search!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     override init() {
         super.init()
         

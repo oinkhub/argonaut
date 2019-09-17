@@ -9,7 +9,7 @@ final class Create: UIView {
     private weak var button: UIButton!
     private let factory = Factory()
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ path: [Path], rect: MKMapRect) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

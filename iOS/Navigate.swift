@@ -4,7 +4,7 @@ import MapKit
 final class Navigate: World {
     private weak var zoom: Zoom!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ item: Session.Item, project: ([Path], Cart)) {
         super.init()
         

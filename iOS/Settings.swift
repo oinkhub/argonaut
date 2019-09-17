@@ -34,7 +34,7 @@ final class Settings: UIView {
         let item: Item
         private weak var base: UIView!
         
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         init(_ item: Item) {
             self.item = item
             super.init(frame: .zero)
@@ -94,7 +94,7 @@ final class Settings: UIView {
     private weak var top: NSLayoutConstraint!
     private weak var info: UILabel!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ style: Style) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

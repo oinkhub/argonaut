@@ -14,7 +14,7 @@ private(set) weak var app: App!
     private(set) weak var walking: NSMenuItem!
     private(set) weak var driving: NSMenuItem!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     override init() {
         super.init()
         app = self
@@ -22,7 +22,7 @@ private(set) weak var app: App!
         UserDefaults.standard.set(false, forKey: "NSFullScreenMenuItemEverywhere")
     }
     
-    func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool { return true }
+    func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool { true }
     
     func application(_: NSApplication, open: [URL]) {
         DispatchQueue.main.async {

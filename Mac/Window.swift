@@ -3,6 +3,7 @@ import AppKit
 final class Window: NSWindow {
     override var canBecomeKey: Bool { true }
 //    override var acceptsFirstResponder: Bool { true }
+    
     private(set) weak var base: NSView!
 
     init() {

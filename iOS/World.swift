@@ -11,7 +11,7 @@ class World: UIView, CLLocationManagerDelegate {
     private weak var _down: Button!
     private let manager = CLLocationManager()
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

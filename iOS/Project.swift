@@ -8,7 +8,7 @@ final class Project: UIControl, UITextViewDelegate {
     private weak var base: UIView!
     private weak var left: NSLayoutConstraint!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ item: Session.Item, measure: String) {
         self.item = item
         super.init(frame: .zero)

@@ -3,7 +3,7 @@ import UIKit
 final class Alert: UIControl {
     private weak var bottom: NSLayoutConstraint!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     @discardableResult init(_ title: String? = nil, message: String) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

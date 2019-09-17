@@ -3,7 +3,7 @@ import UIKit
 
 final class Item: UIControl {
     final class Travel: UIView {
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         init(_ travel: String) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
@@ -34,7 +34,7 @@ final class Item: UIControl {
     private(set) weak var distance: UILabel!
     private(set) weak var name: UILabel!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ item: (Int, Path), deletable: Bool) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

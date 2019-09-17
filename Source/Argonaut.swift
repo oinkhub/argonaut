@@ -178,5 +178,5 @@ public final class Argonaut {
         try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
     }
     
-    private static func url(_ id: String) -> URL { return url.appendingPathComponent(id + ".argonaut") }
+    private static func url(_ id: String) -> URL { url.appendingPathComponent(id + ".argonaut") }
 }

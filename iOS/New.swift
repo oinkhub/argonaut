@@ -5,7 +5,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     @available(iOS 9.3, *) private final class Result: UIControl {
         let search: MKLocalSearchCompletion
         
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         init(_ search: MKLocalSearchCompletion) {
             self.search = search
             super.init(frame: .zero)
@@ -52,7 +52,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private var completer: Any?
     override var style: Settings.Style { get { .new } }
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     override init() {
         super.init()
         

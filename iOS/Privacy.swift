@@ -1,7 +1,7 @@
 import UIKit
 
 final class Privacy: UIView {
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

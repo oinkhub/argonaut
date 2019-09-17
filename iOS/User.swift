@@ -10,7 +10,7 @@ final class User: MKAnnotationView {
     private weak var circle: UIView!
     override var reuseIdentifier: String? { "User" }
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init() {
         super.init(annotation: nil, reuseIdentifier: nil)
         canShowCallout = false

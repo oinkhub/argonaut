@@ -2,7 +2,7 @@ import MapKit
 
 class Callout: NSView {
     final class Item: Callout {
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         @discardableResult init(_ view: MKAnnotationView, index: String) {
             super.init(view)
             
@@ -76,7 +76,7 @@ class Callout: NSView {
     }
     
     final class User: Callout {
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         @discardableResult override init(_ view: MKAnnotationView) {
             super.init(view)
             
@@ -100,7 +100,7 @@ class Callout: NSView {
     
     private weak var title: Label!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     private init(_ view: MKAnnotationView) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

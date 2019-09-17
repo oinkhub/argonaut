@@ -5,7 +5,7 @@ final class Button: UIControl {
     override var isSelected: Bool { didSet { hover() } }
     private weak var icon: UIImageView!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ image: String) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

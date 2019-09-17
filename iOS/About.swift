@@ -7,7 +7,7 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         override var isSelected: Bool { didSet { hover() } }
         private weak var base: UIView!
         
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         init(_ title: String, image: String) {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
@@ -62,7 +62,7 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         }
     }
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

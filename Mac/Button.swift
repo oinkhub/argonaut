@@ -4,7 +4,7 @@ class Button: NSView {
     final class Image: Button {
         private(set) weak var image: NSImageView!
         
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         override init(_ target: AnyObject?, action: Selector?) {
             super.init(target, action: action)
             let image = NSImageView()
@@ -24,7 +24,7 @@ class Button: NSView {
         private(set) weak var width: NSLayoutConstraint!
         private(set) weak var label: Label!
         
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         override init(_ target: AnyObject?, action: Selector?) {
             super.init(target, action: action)
             wantsLayer = true
@@ -58,7 +58,7 @@ class Button: NSView {
         }
     }
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ target: AnyObject?, action: Selector?) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

@@ -12,7 +12,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     private var first = true
     private let geocoder = CLGeocoder()
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false

@@ -21,9 +21,9 @@ extension CGColor {
 }
 
 final class Label: NSTextField {
-    override var acceptsFirstResponder: Bool { return false }
+    override var acceptsFirstResponder: Bool { false }
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init(_ string: String = "") {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
@@ -36,7 +36,7 @@ final class Label: NSTextField {
 }
 
 final class Scroll: NSScrollView {
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
@@ -54,7 +54,7 @@ final class Scroll: NSScrollView {
     }
 }
 
-final class Flipped: NSView { override var isFlipped: Bool { return true } }
+final class Flipped: NSView { override var isFlipped: Bool { true } }
 
 extension Tiler {
     var outside: Data { NSBitmapImageRep(cgImage: NSImage(named: "outside")!.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])! }

@@ -25,7 +25,7 @@ class Field: NSTextView {
     final class Search: Field {
         private(set) weak var _cancel: Button.Image!
         
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         override init() {
             super.init()
             textContainerInset.height = 7
@@ -80,7 +80,7 @@ class Field: NSTextView {
     final class Name: Field {
         private weak var height: NSLayoutConstraint!
         
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         override init() {
             super.init()
             font = .systemFont(ofSize: 14, weight: .bold)
@@ -106,9 +106,9 @@ class Field: NSTextView {
     }
     
     var accepts = false
-    override var acceptsFirstResponder: Bool { return accepts }
+    override var acceptsFirstResponder: Bool { accepts }
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     private init() {
         let storage = NSTextStorage()
         super.init(frame: .zero, textContainer: {
@@ -131,12 +131,12 @@ class Field: NSTextView {
     
     final override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn: Bool) {
         var rect = rect
-//        rect.size.width += 3
+        rect.size.width += 3
         super.drawInsertionPoint(in: rect, color: color, turnedOn: turnedOn)
     }
     
     func adjust() {
-        textContainer!.size.width = frame.width - (textContainerInset.width * 2) - 20
+        textContainer!.size.width = frame.width - (textContainerInset.width * 2)
         layoutManager!.ensureLayout(for: textContainer!)
     }
 }
