@@ -28,10 +28,9 @@ class Field: NSTextView {
         required init?(coder: NSCoder) { nil }
         override init() {
             super.init()
-            textContainerInset.height = 7
+            textContainerInset.height = 6
             textContainerInset.width = 30
-            font = .systemFont(ofSize: 14, weight: .regular)
-            backgroundColor = .dark
+            font = .systemFont(ofSize: 14, weight: .bold)
             
             let icon = Button.Image(self, action: #selector(search))
             icon.image.image = NSImage(named: "search")
@@ -39,7 +38,7 @@ class Field: NSTextView {
             
             let _cancel = Button.Image(self, action: #selector(cancel))
             _cancel.isHidden = true
-            _cancel.image.image = NSImage(named: "delete")
+            _cancel.image.image = NSImage(named: "close")
             addSubview(_cancel)
             self._cancel = _cancel
             
@@ -54,15 +53,15 @@ class Field: NSTextView {
             _cancel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
         
-//        override func keyDown(with: NSEvent) {
-//            switch with.keyCode {
-//            case 36:
-//                window!.makeFirstResponder(nil)
-////                (window as! New).choose()
-//            case 48, 53: window!.makeFirstResponder(nil)
-//            default: super.keyDown(with: with)
-//            }
-//        }
+        override func keyDown(with: NSEvent) {
+            switch with.keyCode {
+            case 36:
+                window!.makeFirstResponder(nil)
+//                (window as! New).choose()
+            case 48, 53: window!.makeFirstResponder(nil)
+            default: super.keyDown(with: with)
+            }
+        }
         
         override func didChangeText() {
             super.didChangeText()
@@ -121,15 +120,16 @@ class Field: NSTextView {
         translatesAutoresizingMaskIntoConstraints = false
         allowsUndo = true
         isRichText = false
-        insertionPointColor = .halo
+        drawsBackground = false
         isContinuousSpellCheckingEnabled = true
         textColor = .white
+        insertionPointColor = .halo
         if #available(OSX 10.12.2, *) {
             isAutomaticTextCompletionEnabled = true
         }
     }
     
-    final override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn: Bool) {
+    override final func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn: Bool) {
         var rect = rect
         rect.size.width += 3
         super.drawInsertionPoint(in: rect, color: color, turnedOn: turnedOn)

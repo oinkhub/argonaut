@@ -8,7 +8,7 @@ final class Window: NSWindow {
 
     init() {
         super.init(contentRect: .init(x: NSScreen.main!.frame.midX - 400, y: NSScreen.main!.frame.midY - 300, width: 800, height: 600), styleMask: [.borderless, .resizable], backing: .buffered, defer: false)
-        minSize = .init(width: 300, height: 200)
+        minSize = .init(width: 400, height: 200)
         backgroundColor = .clear
         hasShadow = true
         isOpaque = false
@@ -69,14 +69,16 @@ final class Window: NSWindow {
     }
     
     override func keyDown(with: NSEvent) {
-        switch with.keyCode {
-        case 36, 48:
-            if let new = contentView!.subviews.compactMap({ $0 as? New }).first {
-                new.search()
-            } else {
-                super.keyDown(with: with)
+        if !(firstResponder is Field) {
+            switch with.keyCode {
+            case 36, 48:
+                if let new = contentView!.subviews.compactMap({ $0 as? New }).first {
+                    new.search()
+                    return
+                }
+            default: break
             }
-        default: super.keyDown(with: with)
         }
+        super.keyDown(with: with)
     }
 }
