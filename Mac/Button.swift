@@ -1,7 +1,27 @@
 import AppKit
 
 class Button: NSView {
-    final class Image: Button {
+    final class Map: Image {
+        required init?(coder: NSCoder) { nil }
+        override init(_ target: AnyObject?, action: Selector?) {
+            super.init(target, action: action)
+            let base = NSImageView()
+            base.translatesAutoresizingMaskIntoConstraints = false
+            base.imageScaling = .scaleNone
+            base.image = NSImage(named: "button")
+            addSubview(base, positioned: .below, relativeTo: image)
+            
+            widthAnchor.constraint(equalToConstant: 70).isActive = true
+            heightAnchor.constraint(equalToConstant: 70).isActive = true
+            
+            base.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            base.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            base.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            base.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        }
+    }
+    
+    class Image: Button {
         private(set) weak var image: NSImageView!
         
         required init?(coder: NSCoder) { nil }
