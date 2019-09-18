@@ -1,6 +1,21 @@
 import AppKit
 
 class Button: NSView {
+    final class Window: Image {
+        required init?(coder: NSCoder) { nil }
+        override init(_ target: AnyObject?, action: Selector?) {
+            super.init(target, action: action)
+            setAccessibilityElement(true)
+            setAccessibilityRole(.button)
+            hover()
+            
+            widthAnchor.constraint(equalToConstant: 12).isActive = true
+            heightAnchor.constraint(equalToConstant: 12).isActive = true
+        }
+        
+        override func hover() { image.alphaValue = selected ? 1 : 0.5 }
+    }
+    
     final class Map: Image {
         required init?(coder: NSCoder) { nil }
         override init(_ target: AnyObject?, action: Selector?) {
@@ -19,6 +34,8 @@ class Button: NSView {
             base.topAnchor.constraint(equalTo: topAnchor).isActive = true
             base.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
+        
+        override func hover() { image.alphaValue = selected ? 0.3 : 1 }
     }
     
     class Image: Button {
@@ -72,11 +89,7 @@ class Button: NSView {
     final var action: Selector?
     final var enabled = true
     private var drag = CGFloat()
-    final fileprivate var selected = false {
-        didSet {
-            alphaValue = selected ? 0.3 : 1
-        }
-    }
+    final fileprivate var selected = false { didSet { hover() } }
     
     required init?(coder: NSCoder) { nil }
     init(_ target: AnyObject?, action: Selector?) {
@@ -119,4 +132,6 @@ class Button: NSView {
     fileprivate func click() {
         _ = target?.perform(action, with: self)
     }
+    
+    fileprivate func hover() { alphaValue = selected ? 0.3 : 1 }
 }

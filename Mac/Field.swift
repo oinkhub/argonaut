@@ -28,17 +28,25 @@ class Field: NSTextView {
         required init?(coder: NSCoder) { nil }
         override init() {
             super.init()
+            setAccessibilityRole(.textField)
+            setAccessibilityLabel(.key("Field.search"))
             textContainerInset.height = 6
             textContainerInset.width = 30
             font = .systemFont(ofSize: 14, weight: .bold)
             
             let icon = Button.Image(self, action: #selector(search))
             icon.image.image = NSImage(named: "search")
+            icon.setAccessibilityRole(.button)
+            icon.setAccessibilityElement(true)
+            icon.setAccessibilityLabel(.key("Field.icon"))
             addSubview(icon)
             
             let _cancel = Button.Image(self, action: #selector(cancel))
             _cancel.isHidden = true
             _cancel.image.image = NSImage(named: "close")
+            _cancel.setAccessibilityElement(true)
+            _cancel.setAccessibilityRole(.button)
+            _cancel.setAccessibilityLabel(.key("Field.cancel"))
             addSubview(_cancel)
             self._cancel = _cancel
             
@@ -118,6 +126,7 @@ class Field: NSTextView {
             $0.lineBreakMode = .byTruncatingHead
             return $0
         } (NSTextContainer(), Layout()))
+        setAccessibilityElement(true)
         translatesAutoresizingMaskIntoConstraints = false
         allowsUndo = true
         isRichText = false

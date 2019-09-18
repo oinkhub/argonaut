@@ -19,6 +19,10 @@ final class New: World, NSTextViewDelegate {
         top.addSubview(field)
         self.field = field
         
+        let _pin = Button.Map(nil, action: nil)
+        _pin.image.image = NSImage(named: "pin")
+        addSubview(_pin)
+        
         [left, right].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.wantsLayer = true
@@ -40,6 +44,9 @@ final class New: World, NSTextViewDelegate {
         
         left.rightAnchor.constraint(equalTo: field.leftAnchor).isActive = true
         right.leftAnchor.constraint(equalTo: field.rightAnchor).isActive = true
+        
+        _pin.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
+        _pin.bottomAnchor.constraint(equalTo: _up.topAnchor).isActive = true
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.field.accepts = true }
     }

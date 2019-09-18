@@ -105,7 +105,7 @@ final class Menu: NSMenu {
         {
             $0.submenu = NSMenu(title: .key("Menu.window"))
             $0.submenu!.items = [
-                NSMenuItem(title: .key("Menu.minimize"), action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m"),
+                NSMenuItem(title: .key("Menu.minimize"), action: #selector(NSWindow.miniaturize(_:)), keyEquivalent: "m"),
                 NSMenuItem(title: .key("Menu.zoom"), action: #selector(Window.zoom(_:)), keyEquivalent: "p"),
                 NSMenuItem.separator(),
                 NSMenuItem(title: .key("Menu.bringAllToFront"), action: #selector(app.arrangeInFront(_:)), keyEquivalent: ""),

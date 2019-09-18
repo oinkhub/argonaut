@@ -3,12 +3,13 @@ import AppKit
 class World: NSView {
     private(set) weak var map: Map!
     private(set) weak var top: NSView!
-    private weak var _up: Button.Map!
+    private(set) weak var _up: Button.Map!
     
     required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
+        setAccessibilityModal(true)
         
         let map = Map()
         addSubview(map)
@@ -25,12 +26,24 @@ class World: NSView {
         
         let close = Button.Image(self, action: #selector(self.close))
         close.image.image = NSImage(named: "close")
+        close.setAccessibilityRole(.button)
+        close.setAccessibilityElement(true)
+        close.setAccessibilityLabel(.key("Close"))
         top.addSubview(close)
         
         let _up = Button.Map(nil, action: nil)
         _up.image.image = NSImage(named: "up")
         addSubview(_up)
         self._up = _up
+        
+        let _settings = Button.Map(nil, action: nil)
+        _settings.image.image = NSImage(named: "settings")
+        addSubview(_settings)
+        
+        let _user = Button.Map(nil, action: nil)
+        _user.image.image = NSImage(named: "follow")
+        _user.setAccessibilityLabel("")
+        addSubview(_user)
         
         map.topAnchor.constraint(equalTo: topAnchor).isActive = true
         map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -49,6 +62,12 @@ class World: NSView {
         
         _up.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         _up.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
+        _settings.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        _settings.rightAnchor.constraint(equalTo: _up.leftAnchor).isActive = true
+        
+        _user.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        _user.rightAnchor.constraint(equalTo: _settings.leftAnchor).isActive = true
     }
     
     @objc func close() {
