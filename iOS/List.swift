@@ -12,7 +12,6 @@ final class List: UIView {
     required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
-        backgroundColor = .black
         translatesAutoresizingMaskIntoConstraints = false
         
         let scroll = Scroll()
@@ -42,19 +41,18 @@ final class List: UIView {
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.clipsToBounds = true
         icon.contentMode = .center
-        icon.tintColor = .black
         header.addSubview(icon)
         
         switch app.session.settings.mode {
         case .walking:
             header.backgroundColor = .walking
-            icon.image = UIImage(named: "walking")!.withRenderingMode(.alwaysTemplate)
+            icon.image = UIImage(named: "walking")
         case .driving:
             header.backgroundColor = .driving
-            icon.image = UIImage(named: "driving")!.withRenderingMode(.alwaysTemplate)
+            icon.image = UIImage(named: "driving")
         case .flying:
             header.backgroundColor = .flying
-            icon.image = UIImage(named: "flying")!.withRenderingMode(.alwaysTemplate)
+            icon.image = UIImage(named: "flying")
         }
         
         let total = UILabel()
@@ -121,7 +119,6 @@ final class List: UIView {
             UIView.animate(withDuration: 0.3) { [weak self] in
                 if let scroll = self?.scroll {
                     scroll.contentOffset.y = scroll.content.frame.height - 250
-                    scroll.alpha = 1
                 }
             }
         }

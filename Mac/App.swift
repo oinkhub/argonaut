@@ -6,10 +6,11 @@ import UserNotifications
 private(set) weak var app: App!
 @NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate {
     var session: Session!
-    
     private(set) weak var window: Window!
+    private var formatter: Any!
+    private let dater = DateComponentsFormatter()
     
-    private(set) weak var list: List!
+    
     private(set) weak var follow: NSMenuItem!
     private(set) weak var walking: NSMenuItem!
     private(set) weak var driving: NSMenuItem!
@@ -42,7 +43,7 @@ private(set) weak var app: App!
     @available(OSX 10.12.2, *) override func makeTouchBar() -> NSTouchBar? {
         let bar = NSTouchBar()
         bar.delegate = self
-        bar.defaultItemIdentifiers = [.init("New")]
+        bar.defaultItemIdentifiers = [.init("Privacy")]
         return bar
     }
     
@@ -52,7 +53,7 @@ private(set) weak var app: App!
         item.view = button
         button.title = .key(makeItemForIdentifier.rawValue)
         switch makeItemForIdentifier.rawValue {
-        case "New": button.action = #selector(list.new)
+        case "Privacy": button.action = #selector(privacy)
         default: break
         }
         return item
@@ -67,9 +68,19 @@ private(set) weak var app: App!
     }
     
     func applicationWillFinishLaunching(_: Notification) {
+        dater.unitsStyle = .full
+        dater.allowedUnits = [.minute, .hour]
+        
+        if #available(OSX 10.12, *) {
+            let formatter = MeasurementFormatter()
+            formatter.unitStyle = .long
+            formatter.unitOptions = .naturalScale
+            formatter.numberFormatter.maximumFractionDigits = 1
+            self.formatter = formatter
+        }
+        
         mainMenu = Menu()
         (mainMenu as! Menu).base()
-        
         
 //        let list = List()
 //        list.makeKeyAndOrderFront(nil)
@@ -124,6 +135,21 @@ private(set) weak var app: App!
         } else {
             DispatchQueue.main.async { Alert(title, message: message).makeKeyAndOrderFront(nil) }
         }
+    }
+    
+    func measure(_ distance: Double, _ duration: Double) -> String {
+        var result = ""
+        if distance > 0 {
+            if #available(OSX 10.12, *) {
+                result = (formatter as! MeasurementFormatter).string(from: .init(value: distance, unit: UnitLength.meters))
+            } else {
+                result = "\(Int(distance))" + .key("App.distance")
+            }
+            if duration > 0 {
+                result += ": " + dater.string(from: duration)!
+            }
+        }
+        return result
     }
     
     @objc func about() { order(About.self) }

@@ -7,19 +7,22 @@ class Button: NSView {
             super.init(target, action: action)
             setAccessibilityElement(true)
             setAccessibilityRole(.button)
-            hover()
+            alphaValue = 0.4
             
             widthAnchor.constraint(equalToConstant: 12).isActive = true
             heightAnchor.constraint(equalToConstant: 12).isActive = true
         }
-        
-        override func hover() { image.alphaValue = selected ? 1 : 0.5 }
+
+        override func hover() { alphaValue = selected ? 1 : 0.4 }
     }
     
     final class Map: Image {
         required init?(coder: NSCoder) { nil }
         override init(_ target: AnyObject?, action: Selector?) {
             super.init(target, action: action)
+            setAccessibilityElement(true)
+            setAccessibilityRole(.button)
+            
             let base = NSImageView()
             base.translatesAutoresizingMaskIntoConstraints = false
             base.imageScaling = .scaleNone

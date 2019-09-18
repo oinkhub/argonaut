@@ -21,6 +21,7 @@ final class New: World, NSTextViewDelegate {
         
         let _pin = Button.Map(nil, action: nil)
         _pin.image.image = NSImage(named: "pin")
+        _pin.setAccessibilityLabel(.key("New.pin"))
         addSubview(_pin)
         
         [left, right].forEach {

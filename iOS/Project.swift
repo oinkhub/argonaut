@@ -46,7 +46,6 @@ final class Project: UIControl, UITextViewDelegate {
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.clipsToBounds = true
         icon.contentMode = .center
-        icon.tintColor = .black
         base.addSubview(icon)
         
         let travel = UILabel()
@@ -89,13 +88,13 @@ final class Project: UIControl, UITextViewDelegate {
         switch item.mode {
         case .walking:
             base.backgroundColor = .walking
-            icon.image = UIImage(named: "walking")!.withRenderingMode(.alwaysTemplate)
+            icon.image = UIImage(named: "walking")
         case .driving:
             base.backgroundColor = .driving
-            icon.image = UIImage(named: "driving")!.withRenderingMode(.alwaysTemplate)
+            icon.image = UIImage(named: "driving")
         case .flying:
             base.backgroundColor = .flying
-            icon.image = UIImage(named: "flying")!.withRenderingMode(.alwaysTemplate)
+            icon.image = UIImage(named: "flying")
         }
         
         if travel.attributedText!.string.isEmpty {

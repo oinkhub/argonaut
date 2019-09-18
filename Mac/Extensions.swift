@@ -33,27 +33,6 @@ final class Label: NSTextField {
     }
 }
 
-final class Scroll: NSScrollView {
-    required init?(coder: NSCoder) { nil }
-    init() {
-        super.init(frame: .zero)
-        translatesAutoresizingMaskIntoConstraints = false
-        drawsBackground = false
-        hasVerticalScroller = true
-        verticalScroller!.controlSize = .mini
-        horizontalScrollElasticity = .none
-        verticalScrollElasticity = .allowed
-        documentView = Flipped()
-        documentView!.translatesAutoresizingMaskIntoConstraints = false
-        documentView!.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        documentView!.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        documentView!.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor).isActive = true
-    }
-}
-
-final class Flipped: NSView { override var isFlipped: Bool { true } }
-
 extension Tiler {
     var outside: Data { NSBitmapImageRep(cgImage: NSImage(named: "outside")!.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])! }
 }
