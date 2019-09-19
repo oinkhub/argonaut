@@ -70,6 +70,7 @@ final class Window: NSWindow {
     }
     
     @objc func new() {
+        guard app.session != nil else { return }
         base.isHidden = true
         NSCursor.arrow.set()
         

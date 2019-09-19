@@ -189,8 +189,15 @@ final class Home: UIView {
         UIView.animate(withDuration: 0.3) { self.scroll.contentOffset.y = 0 }
     }
     
-    @objc private func about() { app.push(About()) }
-    @objc private func new() { app.push(New()) }
+    @objc private func about() {
+        guard app.session != nil else { return }
+        app.push(About())
+    }
+    
+    @objc private func new() {
+        guard app.session != nil else { return }
+        app.push(New())
+    }
     
     @objc private func down(_ project: Project) {
         guard !_edit.isSelected else { return }

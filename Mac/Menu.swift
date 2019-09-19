@@ -98,11 +98,7 @@ final class Menu: NSMenu {
                 } (NSMenuItem(title: .key("Menu.directions"), action: #selector(World.directions), keyEquivalent: "l")),
                 .init(title: .key("Menu.search"), action: #selector(New.search), keyEquivalent: "f"),
                 .separator(),
-                .init(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s"),
-                .separator(),
-                { $0.keyEquivalentModifierMask = []
-                    return $0
-                } (NSMenuItem(title: .key("Menu.cancel"), action: #selector(New.close), keyEquivalent: "\u{1b}"))]
+                .init(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: ""))
     }

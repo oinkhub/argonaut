@@ -33,7 +33,7 @@ final class Marker: MKAnnotationView {
         base.alpha = 0
         base.backgroundColor = .shade
         base.layer.cornerRadius = 5
-        base.layer.borderColor = .black
+        base.layer.borderColor = .white
         base.layer.borderWidth = 1
         addSubview(base)
         self.base = base

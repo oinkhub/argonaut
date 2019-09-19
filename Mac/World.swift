@@ -55,7 +55,7 @@ class World: NSView {
         _settings.setAccessibilityLabel(.key("World.settings"))
         addSubview(_settings)
         
-        let _user = Button.Map(nil, action: nil)
+        let _user = Button.Map(map, action: #selector(map.me))
         _user.image.image = NSImage(named: "follow")
         _user.setAccessibilityLabel(.key("World.user"))
         addSubview(_user)

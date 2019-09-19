@@ -77,7 +77,6 @@ Menu.quit="Quit";
 Menu.maps="Maps";
 Menu.new="New";
 Menu.create="Project";
-Menu.cancel="Cancel";
 Menu.pin="Pin";
 Menu.directions="Directions";
 Menu.search="Find";
