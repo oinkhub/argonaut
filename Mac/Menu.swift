@@ -1,56 +1,8 @@
 import AppKit
 
 final class Menu: NSMenu {
-    required init(coder: NSCoder) { super.init(title: "") }
-    init() {
-        super.init(title: "")
-                
-        
-                /*
-                menu.addItem({
-                    $0.submenu = NSMenu(title: .key("Menu.map"))
-                    $0.submenu!.items = [
-                        { $0.keyEquivalentModifierMask = []
-                            follow = $0
-                            follow.state = .on
-                            return $0
-                        } (NSMenuItem(title: .key("Menu.follow"), action: #selector(World.follow), keyEquivalent: "f")),
-                        { $0.keyEquivalentModifierMask = []
-                            walking = $0
-                            walking.state = .on
-                            return $0
-                        } (NSMenuItem(title: .key("Menu.walking"), action: #selector(World.walking), keyEquivalent: "w")),
-                        { $0.keyEquivalentModifierMask = []
-                            driving = $0
-                            driving.state = .on
-                            return $0
-                        } (NSMenuItem(title: .key("Menu.driving"), action: #selector(World.driving), keyEquivalent: "d")),
-                        NSMenuItem.separator(),
-                        { $0.keyEquivalentModifierMask = []
-                            return $0
-                        } (NSMenuItem(title: .key("Menu.in"), action: #selector(World.in), keyEquivalent: "+")),
-                        { $0.keyEquivalentModifierMask = []
-                            return $0
-                        } (NSMenuItem(title: .key("Menu.out"), action: #selector(World.out), keyEquivalent: "-")),
-                        { $0.keyEquivalentModifierMask = []
-                            return $0
-                        } (NSMenuItem(title: .key("Menu.up"), action: #selector(World.up), keyEquivalent: String(Character(UnicodeScalar(NSUpArrowFunctionKey)!)))),
-                        { $0.keyEquivalentModifierMask = []
-                            return $0
-                        } (NSMenuItem(title: .key("Menu.down"), action: #selector(World.down), keyEquivalent: String(Character(UnicodeScalar(NSDownArrowFunctionKey)!)))),
-                        { $0.keyEquivalentModifierMask = []
-                            return $0
-                        } (NSMenuItem(title: .key("Menu.left"), action: #selector(World.left), keyEquivalent: String(Character(UnicodeScalar(NSLeftArrowFunctionKey)!)))),
-                        { $0.keyEquivalentModifierMask = []
-                            return $0
-                        } (NSMenuItem(title: .key("Menu.right"), action: #selector(World.right), keyEquivalent: String(Character(UnicodeScalar(NSRightArrowFunctionKey)!))))]
-                    return $0
-                } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
-                */
-    }
-    
     func base() { items = [argonaut, maps, edit, window, help] }
-    func new() { items = [argonaut, create, edit, window, help] }
+    func new() { items = [argonaut, create, world, edit, window, help] }
     func navigate() { items = [] }
     
     private var argonaut: NSMenuItem {
@@ -138,8 +90,12 @@ final class Menu: NSMenu {
         {
             $0.submenu = NSMenu(title: .key("Menu.create"))
             $0.submenu!.items = [
-                .init(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p"),
-                .init(title: .key("Menu.directions"), action: #selector(World.directions), keyEquivalent: "l"),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.pin"), action: #selector(Map.pin), keyEquivalent: "p")),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.directions"), action: #selector(World.directions), keyEquivalent: "l")),
                 .init(title: .key("Menu.search"), action: #selector(New.search), keyEquivalent: "f"),
                 .separator(),
                 .init(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s"),
@@ -147,6 +103,32 @@ final class Menu: NSMenu {
                 { $0.keyEquivalentModifierMask = []
                     return $0
                 } (NSMenuItem(title: .key("Menu.cancel"), action: #selector(New.close), keyEquivalent: "\u{1b}"))]
+            return $0
+        } (NSMenuItem(title: "", action: nil, keyEquivalent: ""))
+    }
+    
+    private var world: NSMenuItem {
+        {
+            $0.submenu = .init(title: .key("Menu.map"))
+            $0.submenu!.items = [
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.in"), action: #selector(World.in), keyEquivalent: "+")),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.out"), action: #selector(World.out), keyEquivalent: "-")),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.up"), action: #selector(World.upwards), keyEquivalent: String(Character(UnicodeScalar(NSUpArrowFunctionKey)!)))),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.down"), action: #selector(World.downwards), keyEquivalent: String(Character(UnicodeScalar(NSDownArrowFunctionKey)!)))),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.left"), action: #selector(World.left), keyEquivalent: String(Character(UnicodeScalar(NSLeftArrowFunctionKey)!)))),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.right"), action: #selector(World.right), keyEquivalent: String(Character(UnicodeScalar(NSRightArrowFunctionKey)!))))]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: ""))
     }

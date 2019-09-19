@@ -19,7 +19,7 @@ final class New: World, NSTextViewDelegate {
         top.addSubview(field)
         self.field = field
         
-        let _pin = Button.Map(map, action: #selector(map.pin))
+        let _pin = Button.Map(self, action: #selector(pin))
         _pin.image.image = NSImage(named: "pin")
         _pin.setAccessibilityLabel(.key("New.pin"))
         addSubview(_pin)
@@ -72,7 +72,7 @@ final class New: World, NSTextViewDelegate {
     override func keyDown(with: NSEvent) {
         switch with.keyCode {
         case 36, 48: search()
-        default: super.keyUp(with: with)
+        default: super.keyDown(with: with)
         }
     }
     
@@ -88,7 +88,7 @@ final class New: World, NSTextViewDelegate {
     }
     
     @objc func search() { app.window.makeFirstResponder(field) }
-    @objc func pin() { }
+    @objc func pin() { map.pin() }
     @objc func save() { }
     
     @objc private func clear() {

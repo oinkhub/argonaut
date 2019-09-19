@@ -119,7 +119,7 @@ final class List: NSView {
         total.leftAnchor.constraint(equalTo: header.rightAnchor, constant: 10).isActive = true
         total.rightAnchor.constraint(lessThanOrEqualTo: scroll.documentView!.rightAnchor, constant: -20).isActive = true
         
-        scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: header.bottomAnchor, constant: 30).isActive = true
+        scroll.documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: header.bottomAnchor, constant: 15).isActive = true
         
         if previous == nil {
             header.topAnchor.constraint(equalTo: scroll.documentView!.topAnchor, constant: 15).isActive = true

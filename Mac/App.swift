@@ -79,12 +79,8 @@ private(set) weak var app: App!
             self.formatter = formatter
         }
         
-        mainMenu = Menu()
+        mainMenu = Menu(title: "")
         (mainMenu as! Menu).base()
-        
-//        let list = List()
-//        list.makeKeyAndOrderFront(nil)
-//        self.list = list
         
         let window = Window()
         window.makeKeyAndOrderFront(nil)
@@ -102,6 +98,7 @@ private(set) weak var app: App!
         }
         
         Session.load {
+            $0.settings.follow = false
             self.session = $0
 //            list.refresh()
             

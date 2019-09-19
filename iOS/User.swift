@@ -4,7 +4,6 @@ final class User: MKAnnotationView {
     override var isHighlighted: Bool { didSet { hover() } }
     override var isSelected: Bool { didSet { hover() } }
     override var annotation: MKAnnotation? { didSet { animate() } }
-    
     private(set) weak var heading: UIImageView?
     private weak var halo: CAShapeLayer?
     private weak var circle: UIView!
