@@ -14,11 +14,22 @@ final class List: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
+        let border = NSView()
+        border.translatesAutoresizingMaskIntoConstraints = false
+        border.wantsLayer = true
+        border.layer!.backgroundColor = .halo
+        addSubview(border)
+        
         let scroll = Scroll()
         addSubview(scroll)
         self.scroll = scroll
         
         heightAnchor.constraint(equalToConstant: 250).isActive = true
+        
+        border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        border.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        border.widthAnchor.constraint(equalToConstant: 1).isActive = true
         
         scroll.topAnchor.constraint(equalTo: topAnchor).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true

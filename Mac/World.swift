@@ -14,6 +14,9 @@ class World: NSView {
         setAccessibilityModal(true)
         
         let map = Map()
+        map.refresh = { [weak self] in self?.refresh() }
+        map.rename = { [weak self] in self?.list.rename($0) }
+        map.user = { [weak self] in self?.list.user($0) }
         addSubview(map)
         self.map = map
         
@@ -95,10 +98,10 @@ class World: NSView {
     }
     
     final func refresh() {
-//        list.refresh()
-//        if !map.path.isEmpty && list.top.constant == -70 || map.path.isEmpty && list.top.constant == -list.frame.height {
-//            up()
-//        }
+        list.refresh()
+        if !map.path.isEmpty && list.top.constant == -56 || map.path.isEmpty && list.top.constant == -list.frame.height {
+            up()
+        }
     }
     
     @objc final func down() {
@@ -111,19 +114,6 @@ class World: NSView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             self?._up.isHidden = false
             self?._down.isHidden = true
-        }
-    }
-    
-    @objc private func up() {
-        list.top.constant = map.path.isEmpty ? -70 : -list.frame.height
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.3
-            $0.allowsImplicitAnimation = true
-            layoutSubtreeIfNeeded()
-        }) { }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            self?._up.isHidden = true
-            self?._down.isHidden = false
         }
     }
     
@@ -144,7 +134,7 @@ class World: NSView {
 //        }
     }
     
-    @objc func close() {
+    @objc final func close() {
         app.window!.makeFirstResponder(nil)
         app.window.base.isHidden = false
         (app.mainMenu as! Menu).base()
@@ -154,5 +144,26 @@ class World: NSView {
             alphaValue = 0
         }) { }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in self?.removeFromSuperview() }
+    }
+    
+    @objc final func directions() {
+        if _up.isHidden {
+            down()
+        } else {
+            up()
+        }
+    }
+    
+    @objc private func up() {
+        list.top.constant = map.path.isEmpty ? -56 : -list.frame.height
+        NSAnimationContext.runAnimationGroup({
+            $0.duration = 0.3
+            $0.allowsImplicitAnimation = true
+            layoutSubtreeIfNeeded()
+        }) { }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?._up.isHidden = true
+            self?._down.isHidden = false
+        }
     }
 }

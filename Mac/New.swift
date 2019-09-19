@@ -19,7 +19,7 @@ final class New: World, NSTextViewDelegate {
         top.addSubview(field)
         self.field = field
         
-        let _pin = Button.Map(nil, action: nil)
+        let _pin = Button.Map(map, action: #selector(map.pin))
         _pin.image.image = NSImage(named: "pin")
         _pin.setAccessibilityLabel(.key("New.pin"))
         addSubview(_pin)
@@ -89,7 +89,6 @@ final class New: World, NSTextViewDelegate {
     
     @objc func search() { app.window.makeFirstResponder(field) }
     @objc func pin() { }
-    @objc func directions() { }
     @objc func save() { }
     
     @objc private func clear() {
