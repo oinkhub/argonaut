@@ -4,7 +4,7 @@ public final class Session: Codable {
     public enum Map: Int, Codable { case argonaut, apple, hybrid }
     public enum Mode: UInt8, Codable { case walking, driving, flying }
     
-    public final class Item: Codable {
+    public final class Item: Codable, Identifiable {
         public var id = ""
         public var name = ""
         public var duration = 0.0

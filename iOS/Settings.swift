@@ -52,7 +52,7 @@ final class Settings: UIView {
         _info.translatesAutoresizingMaskIntoConstraints = false
         _info.numberOfLines = 0
         _info.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
-        _info.textColor = .init(white: 1, alpha: 0.9)
+        _info.textColor = .white
         scroll.content.addSubview(_info)
         self._info = _info
         

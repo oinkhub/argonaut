@@ -21,21 +21,23 @@ final class Navigate: World {
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
         title.isAccessibilityElement = true
-        title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
-        title.textColor = .white
+        title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .bold)
+        title.textColor = .halo
+        title.textAlignment = .center
         title.text = item.name.isEmpty ? .key("Navigate.title") : item.name
-        addSubview(title)
+        insertSubview(title, belowSubview: _close)
         
         top.topAnchor.constraint(equalTo: map.topAnchor).isActive = true
         
         _close.centerYAnchor.constraint(equalTo: map.topAnchor, constant: -22).isActive = true
         
-        zoom.centerXAnchor.constraint(equalTo: map.centerXAnchor).isActive = true
-        zoom.centerYAnchor.constraint(equalTo: _close.centerYAnchor).isActive = true
+        zoom.topAnchor.constraint(equalTo: map.topAnchor, constant: 10).isActive = true
+        zoom.leftAnchor.constraint(equalTo: map.leftAnchor, constant: 10).isActive = true
         
         title.centerYAnchor.constraint(equalTo: _close.centerYAnchor).isActive = true
-        title.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
-        title.leftAnchor.constraint(greaterThanOrEqualTo: zoom.rightAnchor, constant: 5).isActive = true
+        title.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        title.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
+        title.leftAnchor.constraint(greaterThanOrEqualTo: _close.rightAnchor).isActive = true
         
         if #available(iOS 11.0, *) {
             map.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 44).isActive = true

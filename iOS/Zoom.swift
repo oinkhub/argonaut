@@ -12,50 +12,55 @@ final class Zoom: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         isUserInteractionEnabled = false
         
+        let indicator = UIView()
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.isUserInteractionEnabled = false
+        indicator.layer.cornerRadius = 2
+        indicator.layer.borderWidth = 1
+        indicator.layer.borderColor = .white
+        addSubview(indicator)
+        self.indicator = indicator
+        
         let track = UIView()
         track.translatesAutoresizingMaskIntoConstraints = false
         track.isUserInteractionEnabled = false
-        track.backgroundColor = .init(white: 0.2333, alpha: 1)
+        track.backgroundColor = .shade
+        track.layer.borderColor = .white
+        track.layer.borderWidth = 1
+        track.layer.cornerRadius = 2
         addSubview(track)
         
         let range = UIView()
         range.translatesAutoresizingMaskIntoConstraints = false
         range.isUserInteractionEnabled = false
-        range.backgroundColor = .halo
+        range.backgroundColor = .white
         addSubview(range)
         
-        let indicator = UIView()
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        indicator.isUserInteractionEnabled = false
-        indicator.layer.cornerRadius = 2
-        addSubview(indicator)
-        self.indicator = indicator
+        widthAnchor.constraint(equalToConstant: 12).isActive = true
+        heightAnchor.constraint(equalToConstant: 42).isActive = true
         
-        widthAnchor.constraint(equalToConstant: 57).isActive = true
-        heightAnchor.constraint(equalToConstant: 8).isActive = true
-        
-        track.heightAnchor.constraint(equalToConstant: 3).isActive = true
-        track.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        track.widthAnchor.constraint(equalToConstant: 4).isActive = true
         track.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        track.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        track.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        track.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-        range.heightAnchor.constraint(equalToConstant: 3).isActive = true
-        range.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        range.leftAnchor.constraint(equalTo: leftAnchor, constant: .init(zoom.min()! * 3)).isActive = true
-        range.rightAnchor.constraint(equalTo: leftAnchor, constant: .init(zoom.max()! * 3)).isActive = true
+        range.widthAnchor.constraint(equalToConstant: 2).isActive = true
+        range.leftAnchor.constraint(equalTo: leftAnchor, constant: 1).isActive = true
+        range.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .init(zoom.min()! * -2)).isActive = true
+        range.topAnchor.constraint(equalTo: bottomAnchor, constant: .init(zoom.max()! * -2)).isActive = true
         
-        indicator.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        indicator.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        indicator.widthAnchor.constraint(equalToConstant: 4).isActive = true
-        centre = indicator.centerXAnchor.constraint(equalTo: leftAnchor)
+        indicator.leftAnchor.constraint(equalTo: track.rightAnchor, constant: -3).isActive = true
+        indicator.rightAnchor.constraint(equalTo: rightAnchor, constant: -1).isActive = true
+        indicator.heightAnchor.constraint(equalToConstant: 4).isActive = true
+        centre = indicator.centerYAnchor.constraint(equalTo: bottomAnchor)
         centre.isActive = true
     }
     
     func update(_ value: CGFloat) {
-        centre.constant = value * 3
+        centre.constant = value * -2
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
-            self.indicator.backgroundColor = self.zoom.contains(Int(round(value))) ? .halo : .init(white: 0.2333, alpha: 1)
+            self.indicator.backgroundColor = self.zoom.contains(Int(round(value))) ? .white : .shade
             self.layoutIfNeeded()
         }
     }
