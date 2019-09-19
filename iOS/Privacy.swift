@@ -12,7 +12,7 @@ final class Privacy: UIView {
         close.translatesAutoresizingMaskIntoConstraints = false
         close.isAccessibilityElement = true
         close.accessibilityLabel = .key("Close")
-        close.setImage(UIImage(named: "close"), for: .normal)
+        close.setImage(UIImage(named: "delete"), for: .normal)
         close.imageView!.clipsToBounds = true
         close.imageView!.contentMode = .center
         close.addTarget(app, action: #selector(app.pop), for: .touchUpInside)

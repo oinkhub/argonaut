@@ -102,6 +102,7 @@
 		DA0FBEAD2332815000D935A9 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEAC2332815000D935A9 /* List.swift */; };
 		DA0FBEAF2332832400D935A9 /* Scroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEAE2332832400D935A9 /* Scroll.swift */; };
 		DA0FBEB12332875C00D935A9 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEB02332875C00D935A9 /* Item.swift */; };
+		DA9EE21D233385CD00D83514 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9EE21C233385CD00D83514 /* Control.swift */; };
 		DAC775652331153E00EF4724 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC775642331153E00EF4724 /* Menu.swift */; };
 /* End PBXBuildFile section */
 
@@ -219,6 +220,7 @@
 		DA0FBEAC2332815000D935A9 /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		DA0FBEAE2332832400D935A9 /* Scroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scroll.swift; sourceTree = "<group>"; };
 		DA0FBEB02332875C00D935A9 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		DA9EE21C233385CD00D83514 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		DAC775642331153E00EF4724 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -314,6 +316,7 @@
 				CEDE10FB22D71F2400DD796B /* App.swift */,
 				CE354513232D11B90022800F /* Bar.swift */,
 				CEDCC688230683C500AAF0C8 /* Button.swift */,
+				DA9EE21C233385CD00D83514 /* Control.swift */,
 				CE18343D23080B260046E496 /* Create.swift */,
 				CEDB361D2302A4140078E521 /* Extensions.swift */,
 				CE0FE655230571D70058386B /* Field.swift */,
@@ -694,6 +697,7 @@
 				CECD5636231131AD0085E0C3 /* Load.swift in Sources */,
 				CEDE110922D71F5300DD796B /* Shared.swift in Sources */,
 				CEDB36202302A5630078E521 /* Alert.swift in Sources */,
+				DA9EE21D233385CD00D83514 /* Control.swift in Sources */,
 				CE0FE656230571D70058386B /* Field.swift in Sources */,
 				CEBB3A6423040F7200C5F61A /* Privacy.swift in Sources */,
 				CE8D430C2324FEBF00CE9B5F /* List.swift in Sources */,

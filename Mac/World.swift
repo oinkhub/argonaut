@@ -55,7 +55,7 @@ class World: NSView {
         _settings.setAccessibilityLabel(.key("World.settings"))
         addSubview(_settings)
         
-        let _user = Button.Map(map, action: #selector(map.me))
+        let _user = Button.Map(self, action: #selector(me))
         _user.image.image = NSImage(named: "follow")
         _user.setAccessibilityLabel(.key("World.user"))
         addSubview(_user)
@@ -118,23 +118,6 @@ class World: NSView {
         }
     }
     
-    @objc private func settings() {
-//        app.window!.endEditing(true)
-//        let settings = Settings(style)
-//        settings.delegate = { [weak self] in
-//            self?.map.remark()
-//            self?.map.line()
-//            self?.list.refresh()
-//        }
-//        settings.map = map
-//        app.view.addSubview(settings)
-//        settings.show()
-//
-//        if _up.isHidden == true {
-//            down()
-//        }
-    }
-    
     @objc final func close() {
         app.window!.makeFirstResponder(nil)
         app.window.base.isHidden = false
@@ -154,6 +137,8 @@ class World: NSView {
             up()
         }
     }
+    
+    @objc final func me() { map.me() }
     
     @objc final func upwards() {
         map.setCenter(.init(latitude: min(map.centerCoordinate.latitude + map.region.span.latitudeDelta / 2, 90), longitude: map.centerCoordinate.longitude), animated: true)
@@ -196,5 +181,18 @@ class World: NSView {
             self?._up.isHidden = true
             self?._down.isHidden = false
         }
+    }
+    
+    @objc private func settings() {
+        
+//        let settings = Settings(style)
+//        settings.delegate = { [weak self] in
+//            self?.map.remark()
+//            self?.map.line()
+//            self?.list.refresh()
+//        }
+//        settings.map = map
+//        app.view.addSubview(settings)
+//        settings.show()
     }
 }

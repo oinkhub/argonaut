@@ -107,8 +107,15 @@ class Field: UITextView {
             _cancel.heightAnchor.constraint(equalToConstant: 60).isActive = true
         }
         
-        @objc private func cancel() { field.text = "" }
         @objc private func edit() { field.becomeFirstResponder() }
+        
+        @objc private func cancel() {
+            if field.text.isEmpty {
+                app.window!.endEditing(true)
+            } else {
+                field.text = ""
+            }
+        }
     }
     
     final class Name: Field {

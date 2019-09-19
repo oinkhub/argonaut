@@ -47,7 +47,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     private weak var field: Field.Search!
     private weak var results: Scroll!
     private weak var _pin: Button!
-    private weak var _save: UIButton!
+    private weak var _save: Control!
     private weak var resultsHeight: NSLayoutConstraint!
     private var completer: Any?
     override var style: Settings.Style { get { .new } }
@@ -67,14 +67,9 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(field)
         self.field = field
         
-        let _save = UIButton()
-        _save.translatesAutoresizingMaskIntoConstraints = false
-        _save.isAccessibilityElement = true
-        _save.setTitle(.key("New.save"), for: [])
+        let _save = Control.Text()
+        _save.label.text = .key("New.save")
         _save.accessibilityLabel = .key("New.save")
-        _save.titleLabel!.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
-        _save.setTitleColor(.halo, for: .normal)
-        _save.setTitleColor(.init(white: 1, alpha: 0.2), for: .highlighted)
         _save.addTarget(self, action: #selector(save), for: .touchUpInside)
         addSubview(_save)
         self._save = _save
@@ -100,9 +95,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         _pin.bottomAnchor.constraint(equalTo: _up.topAnchor).isActive = true
         
         _save.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
-        _save.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        _save.widthAnchor.constraint(equalToConstant: 90).isActive = true
-        _save.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        _save.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         

@@ -2,66 +2,6 @@ import UIKit
 import MessageUI
 
 final class About: UIView, MFMailComposeViewControllerDelegate {
-    private final class Button: UIControl {
-        override var isHighlighted: Bool { didSet { hover() } }
-        override var isSelected: Bool { didSet { hover() } }
-        private weak var base: UIView!
-        
-        required init?(coder: NSCoder) { nil }
-        init(_ title: String, image: String) {
-            super.init(frame: .zero)
-            translatesAutoresizingMaskIntoConstraints = false
-            isAccessibilityElement = true
-            accessibilityTraits = .button
-            accessibilityLabel = title
-            
-            let base = UIView()
-            base.translatesAutoresizingMaskIntoConstraints = false
-            base.isUserInteractionEnabled = false
-            base.layer.cornerRadius = 20
-            addSubview(base)
-            self.base = base
-            
-            let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.text = title
-            label.textColor = .black
-            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
-            addSubview(label)
-            
-            let icon = UIImageView(image: UIImage(named: image))
-            icon.translatesAutoresizingMaskIntoConstraints = false
-            icon.contentMode = .center
-            icon.clipsToBounds = true
-            addSubview(icon)
-            
-            heightAnchor.constraint(equalToConstant: 60).isActive = true
-            
-            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 40).isActive = true
-            base.rightAnchor.constraint(equalTo: rightAnchor, constant: -40).isActive = true
-            base.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-            base.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
-            
-            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 65).isActive = true
-            label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            
-            icon.rightAnchor.constraint(equalTo: rightAnchor, constant: -55).isActive = true
-            icon.widthAnchor.constraint(equalToConstant: 30).isActive = true
-            icon.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            icon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            
-            hover()
-        }
-        
-        private func hover() {
-            if !isSelected && !isHighlighted {
-                base.backgroundColor = .halo
-            } else {
-                base.backgroundColor = .dark
-            }
-        }
-    }
-    
     required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
@@ -73,7 +13,7 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         close.translatesAutoresizingMaskIntoConstraints = false
         close.isAccessibilityElement = true
         close.accessibilityLabel = .key("Close")
-        close.setImage(UIImage(named: "close"), for: .normal)
+        close.setImage(UIImage(named: "delete"), for: .normal)
         close.imageView!.clipsToBounds = true
         close.imageView!.contentMode = .center
         close.addTarget(app, action: #selector(app.pop), for: .touchUpInside)
@@ -103,42 +43,52 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         } (NSMutableAttributedString())
         scroll.content.addSubview(version)
         
-        let privacy = Button(.key("About.privacy"), image: "privacy")
+        let privacy = Control.Image()
+        privacy.label.text = .key("About.privacy")
+        privacy.image.image = UIImage(named: "privacy")
         privacy.addTarget(self, action: #selector(self.privacy), for: .touchUpInside)
-        scroll.content.addSubview(privacy)
         
-        let write = Button(.key("About.write"), image: "write")
+        let whySettings = UILabel()
+        whySettings.text = .key("About.whySettings")
+        
+        let settings = Control.Image()
+        settings.label.text = .key("About.settings")
+        settings.image.image = UIImage(named: "settings")!.withRenderingMode(.alwaysTemplate)
+        settings.addTarget(self, action: #selector(self.settings), for: .touchUpInside)
+        
+        let whyWrite = UILabel()
+        whyWrite.text = .key("About.whyWrite")
+        
+        let write = Control.Image()
+        write.label.text = .key("About.write")
+        write.image.image = UIImage(named: "write")
         write.addTarget(self, action: #selector(self.write), for: .touchUpInside)
-        scroll.content.addSubview(write)
         
-        let rate = Button(.key("About.rate"), image: "rate")
+        let whyRate = UILabel()
+        whyRate.text = .key("About.whyRate")
+        
+        let rate = Control.Image()
+        rate.label.text = .key("About.rate")
+        rate.image.image = UIImage(named: "rate")
         rate.addTarget(self, action: #selector(self.rate), for: .touchUpInside)
-        scroll.content.addSubview(rate)
         
-        var label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = .key("About.whyWrite")
-        label.textColor = .white
-        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
-        scroll.content.addSubview(label)
+        [privacy, settings, write, rate].forEach {
+            $0.accessibilityLabel = $0.label.text
+            scroll.content.addSubview($0)
+            
+            $0.leftAnchor.constraint(equalTo: scroll.content.leftAnchor, constant: 40).isActive = true
+            $0.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -80).isActive = true
+        }
         
-        label.leftAnchor.constraint(equalTo: scroll.content.leftAnchor, constant: 65).isActive = true
-        label.topAnchor.constraint(equalTo: privacy.bottomAnchor, constant: 20).isActive = true
+        [whySettings, whyRate, whyWrite].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.textColor = .white
+            $0.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
+            scroll.content.addSubview($0)
+            
+            $0.leftAnchor.constraint(equalTo: scroll.content.leftAnchor, constant: 65).isActive = true
+        }
         
-        write.topAnchor.constraint(equalTo: label.bottomAnchor).isActive = true
-        
-        label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = .key("About.whyRate")
-        label.textColor = .white
-        label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
-        scroll.content.addSubview(label)
-        
-        label.leftAnchor.constraint(equalTo: scroll.content.leftAnchor, constant: 65).isActive = true
-        label.topAnchor.constraint(equalTo: write.bottomAnchor, constant: 20).isActive = true
-        
-        rate.topAnchor.constraint(equalTo: label.bottomAnchor).isActive = true
-
         bar.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         bar.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
@@ -161,11 +111,12 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         version.leftAnchor.constraint(equalTo: scroll.centerXAnchor).isActive = true
         
         privacy.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 40).isActive = true
-        
-        [privacy, write, rate].forEach {
-            $0.leftAnchor.constraint(equalTo: scroll.content.leftAnchor).isActive = true
-            $0.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
-        }
+        whySettings.topAnchor.constraint(equalTo: privacy.bottomAnchor, constant: 20).isActive = true
+        settings.topAnchor.constraint(equalTo: whySettings.bottomAnchor).isActive = true
+        whyWrite.topAnchor.constraint(equalTo: settings.bottomAnchor, constant: 20).isActive = true
+        write.topAnchor.constraint(equalTo: whyWrite.bottomAnchor).isActive = true
+        whyRate.topAnchor.constraint(equalTo: write.bottomAnchor, constant: 20).isActive = true
+        rate.topAnchor.constraint(equalTo: whyRate.bottomAnchor).isActive = true
         
         scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: rate.bottomAnchor, constant: 40).isActive = true
         
@@ -182,8 +133,8 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
     }
     
     func mailComposeController(_: MFMailComposeViewController, didFinishWith: MFMailComposeResult, error: Error?) { app.dismiss(animated: true) }
-    
     @objc private func privacy() { app.push(Privacy()) }
+    @objc private func settings() { UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!) }
     @objc private func rate() { UIApplication.shared.openURL(URL(string: "itms-apps://itunes.apple.com/\(Locale.current.regionCode!.lowercased())/app/Argonaut/id1436394937")!) }
     
     @objc private func write() {

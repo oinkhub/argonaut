@@ -8,7 +8,7 @@ final class Home: UIView {
     private weak var screenBottom: UIView!
     private weak var border: UIView!
     private weak var bar: Bar!
-    private weak var _done: UIButton!
+    private weak var _done: Control!
     private weak var _new: UIButton!
     private weak var _about: UIButton!
     private weak var screenTopBottom: NSLayoutConstraint!
@@ -47,15 +47,10 @@ final class Home: UIView {
         addSubview(_edit)
         self._edit = _edit
         
-        let _done = UIButton()
-        _done.translatesAutoresizingMaskIntoConstraints = false
-        _done.isAccessibilityElement = true
+        let _done = Control.Text()
         _done.isHidden = true
-        _done.setTitle(.key("Home.done"), for: [])
+        _done.label.text = .key("Home.done")
         _done.accessibilityLabel = .key("Home.done")
-        _done.titleLabel!.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .headline).pointSize, weight: .bold)
-        _done.setTitleColor(.halo, for: .normal)
-        _done.setTitleColor(.dark, for: .highlighted)
         _done.addTarget(self, action: #selector(done), for: .touchUpInside)
         addSubview(_done)
         self._done = _done
@@ -123,9 +118,7 @@ final class Home: UIView {
         _edit.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
         _done.centerYAnchor.constraint(equalTo: _edit.centerYAnchor).isActive = true
-        _done.rightAnchor.constraint(equalTo: _edit.leftAnchor, constant: 20).isActive = true
-        _done.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        _done.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        _done.rightAnchor.constraint(equalTo: _edit.leftAnchor).isActive = true
         
         scroll.topAnchor.constraint(equalTo: bar.bottomAnchor).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true

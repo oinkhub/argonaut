@@ -169,13 +169,12 @@ class World: UIView, CLLocationManagerDelegate {
     
     @objc private func settings() {
         app.window!.endEditing(true)
-        let settings = Settings(style)
+        let settings = Settings(style, map: map)
         settings.delegate = { [weak self] in
             self?.map.remark()
             self?.map.line()
             self?.list.refresh()
         }
-        settings.map = map
         app.view.addSubview(settings)
         settings.show()
         

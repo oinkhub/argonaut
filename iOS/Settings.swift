@@ -2,105 +2,32 @@ import Argonaut
 import UIKit
 
 final class Settings: UIView {
-    enum Style { case new, navigate }
-    
-    private enum Item {
-        case follow, heading, pins, directions
-        
-        var title: String {
-            switch self {
-            case .follow: return .key("Settings.follow")
-            case .heading: return .key("Settings.heading")
-            case .pins: return .key("Settings.pins")
-            case .directions: return .key("Settings.directions")
-            }
-        }
-        
-        var image: String {
-            switch self {
-            case .follow: return "follow"
-            case .heading: return "head"
-            case .pins: return "pin"
-            case .directions: return "directions"
-            }
-        }
-    }
-    
-    private final class Button: UIControl {
+    final class Button: Control.Image {
         var value = false { didSet { hover() } }
-        override var isHighlighted: Bool { didSet { hover() } }
-        override var isSelected: Bool { didSet { hover() } }
+        override var hovering: Bool { value && !isSelected && !isHighlighted }
         override var accessibilityValue: String? { get { value.description } set { } }
-        let item: Item
-        private weak var base: UIView!
-        
-        required init?(coder: NSCoder) { nil }
-        init(_ item: Item) {
-            self.item = item
-            super.init(frame: .zero)
-            translatesAutoresizingMaskIntoConstraints = false
-            isAccessibilityElement = true
-            accessibilityTraits = .button
+        var item = Item.follow { didSet {
             accessibilityLabel = item.title
-            
-            let base = UIView()
-            base.translatesAutoresizingMaskIntoConstraints = false
-            base.isUserInteractionEnabled = false
-            base.layer.cornerRadius = 20
-            addSubview(base)
-            self.base = base
-            
-            let label = UILabel()
-            label.translatesAutoresizingMaskIntoConstraints = false
             label.text = item.title
-            label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .bold)
-            label.textColor = .black
-            addSubview(label)
-            
-            let image = UIImageView(image: UIImage(named: item.image)!.withRenderingMode(.alwaysTemplate))
-            image.translatesAutoresizingMaskIntoConstraints = false
-            image.contentMode = .center
-            image.clipsToBounds = true
-            image.tintColor = .black
-            addSubview(image)
-            
-            heightAnchor.constraint(equalToConstant: 60).isActive = true
-            
-            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 40).isActive = true
-            base.rightAnchor.constraint(equalTo: rightAnchor, constant: -40).isActive = true
-            base.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-            base.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
-            
-            label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 65).isActive = true
-            
-            image.rightAnchor.constraint(equalTo: rightAnchor, constant: -50).isActive = true
-            image.widthAnchor.constraint(equalToConstant: 30).isActive = true
-            image.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            image.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        }
-        
-        private func hover() {
-            if value && !isSelected && !isHighlighted {
-                base.backgroundColor = .halo
-            } else {
-                base.backgroundColor = .dark
-            }
-        }
+            image.image = UIImage(named: item.image)!.withRenderingMode(.alwaysTemplate)
+        } }
     }
     
     var delegate: (() -> Void)!
-    weak var map: Map!
+    var info = "" { didSet { _info.text = info } }
+    private(set) weak var segmented: UISegmentedControl!
+    private(set) weak var map: Map!
     private weak var top: NSLayoutConstraint!
-    private weak var info: UILabel!
+    private weak var _info: UILabel!
     
     required init?(coder: NSCoder) { nil }
-    init(_ style: Style) {
+    init(_ style: Style, map: Map) {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         accessibilityViewIsModal = true
         alpha = 0
         backgroundColor = .init(white: 0, alpha: 0.9)
+        self.map = map
         
         let base = UIView()
         base.translatesAutoresizingMaskIntoConstraints = false
@@ -121,39 +48,29 @@ final class Settings: UIView {
         done.addTarget(self, action: #selector(self.done), for: .touchUpInside)
         addSubview(done)
         
-        let info = UILabel()
-        info.translatesAutoresizingMaskIntoConstraints = false
-        info.numberOfLines = 0
-        info.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
-        info.textColor = .init(white: 1, alpha: 0.9)
-        scroll.content.addSubview(info)
-        self.info = info
+        let _info = UILabel()
+        _info.translatesAutoresizingMaskIntoConstraints = false
+        _info.numberOfLines = 0
+        _info.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .caption1).pointSize, weight: .light)
+        _info.textColor = .init(white: 1, alpha: 0.9)
+        scroll.content.addSubview(_info)
+        self._info = _info
         
         let segmented: UISegmentedControl
         
         switch style {
         case .navigate:
             segmented = UISegmentedControl(items: [String.key("Settings.argonaut"), .key("Settings.apple"), .key("Settings.hybrid")])
-            segmented.addTarget(self, action: #selector(mapped(_:)), for: .valueChanged)
-            
-            switch app.session.settings.map {
-            case .argonaut: segmented.selectedSegmentIndex = 0
-            case .apple: segmented.selectedSegmentIndex = 1
-            case .hybrid: segmented.selectedSegmentIndex = 2
-            }
-            
+            segmented.addTarget(self, action: #selector(mapped), for: .valueChanged)
+            self.segmented = segmented
+            configMap()
             mapInfo()
             
         case .new:
             segmented = UISegmentedControl(items: [String.key("Settings.walking"), .key("Settings.driving"), .key("Settings.flying")])
-            
-            switch app.session.settings.mode {
-            case .walking: segmented.selectedSegmentIndex = 0
-            case .driving: segmented.selectedSegmentIndex = 1
-            case .flying: segmented.selectedSegmentIndex = 2
-            }
-            segmented.addTarget(self, action: #selector(moded(_:)), for: .valueChanged)
-            
+            segmented.addTarget(self, action: #selector(moded), for: .valueChanged)
+            self.segmented = segmented
+            configMode()
             modeInfo()
         }
         
@@ -181,20 +98,21 @@ final class Settings: UIView {
         done.widthAnchor.constraint(equalToConstant: 60).isActive = true
         done.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
         
-        info.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        info.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
-        info.topAnchor.constraint(equalTo: segmented.bottomAnchor, constant: 15).isActive = true
+        _info.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        _info.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
+        _info.topAnchor.constraint(equalTo: segmented.bottomAnchor, constant: 15).isActive = true
         
-        var top = info.bottomAnchor
+        var top = _info.bottomAnchor
         [Item.follow, .heading, .pins, .directions].forEach {
-            let button = Button($0)
+            let button = Button()
+            button.item = $0
             button.addTarget(self, action: #selector(change(_:)), for: .touchUpInside)
             scroll.content.addSubview(button)
             update(button)
             
             button.topAnchor.constraint(equalTo: top, constant: $0 == .follow ? 30 : 0).isActive = true
-            button.leftAnchor.constraint(equalTo: scroll.content.leftAnchor).isActive = true
-            button.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
+            button.leftAnchor.constraint(equalTo: scroll.content.leftAnchor, constant: 40).isActive = true
+            button.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -80).isActive = true
             top = button.bottomAnchor
         }
         scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top).isActive = true
@@ -223,72 +141,11 @@ final class Settings: UIView {
         }
     }
     
-    private func mapInfo() {
-        switch app.session.settings.map {
-        case .argonaut: info.text = .key("Settings.map.argonaut")
-        case .apple: info.text = .key("Settings.map.apple")
-        case .hybrid: info.text = .key("Settings.map.hybrid")
-        }
-    }
-    
-    private func modeInfo() {
-        switch app.session.settings.mode {
-        case .walking: info.text = .key("Settings.mode.walking")
-        case .driving: info.text = .key("Settings.mode.driving")
-        case .flying: info.text = .key("Settings.mode.flying")
-        }
-    }
-    
     @objc private func done() {
         top.constant = -440
         UIView.animate(withDuration: 0.35, animations: { [weak self] in
             app.view.layoutIfNeeded()
             self?.alpha = 0
         }) { [weak self] _ in self?.removeFromSuperview() }
-    }
-    
-    @objc private func change(_ button: Button) {
-        switch button.item {
-        case .follow: app.session.settings.follow.toggle()
-        case .heading: app.session.settings.heading.toggle()
-        case .pins: app.session.settings.pins.toggle()
-        case .directions: app.session.settings.directions.toggle()
-        }
-        update(button)
-        app.session.save()
-        delegate()
-    }
-    
-    @objc private func update(_ button: Button) {
-        switch button.item {
-        case .follow: button.value = app.session.settings.follow
-        case .heading: button.value = app.session.settings.heading
-        case .pins: button.value = app.session.settings.pins
-        case .directions: button.value = app.session.settings.directions
-        }
-    }
-    
-    @objc private func mapped(_ segmented: UISegmentedControl) {
-        switch segmented.selectedSegmentIndex {
-        case 0: app.session.settings.map = .argonaut
-        case 1: app.session.settings.map = .apple
-        default: app.session.settings.map = .hybrid
-        }
-        app.session.save()
-        mapInfo()
-        map.retile()
-        delegate()
-    }
-    
-    @objc private func moded(_ segmented: UISegmentedControl) {
-        switch segmented.selectedSegmentIndex {
-        case 0: app.session.settings.mode = .walking
-        case 1: app.session.settings.mode = .driving
-        default: app.session.settings.mode = .flying
-        }
-        app.session.save()
-        modeInfo()
-        delegate()
-        map.rezoom()
     }
 }
