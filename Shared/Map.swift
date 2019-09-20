@@ -200,15 +200,14 @@ final class Map: MKMapView, MKMapViewDelegate {
         request.destination = .init(placemark: .init(coordinate: .init(latitude: destination.latitude, longitude: destination.longitude), addressDictionary: nil))
         MKDirections(request: request).calculate { [weak self] in
             if $1 == nil, let paths = $0?.routes {
-                let options = paths.map {
+                if let best = paths.sorted(by: { $0.distance < $1.distance && $0.expectedTravelTime < $1.expectedTravelTime }).first {
                     let option = Path.Option()
                     option.mode = mode
-                    option.distance = $0.distance
-                    option.duration = $0.expectedTravelTime
-                    option.points = UnsafeBufferPointer(start: $0.polyline.points(), count: $0.polyline.pointCount).map { ($0.coordinate.latitude, $0.coordinate.longitude) }
-                    return option
-                } as [Path.Option]
-                path.options += options
+                    option.distance = best.distance
+                    option.duration = best.expectedTravelTime
+                    option.points = UnsafeBufferPointer(start: best.polyline.points(), count: best.polyline.pointCount).map { ($0.coordinate.latitude, $0.coordinate.longitude) }
+                    path.options.append(option)
+                }
                 if app.session.settings.mode == mode {
                     self?.line()
                     self?.refresh()
