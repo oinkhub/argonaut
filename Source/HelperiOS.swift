@@ -5,5 +5,11 @@ extension MKMapSnapshotter.Snapshot {
 }
 
 extension MKMapSnapshotter.Options {
-    func dark() { }
+    func dark() {
+        if #available(iOS 13.0, *) {
+            traitCollection = .init(traitsFrom: [.init(displayScale: 2), .init(userInterfaceStyle: .dark)])
+        } else {
+            scale = 2
+        }
+    }
 }

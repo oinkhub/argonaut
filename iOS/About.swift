@@ -94,7 +94,6 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         scroll.topAnchor.constraint(equalTo: bar.bottomAnchor).isActive = true
         
         close.bottomAnchor.constraint(equalTo: bar.bottomAnchor).isActive = true
@@ -118,12 +117,14 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         whyRate.topAnchor.constraint(equalTo: write.bottomAnchor, constant: 20).isActive = true
         rate.topAnchor.constraint(equalTo: whyRate.bottomAnchor).isActive = true
         
-        scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: rate.bottomAnchor, constant: 40).isActive = true
+        scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: rate.bottomAnchor, constant: 20).isActive = true
         
         if #available(iOS 11.0, *) {
             bar.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
+            scroll.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
         } else {
             bar.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
     }
     

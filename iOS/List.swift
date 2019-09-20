@@ -109,7 +109,7 @@ final class List: UIView {
         total.leftAnchor.constraint(equalTo: header.rightAnchor, constant: 10).isActive = true
         total.rightAnchor.constraint(lessThanOrEqualTo: scroll.content.rightAnchor, constant: -20).isActive = true
         
-        scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: header.bottomAnchor, constant: 30).isActive = true
+        scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: header.bottomAnchor, constant: 10).isActive = true
         
         if previous == nil {
             header.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 15).isActive = true
