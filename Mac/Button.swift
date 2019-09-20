@@ -13,7 +13,7 @@ class Button: NSView {
             heightAnchor.constraint(equalToConstant: 12).isActive = true
         }
 
-        override func hover() { alphaValue = selected ? 1 : 0.4 }
+        override func hover() { alphaValue = value ? 1 : 0.4 }
     }
     
     final class Map: Image {
@@ -38,7 +38,7 @@ class Button: NSView {
             base.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
         
-        override func hover() { image.alphaValue = selected ? 0.3 : 1 }
+        override func hover() { image.alphaValue = value ? 0.3 : 1 }
     }
     
     class Image: Button {
@@ -60,39 +60,11 @@ class Button: NSView {
         }
     }
     
-    final class Background: Button {
-        private(set) weak var width: NSLayoutConstraint!
-        private(set) weak var label: Label!
-        
-        required init?(coder: NSCoder) { nil }
-        override init(_ target: AnyObject?, action: Selector?) {
-            super.init(target, action: action)
-            wantsLayer = true
-            layer!.cornerRadius = 12
-            layer!.backgroundColor = .halo
-            
-            let label = Label()
-            label.alignment = .center
-            label.font = .systemFont(ofSize: 12, weight: .bold)
-            label.textColor = .black
-            self.label = label
-            addSubview(label)
-            
-            heightAnchor.constraint(equalToConstant: 24).isActive = true
-            width = widthAnchor.constraint(equalToConstant: 60)
-            width.isActive = true
-            
-            label.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-            label.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-            label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        }
-    }
-    
     final weak var target: AnyObject?
     final var action: Selector?
     final var enabled = true
+    final var value = false { didSet { hover() } }
     private var drag = CGFloat()
-    final fileprivate var selected = false { didSet { hover() } }
     
     required init?(coder: NSCoder) { nil }
     init(_ target: AnyObject?, action: Selector?) {
@@ -110,7 +82,7 @@ class Button: NSView {
     
     override func mouseDown(with: NSEvent) {
         if enabled {
-            selected = true
+            value = true
         }
     }
     
@@ -118,23 +90,23 @@ class Button: NSView {
         if enabled {
             drag += abs(with.deltaX) + abs(with.deltaY)
             if drag > 20 {
-                selected = false
+                value = false
             }
         }
     }
     
     override func mouseUp(with: NSEvent) {
         if enabled {
-            if selected {
+            if value {
                 click()
             }
-            selected = false
+            value = false
         }
     }
+    
+    func hover() { alphaValue = value ? 0.3 : 1 }
     
     fileprivate func click() {
         _ = target?.perform(action, with: self)
     }
-    
-    fileprivate func hover() { alphaValue = selected ? 0.3 : 1 }
 }

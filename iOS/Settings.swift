@@ -2,7 +2,7 @@ import Argonaut
 import UIKit
 
 final class Settings: UIView {
-    final class Button: Control.Image {
+    final class Button: Control.Icon {
         var value = false { didSet { hover() } }
         override var hovering: Bool { value && !isSelected && !isHighlighted }
         override var accessibilityValue: String? { get { value.description } set { } }
@@ -13,7 +13,7 @@ final class Settings: UIView {
         } }
     }
     
-    var delegate: (() -> Void)!
+    var observer: (() -> Void)!
     var info = "" { didSet { _info.text = info } }
     private(set) weak var segmented: UISegmentedControl!
     private(set) weak var map: Map!
@@ -26,7 +26,7 @@ final class Settings: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         accessibilityViewIsModal = true
         alpha = 0
-        backgroundColor = .init(white: 0, alpha: 0.9)
+        backgroundColor = .init(white: 0, alpha: 0.6)
         self.map = map
         
         let base = UIView()
@@ -37,6 +37,9 @@ final class Settings: UIView {
         let scroll = Scroll()
         base.addSubview(scroll)
         
+        let gradient = Gradient.Top()
+        addSubview(gradient)
+        
         let done = UIButton()
         done.translatesAutoresizingMaskIntoConstraints = false
         done.isAccessibilityElement = true
@@ -44,7 +47,7 @@ final class Settings: UIView {
         done.setImage(UIImage(named: "done"), for: .normal)
         done.imageView!.clipsToBounds = true
         done.imageView!.contentMode = .center
-        done.imageEdgeInsets.bottom = 20
+        done.imageEdgeInsets.bottom = 60
         done.addTarget(self, action: #selector(self.done), for: .touchUpInside)
         addSubview(done)
         
@@ -57,7 +60,6 @@ final class Settings: UIView {
         self._info = _info
         
         let segmented: UISegmentedControl
-        
         switch style {
         case .navigate:
             segmented = UISegmentedControl(items: [String.key("Settings.argonaut"), .key("Settings.apple"), .key("Settings.hybrid")])
@@ -73,7 +75,6 @@ final class Settings: UIView {
             configMode()
             modeInfo()
         }
-        
         segmented.translatesAutoresizingMaskIntoConstraints = false
         segmented.tintColor = .halo
         segmented.setTitleTextAttributes([.foregroundColor: UIColor.halo.withAlphaComponent(0.6)], for: .normal)
@@ -93,9 +94,13 @@ final class Settings: UIView {
         scroll.rightAnchor.constraint(equalTo: base.rightAnchor).isActive = true
         scroll.bottomAnchor.constraint(equalTo: base.bottomAnchor, constant: -1).isActive = true
         
+        gradient.topAnchor.constraint(equalTo: base.bottomAnchor).isActive = true
+        gradient.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        gradient.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        
         done.topAnchor.constraint(equalTo: base.bottomAnchor).isActive = true
-        done.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        done.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        done.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        done.widthAnchor.constraint(equalToConstant: 120).isActive = true
         done.centerXAnchor.constraint(equalTo: base.centerXAnchor).isActive = true
         
         _info.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true

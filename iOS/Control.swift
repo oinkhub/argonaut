@@ -1,10 +1,10 @@
 import UIKit
 
 class Control: UIControl {
-    class Image: Control {
+    class Icon: Control {
         private(set) weak var image: UIImageView!
         
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         override init() {
             super.init()
             base.layer.cornerRadius = 20
@@ -30,7 +30,7 @@ class Control: UIControl {
     }
     
     class Text: Control {
-        required init?(coder: NSCoder) { return nil }
+        required init?(coder: NSCoder) { nil }
         override init() {
             super.init()
             base.layer.cornerRadius = 15
@@ -50,10 +50,9 @@ class Control: UIControl {
     private(set) weak var label: UILabel!
     private weak var base: UIView!
     
-    required init?(coder: NSCoder) { return nil }
+    required init?(coder: NSCoder) { nil }
     private init() {
         super.init(frame: .zero)
-        translatesAutoresizingMaskIntoConstraints = false
         translatesAutoresizingMaskIntoConstraints = false
         isAccessibilityElement = true
         accessibilityTraits = .button

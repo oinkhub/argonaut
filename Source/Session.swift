@@ -40,7 +40,7 @@ public final class Session: Codable {
     public var onboard = [String: Bool]()
     public var rating = Calendar.current.date(byAdding: {
         var d = DateComponents()
-        d.day = 3
+        d.day = 2
         return d
     } (), to: Date())!
     

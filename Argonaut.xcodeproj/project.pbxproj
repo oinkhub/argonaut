@@ -102,6 +102,7 @@
 		DA0FBEAD2332815000D935A9 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEAC2332815000D935A9 /* List.swift */; };
 		DA0FBEAF2332832400D935A9 /* Scroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEAE2332832400D935A9 /* Scroll.swift */; };
 		DA0FBEB12332875C00D935A9 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEB02332875C00D935A9 /* Item.swift */; };
+		DA6718092334CB3300883FA6 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6718082334CB3300883FA6 /* Control.swift */; };
 		DA9EE21D233385CD00D83514 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9EE21C233385CD00D83514 /* Control.swift */; };
 		DAC775652331153E00EF4724 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC775642331153E00EF4724 /* Menu.swift */; };
 /* End PBXBuildFile section */
@@ -220,6 +221,7 @@
 		DA0FBEAC2332815000D935A9 /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		DA0FBEAE2332832400D935A9 /* Scroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scroll.swift; sourceTree = "<group>"; };
 		DA0FBEB02332875C00D935A9 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		DA6718082334CB3300883FA6 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		DA9EE21C233385CD00D83514 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		DAC775642331153E00EF4724 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -348,6 +350,7 @@
 				CE9C6A3A232E49D30020F982 /* Bar.swift */,
 				CE4A547B22D85E1B00125A9C /* Button.swift */,
 				CE7EACE222E1B9A40082D91C /* Callout.swift */,
+				DA6718082334CB3300883FA6 /* Control.swift */,
 				CEE2BF9822EAF5400080C111 /* Create.swift */,
 				CE0038FB22D72D68008A8E88 /* Extensions.swift */,
 				CE02CB5522E992D1009F7323 /* Field.swift */,
@@ -658,6 +661,7 @@
 				CE9C6A3F232E66AF0020F982 /* New.swift in Sources */,
 				CEDE110822D71F5300DD796B /* Shared.swift in Sources */,
 				CEAB0F0822D73C5800320F4F /* New_old.swift in Sources */,
+				DA6718092334CB3300883FA6 /* Control.swift in Sources */,
 				CE9301DB22EF09AF00EACBD4 /* Tiler.swift in Sources */,
 				DAC775652331153E00EF4724 /* Menu.swift in Sources */,
 				CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */,

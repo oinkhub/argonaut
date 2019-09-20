@@ -16,12 +16,12 @@ final class TestSession: XCTestCase {
         let expect = expectation(description: "")
         let dateMin = Calendar.current.date(byAdding: {
             var d = DateComponents()
-            d.day = 3
+            d.day = 2
             return d
         } (), to: Date())!
         let dateMax = Calendar.current.date(byAdding: {
             var d = DateComponents()
-            d.day = 4
+            d.day = 3
             return d
         } (), to: Date())!
         DispatchQueue.global(qos: .background).async {

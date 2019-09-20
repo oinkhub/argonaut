@@ -33,6 +33,8 @@ final class Label: NSTextField {
     }
 }
 
+extension NSSegmentedControl { var selectedSegmentIndex: Int { get { selectedSegment } set { selectedSegment = newValue } } }
+
 extension Tiler {
     var outside: Data { NSBitmapImageRep(cgImage: NSImage(named: "outside")!.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])! }
 }

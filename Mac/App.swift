@@ -108,7 +108,7 @@ private(set) weak var app: App!
             
             if Date() >= $0.rating {
                 var components = DateComponents()
-                components.month = 4
+                components.month = 3
                 $0.rating = Calendar.current.date(byAdding: components, to: .init())!
                 $0.save()
                 if #available(OSX 10.14, *) { SKStoreReviewController.requestReview() }
@@ -123,7 +123,7 @@ private(set) weak var app: App!
                     UNUserNotificationCenter.current().add({
                         $0.title = title
                         $0.body = message
-                        return UNNotificationRequest(identifier: UUID().uuidString, content: $0, trigger: nil)
+                        return .init(identifier: UUID().uuidString, content: $0, trigger: nil)
                     } (UNMutableNotificationContent()))
                 } else {
                     DispatchQueue.main.async { Alert(title, message: message).makeKeyAndOrderFront(nil) }

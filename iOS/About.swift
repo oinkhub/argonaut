@@ -43,7 +43,7 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         } (NSMutableAttributedString())
         scroll.content.addSubview(version)
         
-        let privacy = Control.Image()
+        let privacy = Control.Icon()
         privacy.label.text = .key("About.privacy")
         privacy.image.image = UIImage(named: "privacy")
         privacy.addTarget(self, action: #selector(self.privacy), for: .touchUpInside)
@@ -51,7 +51,7 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         let whySettings = UILabel()
         whySettings.text = .key("About.whySettings")
         
-        let settings = Control.Image()
+        let settings = Control.Icon()
         settings.label.text = .key("About.settings")
         settings.image.image = UIImage(named: "settings")!.withRenderingMode(.alwaysTemplate)
         settings.addTarget(self, action: #selector(self.settings), for: .touchUpInside)
@@ -59,7 +59,7 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         let whyWrite = UILabel()
         whyWrite.text = .key("About.whyWrite")
         
-        let write = Control.Image()
+        let write = Control.Icon()
         write.label.text = .key("About.write")
         write.image.image = UIImage(named: "write")
         write.addTarget(self, action: #selector(self.write), for: .touchUpInside)
@@ -67,7 +67,7 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         let whyRate = UILabel()
         whyRate.text = .key("About.whyRate")
         
-        let rate = Control.Image()
+        let rate = Control.Icon()
         rate.label.text = .key("About.rate")
         rate.image.image = UIImage(named: "rate")
         rate.addTarget(self, action: #selector(self.rate), for: .touchUpInside)

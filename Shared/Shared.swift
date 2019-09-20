@@ -68,7 +68,7 @@ extension Settings {
         }
         update(button)
         app.session.save()
-        delegate()
+        observer()
     }
     
     @objc func update(_ button: Button) {
@@ -89,7 +89,7 @@ extension Settings {
         app.session.save()
         mapInfo()
         map.retile()
-        delegate()
+        observer()
     }
     
     @objc func moded() {
@@ -111,7 +111,7 @@ extension Settings {
         }
         app.session.save()
         modeInfo()
-        delegate()
+        observer()
         if rezoom {
             map.rezoom()
         }

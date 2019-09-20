@@ -7,7 +7,7 @@ final class New: World, NSTextViewDelegate {
     override init() {
         super.init()
         
-        let save = Button.Background(nil, action: nil)
+        let save = Control.Text(nil, action: nil)
         save.label.stringValue = .key("New.save")
         top.addSubview(save)
         

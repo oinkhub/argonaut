@@ -170,7 +170,7 @@ class World: UIView, CLLocationManagerDelegate {
     @objc private func settings() {
         app.window!.endEditing(true)
         let settings = Settings(style, map: map)
-        settings.delegate = { [weak self] in
+        settings.observer = { [weak self] in
             self?.map.remark()
             self?.map.line()
             self?.list.refresh()

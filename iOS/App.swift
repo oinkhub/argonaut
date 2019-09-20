@@ -80,7 +80,7 @@ private(set) weak var app: App!
 
             if Date() >= $0.rating {
                 var components = DateComponents()
-                components.month = 4
+                components.month = 3
                 $0.rating = Calendar.current.date(byAdding: components, to: .init())!
                 $0.save()
                 if #available(iOS 10.3, *) { SKStoreReviewController.requestReview() }
