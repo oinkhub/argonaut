@@ -24,9 +24,8 @@ final class TestChunk: XCTestCase {
         let expect = expectation(description: "")
         factory.chunk(.init("hello world".utf8), x: 87, y: 76, z: 3)
         factory.chunk(.init("lorem ipsum".utf8), x: 34, y: 12, z: 4)
-        factory.item.id = "abc"
         Argonaut.save(factory)
-        let cart = Argonaut.load("abc").1
+        let cart = Argonaut.load(factory.item).1
         XCTAssertEqual(2, cart.map.keys.count)
         cart.tile(87, 76, 3) {
             XCTAssertNotNil($0)

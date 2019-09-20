@@ -16,9 +16,10 @@ final class TestArgonaut: XCTestCase {
     
     func testDelete() {
         let expect = expectation(description: "")
-        let url = Argonaut.url.appendingPathComponent("lorem.argonaut")
+        let item = Session.Item()
+        let url = Argonaut.url.appendingPathComponent(item.id.uuidString + ".argonaut")
         try! Data("hello world".utf8).write(to: url)
-        Argonaut.delete("lorem")
+        Argonaut.delete(item)
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.05) {
             XCTAssertFalse(FileManager.default.fileExists(atPath: url.path))
             expect.fulfill()
@@ -28,10 +29,9 @@ final class TestArgonaut: XCTestCase {
     
     func testShare() {
         let expect = expectation(description: "")
-        let url = Argonaut.url.appendingPathComponent("lorem.argonaut")
-        try! Data("hello world".utf8).write(to: url)
         let item = Session.Item()
-        item.id = "lorem"
+        let url = Argonaut.url.appendingPathComponent(item.id.uuidString + ".argonaut")
+        try! Data("hello world".utf8).write(to: url)
         item.name = "hello world and lorem ipsum"
         item.points = ["alpha", "beta"]
         item.distance = 8.8
@@ -65,7 +65,6 @@ final class TestArgonaut: XCTestCase {
         let url = Argonaut.url.appendingPathComponent("lorem.argonaut")
         try! Data("hello world".utf8).write(to: url)
         let item = Session.Item()
-        item.id = "lorem"
         Argonaut.share(item) { shared in
             XCTAssertTrue(FileManager.default.fileExists(atPath: shared.path))
             XCTAssertEqual("map.argonaut", shared.lastPathComponent)
@@ -84,10 +83,8 @@ final class TestArgonaut: XCTestCase {
         factory.path[0].options = [.init()]
         factory.path[0].options[0].points = [(-50, 60), (70, -80), (-30, 20), (82, -40)]
         factory.path[1].name = "adasdsadas dadskjnaslkdas sakmdasklmdas asmdkaslmdlksama sdksamdklasmklsa asdsaasd\n sdadas"
-        factory.item.id = "abc"
         Argonaut.save(factory)
-        factory = nil
-        let loaded = Argonaut.load("abc")
+        let loaded = Argonaut.load(factory.item)
         XCTAssertEqual(-50, loaded.0[0].options[0].points[0].0)
         XCTAssertEqual(60, loaded.0[0].options[0].points[0].1)
         XCTAssertEqual(70, loaded.0[0].options[0].points[1].0)

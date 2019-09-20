@@ -5,12 +5,12 @@ public final class Session: Codable {
     public enum Mode: UInt8, Codable { case walking, driving, flying }
     
     public final class Item: Codable, Identifiable {
-        public var id = ""
         public var name = ""
         public var duration = 0.0
         public var distance = 0.0
         public var mode = Mode.walking
         public var points = [String]()
+        public internal(set) var id = UUID()
         
         public init() { }
     }

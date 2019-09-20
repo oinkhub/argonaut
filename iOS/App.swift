@@ -134,7 +134,7 @@ private(set) weak var app: App!
         session.items.removeAll(where: { $0.id == item.id })
         session.save()
         home.refresh()
-        Argonaut.delete(item.id)
+        Argonaut.delete(item)
     }
     
     func measure(_ distance: Double, _ duration: Double) -> String {

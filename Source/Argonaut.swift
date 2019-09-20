@@ -8,11 +8,11 @@ public final class Argonaut {
     static let url = root.appendingPathComponent("maps")
     static let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("map.argonaut")
     
-    public class func load(_ id: String) -> ([Path], Cart) {
+    public class func load(_ item: Session.Item) -> ([Path], Cart) {
         var path = [Path]()
-        let cart = Cart(url(id))
+        let cart = Cart(url(item.id.uuidString))
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
-        let input = InputStream(url: url(id))!
+        let input = InputStream(url: url(item.id.uuidString))!
         input.open()
         input.read(buffer, maxLength: 3)
         cart.zoom = (Int(buffer.pointee) ... Int(buffer.advanced(by: 1).pointee))
@@ -60,9 +60,9 @@ public final class Argonaut {
         return (path, cart)
     }
     
-    public class func delete(_ id: String) {
+    public class func delete(_ item: Session.Item) {
         DispatchQueue.global(qos: .background).async {
-            try? FileManager.default.removeItem(at: url(id))
+            try? FileManager.default.removeItem(at: url(item.id.uuidString))
         }
     }
     
@@ -79,7 +79,7 @@ public final class Argonaut {
             let coded = try! JSONEncoder().encode(item)
             _ = withUnsafeBytes(of: UInt16(coded.count)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 2) }
             _ = coded.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: coded.count) }
-            let input = InputStream(url: url(item.id))!
+            let input = InputStream(url: url(item.id.uuidString))!
             input.open()
             let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
             while input.hasBytesAvailable {
@@ -103,7 +103,7 @@ public final class Argonaut {
             input.open()
             input.read(buffer, maxLength: 2)
             let item = try! JSONDecoder().decode(Session.Item.self, from: .init(bytes: buffer, count: input.read(buffer, maxLength: Int(buffer.withMemoryRebound(to: UInt16.self, capacity: 1) { $0.pointee }))))
-            let out = OutputStream(url: url(item.id), append: false)!
+            let out = OutputStream(url: url(item.id.uuidString), append: false)!
             out.open()
             while input.hasBytesAvailable {
                 out.write(buffer, maxLength: input.read(buffer, maxLength: size))
@@ -119,7 +119,7 @@ public final class Argonaut {
     
     class func save(_ factory: Factory) {
         prepare()
-        let out = OutputStream(url: url(factory.item.id), append: false)!
+        let out = OutputStream(url: url(factory.item.id.uuidString), append: false)!
         out.open()
         _ = [UInt8(factory.range.min()!), UInt8(factory.range.max()!), UInt8(factory.path.count)].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 3) }
         factory.path.forEach {

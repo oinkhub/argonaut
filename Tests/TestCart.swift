@@ -20,9 +20,8 @@ final class TestCart: XCTestCase {
         let expectB = expectation(description: "")
         factory.chunk(.init("hello world".utf8), x: 87, y: 76, z: 1)
         factory.chunk(.init("lorem ipsum".utf8), x: 45, y: 12, z: 2)
-        factory.item.id = "abc"
         Argonaut.save(factory)
-        cart = Argonaut.load("abc").1
+        cart = Argonaut.load(factory.item).1
         cart.tile(87, 76, 1) {
             XCTAssertEqual("hello world", String(decoding: $0!, as: UTF8.self))
             expectA.fulfill()
@@ -35,18 +34,16 @@ final class TestCart: XCTestCase {
     }
     
     func testZoom() {
-        factory.item.id = "abc"
         factory.range = (55 ... 57)
         Argonaut.save(factory)
-        XCTAssertEqual((55 ... 57), Argonaut.load("abc").1.zoom)
+        XCTAssertEqual((55 ... 57), Argonaut.load(factory.item).1.zoom)
     }
     
     func testNil() {
         let expect = expectation(description: "")
         factory.chunk(.init("hello world".utf8), x: 160, y: 280, z: 1)
-        factory.item.id = "abc"
         Argonaut.save(factory)
-        cart = Argonaut.load("abc").1
+        cart = Argonaut.load(factory.item).1
         cart.tile(320, 560, 0) {
             XCTAssertNil($0)
             expect.fulfill()

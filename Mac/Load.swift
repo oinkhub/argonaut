@@ -20,13 +20,13 @@ final class Load: NSWindow {
         label.centerYAnchor.constraint(equalTo: contentView!.centerYAnchor).isActive = true
         
         DispatchQueue.global(qos: .background).async {
-            let project = Argonaut.load(id)
-            DispatchQueue.main.async { [weak self] in
-                self?.close()
-                if app.isActive {
+//            let project = Argonaut.load(id)
+//            DispatchQueue.main.async { [weak self] in
+//                self?.close()
+//                if app.isActive {
 //                    Navigate(project).makeKeyAndOrderFront(nil)
-                }
-            }
+//                }
+//            }
         }
     }
 }

@@ -52,10 +52,9 @@ final class TestSession: XCTestCase {
         let expect = expectation(description: "")
         let session = Session()
         session.items = [.init()]
-        session.items[0].id = "hello"
         session.save()
         Session.load {
-            XCTAssertEqual("hello", $0.items[0].id)
+            XCTAssertEqual(session.items[0].id, $0.items[0].id)
             expect.fulfill()
         }
         waitForExpectations(timeout: 1)
@@ -63,15 +62,12 @@ final class TestSession: XCTestCase {
     
     func testUpdate() {
         let a = Session.Item()
-        a.id = "lorem ipsum"
-        let b = Session.Item()
-        b.id = "lorem ipsum"
         let session = Session()
         session.items = [a]
-        session.update(b)
+        session.update(a)
         XCTAssertEqual(1, session.items.count)
         session.items = []
-        session.update(b)
+        session.update(a)
         XCTAssertEqual(1, session.items.count)
     }
 }

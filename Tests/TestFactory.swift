@@ -94,7 +94,6 @@ final class TestFactory: XCTestCase {
         factory.path[2].options[0].distance = 2
         factory.path[2].options[0].mode = .flying
         factory.register()
-        XCTAssertEqual(factory.id, factory.item.id)
         XCTAssertEqual(.flying, factory.item.mode)
         XCTAssertEqual("hello", factory.item.points[0])
         XCTAssertEqual("world", factory.item.points[1])
@@ -106,6 +105,13 @@ final class TestFactory: XCTestCase {
     func testRegisterEmpty() {
         factory.register()
         XCTAssertTrue(factory.item.points.isEmpty)
+    }
+    
+    func testRegisterNameNonEmpty() {
+        factory.path = [.init(), .init()]
+        factory.path[0].name = "hello"
+        factory.register()
+        XCTAssertEqual(1, factory.item.points.count)
     }
     
     func testRange() {

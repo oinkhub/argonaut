@@ -6,7 +6,7 @@ final class Load: UIView {
     
     class func navigate(_ item: Session.Item) {
         modal {
-            let project = Argonaut.load(item.id)
+            let project = Argonaut.load(item)
             DispatchQueue.main.async {
                 app.session.settings.mode = item.mode
                 app.push(Navigate(item, project: project))

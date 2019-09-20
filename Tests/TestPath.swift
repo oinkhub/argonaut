@@ -12,13 +12,11 @@ final class TestPath: XCTestCase {
     }
     
     func testCode() {
-        var factory: Factory! = Factory()
+        let factory = Factory()
         factory.path = [.init(), .init()]
         factory.path[0].name = "hello world"
-        factory.item.id = "abc"
         Argonaut.save(factory)
-        factory = nil
-        let coded = Argonaut.load("abc")
+        let coded = Argonaut.load(factory.item)
         XCTAssertEqual(2, coded.0.count)
         XCTAssertEqual("hello world", coded.0[0].name)
     }
@@ -38,9 +36,8 @@ final class TestPath: XCTestCase {
         old.path[1].longitude = 90.1
         old.path[1].options = [.init()]
         old.path[1].options[0].points = [(99, 88)]
-        old.item.id = "a"
         Argonaut.save(old)
-        let new = Argonaut.load("a").0
+        let new = Argonaut.load(old.item).0
         XCTAssertEqual(2, new.count)
         XCTAssertEqual("hello world", new[0].name)
         XCTAssertEqual(33.5, new[0].latitude)
@@ -64,18 +61,16 @@ final class TestPath: XCTestCase {
     
     func testNoName() {
         let old = Factory()
-        old.item.id = "a"
         old.path = [.init()]
         old.path[0].options = [.init()]
         Argonaut.save(old)
-        let new = Argonaut.load("a").0
+        let new = Argonaut.load(old.item).0
         XCTAssertEqual("", new[0].name)
         XCTAssertEqual(1, new[0].options.count)
     }
     
     func testOnlyActiveMode() {
         let old = Factory()
-        old.item.id = "a"
         old.mode = .flying
         old.path = [.init()]
         old.path[0].options = [.init(), .init(), .init()]
@@ -84,7 +79,7 @@ final class TestPath: XCTestCase {
         old.path[0].options[2].mode = .flying
         old.filter()
         Argonaut.save(old)
-        let new = Argonaut.load("a").0
+        let new = Argonaut.load(old.item).0
         XCTAssertEqual(1, new[0].options.count)
         XCTAssertEqual(.flying, new[0].options[0].mode)
     }
