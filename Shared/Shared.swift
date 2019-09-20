@@ -93,14 +93,27 @@ extension Settings {
     }
     
     @objc func moded() {
+        var rezoom = false
         switch segmented.selectedSegmentIndex {
-        case 0: app.session.settings.mode = .walking
-        case 1: app.session.settings.mode = .driving
-        default: app.session.settings.mode = .flying
+        case 0:
+            if app.session.settings.mode == .flying {
+                rezoom = true
+            }
+            app.session.settings.mode = .walking
+        case 1:
+            if app.session.settings.mode == .flying {
+                rezoom = true
+            }
+            app.session.settings.mode = .driving
+        default:
+            rezoom = true
+            app.session.settings.mode = .flying
         }
         app.session.save()
         modeInfo()
         delegate()
-        map.rezoom()
+        if rezoom {
+            map.rezoom()
+        }
     }
 }
