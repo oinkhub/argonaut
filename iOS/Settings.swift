@@ -26,7 +26,7 @@ final class Settings: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         accessibilityViewIsModal = true
         alpha = 0
-        backgroundColor = .init(white: 0, alpha: 0.8)
+        backgroundColor = .init(white: 0, alpha: 0.7)
         self.map = map
         
         let base = UIView()

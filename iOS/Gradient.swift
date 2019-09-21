@@ -5,7 +5,7 @@ class Gradient: UIView {
         required init?(coder: NSCoder) { nil }
         override init() {
             super.init()
-            (layer as! CAGradientLayer).colors = [UIColor(white: 1, alpha: 0.2).cgColor, UIColor(white: 1, alpha: 0).cgColor]
+            (layer as! CAGradientLayer).colors = [UIColor(white: 1, alpha: 0.1).cgColor, UIColor(white: 1, alpha: 0).cgColor]
             heightAnchor.constraint(equalToConstant: 20).isActive = true
         }
     }

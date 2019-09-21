@@ -18,12 +18,16 @@ final class List: UIView {
         addSubview(scroll)
         self.scroll = scroll
         
-        heightAnchor.constraint(equalToConstant: 250).isActive = true
+        heightAnchor.constraint(equalToConstant: 300).isActive = true
         
         scroll.topAnchor.constraint(equalTo: topAnchor).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        if #available(iOS 11.0, *) {
+            scroll.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
+        } else {
+            scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        }
         
         refresh()
     }
@@ -116,10 +120,12 @@ final class List: UIView {
         } else {
             header.topAnchor.constraint(greaterThanOrEqualTo: previous!.bottomAnchor, constant: 15).isActive = true
             scroll.content.layoutIfNeeded()
+            var offset = scroll.content.frame.height - 300
+            if #available(iOS 11.0, *) {
+                offset += safeAreaInsets.bottom
+            }
             UIView.animate(withDuration: 0.3) { [weak self] in
-                if let scroll = self?.scroll {
-                    scroll.contentOffset.y = scroll.content.frame.height - 250
-                }
+                self?.scroll.contentOffset.y = offset
             }
         }
     }

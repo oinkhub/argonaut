@@ -100,7 +100,7 @@ final class Item: UIControl {
             index.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
         }
         
-        bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 30).isActive = true
+        bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 25).isActive = true
         
         border.heightAnchor.constraint(equalToConstant: 1).isActive = true
         border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -109,7 +109,7 @@ final class Item: UIControl {
         
         name.leftAnchor.constraint(equalTo: border.leftAnchor).isActive = true
         name.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
-        name.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
+        name.topAnchor.constraint(equalTo: topAnchor, constant: 25).isActive = true
         
         index.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
