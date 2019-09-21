@@ -1,4 +1,4 @@
-import UIKit
+import MapKit
 
 extension UIColor {
     static let halo = #colorLiteral(red: 0.231372549, green: 0.7215686275, blue: 1, alpha: 1)
@@ -21,4 +21,12 @@ extension CGColor {
 
 extension Tiler {
     var outside: Data { UIImage(named: "outside")!.pngData()! }
+}
+
+extension MKMapView {
+    func dark() {
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .dark
+        }
+    }
 }

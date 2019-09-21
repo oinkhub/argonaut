@@ -1,4 +1,4 @@
-import AppKit
+import MapKit
 
 extension NSColor {
     static let halo = #colorLiteral(red: 0.231372549, green: 0.7215686275, blue: 1, alpha: 1)
@@ -37,4 +37,14 @@ extension NSSegmentedControl { var selectedSegmentIndex: Int { get { selectedSeg
 
 extension Tiler {
     var outside: Data { NSBitmapImageRep(cgImage: NSImage(named: "outside")!.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])! }
+}
+
+extension MKMapView {
+    func dark() {
+        if #available(OSX 10.14, *) {
+            appearance = NSAppearance(named: .darkAqua)
+        } else if #available(OSX 10.13, *) {
+            appearance = NSAppearance(named: .vibrantDark)
+        }
+    }
 }

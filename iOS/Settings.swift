@@ -26,7 +26,7 @@ final class Settings: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         accessibilityViewIsModal = true
         alpha = 0
-        backgroundColor = .init(white: 0, alpha: 0.6)
+        backgroundColor = .init(white: 0, alpha: 0.8)
         self.map = map
         
         let base = UIView()
@@ -37,7 +37,7 @@ final class Settings: UIView {
         let scroll = Scroll()
         base.addSubview(scroll)
         
-        let gradient = Gradient.Top()
+        let gradient = Gradient.Inverse()
         addSubview(gradient)
         
         let done = UIButton()
@@ -122,11 +122,11 @@ final class Settings: UIView {
         }
         scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top).isActive = true
         
-        segmented.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 15).isActive = true
+        segmented.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 30).isActive = true
         segmented.centerXAnchor.constraint(equalTo: scroll.content.centerXAnchor).isActive = true
         
         if #available(iOS 11.0, *) {
-            scroll.topAnchor.constraint(equalTo: base.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+            scroll.topAnchor.constraint(equalTo: base.safeAreaLayoutGuide.topAnchor).isActive = true
         } else {
             scroll.topAnchor.constraint(equalTo: base.topAnchor, constant: 20).isActive = true
         }

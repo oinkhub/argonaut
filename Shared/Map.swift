@@ -21,6 +21,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         showsUserLocation = true
         mapType = .standard
         delegate = self
+        dark()
         
         var region = MKCoordinateRegion()
         region.center = userLocation.location == nil ? centerCoordinate : userLocation.coordinate
