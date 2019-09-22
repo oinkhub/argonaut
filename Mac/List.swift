@@ -17,24 +17,24 @@ final class List: NSView {
         let border = NSView()
         border.translatesAutoresizingMaskIntoConstraints = false
         border.wantsLayer = true
-        border.layer!.backgroundColor = .halo
+        border.layer!.backgroundColor = .dark
         addSubview(border)
         
         let scroll = Scroll()
         addSubview(scroll)
         self.scroll = scroll
         
-        heightAnchor.constraint(equalToConstant: 250).isActive = true
+        heightAnchor.constraint(equalToConstant: 210).isActive = true
         
         border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        border.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        border.topAnchor.constraint(equalTo: topAnchor, constant: 1).isActive = true
+        border.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1).isActive = true
         border.widthAnchor.constraint(equalToConstant: 1).isActive = true
         
-        scroll.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        scroll.topAnchor.constraint(equalTo: topAnchor, constant: 1).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        scroll.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1).isActive = true
         
         refresh()
     }
@@ -76,7 +76,7 @@ final class List: NSView {
         var previous: Item?
         map?.path.enumerated().forEach {
             let item = Item($0, deletable: deletable)
-            item.distance.stringValue = location == nil ? " " : app.measure(location!.distance(from: .init(latitude: $0.1.latitude, longitude: $0.1.longitude)), 0)
+            item.distance = location == nil ? " " : app.measure(location!.distance(from: .init(latitude: $0.1.latitude, longitude: $0.1.longitude)), 0)
             item.target = self
             item.action = #selector(focus(_:))
             item.delete?.target = self
@@ -129,7 +129,7 @@ final class List: NSView {
             NSAnimationContext.runAnimationGroup({
                 $0.duration = 0.5
                 $0.allowsImplicitAnimation = true
-                scroll.contentView.scroll(to: .init(x: 0, y: scroll.documentView!.frame.height - 250))
+                scroll.contentView.scroll(to: .init(x: 0, y: scroll.documentView!.frame.height - 210))
             }) { }
         }
     }
@@ -138,12 +138,12 @@ final class List: NSView {
         self.location = location
         scroll.documentView!.subviews.compactMap { $0 as? Item }.forEach {
             guard let path = $0.path else { return }
-            $0.distance.stringValue = app.measure(location.distance(from: .init(latitude: path.latitude, longitude: path.longitude)), 0)
+            $0.distance = app.measure(location.distance(from: .init(latitude: path.latitude, longitude: path.longitude)), 0)
         }
     }
     
     func rename(_ path: Path) {
-        scroll.documentView!.subviews.compactMap { $0 as? Item }.first(where: { $0.path === path })?.name.stringValue = path.name
+        scroll.documentView!.subviews.compactMap { $0 as? Item }.first(where: { $0.path === path })?.name = path.name
     }
     
     @objc private func focus(_ item: Item) {

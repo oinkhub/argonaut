@@ -2,6 +2,7 @@ import AppKit
 
 class World: NSView {
     override var acceptsFirstResponder: Bool { true }
+    private(set) var style = Settings.Style.navigate
     private(set) weak var map: Map!
     private(set) weak var list: List!
     private(set) weak var top: NSView!
@@ -50,7 +51,7 @@ class World: NSView {
         addSubview(_up)
         self._up = _up
         
-        let _settings = Button.Map(nil, action: nil)
+        let _settings = Button.Map(self, action: #selector(settings))
         _settings.image.image = NSImage(named: "settings")
         _settings.setAccessibilityLabel(.key("World.settings"))
         addSubview(_settings)
@@ -98,6 +99,12 @@ class World: NSView {
         list.top.isActive = true
     }
     
+    deinit {
+        if let settings = app.windows.first(where: { $0 is Settings }) {
+            settings.close()
+        }
+    }
+    
     final func refresh() {
         list.refresh()
         if !map.path.isEmpty && list.top.constant == -56 || map.path.isEmpty && list.top.constant == -list.frame.height {
@@ -119,8 +126,8 @@ class World: NSView {
     }
     
     @objc final func close() {
-        app.window!.makeFirstResponder(nil)
-        app.window.base.isHidden = false
+        app.main.makeFirstResponder(nil)
+        app.main.base.isHidden = false
         (app.mainMenu as! Menu).base()
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.4
@@ -184,15 +191,16 @@ class World: NSView {
     }
     
     @objc private func settings() {
+        if let settings = app.windows.first(where: { $0 is Settings }) {
+            settings.close()
+        }
         
-//        let settings = Settings(style)
-//        settings.delegate = { [weak self] in
-//            self?.map.remark()
-//            self?.map.line()
-//            self?.list.refresh()
-//        }
-//        settings.map = map
-//        app.view.addSubview(settings)
-//        settings.show()
+        let settings = Settings(style, map: map)
+        settings.observer = { [weak self] in
+            self?.map.remark()
+            self?.map.line()
+            self?.list.refresh()
+        }
+        settings.makeKeyAndOrderFront(nil)
     }
 }

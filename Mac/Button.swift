@@ -7,13 +7,13 @@ class Button: NSView {
             super.init(target, action: action)
             setAccessibilityElement(true)
             setAccessibilityRole(.button)
-            alphaValue = 0.4
             
             widthAnchor.constraint(equalToConstant: 12).isActive = true
             heightAnchor.constraint(equalToConstant: 12).isActive = true
+            hover()
         }
-
-        override func hover() { alphaValue = value ? 1 : 0.4 }
+        
+        override func hover() { alphaValue = selected ? 1 : 0.4 }
     }
     
     final class Map: Image {
@@ -36,9 +36,10 @@ class Button: NSView {
             base.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             base.topAnchor.constraint(equalTo: topAnchor).isActive = true
             base.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            hover()
         }
         
-        override func hover() { image.alphaValue = value ? 0.3 : 1 }
+        override func hover() { image.alphaValue = selected ? 0.3 : 1 }
     }
     
     class Image: Button {
@@ -57,13 +58,16 @@ class Button: NSView {
             image.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             image.topAnchor.constraint(equalTo: topAnchor).isActive = true
             image.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            hover()
         }
+        
+        override func hover() { alphaValue = selected ? 0.3 : 1 }
     }
     
     final weak var target: AnyObject?
     final var action: Selector?
     final var enabled = true
-    final var value = false { didSet { hover() } }
+    final var selected = false { didSet { hover() } }
     private var drag = CGFloat()
     
     required init?(coder: NSCoder) { nil }
@@ -82,7 +86,7 @@ class Button: NSView {
     
     override func mouseDown(with: NSEvent) {
         if enabled {
-            value = true
+            selected = true
         }
     }
     
@@ -90,21 +94,21 @@ class Button: NSView {
         if enabled {
             drag += abs(with.deltaX) + abs(with.deltaY)
             if drag > 20 {
-                value = false
+                selected = false
             }
         }
     }
     
     override func mouseUp(with: NSEvent) {
         if enabled {
-            if value {
+            if selected {
                 click()
             }
-            value = false
+            selected = false
         }
     }
     
-    func hover() { alphaValue = value ? 0.3 : 1 }
+    func hover() { }
     
     fileprivate func click() {
         _ = target?.perform(action, with: self)

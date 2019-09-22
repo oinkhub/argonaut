@@ -1,6 +1,7 @@
 import AppKit
 
 final class New: World, NSTextViewDelegate {
+    override var style: Settings.Style { get { .new } }
     private weak var field: Field.Search!
     
     required init?(coder: NSCoder) { nil }
@@ -87,13 +88,13 @@ final class New: World, NSTextViewDelegate {
         }
     }
     
-    @objc func search() { app.window.makeFirstResponder(field) }
+    @objc func search() { app.main.makeFirstResponder(field) }
     @objc func pin() { map.pin() }
     @objc func save() { }
     
     @objc private func clear() {
         field.string = ""
-        app.window.makeFirstResponder(nil)
+        app.main.makeFirstResponder(nil)
 //        results.documentView!.subviews.forEach { $0.removeFromSuperview() }
 //        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: results.documentView!.topAnchor)
         NSAnimationContext.runAnimationGroup({

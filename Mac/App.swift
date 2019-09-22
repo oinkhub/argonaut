@@ -6,7 +6,7 @@ import UserNotifications
 private(set) weak var app: App!
 @NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate {
     var session: Session!
-    private(set) weak var window: Window!
+    private(set) weak var main: Main!
     private var formatter: Any!
     private let dater = DateComponentsFormatter()
     
@@ -82,9 +82,9 @@ private(set) weak var app: App!
         mainMenu = Menu(title: "")
         (mainMenu as! Menu).base()
         
-        let window = Window()
-        window.makeKeyAndOrderFront(nil)
-        self.window = window
+        let main = Main()
+        main.makeKeyAndOrderFront(nil)
+        self.main = main
         
         if #available(OSX 10.14, *) {
             UNUserNotificationCenter.current().delegate = self

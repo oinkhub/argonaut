@@ -40,12 +40,14 @@ class Control: Button {
         }
     }
     
+    final var value = false { didSet { hover() } }
     private(set) weak var label: Label!
     
     required init?(coder: NSCoder) { nil }
     private override init(_ target: AnyObject?, action: Selector?) {
         super.init(target, action: action)
         wantsLayer = true
+        layer!.backgroundColor = .halo
         setAccessibilityElement(true)
         setAccessibilityRole(.button)
         
@@ -60,4 +62,6 @@ class Control: Button {
         
         hover()
     }
+    
+    override func hover() { alphaValue = !value && !selected ? 1 : 0.3 }
 }

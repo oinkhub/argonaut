@@ -58,7 +58,7 @@ final class Menu: NSMenu {
             $0.submenu = .init(title: .key("Menu.window"))
             $0.submenu!.items = [
                 .init(title: .key("Menu.minimize"), action: #selector(NSWindow.miniaturize(_:)), keyEquivalent: "m"),
-                .init(title: .key("Menu.zoom"), action: #selector(Window.zoom(_:)), keyEquivalent: "p"),
+                .init(title: .key("Menu.zoom"), action: #selector(NSWindow.zoom(_:)), keyEquivalent: "p"),
                 .separator(),
                 .init(title: .key("Menu.bringAllToFront"), action: #selector(app.arrangeInFront(_:)), keyEquivalent: ""),
                 .separator(),
@@ -79,7 +79,7 @@ final class Menu: NSMenu {
         {
             $0.submenu = .init(title: .key("Menu.maps"))
             $0.submenu!.items = [
-                .init(title: .key("Menu.new"), action: #selector(Window.new), keyEquivalent: "n"),
+                .init(title: .key("Menu.new"), action: #selector(Main.new), keyEquivalent: "n"),
                 .separator(),
                 .init(title: .key("Menu.edit"), action: #selector(Bar.edit), keyEquivalent: "e")]
             return $0

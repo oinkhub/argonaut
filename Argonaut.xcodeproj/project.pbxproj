@@ -104,6 +104,7 @@
 		DA0FBEB12332875C00D935A9 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEB02332875C00D935A9 /* Item.swift */; };
 		DA6718092334CB3300883FA6 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6718082334CB3300883FA6 /* Control.swift */; };
 		DA9EE21D233385CD00D83514 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9EE21C233385CD00D83514 /* Control.swift */; };
+		DAB929C1233781F00090648D /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C0233781F00090648D /* Main.swift */; };
 		DAC775652331153E00EF4724 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC775642331153E00EF4724 /* Menu.swift */; };
 /* End PBXBuildFile section */
 
@@ -223,6 +224,7 @@
 		DA0FBEB02332875C00D935A9 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		DA6718082334CB3300883FA6 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		DA9EE21C233385CD00D83514 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
+		DAB929C0233781F00090648D /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		DAC775642331153E00EF4724 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -359,6 +361,7 @@
 				CE0038FD22D72E5B008A8E88 /* List_old.swift */,
 				DA0FBEAC2332815000D935A9 /* List.swift */,
 				CE633A2222FD791C00846455 /* Load.swift */,
+				DAB929C0233781F00090648D /* Main.swift */,
 				CE39789F22F5B1E60045E1D7 /* Marker.swift */,
 				DAC775642331153E00EF4724 /* Menu.swift */,
 				CE9301D822EEF9C000EACBD4 /* Navigate.swift */,
@@ -666,6 +669,7 @@
 				DAC775652331153E00EF4724 /* Menu.swift in Sources */,
 				CE0038FC22D72D68008A8E88 /* Extensions.swift in Sources */,
 				DA0FBEB12332875C00D935A9 /* Item.swift in Sources */,
+				DAB929C1233781F00090648D /* Main.swift in Sources */,
 				CECECD7C22F469F2006AE0C8 /* Liner.swift in Sources */,
 				DA0FBEAF2332832400D935A9 /* Scroll.swift in Sources */,
 				CE088B8722FEE7A80001BEE4 /* Help.swift in Sources */,

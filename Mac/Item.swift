@@ -27,10 +27,11 @@ final class Item: NSControl {
         }
     }
     
+    var name = "" { didSet { update() } }
+    var distance = "" { didSet { update() } }
     private(set) weak var path: Path?
     private(set) weak var delete: Button.Image?
-    private(set) weak var distance: Label!
-    private(set) weak var name: Label!
+    private(set) weak var title: Label!
     
     required init?(coder: NSCoder) { nil }
     init(_ item: (Int, Path), deletable: Bool) {
@@ -47,27 +48,19 @@ final class Item: NSControl {
         border.layer!.backgroundColor = .dark
         addSubview(border)
         
-        let name = Label()
-        name.stringValue = item.1.name
-        name.textColor = .white
-        name.font = .systemFont(ofSize: 14, weight: .medium)
-        name.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        addSubview(name)
-        self.name = name
+        let title = Label()
+        title.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        addSubview(title)
+        self.title = title
+        name = item.1.name
         
         let index = Label()
         index.stringValue = "\(item.0 + 1)"
         index.textColor = .halo
         addSubview(index)
         
-        let distance = Label()
-        distance.textColor = .init(white: 1, alpha: 0.8)
-        distance.font = .systemFont(ofSize: 12, weight: .light)
-        addSubview(distance)
-        self.distance = distance
-        
         if deletable {
-            index.font = .systemFont(ofSize: 12, weight: .bold)
+            index.font = .systemFont(ofSize: 16, weight: .bold)
             
             let delete = Button.Image(nil, action: nil)
             delete.setAccessibilityElement(true)
@@ -89,22 +82,19 @@ final class Item: NSControl {
             index.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
         }
         
-        bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 30).isActive = true
+        bottomAnchor.constraint(equalTo: title.bottomAnchor, constant: 24).isActive = true
         
         border.heightAnchor.constraint(equalToConstant: 1).isActive = true
         border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         border.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
-        name.leftAnchor.constraint(equalTo: border.leftAnchor).isActive = true
-        name.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
-        name.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
+        title.leftAnchor.constraint(equalTo: border.leftAnchor).isActive = true
+        title.topAnchor.constraint(equalTo: topAnchor, constant: 24).isActive = true
+        title.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
         
         index.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        
-        distance.leftAnchor.constraint(equalTo: name.leftAnchor).isActive = true
-        distance.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 2).isActive = true
-        distance.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
+        update()
     }
     
     override func mouseDown(with: NSEvent) { layer!.backgroundColor = .dark }
@@ -114,5 +104,13 @@ final class Item: NSControl {
             $0.allowsImplicitAnimation = true
             layer!.backgroundColor = .clear
         }) { }
+    }
+    
+    private func update() {
+        title.attributedStringValue = {
+            $0.append(.init(string: name + " ", attributes: [.foregroundColor: NSColor.white, .font: NSFont.systemFont(ofSize: 14, weight: .medium)]))
+            $0.append(.init(string: distance, attributes: [.foregroundColor: NSColor.init(white: 1, alpha: 0.8), .font: NSFont.systemFont(ofSize: 12, weight: .light)]))
+            return $0
+        } (NSMutableAttributedString())
     }
 }
