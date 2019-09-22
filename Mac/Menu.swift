@@ -11,13 +11,11 @@ final class Menu: NSMenu {
             $0.submenu!.items = [
                 .init(title: .key("Menu.about"), action: #selector(app.about), keyEquivalent: ""),
                 .separator(),
-                .init(title: .key("Menu.privacy"), action: #selector(app.privacy), keyEquivalent: ","),
-                .separator(),
                 .init(title: .key("Menu.hide"), action: #selector(app.hide(_:)), keyEquivalent: "h"),
                 { $0.keyEquivalentModifierMask = [.option, .command]
                     return $0
                 } (NSMenuItem(title: .key("Menu.hideOthers"), action: #selector(app.hideOtherApplications(_:)), keyEquivalent: "h")),
-                .init(title: .key("Menu.showAll"), action: #selector(app.unhideAllApplications(_:)), keyEquivalent: ","),
+                .init(title: .key("Menu.showAll"), action: #selector(app.unhideAllApplications(_:)), keyEquivalent: ""),
                 .separator(),
                 .init(title: .key("Menu.quit"), action: #selector(app.terminate(_:)), keyEquivalent: "q")]
             return $0
@@ -107,6 +105,8 @@ final class Menu: NSMenu {
         {
             $0.submenu = .init(title: .key("Menu.map"))
             $0.submenu!.items = [
+                .init(title: .key("Menu.settings"), action: #selector(World.settings), keyEquivalent: ","),
+                .separator(),
                 { $0.keyEquivalentModifierMask = []
                     return $0
                 } (NSMenuItem(title: .key("Menu.me"), action: #selector(World.me), keyEquivalent: "c")),

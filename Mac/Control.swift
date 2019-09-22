@@ -40,7 +40,7 @@ class Control: Button {
         }
     }
     
-    final var value = false { didSet { hover() } }
+    final var value = true { didSet { hover() } }
     private(set) weak var label: Label!
     
     required init?(coder: NSCoder) { nil }
@@ -63,5 +63,5 @@ class Control: Button {
         hover()
     }
     
-    override func hover() { alphaValue = !value && !selected ? 1 : 0.3 }
+    override func hover() { alphaValue = value && !selected ? 1 : 0.3 }
 }

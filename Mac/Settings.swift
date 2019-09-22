@@ -19,7 +19,7 @@ final class Settings: Window {
     private weak var _info: Label!
     
     init(_ style: Style, map: Map) {
-        super.init(250, 300, mask: [])
+        super.init(300, 280, mask: [])
         _minimise.isHidden = true
         _zoom.isHidden = true
         self.map = map
@@ -31,6 +31,7 @@ final class Settings: Window {
         self._info = _info
         
         let segmented = NSSegmentedControl()
+        segmented.segmentCount = 3
         switch style {
         case .navigate:
             segmented.setLabel(.key("Settings.argonaut"), forSegment: 0)
@@ -51,14 +52,8 @@ final class Settings: Window {
         segmented.target = self
         segmented.translatesAutoresizingMaskIntoConstraints = false
         self.segmented = segmented
-        if #available(OSX 10.12.2, *) {
-            segmented.selectedSegmentBezelColor = .halo
-        }
-        contentView!.addSubview(segmented)
         
-        _info.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
-        _info.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
-        _info.topAnchor.constraint(equalTo: segmented.bottomAnchor, constant: 15).isActive = true
+        contentView!.addSubview(segmented)
         
         var top = _info.bottomAnchor
         [Item.pins, .directions].forEach {
@@ -67,13 +62,17 @@ final class Settings: Window {
             contentView!.addSubview(button)
             update(button)
             
-            button.topAnchor.constraint(equalTo: top, constant: $0 == .follow ? 30 : 0).isActive = true
-            button.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 40).isActive = true
-            button.widthAnchor.constraint(equalTo: contentView!.widthAnchor, constant: -80).isActive = true
+            button.topAnchor.constraint(equalTo: top, constant: $0 == .pins ? 40 : 20).isActive = true
+            button.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 50).isActive = true
+            button.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -50).isActive = true
             top = button.bottomAnchor
         }
         
-        segmented.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 15).isActive = true
+        segmented.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 50).isActive = true
         segmented.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
+        
+        _info.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
+        _info.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
+        _info.topAnchor.constraint(equalTo: segmented.bottomAnchor, constant: 15).isActive = true
     }
 }

@@ -177,20 +177,7 @@ class World: NSView {
         map.setCenter(.init(latitude: map.centerCoordinate.latitude, longitude: min(map.centerCoordinate.longitude + map.region.span.longitudeDelta / 2, 180)), animated: true)
     }
     
-    @objc private func up() {
-        list.top.constant = map.path.isEmpty ? -56 : -list.frame.height
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.3
-            $0.allowsImplicitAnimation = true
-            layoutSubtreeIfNeeded()
-        }) { }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            self?._up.isHidden = true
-            self?._down.isHidden = false
-        }
-    }
-    
-    @objc private func settings() {
+    @objc final func settings() {
         if let settings = app.windows.first(where: { $0 is Settings }) {
             settings.close()
         }
@@ -202,5 +189,18 @@ class World: NSView {
             self?.list.refresh()
         }
         settings.makeKeyAndOrderFront(nil)
+    }
+    
+    @objc private func up() {
+        list.top.constant = map.path.isEmpty ? -56 : -list.frame.height
+        NSAnimationContext.runAnimationGroup({
+            $0.duration = 0.3
+            $0.allowsImplicitAnimation = true
+            layoutSubtreeIfNeeded()
+        }) { }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?._up.isHidden = true
+            self?._down.isHidden = false
+        }
     }
 }
