@@ -55,6 +55,7 @@ class Control: Button {
         label.alignment = .center
         label.font = .systemFont(ofSize: 12, weight: .bold)
         label.textColor = .black
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         addSubview(label)
         self.label = label
         

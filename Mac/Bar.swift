@@ -1,10 +1,19 @@
 import AppKit
 
 final class Bar: NSView {
+    override var acceptsFirstResponder: Bool { true }
+    
     required init?(coder: NSCoder) { nil }
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
+        
+        let new = Button.Image(self, action: #selector(self.new))
+        new.image.image = NSImage(named: "new")
+        new.setAccessibilityRole(.button)
+        new.setAccessibilityElement(true)
+        new.setAccessibilityLabel(.key("Home.new"))
+        addSubview(new)
         
         let title = Label()
         title.font = .systemFont(ofSize: 16, weight: .bold)
@@ -30,7 +39,18 @@ final class Bar: NSView {
         line.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         line.heightAnchor.constraint(equalToConstant: 1).isActive = true
         line.topAnchor.constraint(equalTo: topAnchor, constant: 100).isActive = true
+        
+        new.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+        new.centerYAnchor.constraint(equalTo: topAnchor, constant: 50).isActive = true
+        new.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        new.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
     @objc func edit() { }
+    
+    @objc func new() {
+        guard app.session != nil else { return }
+        app.main.show(New())
+        (app.mainMenu as! Menu).new()
+    }
 }

@@ -13,7 +13,7 @@ class Button: NSView {
             hover()
         }
         
-        override func hover() { alphaValue = selected ? 1 : 0.4 }
+        override func hover() { alphaValue = selected ? 1 : 0.5 }
     }
     
     final class Map: Image {

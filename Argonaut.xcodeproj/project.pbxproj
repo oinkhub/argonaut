@@ -105,6 +105,8 @@
 		DA6718092334CB3300883FA6 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6718082334CB3300883FA6 /* Control.swift */; };
 		DA9EE21D233385CD00D83514 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9EE21C233385CD00D83514 /* Control.swift */; };
 		DAB929C1233781F00090648D /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C0233781F00090648D /* Main.swift */; };
+		DAB929C32337A7DF0090648D /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C22337A7DF0090648D /* Result.swift */; };
+		DAB929C52337A8280090648D /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C42337A8280090648D /* Result.swift */; };
 		DAC775652331153E00EF4724 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC775642331153E00EF4724 /* Menu.swift */; };
 /* End PBXBuildFile section */
 
@@ -225,6 +227,8 @@
 		DA6718082334CB3300883FA6 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		DA9EE21C233385CD00D83514 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		DAB929C0233781F00090648D /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
+		DAB929C22337A7DF0090648D /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		DAB929C42337A8280090648D /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		DAC775642331153E00EF4724 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -334,6 +338,7 @@
 				CE0FE651230555D40058386B /* New.swift */,
 				CEBB3A6323040F7200C5F61A /* Privacy.swift */,
 				CE9D6BB02328CD46001B4E87 /* Project.swift */,
+				DAB929C22337A7DF0090648D /* Result.swift */,
 				CE0FE65323056F490058386B /* Scroll.swift */,
 				CE25B85E231A830B007538E2 /* Settings.swift */,
 				CED0E78D230E9ECA00D30D85 /* User.swift */,
@@ -368,6 +373,7 @@
 				CEAB0F0722D73C5800320F4F /* New_old.swift */,
 				CE9C6A3E232E66AF0020F982 /* New.swift */,
 				CE088B8422FEDE810001BEE4 /* Privacy.swift */,
+				DAB929C42337A8280090648D /* Result.swift */,
 				DA0FBEAE2332832400D935A9 /* Scroll.swift */,
 				CE9AEC92231B9521009596FE /* Settings.swift */,
 				CE2F61462312963100A01CF6 /* User.swift */,
@@ -658,6 +664,7 @@
 				CE088B8322FED9120001BEE4 /* About.swift in Sources */,
 				CEDE110522D71F3600DD796B /* App.swift in Sources */,
 				CE0038FE22D72E5B008A8E88 /* List_old.swift in Sources */,
+				DAB929C52337A8280090648D /* Result.swift in Sources */,
 				CE4A547C22D85E1B00125A9C /* Button.swift in Sources */,
 				CE9C6A3B232E49D30020F982 /* Bar.swift in Sources */,
 				CEAB0F0A22D742D900320F4F /* Map.swift in Sources */,
@@ -711,6 +718,7 @@
 				CE8D430C2324FEBF00CE9B5F /* List.swift in Sources */,
 				CE0FE652230555D40058386B /* New.swift in Sources */,
 				CEDCC689230683C500AAF0C8 /* Button.swift in Sources */,
+				DAB929C32337A7DF0090648D /* Result.swift in Sources */,
 				CE25B85F231A830B007538E2 /* Settings.swift in Sources */,
 				CEC2BA5C230BC26900FB4BA1 /* Gradient.swift in Sources */,
 				CECD5634231130490085E0C3 /* Navigate.swift in Sources */,

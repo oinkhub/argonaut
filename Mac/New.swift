@@ -1,12 +1,29 @@
-import AppKit
+import MapKit
 
-final class New: World, NSTextViewDelegate {
+final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     override var style: Settings.Style { get { .new } }
     private weak var field: Field.Search!
+    private weak var results: Scroll!
+    private weak var resultsHeight: NSLayoutConstraint!
+    private var completer: Any?
     
     required init?(coder: NSCoder) { nil }
     override init() {
         super.init()
+        
+        if #available(OSX 10.11.4, *) {
+            let completer = MKLocalSearchCompleter()
+            completer.delegate = self
+            self.completer = completer
+        }
+        
+        let results = Scroll()
+        results.wantsLayer = true
+        results.drawsBackground = true
+        results.backgroundColor = .black
+        results.layer!.cornerRadius = 6
+        addSubview(results, positioned: .below, relativeTo: top)
+        self.results = results
         
         let save = Control.Text(nil, action: nil)
         save.label.stringValue = .key("New.save")
@@ -36,6 +53,12 @@ final class New: World, NSTextViewDelegate {
             $0.widthAnchor.constraint(equalToConstant: 1).isActive = true
         }
         
+        results.topAnchor.constraint(equalTo: top.bottomAnchor, constant: -10).isActive = true
+        results.leftAnchor.constraint(equalTo: field.leftAnchor).isActive = true
+        results.rightAnchor.constraint(equalTo: field.rightAnchor).isActive = true
+        resultsHeight = results.heightAnchor.constraint(lessThanOrEqualToConstant: 0)
+        resultsHeight.isActive = true
+        
         save.centerYAnchor.constraint(equalTo: top.centerYAnchor).isActive = true
         save.rightAnchor.constraint(equalTo: top.rightAnchor, constant: -10).isActive = true
         
@@ -53,20 +76,33 @@ final class New: World, NSTextViewDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.field.accepts = true }
     }
     
-    func textDidChange(_: Notification) {
+    override func viewDidEndLiveResize() {
+        super.viewDidEndLiveResize()
         field.adjust()
-        if #available(OSX 10.11.4, *) {
-//            (completer as! MKLocalSearchCompleter).cancel()
-            if !field.string.isEmpty {
-//                (completer as! MKLocalSearchCompleter).queryFragment = field.string
-            }
+    }
+    
+    func textDidChange(_: Notification) { query() }
+    
+    func textDidBeginEditing(_: Notification) {
+        query()
+        if _up.isHidden == true {
+            down()
         }
     }
     
     func textDidEndEditing(_: Notification) {
+        if #available(OSX 10.11.4, *) {
+            (completer as! MKLocalSearchCompleter).cancel()
+        }
+        resultsHeight.constant = 0
         field._cancel.isHidden = field.string.isEmpty
-        if field.string.isEmpty {
-//            clear()
+        NSAnimationContext.runAnimationGroup({
+            $0.allowsImplicitAnimation = true
+            $0.duration = 0.3
+            layoutSubtreeIfNeeded()
+        }) { }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.results.clear()
         }
     }
     
@@ -77,14 +113,55 @@ final class New: World, NSTextViewDelegate {
         }
     }
     
-    override func viewDidEndLiveResize() {
-        super.viewDidEndLiveResize()
-        field.adjust()
+    @available(OSX 10.11.4, *) func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        results.clear()
+        var top = results.topAnchor
+        completer.results.forEach {
+            let result = Result($0, target: self, action: #selector(search(_:)))
+            results.documentView!.addSubview(result)
+            
+            if top != results.topAnchor {
+                let border = NSView()
+                border.translatesAutoresizingMaskIntoConstraints = false
+                border.wantsLayer = true
+                border.layer!.backgroundColor = .dark
+                results.documentView!.addSubview(border)
+                
+                border.topAnchor.constraint(equalTo: top).isActive = true
+                border.leftAnchor.constraint(equalTo: result.leftAnchor, constant: 20).isActive = true
+                border.rightAnchor.constraint(equalTo: result.rightAnchor).isActive = true
+                border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+            }
+            
+            result.leftAnchor.constraint(equalTo: results.leftAnchor).isActive = true
+            result.widthAnchor.constraint(equalTo: results.widthAnchor).isActive = true
+            result.topAnchor.constraint(equalTo: top).isActive = true
+            top = result.bottomAnchor
+        }
+        var animation = 0.4
+        if top == results.topAnchor {
+            resultsHeight.constant = 0
+        } else {
+            if resultsHeight.constant != 0 {
+                animation = 0.1
+            }
+            resultsHeight.constant = results.bounds.height
+            results.layoutSubtreeIfNeeded()
+            resultsHeight.constant = 220
+            results.documentView!.bottomAnchor.constraint(equalTo: top).isActive = true
+        }
+        NSAnimationContext.runAnimationGroup({
+            $0.duration = animation
+            $0.allowsImplicitAnimation = true
+            layoutSubtreeIfNeeded()
+        }) { }
     }
     
     func choose() {
         if #available(OSX 10.11.4, *) {
-//            results.documentView!.subviews.map { $0 as! Result }.first(where: { $0.highlighted })?.click()
+            if let result = results.documentView!.subviews.compactMap({ $0 as? Result }).first(where: { $0.selected }) {
+                search(result)
+            }
         }
     }
     
@@ -92,15 +169,76 @@ final class New: World, NSTextViewDelegate {
     @objc func pin() { map.pin() }
     @objc func save() { }
     
-    @objc private func clear() {
+    override func left() {
+        if app.main.firstResponder === field {
+            field.setSelectedRange(.init(location: max(0, field.selectedRange().location - 1), length: 0))
+        } else {
+            super.left()
+        }
+    }
+    
+    override func right() {
+        if app.main.firstResponder === field {
+            field.setSelectedRange(.init(location: field.selectedRange().location + 1, length: 0))
+        } else {
+            super.right()
+        }
+    }
+    
+    override func upwards() {
+        if #available(OSX 10.11.4, *), app.main.firstResponder === field {
+            let results = self.results.documentView!.subviews.compactMap({ $0 as? Result })
+            var index = results.count - 1
+            if let selected = results.firstIndex(where: { $0.selected }), selected > 0 {
+                index = selected - 1
+            }
+            results.enumerated().forEach { $0.1.selected = $0.0 == index }
+            NSAnimationContext.runAnimationGroup({
+                $0.duration = 0.3
+                $0.allowsImplicitAnimation = true
+                self.results.contentView.scroll(to: .init(x: 0, y: results.first(where: { $0.selected })?.frame.minY ?? 0))
+            }) { }
+        } else {
+            super.upwards()
+        }
+    }
+    
+    override func downwards() {
+        if #available(OSX 10.11.4, *), app.main.firstResponder === field {
+            let results = self.results.documentView!.subviews.compactMap({ $0 as? Result })
+            var index = 0
+            if let selected = results.firstIndex(where: { $0.selected }), selected < results.count - 1 {
+                index = selected + 1
+            }
+            results.enumerated().forEach { $0.1.selected = $0.0 == index }
+            NSAnimationContext.runAnimationGroup({
+                $0.duration = 0.3
+                $0.allowsImplicitAnimation = true
+                self.results.contentView.scroll(to: .init(x: 0, y: results.first(where: { $0.selected })?.frame.minY ?? 0))
+            }) { }
+        } else {
+            super.downwards()
+        }
+    }
+    
+    private func query() {
+        if #available(OSX 10.11.4, *) {
+            (completer as! MKLocalSearchCompleter).cancel()
+            if !field.string.isEmpty {
+                (completer as! MKLocalSearchCompleter).queryFragment = ""
+                (completer as! MKLocalSearchCompleter).queryFragment = field.string
+            }
+        }
+    }
+    
+    @available(OSX 10.11.4, *) @objc private func search(_ result: Result) {
         field.string = ""
-        app.main.makeFirstResponder(nil)
-//        results.documentView!.subviews.forEach { $0.removeFromSuperview() }
-//        resultsBottom = results.documentView!.bottomAnchor.constraint(equalTo: results.documentView!.topAnchor)
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.3
-            $0.allowsImplicitAnimation = true
-//            results.superview!.layoutSubtreeIfNeeded()
-        }) { }
+        app.main.makeFirstResponder(self)
+        MKLocalSearch(request: .init(completion: result.search)).start { [weak self] in
+            guard $1 == nil, let placemark = $0?.mapItems.first?.placemark, let mark = self?.map.add(placemark.coordinate) else { return }
+            mark.path.name = placemark.name ?? placemark.title ?? ""
+            self?.map.selectAnnotation(mark, animated: true)
+            self?.refresh()
+        }
     }
 }

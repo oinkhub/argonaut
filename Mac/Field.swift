@@ -62,7 +62,7 @@ class Field: NSTextView {
         }
         
         override func keyDown(with: NSEvent) {
-            let new = window!.contentView!.subviews.compactMap({ $0 as? New }).first!
+            let new = app.main.base.subviews.first as! New
             switch with.keyCode {
             case 36:
                 window!.makeFirstResponder(new)

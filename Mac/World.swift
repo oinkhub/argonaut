@@ -112,6 +112,22 @@ class World: NSView {
         }
     }
     
+    @objc func upwards() {
+        map.setCenter(.init(latitude: min(map.centerCoordinate.latitude + map.region.span.latitudeDelta / 2, 90), longitude: map.centerCoordinate.longitude), animated: true)
+    }
+    
+    @objc func downwards() {
+        map.setCenter(.init(latitude: max(map.centerCoordinate.latitude - map.region.span.latitudeDelta / 2, -90), longitude: map.centerCoordinate.longitude), animated: true)
+    }
+    
+    @objc func left() {
+        map.setCenter(.init(latitude: map.centerCoordinate.latitude, longitude: max(map.centerCoordinate.longitude - map.region.span.longitudeDelta / 2, -180)), animated: true)
+    }
+    
+    @objc func right() {
+        map.setCenter(.init(latitude: map.centerCoordinate.latitude, longitude: min(map.centerCoordinate.longitude + map.region.span.longitudeDelta / 2, 180)), animated: true)
+    }
+    
     @objc final func down() {
         list.top.constant = 0
         NSAnimationContext.runAnimationGroup({
@@ -126,8 +142,7 @@ class World: NSView {
     }
     
     @objc final func close() {
-        app.main.makeFirstResponder(nil)
-        app.main.base.isHidden = false
+        app.main.makeFirstResponder(app.main.bar)
         (app.mainMenu as! Menu).base()
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.4
@@ -147,14 +162,6 @@ class World: NSView {
     
     @objc final func me() { map.me() }
     
-    @objc final func upwards() {
-        map.setCenter(.init(latitude: min(map.centerCoordinate.latitude + map.region.span.latitudeDelta / 2, 90), longitude: map.centerCoordinate.longitude), animated: true)
-    }
-    
-    @objc final func downwards() {
-        map.setCenter(.init(latitude: max(map.centerCoordinate.latitude - map.region.span.latitudeDelta / 2, -90), longitude: map.centerCoordinate.longitude), animated: true)
-    }
-    
     @objc final func `in`() {
         var region = map.region
         region.span.latitudeDelta *= 0.1
@@ -167,14 +174,6 @@ class World: NSView {
         region.span.latitudeDelta = min(region.span.latitudeDelta / 0.1, 180)
         region.span.longitudeDelta = min(region.span.longitudeDelta / 0.1, 180)
         map.setRegion(region, animated: true)
-    }
-    
-    @objc final func left() {
-        map.setCenter(.init(latitude: map.centerCoordinate.latitude, longitude: max(map.centerCoordinate.longitude - map.region.span.longitudeDelta / 2, -180)), animated: true)
-    }
-    
-    @objc final func right() {
-        map.setCenter(.init(latitude: map.centerCoordinate.latitude, longitude: min(map.centerCoordinate.longitude + map.region.span.longitudeDelta / 2, 180)), animated: true)
     }
     
     @objc final func settings() {
@@ -192,6 +191,7 @@ class World: NSView {
     }
     
     @objc private func up() {
+        app.main.makeFirstResponder(self)
         list.top.constant = map.path.isEmpty ? -56 : -list.frame.height
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.3
