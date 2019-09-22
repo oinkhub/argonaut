@@ -149,6 +149,12 @@ private(set) weak var app: App!
         return result
     }
     
+    func created(_ item: Session.Item) {
+        session.items.append(item)
+        session.save()
+        main.bar.refresh()
+    }
+    
     @objc func about() { order(About.self) }
     @objc func privacy() { order(Privacy.self) }
     @objc func help() { /*order(Help.self)*/ }

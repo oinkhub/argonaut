@@ -160,7 +160,10 @@ class World: NSView {
         }
     }
     
-    @objc final func me() { map.me() }
+    @objc final func me() {
+        app.main.makeFirstResponder(self)
+        map.me()
+    }
     
     @objc final func `in`() {
         var region = map.region
@@ -177,6 +180,7 @@ class World: NSView {
     }
     
     @objc final func settings() {
+        app.main.makeFirstResponder(self)
         if let settings = app.windows.first(where: { $0 is Settings }) {
             settings.close()
         }

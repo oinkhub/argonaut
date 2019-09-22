@@ -46,6 +46,10 @@ final class Bar: NSView {
         new.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
+    func refresh() {
+        
+    }
+    
     @objc func edit() { }
     
     @objc func new() {

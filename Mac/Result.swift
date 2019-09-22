@@ -9,6 +9,9 @@ import MapKit
         self.search = search
         super.init(target, action: action)
         wantsLayer = true
+        setAccessibilityElement(true)
+        setAccessibilityRole(.button)
+        setAccessibilityLabel(search.title)
         
         let label = Label()
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)

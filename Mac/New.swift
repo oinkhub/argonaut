@@ -25,7 +25,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(results, positioned: .below, relativeTo: top)
         self.results = results
         
-        let save = Control.Text(nil, action: nil)
+        let save = Control.Text(self, action: #selector(self.save))
         save.label.stringValue = .key("New.save")
         top.addSubview(save)
         
@@ -165,9 +165,17 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         }
     }
     
+    @objc func pin() {
+        app.main.makeFirstResponder(self)
+        map.pin()
+    }
+    
     @objc func search() { app.main.makeFirstResponder(field) }
-    @objc func pin() { map.pin() }
-    @objc func save() { }
+    
+    @objc func save() {
+        app.main.makeFirstResponder(self)
+        app.main.show(Create(map.path, rect: map.visibleMapRect))
+    }
     
     override func left() {
         if app.main.firstResponder === field {
