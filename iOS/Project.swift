@@ -78,6 +78,7 @@ final class Project: UIControl, UITextViewDelegate {
             $0.imageView!.clipsToBounds = true
             $0.imageView!.contentMode = .center
             $0.isAccessibilityElement = true
+            $0.accessibilityTraits = .button
             addSubview($0)
             
             $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -141,8 +142,8 @@ final class Project: UIControl, UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_: UITextView) {
-        UIView.animate(withDuration: 0.6) {
-            app.home.scroll.contentOffset.y = app.home.scroll.convert(.init(x: 0, y: self.field.frame.minY), from: self).y
+        UIView.animate(withDuration: 0.6) { [weak self] in
+            app.home.scroll.contentOffset.y = app.home.scroll.convert(.init(x: 0, y: self?.field.frame.minY ?? 0), from: self).y
         }
     }
     

@@ -10,11 +10,6 @@ private(set) weak var app: App!
     private var formatter: Any!
     private let dater = DateComponentsFormatter()
     
-    
-    private(set) weak var follow: NSMenuItem!
-    private(set) weak var walking: NSMenuItem!
-    private(set) weak var driving: NSMenuItem!
-    
     required init?(coder: NSCoder) { nil }
     override init() {
         super.init()
@@ -153,6 +148,13 @@ private(set) weak var app: App!
         session.items.append(item)
         session.save()
         main.bar.refresh()
+    }
+    
+    func delete(_ item: Session.Item) {
+        session.items.removeAll(where: { $0.id == item.id })
+        session.save()
+        main.bar.refresh()
+        Argonaut.delete(item)
     }
     
     @objc func about() { order(About.self) }

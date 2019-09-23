@@ -17,10 +17,9 @@ final class Create: NSView {
         layer!.backgroundColor = .shade
         setAccessibilityModal(true)
         
-        let percent = Label()
+        let percent = Label("0%")
         percent.font = .systemFont(ofSize: 20, weight: .bold)
         percent.textColor = .halo
-        percent.stringValue = "0%"
         percent.setAccessibilityElement(true)
         percent.setAccessibilityRole(.incrementor)
         addSubview(percent)

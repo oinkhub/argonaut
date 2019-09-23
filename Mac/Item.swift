@@ -11,11 +11,10 @@ final class Item: NSControl {
             layer!.backgroundColor = .dark
             layer!.cornerRadius = 4
             
-            let label = Label()
+            let label = Label("+" + travel)
             label.textColor = .white
             label.font = .systemFont(ofSize: 12, weight: .regular)
             label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            label.stringValue = "+" + travel
             addSubview(label)
             
             rightAnchor.constraint(equalTo: label.rightAnchor, constant: 10).isActive = true
@@ -54,8 +53,7 @@ final class Item: NSControl {
         self.title = title
         name = item.1.name
         
-        let index = Label()
-        index.stringValue = "\(item.0 + 1)"
+        let index = Label("\(item.0 + 1)")
         index.textColor = .halo
         addSubview(index)
         

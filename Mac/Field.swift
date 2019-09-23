@@ -94,7 +94,6 @@ class Field: NSTextView {
             font = .systemFont(ofSize: 14, weight: .bold)
             textContainerInset.height = 7
             textContainerInset.width = 10
-            accepts = true
             
             height = heightAnchor.constraint(greaterThanOrEqualToConstant: 40)
             height.isActive = true
@@ -102,7 +101,7 @@ class Field: NSTextView {
         
         override func keyDown(with: NSEvent) {
             switch with.keyCode {
-            case 36, 48, 53: window!.makeFirstResponder(nil)
+            case 36, 48, 53: window!.makeFirstResponder(app.main.bar)
             default: super.keyDown(with: with)
             }
         }

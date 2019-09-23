@@ -2,6 +2,7 @@ import AppKit
 
 final class Bar: NSView {
     override var acceptsFirstResponder: Bool { true }
+    private(set) weak var scroll: Scroll!
     
     required init?(coder: NSCoder) { nil }
     init() {
@@ -15,10 +16,9 @@ final class Bar: NSView {
         new.setAccessibilityLabel(.key("Home.new"))
         addSubview(new)
         
-        let title = Label()
+        let title = Label(.key("Home.title"))
         title.font = .systemFont(ofSize: 16, weight: .bold)
         title.textColor = .halo
-        title.stringValue = .key("Home.title")
         title.setAccessibilityElement(true)
         title.setAccessibilityRole(.staticText)
         title.setAccessibilityLabel(.key("Home.title"))
