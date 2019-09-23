@@ -15,7 +15,6 @@ final class Scroll: NSScrollView {
         documentView!.topAnchor.constraint(equalTo: topAnchor).isActive = true
         documentView!.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         documentView!.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        documentView!.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor).isActive = true
     }
     
     func clear() { documentView!.subviews.forEach { $0.removeFromSuperview() } }

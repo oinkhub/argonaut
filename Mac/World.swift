@@ -73,8 +73,8 @@ class World: NSView {
         
         top.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
         top.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
-        top.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         top.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        top.widthAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
         
         close.leftAnchor.constraint(equalTo: top.leftAnchor).isActive = true
         close.topAnchor.constraint(equalTo: top.topAnchor).isActive = true

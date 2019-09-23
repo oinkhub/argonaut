@@ -1,7 +1,7 @@
 import Argonaut
 import AppKit
 
-final class Project: Button, NSTextViewDelegate {
+final class Project: NSView, NSTextViewDelegate {
     private(set) weak var field: Field.Name!
     private weak var item: Session.Item!
     private weak var warning: Label!
@@ -9,15 +9,17 @@ final class Project: Button, NSTextViewDelegate {
     private weak var over: NSView!
     private weak var base: NSView!
     private weak var left: NSLayoutConstraint!
+    private weak var button: Button!
     
     required init?(coder: NSCoder) { nil }
     init(_ item: Session.Item, measure: String) {
         self.item = item
-        super.init(nil, action: #selector(navigate))
+        super.init(frame: .zero)
+        translatesAutoresizingMaskIntoConstraints = false
+        wantsLayer = true
         setAccessibilityElement(true)
         setAccessibilityRole(.button)
         setAccessibilityLabel(item.name)
-        target = self
         
         let rename = NSView()
         rename.translatesAutoresizingMaskIntoConstraints = false
@@ -77,6 +79,10 @@ final class Project: Button, NSTextViewDelegate {
             $0.heightAnchor.constraint(equalToConstant: 40).isActive = true
             $0.widthAnchor.constraint(equalToConstant: 40).isActive = true
         }
+        
+        let button = Button(self, action: #selector(navigate))
+        addSubview(button)
+        self.button = button
         
         let over = NSView()
         over.translatesAutoresizingMaskIntoConstraints = false
@@ -159,6 +165,11 @@ final class Project: Button, NSTextViewDelegate {
         over.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         over.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
+        button.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        button.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        button.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
         warning.leftAnchor.constraint(equalTo: leftAnchor, constant: 13).isActive = true
         warning.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -13).isActive = true
         warning.topAnchor.constraint(lessThanOrEqualTo: topAnchor, constant: 20).isActive = true
@@ -186,6 +197,7 @@ final class Project: Button, NSTextViewDelegate {
     }
     
     func edit() {
+        button.isHidden = true
         field.isEditable = true
         field.isSelectable = true
         field.accepts = true
@@ -202,19 +214,18 @@ final class Project: Button, NSTextViewDelegate {
         left.constant = 0
         rename.isHidden = true
         base.isHidden = false
+        button.isHidden = false
     }
     
     @objc private func navigate() {
-//        if !app.home._edit.isSelected {
-//        Load(item.id).makeKeyAndOrderFront(nil)
-//        }
-    }
-    
-    @objc private func share() {
-        Argonaut.share(item) {
-            NSSharingService(named: NSSharingService.Name.sendViaAirDrop)?.perform(withItems: [$0])
+        if app.main.bar._edit.enabled {
+            app.main.deselect()
+            layer!.backgroundColor = .dark
+            Load.navigate(item)
         }
     }
+    
+    @objc private func share() { Load.share(item) }
     
     @objc private func remove() {
         warning.stringValue = item.name.isEmpty ? .key("Project.deleteUnanmed") : item.name

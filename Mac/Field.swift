@@ -111,6 +111,8 @@ class Field: NSTextView {
     
     var accepts = false
     override var acceptsFirstResponder: Bool { accepts }
+    override var mouseDownCanMoveWindow: Bool { !accepts }
+    override var canBecomeKeyView: Bool { !accepts }
     
     required init?(coder: NSCoder) { nil }
     private init() {

@@ -32,7 +32,7 @@ final class Main: Window {
     override func close() { app.terminate(nil) }
     
     func show(_ view: NSView) {
-        base.subviews.forEach { $0.removeFromSuperview() }
+        clear()
         view.alphaValue = 0
         base.addSubview(view)
         
@@ -48,5 +48,8 @@ final class Main: Window {
         }) { }
         makeFirstResponder(view)
     }
+    
+    func clear() { base.subviews.forEach { $0.removeFromSuperview() } }
+    func deselect() { bar.scroll.documentView!.subviews.compactMap { $0 as? Project }.forEach { $0.layer!.backgroundColor = .clear } }
 }
 

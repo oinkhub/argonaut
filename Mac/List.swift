@@ -75,7 +75,7 @@ final class List: NSView {
         var duration = 0.0
         var previous: Item?
         map?.path.enumerated().forEach {
-            let item = Item($0, deletable: deletable)
+            let item = Item($0, deletable: deletable, target: self, action: #selector(focus(_:)))
             item.distance = location == nil ? " " : app.measure(location!.distance(from: .init(latitude: $0.1.latitude, longitude: $0.1.longitude)), 0)
             item.target = self
             item.action = #selector(focus(_:))

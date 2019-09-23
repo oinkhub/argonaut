@@ -3,7 +3,7 @@ import AppKit
 final class Bar: NSView {
     override var acceptsFirstResponder: Bool { true }
     private(set) weak var scroll: Scroll!
-    private weak var _edit: Button.Image!
+    private(set) weak var _edit: Button.Image!
     private weak var _new: Button.Image!
     private weak var _about: Button.Image!
     private weak var _done: Control.Text!
@@ -138,11 +138,14 @@ final class Bar: NSView {
     
     @objc func new() {
         guard app.session != nil else { return }
+        app.main.deselect()
         app.main.show(New())
         (app.mainMenu as! Menu).new()
     }
     
     @objc func edit() {
+        app.main.clear()
+        app.main.deselect()
         [_edit, _new, _about].forEach { $0.enabled = false }
         _done.isHidden = false
         scroll.documentView!.subviews.compactMap { $0 as? Project }.forEach { $0.edit() }

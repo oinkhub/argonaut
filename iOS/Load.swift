@@ -63,6 +63,7 @@ final class Load: UIView {
         label.accessibilityTraits = .staticText
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = .key("Load.label")
+        label.accessibilityLabel = .key("Load.label")
         label.textColor = .white
         label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .bold)
         addSubview(label)

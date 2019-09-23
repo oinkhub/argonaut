@@ -53,6 +53,8 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
             $0.widthAnchor.constraint(equalToConstant: 1).isActive = true
         }
         
+        top.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+        
         results.topAnchor.constraint(equalTo: top.bottomAnchor, constant: -10).isActive = true
         results.leftAnchor.constraint(equalTo: field.leftAnchor).isActive = true
         results.rightAnchor.constraint(equalTo: field.rightAnchor).isActive = true

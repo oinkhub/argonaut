@@ -31,6 +31,7 @@ final class Settings: Window {
         self._info = _info
         
         let segmented = NSSegmentedControl()
+        self.segmented = segmented
         segmented.segmentCount = 3
         switch style {
         case .navigate:
@@ -45,7 +46,6 @@ final class Settings: Window {
             segmented.setLabel(.key("Settings.driving"), forSegment: 1)
             segmented.setLabel(.key("Settings.flying"), forSegment: 2)
             segmented.action = #selector(moded)
-            self.segmented = segmented
             configMode()
             modeInfo()
         }

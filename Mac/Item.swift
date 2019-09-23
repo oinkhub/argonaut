@@ -1,7 +1,7 @@
 import Argonaut
 import AppKit
 
-final class Item: NSControl {
+final class Item: Button {
     final class Travel: NSView {
         required init?(coder: NSCoder) { nil }
         init(_ travel: String) {
@@ -33,9 +33,8 @@ final class Item: NSControl {
     private(set) weak var title: Label!
     
     required init?(coder: NSCoder) { nil }
-    init(_ item: (Int, Path), deletable: Bool) {
-        super.init(frame: .zero)
-        translatesAutoresizingMaskIntoConstraints = false
+    init(_ item: (Int, Path), deletable: Bool, target: AnyObject, action: Selector) {
+        super.init(target, action: action)
         setAccessibilityElement(true)
         setAccessibilityRole(.button)
         setAccessibilityLabel(item.1.name)
@@ -95,14 +94,7 @@ final class Item: NSControl {
         update()
     }
     
-    override func mouseDown(with: NSEvent) { layer!.backgroundColor = .dark }
-    override func mouseUp(with: NSEvent) {
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.3
-            $0.allowsImplicitAnimation = true
-            layer!.backgroundColor = .clear
-        }) { }
-    }
+    override func hover() { layer!.backgroundColor = selected ? .dark : .clear }
     
     private func update() {
         title.attributedStringValue = {
