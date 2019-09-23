@@ -143,7 +143,7 @@ final class Project: UIControl, UITextViewDelegate {
     
     func textViewDidBeginEditing(_: UITextView) {
         UIView.animate(withDuration: 0.6) { [weak self] in
-            app.home.scroll.contentOffset.y = app.home.scroll.convert(.init(x: 0, y: self?.field.frame.minY ?? 0), from: self).y
+            app.main.scroll.contentOffset.y = app.main.scroll.convert(.init(x: 0, y: self?.field.frame.minY ?? 0), from: self).y
         }
     }
     
@@ -167,7 +167,7 @@ final class Project: UIControl, UITextViewDelegate {
     }
     
     @objc private func navigate() {
-        if !app.home._edit.isSelected {
+        if !app.main._edit.isSelected {
             Load.navigate(item)
         }
     }

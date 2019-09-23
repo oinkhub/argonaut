@@ -6,7 +6,7 @@ import UserNotifications
 private(set) weak var app: App!
 @UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
-    private(set) weak var home: Home!
+    private(set) weak var main: Main!
     private(set) var session: Session!
     private var formatter: Any!
     private let dater = DateComponentsFormatter()
@@ -28,7 +28,7 @@ private(set) weak var app: App!
             Argonaut.receive(open) {
                 self.session.update($0)
                 self.session.save()
-                self.home.refresh()
+                self.main.refresh()
             }
         }
         return true
@@ -54,14 +54,14 @@ private(set) weak var app: App!
             self.formatter = formatter
         }
         
-        let home = Home()
-        view.addSubview(home)
-        self.home = home
+        let main = Main()
+        view.addSubview(main)
+        self.main = main
         
-        home.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        home.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        home.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        home.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        main.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        main.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        main.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        main.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self
@@ -76,7 +76,7 @@ private(set) weak var app: App!
         
         Session.load {
             self.session = $0
-            self.home.refresh()
+            self.main.refresh()
 
             if Date() >= $0.rating {
                 var components = DateComponents()
@@ -127,13 +127,13 @@ private(set) weak var app: App!
         session.items.append(item)
         session.save()
         pop()
-        home.refresh()
+        main.refresh()
     }
     
     func delete(_ item: Session.Item) {
         session.items.removeAll(where: { $0.id == item.id })
         session.save()
-        home.refresh()
+        main.refresh()
         Argonaut.delete(item)
     }
     

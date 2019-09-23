@@ -13,15 +13,15 @@ final class Bar: NSView {
         new.image.image = NSImage(named: "new")
         new.setAccessibilityRole(.button)
         new.setAccessibilityElement(true)
-        new.setAccessibilityLabel(.key("Home.new"))
+        new.setAccessibilityLabel(.key("Main.new"))
         addSubview(new)
         
-        let title = Label(.key("Home.title"))
+        let title = Label(.key("Main.title"))
         title.font = .systemFont(ofSize: 16, weight: .bold)
         title.textColor = .halo
         title.setAccessibilityElement(true)
         title.setAccessibilityRole(.staticText)
-        title.setAccessibilityLabel(.key("Home.title"))
+        title.setAccessibilityLabel(.key("Main.title"))
         addSubview(title)
         
         let line = NSView()

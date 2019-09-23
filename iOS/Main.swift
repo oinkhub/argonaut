@@ -1,7 +1,7 @@
 import Argonaut
 import UIKit
 
-final class Home: UIView {
+final class Main: UIView {
     private(set) weak var scroll: Scroll!
     private(set) weak var _edit: UIButton!
     private weak var screenTop: UIView!
@@ -23,7 +23,7 @@ final class Home: UIView {
         addSubview(scroll)
         self.scroll = scroll
         
-        let bar = Bar(.key("Home.title"))
+        let bar = Bar(.key("Main.title"))
         addSubview(bar)
         self.bar = bar
         
@@ -36,7 +36,7 @@ final class Home: UIView {
         
         let _edit = UIButton()
         _edit.isAccessibilityElement = true
-        _edit.accessibilityLabel = .key("Home.edit")
+        _edit.accessibilityLabel = .key("Main.edit")
         _edit.translatesAutoresizingMaskIntoConstraints = false
         _edit.setImage(UIImage(named: "settings"), for: .normal)
         _edit.setImage(UIImage(named: "settings")!.withRenderingMode(.alwaysTemplate), for: .selected)
@@ -49,22 +49,22 @@ final class Home: UIView {
         
         let _done = Control.Text()
         _done.isHidden = true
-        _done.label.text = .key("Home.done")
-        _done.accessibilityLabel = .key("Home.done")
+        _done.label.text = .key("Main.done")
+        _done.accessibilityLabel = .key("Main.done")
         _done.addTarget(self, action: #selector(done), for: .touchUpInside)
         addSubview(_done)
         self._done = _done
         
         let _about = UIButton()
         _about.isAccessibilityElement = true
-        _about.accessibilityLabel = .key("Home.about")
+        _about.accessibilityLabel = .key("Main.about")
         _about.setImage(UIImage(named: "info"), for: .normal)
         _about.addTarget(self, action: #selector(about), for: .touchUpInside)
         self._about = _about
         
         let _new = UIButton()
         _new.isAccessibilityElement = true
-        _new.accessibilityLabel = .key("Home.new")
+        _new.accessibilityLabel = .key("Main.new")
         _new.setImage(UIImage(named: "new"), for: .normal)
         _new.addTarget(self, action: #selector(new), for: .touchUpInside)
         self._new = _new

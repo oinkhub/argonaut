@@ -14,7 +14,7 @@
 		CE088B8322FED9120001BEE4 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE088B8222FED9120001BEE4 /* About.swift */; };
 		CE088B8522FEDE810001BEE4 /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE088B8422FEDE810001BEE4 /* Privacy.swift */; };
 		CE088B8722FEE7A80001BEE4 /* Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE088B8622FEE7A80001BEE4 /* Help.swift */; };
-		CE0BA3242302CBEC004E6660 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0BA3232302CBEC004E6660 /* Home.swift */; };
+		CE0BA3242302CBEC004E6660 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0BA3232302CBEC004E6660 /* Main.swift */; };
 		CE0FE65023053F340058386B /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0FE64F23053F340058386B /* World.swift */; };
 		CE0FE652230555D40058386B /* New.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0FE651230555D40058386B /* New.swift */; };
 		CE0FE65423056F490058386B /* Scroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0FE65323056F490058386B /* Scroll.swift */; };
@@ -142,7 +142,7 @@
 		CE088B8222FED9120001BEE4 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		CE088B8422FEDE810001BEE4 /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
 		CE088B8622FEE7A80001BEE4 /* Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
-		CE0BA3232302CBEC004E6660 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		CE0BA3232302CBEC004E6660 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		CE0FE64F23053F340058386B /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
 		CE0FE651230555D40058386B /* New.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = New.swift; sourceTree = "<group>"; };
 		CE0FE65323056F490058386B /* Scroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scroll.swift; sourceTree = "<group>"; };
@@ -333,10 +333,10 @@
 				CEDB361D2302A4140078E521 /* Extensions.swift */,
 				CE0FE655230571D70058386B /* Field.swift */,
 				CEC2BA5B230BC26900FB4BA1 /* Gradient.swift */,
-				CE0BA3232302CBEC004E6660 /* Home.swift */,
 				CECD6FE6232C048200656702 /* Item.swift */,
 				CE8D430B2324FEBF00CE9B5F /* List.swift */,
 				CECD5635231131AD0085E0C3 /* Load.swift */,
+				CE0BA3232302CBEC004E6660 /* Main.swift */,
 				CEACFC56230950A4008E76A9 /* Marker.swift */,
 				CECD5633231130490085E0C3 /* Navigate.swift */,
 				CE0FE651230555D40058386B /* New.swift */,
@@ -712,7 +712,7 @@
 				CEAB0F0B22D742D900320F4F /* Map.swift in Sources */,
 				CEE098312302E3E200321C07 /* About.swift in Sources */,
 				CE9301DC22EF09AF00EACBD4 /* Tiler.swift in Sources */,
-				CE0BA3242302CBEC004E6660 /* Home.swift in Sources */,
+				CE0BA3242302CBEC004E6660 /* Main.swift in Sources */,
 				CE26CE0822F467AA0007441D /* Line.swift in Sources */,
 				CECECD7D22F469F2006AE0C8 /* Liner.swift in Sources */,
 				CE0FE65023053F340058386B /* World.swift in Sources */,
