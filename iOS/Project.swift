@@ -54,7 +54,7 @@ final class Project: UIControl, UITextViewDelegate {
         travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         travel.attributedText = { string in
             item.points.forEach {
-                string.append(.init(string: (string.string.isEmpty ? "" : "\n") + $0, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light), .foregroundColor: UIColor.white]))
+                string.append(.init(string: (string.string.isEmpty ? "" : "\n") + "- " + $0, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light), .foregroundColor: UIColor.white]))
             }
             if !measure.isEmpty {
                 string.append(.init(string: "\n" + measure, attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .light), .foregroundColor: UIColor(white: 1, alpha: 0.8)]))

@@ -14,7 +14,7 @@ final class Create: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         wantsLayer = true
-        layer!.backgroundColor = .shade
+        layer!.backgroundColor = .ui
         setAccessibilityModal(true)
         
         let percent = Label("0%")
@@ -46,7 +46,7 @@ final class Create: NSView {
         label.attributedStringValue = { string in
             string.append(.init(string: .key("Create.title"), attributes: [.font: NSFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: NSColor.white]))
             path.forEach {
-                string.append(.init(string: $0.name + "\n", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light), .foregroundColor: NSColor.white]))
+                string.append(.init(string: "- " + $0.name + "\n", attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light), .foregroundColor: NSColor.white]))
             }
             string.append(.init(string: .key("Create.info"), attributes: [.font: NSFont.systemFont(ofSize: 12, weight: .light), .foregroundColor: NSColor.init(white: 0.6, alpha: 1)]))
             return string
@@ -90,7 +90,7 @@ final class Create: NSView {
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         label.leftAnchor.constraint(greaterThanOrEqualTo: leftAnchor, constant: 20).isActive = true
         label.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
-        label.widthAnchor.constraint(lessThanOrEqualToConstant: 400).isActive = true
+        label.widthAnchor.constraint(lessThanOrEqualToConstant: 450).isActive = true
         label.bottomAnchor.constraint(equalTo: cancel.topAnchor, constant: -40).isActive = true
         
         logo.bottomAnchor.constraint(equalTo: label.topAnchor, constant: -20).isActive = true

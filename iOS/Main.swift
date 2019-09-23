@@ -210,34 +210,26 @@ final class Main: UIView {
     }
     
     @objc private func edit() {
-        [_edit, _new, _about].forEach {
-            $0?.isUserInteractionEnabled = false
-        }
+        [_edit, _new, _about].forEach { $0.isUserInteractionEnabled = false }
         _edit.isSelected = true
         _done.isHidden = false
         scroll.content.subviews.compactMap { $0 as? Project }.forEach { $0.edit() }
         UIView.animate(withDuration: 0.3) {
             self.scroll.content.layoutIfNeeded()
-            [self.border, self.bar, self._new, self._about].forEach {
-                $0.alpha = 0.2
-            }
+            [self.border, self.bar, self._new, self._about].forEach { $0.alpha = 0.2 }
         }
     }
     
     @objc private func done() {
         app.window!.endEditing(true)
-        [_edit, _new, _about].forEach {
-            $0?.isUserInteractionEnabled = true
-        }
+        [_edit, _new, _about].forEach { $0.isUserInteractionEnabled = true }
         _edit.isSelected = false
         _done.isHidden = true
         scroll.content.subviews.compactMap { $0 as? Project }.forEach { $0.done() }
         UIView.animate(withDuration: 0.3) {
             self.scroll.content.layoutIfNeeded()
             self._edit.isHidden = app.session.items.isEmpty
-            [self.border, self.bar, self._new, self._about].forEach {
-                $0.alpha = 1
-            }
+            [self.border, self.bar, self._new, self._about].forEach { $0.alpha = 1 }
         }
     }
 }

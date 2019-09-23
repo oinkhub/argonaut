@@ -14,6 +14,8 @@ final class Main: Window {
         
         let base = NSView()
         base.translatesAutoresizingMaskIntoConstraints = false
+        base.wantsLayer = true
+        base.layer!.backgroundColor = .ui
         contentView!.addSubview(base)
         self.base = base
         

@@ -2,8 +2,8 @@ import Argonaut
 import AppKit
 
 final class Project: Button, NSTextViewDelegate {
+    private(set) weak var field: Field.Name!
     private weak var item: Session.Item!
-    private weak var field: Field.Name!
     private weak var warning: Label!
     private weak var rename: NSView!
     private weak var over: NSView!
@@ -32,6 +32,7 @@ final class Project: Button, NSTextViewDelegate {
         field.string = item.name.isEmpty ? .key("Project.field") : item.name
         field.delegate = self
         field.isEditable = false
+        field.isSelectable = false
         addSubview(field)
         self.field = field
         
@@ -51,7 +52,7 @@ final class Project: Button, NSTextViewDelegate {
         travel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         travel.attributedStringValue = { string in
             item.points.forEach {
-                string.append(.init(string: (string.string.isEmpty ? "" : "\n") + $0, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light), .foregroundColor: NSColor.white]))
+                string.append(.init(string: (string.string.isEmpty ? "" : "\n") + "- " + $0, attributes: [.font: NSFont.systemFont(ofSize: 14, weight: .light), .foregroundColor: NSColor.white]))
             }
             if !measure.isEmpty {
                 string.append(.init(string: "\n" + measure, attributes: [.font: NSFont.systemFont(ofSize: 12, weight: .light), .foregroundColor: NSColor(white: 1, alpha: 0.8)]))
@@ -73,24 +74,26 @@ final class Project: Button, NSTextViewDelegate {
             $0.setAccessibilityRole(.button)
             addSubview($0)
             
-            $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
-            $0.widthAnchor.constraint(equalToConstant: 60).isActive = true
-            $0.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            $0.widthAnchor.constraint(equalToConstant: 40).isActive = true
         }
         
         let over = NSView()
         over.translatesAutoresizingMaskIntoConstraints = false
         over.wantsLayer = true
-        over.layer!.backgroundColor = .shade
+        over.layer!.backgroundColor = .ui
         over.alphaValue = 0
         over.isHidden = true
+        over.setAccessibilityModal(true)
         addSubview(over)
         self.over = over
         
         let warning = Label()
-        warning.font = .systemFont(ofSize: 14, weight: .regular)
+        warning.font = .systemFont(ofSize: 16, weight: .regular)
         warning.textColor = .white
-        warning.setAccessibilityModal(true)
+        warning.setAccessibilityElement(true)
+        warning.setAccessibilityRole(.staticText)
+        warning.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         over.addSubview(warning)
         self.warning = warning
         
@@ -98,7 +101,6 @@ final class Project: Button, NSTextViewDelegate {
         cancel.layer!.backgroundColor = .clear
         cancel.label.textColor = .white
         cancel.label.stringValue = .key("Project.deleteCancel")
-        cancel.label.font = .systemFont(ofSize: 14, weight: .medium)
         cancel.setAccessibilityLabel(.key("Project.deleteCancel"))
         over.addSubview(cancel)
         
@@ -119,22 +121,19 @@ final class Project: Button, NSTextViewDelegate {
             icon.image = NSImage(named: "flying")
         }
         
-        if travel.attributedStringValue.string.isEmpty {
-            bottomAnchor.constraint(equalTo: field.bottomAnchor, constant: 2).isActive = true
-        } else {
-            bottomAnchor.constraint(equalTo: travel.bottomAnchor, constant: 16).isActive = true
-        }
+        bottomAnchor.constraint(greaterThanOrEqualTo: travel.bottomAnchor, constant: 16).isActive = true
+        bottomAnchor.constraint(greaterThanOrEqualTo: share.bottomAnchor, constant: 10).isActive = true
         
-        rename.topAnchor.constraint(equalTo: field.topAnchor, constant: 16).isActive = true
-        rename.bottomAnchor.constraint(equalTo: field.bottomAnchor, constant: -16).isActive = true
+        rename.topAnchor.constraint(equalTo: field.topAnchor).isActive = true
+        rename.bottomAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         rename.leftAnchor.constraint(equalTo: field.leftAnchor).isActive = true
-        rename.rightAnchor.constraint(equalTo: field.rightAnchor, constant: -10).isActive = true
+        rename.rightAnchor.constraint(equalTo: field.rightAnchor).isActive = true
         
-        field.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        field.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
         field.leftAnchor.constraint(equalTo: base.rightAnchor).isActive = true
-        field.rightAnchor.constraint(equalTo: delete.leftAnchor).isActive = true
+        field.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
         
-        base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        base.leftAnchor.constraint(equalTo: leftAnchor, constant: 13).isActive = true
         base.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
         base.widthAnchor.constraint(equalToConstant: 26).isActive = true
         base.heightAnchor.constraint(equalToConstant: 26).isActive = true
@@ -144,30 +143,31 @@ final class Project: Button, NSTextViewDelegate {
         icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
         icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
         
-        travel.topAnchor.constraint(equalTo: field.bottomAnchor, constant: -15).isActive = true
-        travel.leftAnchor.constraint(equalTo: field.leftAnchor, constant: 15).isActive = true
-        travel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
+        travel.topAnchor.constraint(equalTo: field.bottomAnchor, constant: 10).isActive = true
+        travel.leftAnchor.constraint(equalTo: leftAnchor, constant: 13).isActive = true
+        travel.rightAnchor.constraint(lessThanOrEqualTo: delete.leftAnchor, constant: -5).isActive = true
         
+        delete.topAnchor.constraint(equalTo: travel.topAnchor).isActive = true
         left = delete.leftAnchor.constraint(equalTo: rightAnchor)
         left.isActive = true
         
-        share.leftAnchor.constraint(equalTo: delete.rightAnchor).isActive = true
+        share.topAnchor.constraint(equalTo: delete.bottomAnchor, constant: 10).isActive = true
+        share.centerXAnchor.constraint(equalTo: delete.centerXAnchor).isActive = true
         
         over.topAnchor.constraint(equalTo: topAnchor).isActive = true
         over.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         over.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         over.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
-        warning.centerXAnchor.constraint(equalTo: over.centerXAnchor).isActive = true
-        warning.bottomAnchor.constraint(lessThanOrEqualTo: confirm.topAnchor, constant: -40).isActive = true
+        warning.leftAnchor.constraint(equalTo: leftAnchor, constant: 13).isActive = true
+        warning.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -13).isActive = true
+        warning.topAnchor.constraint(lessThanOrEqualTo: topAnchor, constant: 20).isActive = true
         
-        confirm.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
-        confirm.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
+        confirm.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        confirm.topAnchor.constraint(equalTo: warning.bottomAnchor, constant: 30).isActive = true
         
-        cancel.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
-        cancel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
-        cancel.widthAnchor.constraint(equalTo: confirm.widthAnchor).isActive = true
-        cancel.heightAnchor.constraint(equalTo: confirm.heightAnchor).isActive = true
+        cancel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        cancel.topAnchor.constraint(equalTo: confirm.bottomAnchor, constant: 20).isActive = true
     }
     
     func textDidChange(_: Notification) { field.adjust() }
@@ -176,7 +176,7 @@ final class Project: Button, NSTextViewDelegate {
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.6
             $0.allowsImplicitAnimation = true
-            app.main.bar.scroll.contentView.scroll(to: .init(x: 0, y: app.main.bar.scroll.convert(.init(x: 0, y: field.frame.minY), from: self).y))
+            app.main.bar.scroll.contentView.scroll(to: .init(x: 0, y: app.main.bar.scroll.documentView!.convert(.init(x: 0, y: field.frame.maxY + 10), from: self).y))
         }) { }
     }
     
@@ -187,14 +187,17 @@ final class Project: Button, NSTextViewDelegate {
     
     func edit() {
         field.isEditable = true
+        field.isSelectable = true
         field.accepts = true
-        left.constant = -120
+        left.constant = -50
         rename.isHidden = false
         base.isHidden = true
     }
     
     func done() {
+        cancel()
         field.isEditable = false
+        field.isSelectable = false
         field.accepts = false
         left.constant = 0
         rename.isHidden = true
@@ -214,7 +217,8 @@ final class Project: Button, NSTextViewDelegate {
     }
     
     @objc private func remove() {
-        warning.stringValue = .key("Project.deleteTitle") + (item.name.isEmpty ? .key("Project.deleteUnanmed") : item.name)
+        warning.stringValue = item.name.isEmpty ? .key("Project.deleteUnanmed") : item.name
+        warning.setAccessibilityLabel(warning.stringValue)
         over.isHidden = false
         NSAnimationContext.runAnimationGroup({
             $0.duration = 0.35

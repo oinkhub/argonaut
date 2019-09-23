@@ -7,6 +7,7 @@ extension NSColor {
     static let flying = #colorLiteral(red: 1, green: 0.5459220779, blue: 0.4609899387, alpha: 1)
     static let dark = #colorLiteral(red: 0.07843137255, green: 0.2352941176, blue: 0.3529411765, alpha: 1)
     static let shade = #colorLiteral(red: 0.173407346, green: 0.173407346, blue: 0.173407346, alpha: 1)
+    static let ui = #colorLiteral(red: 0.09411764706, green: 0.09411764706, blue: 0.09411764706, alpha: 1)
 }
 
 extension CGColor {
@@ -16,6 +17,7 @@ extension CGColor {
     static let flying = NSColor.flying.cgColor
     static let dark = NSColor.dark.cgColor
     static let shade = NSColor.shade.cgColor
+    static let ui = NSColor.ui.cgColor
 }
 
 final class Label: NSTextField {

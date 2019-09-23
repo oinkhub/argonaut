@@ -85,7 +85,7 @@ private(set) weak var app: App!
             UNUserNotificationCenter.current().delegate = self
             UNUserNotificationCenter.current().getNotificationSettings {
                 if $0.authorizationStatus != .authorized {
-                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 15) {
+                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 20) {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { _, _ in }
                     }
                 }
@@ -93,14 +93,10 @@ private(set) weak var app: App!
         }
         
         Session.load {
-            $0.settings.follow = false
             self.session = $0
-//            list.refresh()
-            
-            if $0.items.isEmpty {
-//                self.help()
-            }
-            
+            self.session.settings.follow = false
+            self.main.bar.refresh()
+
             if Date() >= $0.rating {
                 var components = DateComponents()
                 components.month = 3

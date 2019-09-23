@@ -17,7 +17,7 @@ final class List: NSView {
         let border = NSView()
         border.translatesAutoresizingMaskIntoConstraints = false
         border.wantsLayer = true
-        border.layer!.backgroundColor = .dark
+        border.layer!.backgroundColor = .black
         addSubview(border)
         
         let scroll = Scroll()
@@ -27,9 +27,9 @@ final class List: NSView {
         heightAnchor.constraint(equalToConstant: 210).isActive = true
         
         border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        border.topAnchor.constraint(equalTo: topAnchor, constant: 1).isActive = true
-        border.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1).isActive = true
-        border.widthAnchor.constraint(equalToConstant: 1).isActive = true
+        border.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        border.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         scroll.topAnchor.constraint(equalTo: topAnchor, constant: 1).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true

@@ -50,7 +50,7 @@ final class Create: UIView {
         label.attributedText = { string in
             string.append(.init(string: .key("Create.title"), attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title1).pointSize, weight: .bold), .foregroundColor: UIColor.white]))
             path.forEach {
-                string.append(.init(string: $0.name + "\n", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light), .foregroundColor: UIColor.white]))
+                string.append(.init(string: "- " + $0.name + "\n", attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light), .foregroundColor: UIColor.white]))
             }
             string.append(.init(string: .key("Create.info"), attributes: [.font: UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .light), .foregroundColor: UIColor.init(white: 0.6, alpha: 1)]))
             return string

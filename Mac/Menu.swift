@@ -79,7 +79,9 @@ final class Menu: NSMenu {
             $0.submenu!.items = [
                 .init(title: .key("Menu.new"), action: #selector(Bar.new), keyEquivalent: "n"),
                 .separator(),
-                .init(title: .key("Menu.edit"), action: #selector(Bar.edit), keyEquivalent: "e")]
+                .init(title: .key("Menu.edit"), action: #selector(Bar.edit), keyEquivalent: "e"),
+                .separator(),
+                .init(title: .key("Menu.options"), action: #selector(Bar.about), keyEquivalent: ",")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: ""))
     }

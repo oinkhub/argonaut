@@ -28,11 +28,9 @@ class Field: NSTextView {
         required init?(coder: NSCoder) { nil }
         override init() {
             super.init()
-            setAccessibilityRole(.textField)
             setAccessibilityLabel(.key("Field.search"))
             textContainerInset.height = 6
             textContainerInset.width = 30
-            font = .systemFont(ofSize: 14, weight: .bold)
             
             let icon = Button.Image(self, action: #selector(search))
             icon.image.image = NSImage(named: "search")
@@ -91,9 +89,8 @@ class Field: NSTextView {
         required init?(coder: NSCoder) { nil }
         override init() {
             super.init()
-            font = .systemFont(ofSize: 14, weight: .bold)
-            textContainerInset.height = 7
-            textContainerInset.width = 10
+            textContainerInset.height = 10
+            textContainerInset.width = 6
             
             height = heightAnchor.constraint(greaterThanOrEqualToConstant: 40)
             height.isActive = true
@@ -108,7 +105,7 @@ class Field: NSTextView {
         
         override func adjust() {
             super.adjust()
-            height.constant = layoutManager!.usedRect(for: textContainer!).size.height + 14
+            height.constant = layoutManager!.usedRect(for: textContainer!).size.height + 20
         }
     }
     
@@ -126,6 +123,7 @@ class Field: NSTextView {
             return $0
         } (NSTextContainer(), Layout()))
         setAccessibilityElement(true)
+        setAccessibilityRole(.textField)
         translatesAutoresizingMaskIntoConstraints = false
         allowsUndo = true
         isRichText = false
@@ -133,6 +131,7 @@ class Field: NSTextView {
         isContinuousSpellCheckingEnabled = true
         textColor = .white
         insertionPointColor = .halo
+        font = .systemFont(ofSize: 14, weight: .bold)
         if #available(OSX 10.12.2, *) {
             isAutomaticTextCompletionEnabled = true
         }

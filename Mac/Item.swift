@@ -8,7 +8,7 @@ final class Item: NSControl {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             wantsLayer = true
-            layer!.backgroundColor = .dark
+            layer!.backgroundColor = .shade
             layer!.cornerRadius = 4
             
             let label = Label("+" + travel)
@@ -44,7 +44,7 @@ final class Item: NSControl {
         let border = NSView()
         border.translatesAutoresizingMaskIntoConstraints = false
         border.wantsLayer = true
-        border.layer!.backgroundColor = .dark
+        border.layer!.backgroundColor = .shade
         addSubview(border)
         
         let title = Label()
