@@ -28,6 +28,7 @@ final class Privacy: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.isAccessibilityElement = true
         label.accessibilityTraits = .staticText
+        label.accessibilityLabel = .key("Privacy.label")
         label.text = .key("Privacy.label")
         label.textColor = .white
         label.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)

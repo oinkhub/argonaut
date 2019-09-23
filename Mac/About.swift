@@ -69,12 +69,18 @@ final class About: Window {
         rate.topAnchor.constraint(equalTo: whyRate.bottomAnchor).isActive = true
     }
     
-    @objc private func privacy() { /**/ }
     @objc private func rate() { NSWorkspace.shared.open(URL(string: "itms-apps://itunes.apple.com/\(Locale.current.regionCode!.lowercased())/app/Argonaut/id1472479862")!) }
     @objc private func write() {
         let service = NSSharingService(named: NSSharingService.Name.composeEmail)
         service?.recipients = ["argonaut@iturbi.de"]
         service?.subject = .key("About.subject")
         service?.perform(withItems: [String.key("About.body")])
+    }
+    
+    @objc private func privacy() {
+        if let privacy = app.windows.first(where: { $0 is Privacy }) {
+            privacy.close()
+        }
+        Privacy().makeKeyAndOrderFront(nil)
     }
 }
