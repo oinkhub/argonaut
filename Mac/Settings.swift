@@ -7,7 +7,7 @@ final class Settings: Window {
         var item = Item.follow { didSet {
             setAccessibilityLabel(item.title)
             label.stringValue = item.title
-            image.image = NSImage(named: item.image)
+            image.image = NSImage(named: item.image)!.tint(.black)
         } }
     }
     

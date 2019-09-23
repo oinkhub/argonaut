@@ -38,17 +38,17 @@ private(set) weak var app: App!
     @available(OSX 10.12.2, *) override func makeTouchBar() -> NSTouchBar? {
         let bar = NSTouchBar()
         bar.delegate = self
-        bar.defaultItemIdentifiers = [.init("Privacy")]
+        bar.defaultItemIdentifiers = [.init("Options")]
         return bar
     }
     
     @available(OSX 10.12.2, *) func touchBar(_: NSTouchBar, makeItemForIdentifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
         let item = NSCustomTouchBarItem(identifier: makeItemForIdentifier)
-        let button = NSButton(title: "", target: nil, action: nil)
+        let button = NSButton(title: "", target: self, action: nil)
         item.view = button
         button.title = .key(makeItemForIdentifier.rawValue)
         switch makeItemForIdentifier.rawValue {
-        case "Privacy": button.action = #selector(privacy)
+        case "Options": button.action = #selector(about)
         default: break
         }
         return item
@@ -153,9 +153,11 @@ private(set) weak var app: App!
         Argonaut.delete(item)
     }
     
-    @objc func about() { order(About.self) }
-    @objc func privacy() { order(Privacy.self) }
-    @objc func help() { /*order(Help.self)*/ }
-    
-    private func order<W: NSWindow>(_ type: W.Type) { (windows.first(where: { $0 is W }) ?? W()).makeKeyAndOrderFront(nil) }
+    @objc func about() {
+        guard session != nil else { return }
+        if let about = windows.first(where: { $0 is About }) {
+            about.close()
+        }
+        About().makeKeyAndOrderFront(nil)
+    }
 }

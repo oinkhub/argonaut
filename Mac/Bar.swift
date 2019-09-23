@@ -21,7 +21,7 @@ final class Bar: NSView {
         addSubview(_new)
         self._new = _new
         
-        let _about = Button.Image(self, action: #selector(about))
+        let _about = Button.Image(app, action: #selector(app.about))
         _about.image.image = NSImage(named: "info")
         _about.setAccessibilityRole(.button)
         _about.setAccessibilityElement(true)
@@ -155,11 +155,6 @@ final class Bar: NSView {
             scroll.documentView!.layoutSubtreeIfNeeded()
             [_new, _edit, _about].forEach { $0.image.alphaValue = 0.3 }
         }) { }
-    }
-    
-    @objc func about() {
-        guard app.session != nil else { return }
-//        app.push(About())
     }
     
     @objc private func done() {

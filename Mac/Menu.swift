@@ -3,7 +3,7 @@ import AppKit
 final class Menu: NSMenu {
     func base() { items = [argonaut, maps, edit, window, help] }
     func new() { items = [argonaut, create, world, edit, window, help] }
-    func navigate() { items = [] }
+    func navigate() { items = [argonaut, world, window, help] }
     
     private var argonaut: NSMenuItem {
         {
@@ -68,7 +68,7 @@ final class Menu: NSMenu {
     private var help: NSMenuItem {
         {
             $0.submenu = .init(title: .key("Menu.help"))
-            $0.submenu!.items = [.init(title: .key("Menu.showHelp"), action: #selector(app.help), keyEquivalent: "/")]
+            $0.submenu!.items = [.init(title: .key("Menu.showHelp"), action: #selector(app.about), keyEquivalent: "/")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: ""))
     }
@@ -81,7 +81,7 @@ final class Menu: NSMenu {
                 .separator(),
                 .init(title: .key("Menu.edit"), action: #selector(Bar.edit), keyEquivalent: "e"),
                 .separator(),
-                .init(title: .key("Menu.options"), action: #selector(Bar.about), keyEquivalent: ",")]
+                .init(title: .key("Menu.options"), action: #selector(app.about), keyEquivalent: ",")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: ""))
     }
@@ -93,9 +93,6 @@ final class Menu: NSMenu {
                 { $0.keyEquivalentModifierMask = []
                     return $0
                 } (NSMenuItem(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p")),
-                { $0.keyEquivalentModifierMask = []
-                    return $0
-                } (NSMenuItem(title: .key("Menu.directions"), action: #selector(World.directions), keyEquivalent: "l")),
                 .init(title: .key("Menu.search"), action: #selector(New.search), keyEquivalent: "f"),
                 .separator(),
                 .init(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s")]
@@ -107,7 +104,12 @@ final class Menu: NSMenu {
         {
             $0.submenu = .init(title: .key("Menu.map"))
             $0.submenu!.items = [
-                .init(title: .key("Menu.settings"), action: #selector(World.settings), keyEquivalent: ","),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.directions"), action: #selector(World.directions), keyEquivalent: "l")),
+                { $0.keyEquivalentModifierMask = []
+                    return $0
+                } (NSMenuItem(title: .key("Menu.settings"), action: #selector(World.settings), keyEquivalent: ",")),
                 .separator(),
                 { $0.keyEquivalentModifierMask = []
                     return $0

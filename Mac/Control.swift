@@ -19,7 +19,7 @@ class Control: Button {
             
             label.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             
-            image.rightAnchor.constraint(equalTo: rightAnchor, constant: -5).isActive = true
+            image.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
             image.widthAnchor.constraint(equalToConstant: 30).isActive = true
             image.heightAnchor.constraint(equalToConstant: 30).isActive = true
             image.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true

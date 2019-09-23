@@ -222,6 +222,7 @@ final class Project: NSView, NSTextViewDelegate {
             app.main.deselect()
             layer!.backgroundColor = .dark
             Load.navigate(item)
+            (app.mainMenu as! Menu).navigate()
         }
     }
     
