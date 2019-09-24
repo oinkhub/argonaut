@@ -91,14 +91,14 @@ public final class Factory {
                 
                 while minX < maxX {
                     var y = minY
-                    let w = min(maxX - minX, 9)
+                    let w = min(maxX - minX, 5)
                     while y < maxY {
                         var shot = Shot()
                         shot.x = minX
                         shot.y = y
                         shot.z = z
                         shot.w = w
-                        shot.h = min(maxY - y, 9)
+                        shot.h = min(maxY - y, 5)
                         shot.update(proportion)
                         shots.append(shot)
                         y += shot.h
@@ -125,7 +125,7 @@ public final class Factory {
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let shot = self.shots.last else { return }
             self.progress((self.total - .init(self.shots.count)) / self.total)
-            self.timer.schedule(deadline: .now() + 30)
+            self.timer.schedule(deadline: .now() + 22)
             let shooter = MKMapSnapshotter(options: shot.options)
             self.shooter = shooter
             shooter.start(with: self.queue) { [weak self] in

@@ -124,6 +124,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func retile() {
         removeOverlay(tiler)
+        showsPointsOfInterest = app.session.settings.map != .argonaut
         if app.session.settings.map != .apple {
             tiler.canReplaceMapContent = app.session.settings.map == .argonaut
             addOverlay(tiler, level: .aboveLabels)
