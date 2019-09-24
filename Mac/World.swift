@@ -142,6 +142,7 @@ class World: NSView {
     }
     
     @objc final func close() {
+        app.main.deselect()
         app.main.makeFirstResponder(app.main.bar)
         (app.mainMenu as! Menu).base()
         NSAnimationContext.runAnimationGroup({
