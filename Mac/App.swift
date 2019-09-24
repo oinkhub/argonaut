@@ -54,14 +54,6 @@ private(set) weak var app: App!
         return item
     }
     
-    func receive(_ url: URL) {
-        Argonaut.receive(url) {
-            self.session.update($0)
-            self.session.save()
-//            self.list.refresh()
-        }
-    }
-    
     func applicationWillFinishLaunching(_: Notification) {
         dater.unitsStyle = .full
         dater.allowedUnits = [.minute, .hour]
@@ -151,6 +143,15 @@ private(set) weak var app: App!
         session.save()
         main.bar.refresh()
         Argonaut.delete(item)
+    }
+    
+    func receive(_ url: URL) {
+        main.clear()
+        Argonaut.receive(url) {
+            self.session.update($0)
+            self.session.save()
+            self.main.bar.refresh()
+        }
     }
     
     @objc func about() {

@@ -157,7 +157,7 @@ class Field: UITextView {
     
     override func caretRect(for position: UITextPosition) -> CGRect {
         var rect = super.caretRect(for: position)
-        rect.size.width += 3
+        rect.size.width += 2
         return rect
     }
 }

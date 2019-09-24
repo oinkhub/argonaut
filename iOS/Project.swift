@@ -104,8 +104,8 @@ final class Project: UIControl, UITextViewDelegate {
             bottomAnchor.constraint(equalTo: travel.bottomAnchor, constant: 16).isActive = true
         }
         
-        rename.topAnchor.constraint(equalTo: field.topAnchor, constant: 16).isActive = true
-        rename.bottomAnchor.constraint(equalTo: field.bottomAnchor, constant: -16).isActive = true
+        rename.topAnchor.constraint(equalTo: field.topAnchor, constant: 12).isActive = true
+        rename.bottomAnchor.constraint(equalTo: field.bottomAnchor, constant: -12).isActive = true
         rename.leftAnchor.constraint(equalTo: field.leftAnchor).isActive = true
         rename.rightAnchor.constraint(equalTo: field.rightAnchor, constant: -10).isActive = true
         
@@ -123,7 +123,7 @@ final class Project: UIControl, UITextViewDelegate {
         icon.widthAnchor.constraint(equalToConstant: 26).isActive = true
         icon.heightAnchor.constraint(equalToConstant: 26).isActive = true
         
-        travel.topAnchor.constraint(equalTo: field.bottomAnchor, constant: -15).isActive = true
+        travel.topAnchor.constraint(equalTo: field.bottomAnchor, constant: -12).isActive = true
         travel.leftAnchor.constraint(equalTo: field.leftAnchor, constant: 15).isActive = true
         travel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
