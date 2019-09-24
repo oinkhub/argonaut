@@ -27,10 +27,12 @@ final class TestDivide: XCTestCase {
         factory.range = (18 ... 18)
         factory.divide()
         XCTAssertEqual(1, factory.shots.count)
-        XCTAssertEqual(2048, factory.shots.first?.options.mapRect.minX)
-        XCTAssertEqual(2048, factory.shots.first?.options.mapRect.minY)
-        XCTAssertEqual(3072, factory.shots.first?.options.mapRect.maxX)
-        XCTAssertEqual(3072, factory.shots.first?.options.mapRect.maxY)
+        XCTAssertEqual(2048, factory.shots[0].options.mapRect.minX)
+        XCTAssertEqual(2048, factory.shots[0].options.mapRect.minY)
+        XCTAssertEqual(3072, factory.shots[0].options.mapRect.maxX)
+        XCTAssertEqual(3072, factory.shots[0].options.mapRect.maxY)
+        XCTAssertEqual(.init(Argonaut.tile), factory.shots[0].options.size.width)
+        XCTAssertEqual(.init(Argonaut.tile), factory.shots[0].options.size.height)
     }
     
     func testWidthByMax() {
@@ -43,6 +45,8 @@ final class TestDivide: XCTestCase {
         XCTAssertEqual(1, factory.shots[0].h)
         XCTAssertEqual(MKMapRect.world.width / 32, factory.shots[0].options.mapRect.width)
         XCTAssertEqual(MKMapRect.world.width / 256, factory.shots[0].options.mapRect.height)
+        XCTAssertEqual(.init(Argonaut.tile) * 8, factory.shots[0].options.size.width)
+        XCTAssertEqual(.init(Argonaut.tile), factory.shots[0].options.size.height)
     }
     
     func testHeightByMax() {
@@ -55,6 +59,8 @@ final class TestDivide: XCTestCase {
         XCTAssertEqual(8, factory.shots[0].h)
         XCTAssertEqual(MKMapRect.world.width / 256, factory.shots[0].options.mapRect.width)
         XCTAssertEqual(MKMapRect.world.width / 32, factory.shots[0].options.mapRect.height)
+        XCTAssertEqual(.init(Argonaut.tile), factory.shots[0].options.size.width)
+        XCTAssertEqual(.init(Argonaut.tile) * 8, factory.shots[0].options.size.height)
     }
     
     func testWidthByLimit() {
@@ -63,13 +69,13 @@ final class TestDivide: XCTestCase {
         factory.range = (8 ... 8)
         factory.divide()
         XCTAssertEqual(2, factory.shots.count)
-        XCTAssertEqual(10, factory.shots[0].w)
+        XCTAssertEqual(9, factory.shots[0].w)
         XCTAssertEqual(1, factory.shots[0].h)
-        XCTAssertEqual(6, factory.shots[1].w)
+        XCTAssertEqual(7, factory.shots[1].w)
         XCTAssertEqual(1, factory.shots[1].h)
-        XCTAssertEqual(MKMapRect.world.width / 16 / 16 * 10, factory.shots[0].options.mapRect.width)
+        XCTAssertEqual(MKMapRect.world.width / 16 / 16 * 9, factory.shots[0].options.mapRect.width)
         XCTAssertEqual(MKMapRect.world.width / 256, factory.shots[0].options.mapRect.height)
-        XCTAssertEqual(MKMapRect.world.width / 16 / 16 * 6, factory.shots[1].options.mapRect.width)
+        XCTAssertEqual(MKMapRect.world.width / 16 / 16 * 7, factory.shots[1].options.mapRect.width)
         XCTAssertEqual(MKMapRect.world.width / 256, factory.shots[1].options.mapRect.height)
     }
     
@@ -79,22 +85,22 @@ final class TestDivide: XCTestCase {
         factory.range = (8 ... 8)
         factory.divide()
         XCTAssertEqual(6, factory.shots.count)
-        XCTAssertEqual(10, factory.shots[0].w)
-        XCTAssertEqual(10, factory.shots[0].h)
-        XCTAssertEqual(10, factory.shots[1].w)
-        XCTAssertEqual(10, factory.shots[1].h)
-        XCTAssertEqual(10, factory.shots[2].w)
-        XCTAssertEqual(1, factory.shots[2].h)
-        XCTAssertEqual(1, factory.shots[3].w)
-        XCTAssertEqual(10, factory.shots[3].h)
-        XCTAssertEqual(1, factory.shots[4].w)
-        XCTAssertEqual(10, factory.shots[4].h)
-        XCTAssertEqual(1, factory.shots[5].w)
-        XCTAssertEqual(1, factory.shots[5].h)
-        XCTAssertEqual(MKMapRect.world.width / 16 / 16 * 10, factory.shots[0].options.mapRect.width)
-        XCTAssertEqual(MKMapRect.world.width / 16 / 16 * 10, factory.shots[0].options.mapRect.height)
-        XCTAssertEqual(MKMapRect.world.width / 16 / 16, factory.shots[5].options.mapRect.width)
-        XCTAssertEqual(MKMapRect.world.width / 16 / 16, factory.shots[5].options.mapRect.height)
+        XCTAssertEqual(9, factory.shots[0].w)
+        XCTAssertEqual(9, factory.shots[0].h)
+        XCTAssertEqual(9, factory.shots[1].w)
+        XCTAssertEqual(9, factory.shots[1].h)
+        XCTAssertEqual(9, factory.shots[2].w)
+        XCTAssertEqual(3, factory.shots[2].h)
+        XCTAssertEqual(2, factory.shots[3].w)
+        XCTAssertEqual(9, factory.shots[3].h)
+        XCTAssertEqual(2, factory.shots[4].w)
+        XCTAssertEqual(9, factory.shots[4].h)
+        XCTAssertEqual(2, factory.shots[5].w)
+        XCTAssertEqual(3, factory.shots[5].h)
+        XCTAssertEqual(MKMapRect.world.width / 16 / 16 * 9, factory.shots[0].options.mapRect.width)
+        XCTAssertEqual(MKMapRect.world.width / 16 / 16 * 9, factory.shots[0].options.mapRect.height)
+        XCTAssertEqual(MKMapRect.world.width / 16 / 16 * 2, factory.shots[5].options.mapRect.width)
+        XCTAssertEqual(MKMapRect.world.width / 16 / 16 * 3, factory.shots[5].options.mapRect.height)
     }
     
     func testFlightOne() {

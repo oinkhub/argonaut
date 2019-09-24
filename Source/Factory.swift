@@ -12,7 +12,7 @@ public final class Factory {
         mutating func update(_ size: Double) {
             options.dark()
             options.mapType = .standard
-            options.size = .init(width: Argonaut.tile, height: Argonaut.tile)
+            options.size = .init(width: Argonaut.tile * .init(w), height: Argonaut.tile * .init(h))
             options.mapRect = .init(x: .init(x) * size, y: .init(y) * size, width: .init(w) * size, height: .init(h) * size)
         }
     }
@@ -91,14 +91,14 @@ public final class Factory {
                 
                 while minX < maxX {
                     var y = minY
-                    let w = min(maxX - minX, 10)
+                    let w = min(maxX - minX, 9)
                     while y < maxY {
                         var shot = Shot()
                         shot.x = minX
                         shot.y = y
                         shot.z = z
                         shot.w = w
-                        shot.h = min(maxY - y, 10)
+                        shot.h = min(maxY - y, 9)
                         shot.update(proportion)
                         shots.append(shot)
                         y += shot.h
@@ -125,7 +125,7 @@ public final class Factory {
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let shot = self.shots.last else { return }
             self.progress((self.total - .init(self.shots.count)) / self.total)
-            self.timer.schedule(deadline: .now() + 15)
+            self.timer.schedule(deadline: .now() + 30)
             let shooter = MKMapSnapshotter(options: shot.options)
             self.shooter = shooter
             shooter.start(with: self.queue) { [weak self] in

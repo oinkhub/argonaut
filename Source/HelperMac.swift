@@ -19,6 +19,16 @@ extension NSImage {
         return result
     }
 }
+/*
+(0 ..< 5).forEach { x in
+    (0 ..< 5).forEach { y in
+        let image = NSImage(size: .init(width: 256, height: 256))
+        image.lockFocus()
+        result.image.draw(in: .init(x: 0, y: 0, width: 256, height: 256), from: .init(x: 256 * x, y: 256 * y, width: 256, height: 256), operation: .copy, fraction: 1)
+        image.unlockFocus()
+        chunk(NSBitmapImageRep(cgImage: image.cgImage(forProposedRect: nil, context: nil, hints: nil)!).representation(using: .png, properties: [:])!, tile: shot.tile, x: shot.x + x, y: shot.y + 4 - y)
+    }
+}*/
 
 extension MKMapSnapshotter.Options {
     func dark() {
