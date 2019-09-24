@@ -75,6 +75,15 @@ final class TestFactory: XCTestCase {
         XCTAssertEqual(3072, factory.shots.first?.options.mapRect.maxY)
     }
     
+    func testDivideByMax() {
+        factory.rect.size.width = MKMapRect.world.width / 32
+        factory.rect.size.height = MKMapRect.world.width / 256
+        factory.range = (8 ... 8)
+        factory.divide()
+        XCTAssertEqual(1, factory.shots.count)
+        XCTAssertEqual(MKMapRect.world.width / 32, factory.shots[0].options.mapRect.width)
+    }
+    
     func testRegister() {
         factory.mode = .flying
         factory.path = [.init(), .init(), .init()]
