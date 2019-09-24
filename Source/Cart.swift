@@ -29,8 +29,7 @@ public final class Cart {
                     data.append(self.buffer, count: read)
                     length -= read
                 } while length > 0
-                let decoded = Argonaut.decode(data)
-                return decoded
+                return data
             })
         }
     }

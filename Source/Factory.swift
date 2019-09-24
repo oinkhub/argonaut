@@ -158,10 +158,9 @@ public final class Factory {
     
     func chunk(_ split: [Split], z: Int) {
         split.forEach {
-            let chunk = Argonaut.code($0.data)
             _ = withUnsafeBytes(of: UInt8(z)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
-            _ = [UInt32($0.x), UInt32($0.y), UInt32(chunk.count)].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 12) }
-            _ = chunk.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
+            _ = [UInt32($0.x), UInt32($0.y), UInt32($0.data.count)].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 12) }
+            _ = $0.data.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
         }
     }
 }

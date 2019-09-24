@@ -1,5 +1,4 @@
 import Foundation
-import Compression
 
 public final class Argonaut {
     public static let tile = 512.0
@@ -149,25 +148,6 @@ public final class Argonaut {
         input.close()
         out.close()
         try! FileManager.default.removeItem(at: temporal)
-    }
-    
-    class func code(_ data: Data) -> Data {
-        data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
-            let result = Data(bytes: buffer, count: compression_encode_buffer(buffer, data.count * 10, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_LZMA))
-            buffer.deallocate()
-            return result
-        }
-    }
-
-    class func decode(_ data: Data) -> Data {
-        data.withUnsafeBytes {
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: data.count * 10)
-            let read = compression_decode_buffer(buffer, data.count * 10, $0.bindMemory(to: UInt8.self).baseAddress!, data.count, nil, COMPRESSION_LZMA)
-            let result = Data(bytes: buffer, count: read)
-            buffer.deallocate()
-            return result
-        }
     }
     
     private static func prepare() {
