@@ -3,9 +3,11 @@ import XCTest
 
 final class TestChunk: XCTestCase {
     private var factory: Factory!
+    private var split: Factory.Split!
     
     override func setUp() {
         factory = .init()
+        split = .init()
     }
     
     override func tearDown() {
@@ -14,7 +16,10 @@ final class TestChunk: XCTestCase {
     }
     
     func testAdd() {
-        factory.chunk(.init("hello world".utf8), x: 87, y: 76, z: 0)
+        split.data = .init("hello world".utf8)
+        split.x = 87
+        split.y = 76
+        factory.chunk([split], z: 0)
         let data = try! Data(contentsOf: Argonaut.temporal)
         XCTAssertEqual(87, data.subdata(in: 1 ..< 5).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
         XCTAssertEqual(76, data.subdata(in: 5 ..< 9).withUnsafeBytes { $0.bindMemory(to: UInt32.self)[0] })
@@ -22,8 +27,14 @@ final class TestChunk: XCTestCase {
     
     func testWrap() {
         let expect = expectation(description: "")
-        factory.chunk(.init("hello world".utf8), x: 87, y: 76, z: 3)
-        factory.chunk(.init("lorem ipsum".utf8), x: 34, y: 12, z: 4)
+        split.data = .init("hello world".utf8)
+        split.x = 87
+        split.y = 76
+        factory.chunk([split], z: 3)
+        split.data = .init("lorem ipsum".utf8)
+        split.x = 34
+        split.y = 12
+        factory.chunk([split], z: 4)
         Argonaut.save(factory)
         let cart = Argonaut.load(factory.item).1
         XCTAssertEqual(2, cart.map.keys.count)

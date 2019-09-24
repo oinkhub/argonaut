@@ -17,6 +17,12 @@ public final class Factory {
         }
     }
     
+    struct Split {
+        var data = Data()
+        var x = 0
+        var y = 0
+    }
+    
     public var error: ((Error) -> Void)!
     public var progress: ((Float) -> Void)!
     public var complete: ((Session.Item) -> Void)!
@@ -131,7 +137,7 @@ public final class Factory {
                     } else if let result = $0 {
                         self.shots.removeLast()
                         self.shoot()
-                        self.chunk(result.data, x: shot.x, y: shot.y, z: shot.z)
+                        self.chunk(result.image.split(shot), z: shot.z)
                         if self.shots.isEmpty {
                             self.out.close()
                             Argonaut.save(self)
@@ -150,10 +156,12 @@ public final class Factory {
         }
     }
     
-    func chunk(_ bits: Data, x: Int, y: Int, z: Int) {
-        let chunk = Argonaut.code(bits)
-        _ = withUnsafeBytes(of: UInt8(z)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
-        _ = [UInt32(x), UInt32(y), UInt32(chunk.count)].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 12) }
-        _ = chunk.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
+    func chunk(_ split: [Split], z: Int) {
+        split.forEach {
+            let chunk = Argonaut.code($0.data)
+            _ = withUnsafeBytes(of: UInt8(z)) { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 1) }
+            _ = [UInt32($0.x), UInt32($0.y), UInt32(chunk.count)].withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: 12) }
+            _ = chunk.withUnsafeBytes { out.write($0.bindMemory(to: UInt8.self).baseAddress!, maxLength: $0.count) }
+        }
     }
 }

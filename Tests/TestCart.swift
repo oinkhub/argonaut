@@ -4,10 +4,12 @@ import XCTest
 final class TestCart: XCTestCase {
     private var factory: Factory!
     private var cart: Cart!
+    private var split: Factory.Split!
     
     override func setUp() {
         try! FileManager.default.createDirectory(at: Argonaut.url, withIntermediateDirectories: true)
         factory = .init()
+        split = .init()
     }
     
     override func tearDown() {
@@ -18,8 +20,14 @@ final class TestCart: XCTestCase {
     func testTiles() {
         let expectA = expectation(description: "")
         let expectB = expectation(description: "")
-        factory.chunk(.init("hello world".utf8), x: 87, y: 76, z: 1)
-        factory.chunk(.init("lorem ipsum".utf8), x: 45, y: 12, z: 2)
+        split.data = .init("hello world".utf8)
+        split.x = 87
+        split.y = 76
+        factory.chunk([split], z: 1)
+        split.data = .init("lorem ipsum".utf8)
+        split.x = 45
+        split.y = 12
+        factory.chunk([split], z: 2)
         Argonaut.save(factory)
         cart = Argonaut.load(factory.item).1
         cart.tile(87, 76, 1) {
@@ -41,7 +49,7 @@ final class TestCart: XCTestCase {
     
     func testNil() {
         let expect = expectation(description: "")
-        factory.chunk(.init("hello world".utf8), x: 160, y: 280, z: 1)
+        factory.chunk([split], z: 1)
         Argonaut.save(factory)
         cart = Argonaut.load(factory.item).1
         cart.tile(320, 560, 0) {

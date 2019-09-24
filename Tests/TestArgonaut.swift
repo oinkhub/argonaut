@@ -76,8 +76,15 @@ final class TestArgonaut: XCTestCase {
     func testLoad() {
         let expectA = expectation(description: "")
         let expectB = expectation(description: "")
-        factory.chunk(.init("hello world".utf8), x: 87, y: 76, z: 1)
-        factory.chunk(.init("lorem ipsum dolec".utf8), x: 45, y: 12, z: 2)
+        var split = Factory.Split()
+        split.data = .init("hello world".utf8)
+        split.x = 87
+        split.y = 76
+        factory.chunk([split], z: 1)
+        split.data = .init("lorem ipsum dolec".utf8)
+        split.x = 45
+        split.y = 12
+        factory.chunk([split], z: 2)
         factory.path = [.init(), .init()]
         factory.path[0].name = "hello"
         factory.path[0].options = [.init()]
