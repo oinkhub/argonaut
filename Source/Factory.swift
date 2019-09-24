@@ -6,15 +6,14 @@ public final class Factory {
         var x = 0
         var y = 0
         var z = 0
+        var w = 0
+        var h = 0
         
-        mutating func update(_ x: Int, _ y: Int, _ z: Int, proportion: Double) {
-            self.x = x
-            self.y = y
-            self.z = z
+        mutating func update(_ size: Double) {
             options.dark()
             options.mapType = .standard
             options.size = .init(width: Argonaut.tile, height: Argonaut.tile)
-            options.mapRect = .init(x: Double(x) * proportion, y: Double(y) * proportion, width: proportion, height: proportion)
+            options.mapRect = .init(x: .init(x) * size, y: .init(y) * size, width: .init(w) * size, height: .init(h) * size)
         }
     }
     
@@ -70,27 +69,39 @@ public final class Factory {
     
     public func divide() {
         range.forEach { z in
-            let proportion = MKMapRect.world.width / pow(2, Double(z))
             if z == 1 {
-                let count = Int(pow(2, Double(z)))
-                (0 ..< count).forEach { x in
-                    (0 ..< count).forEach { y in
-                        var shot = Shot()
-                        shot.update(x, y, z, proportion: proportion)
-                        shots.append(shot)
-                    }
-                }
+                var shot = Shot()
+                shot.z = z
+                shot.w = 2
+                shot.h = 2
+                shot.update(MKMapRect.world.width / 2)
+                shots.append(shot)
             } else {
-                (Int(rect.minX / proportion) ..< Int(ceil(rect.maxX / proportion))).forEach { x in
-                    (Int(rect.minY / proportion) ..< Int(ceil(rect.maxY / proportion))).forEach { y in
+                let proportion = MKMapRect.world.width / pow(2, .init(z))
+                var minX = Int(rect.minX / proportion)
+                let minY = Int(rect.minY / proportion)
+                let maxX = Int(ceil(rect.maxX / proportion))
+                let maxY = Int(ceil(rect.maxY / proportion))
+                
+                while minX < maxX {
+                    var y = minY
+                    let w = min(maxX - minX, 10)
+                    while y < maxY {
                         var shot = Shot()
-                        shot.update(x, y, z, proportion: proportion)
+                        shot.x = minX
+                        shot.y = y
+                        shot.z = z
+                        shot.w = w
+                        shot.h = min(maxY - y, 10)
+                        shot.update(proportion)
                         shots.append(shot)
+                        y += shot.h
                     }
+                    minX += w
                 }
             }
         }
-        total = Float(shots.count)
+        total = .init(shots.count)
     }
     
     public func register() {
@@ -107,7 +118,7 @@ public final class Factory {
     public func shoot() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let shot = self.shots.last else { return }
-            self.progress((self.total - Float(self.shots.count)) / self.total)
+            self.progress((self.total - .init(self.shots.count)) / self.total)
             self.timer.schedule(deadline: .now() + 15)
             let shooter = MKMapSnapshotter(options: shot.options)
             self.shooter = shooter

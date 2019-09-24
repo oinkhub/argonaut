@@ -29,61 +29,6 @@ final class TestFactory: XCTestCase {
         XCTAssertEqual(-50.002, MKMapPoint(x: 0, y: factory.rect.maxY).coordinate.latitude, accuracy: 0.00001)
     }
     
-    func testDivide1() {
-        factory.rect.size.width = 5120
-        factory.rect.size.height = 5120
-        factory.range = (18 ... 18)
-        factory.divide()
-        XCTAssertEqual(25, factory.shots.count)
-        XCTAssertEqual(0, factory.shots.first?.options.mapRect.minX)
-        XCTAssertEqual(0, factory.shots.first?.options.mapRect.minY)
-        XCTAssertEqual(1024, factory.shots.first?.options.mapRect.maxX)
-        XCTAssertEqual(1024, factory.shots.first?.options.mapRect.maxY)
-        XCTAssertEqual(512, factory.shots.first?.options.size.width)
-        XCTAssertEqual(512, factory.shots.first?.options.size.height)
-    }
-    
-    func testDivideMin() {
-        factory.rect.origin.x = 5119
-        factory.rect.origin.y = 5119
-        factory.rect.size.width = 1
-        factory.rect.size.height = 1
-        factory.range = (18 ... 18)
-        factory.divide()
-        XCTAssertEqual(1, factory.shots.count)
-    }
-    
-    func testDivide4() {
-        factory.rect.size.width = 5121
-        factory.rect.size.height = 5121
-        factory.range = (18 ... 18)
-        factory.divide()
-        XCTAssertEqual(36, factory.shots.count)
-    }
-    
-    func testDivideCentred() {
-        factory.rect.origin.x = 2559
-        factory.rect.origin.y = 2559
-        factory.rect.size.width = 1
-        factory.rect.size.height = 1
-        factory.range = (18 ... 18)
-        factory.divide()
-        XCTAssertEqual(1, factory.shots.count)
-        XCTAssertEqual(2048, factory.shots.first?.options.mapRect.minX)
-        XCTAssertEqual(2048, factory.shots.first?.options.mapRect.minY)
-        XCTAssertEqual(3072, factory.shots.first?.options.mapRect.maxX)
-        XCTAssertEqual(3072, factory.shots.first?.options.mapRect.maxY)
-    }
-    
-    func testDivideByMax() {
-        factory.rect.size.width = MKMapRect.world.width / 32
-        factory.rect.size.height = MKMapRect.world.width / 256
-        factory.range = (8 ... 8)
-        factory.divide()
-        XCTAssertEqual(1, factory.shots.count)
-        XCTAssertEqual(MKMapRect.world.width / 32, factory.shots[0].options.mapRect.width)
-    }
-    
     func testRegister() {
         factory.mode = .flying
         factory.path = [.init(), .init(), .init()]
@@ -133,15 +78,5 @@ final class TestFactory: XCTestCase {
         factory.filter()
         XCTAssertEqual(1, factory.range.min()!)
         XCTAssertEqual(7, factory.range.max()!)
-    }
-    
-    func testDivideFlight1() {
-        factory.rect.size.width = 1
-        factory.rect.size.height = 1
-        factory.range = (1 ... 1)
-        factory.divide()
-        XCTAssertEqual(4, factory.shots.count)
-        XCTAssertEqual(0, factory.shots.first?.options.mapRect.minX)
-        XCTAssertEqual(0, factory.shots.first?.options.mapRect.minY)
     }
 }
