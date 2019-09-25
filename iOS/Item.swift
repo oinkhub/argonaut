@@ -141,11 +141,21 @@ final class Item: UIControl {
         update()
     }
     
-    @objc private func down() { backgroundColor = .dark }
-    @objc private func up() { UIView.animate(withDuration: 0.3) { [weak self] in self?.backgroundColor = .clear } }
+    @objc private func down() {
+        guard !isSelected else { return }
+        backgroundColor = .dark
+    }
+    
+    @objc private func up() {
+        guard !isSelected else { return }
+        UIView.animate(withDuration: 0.3) { [weak self] in self?.backgroundColor = .clear }
+    }
     
     private func update() {
-        index.textColor = isSelected ? .black : .halo
-        base.backgroundColor = isSelected ? .halo : .black
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            self?.index.textColor = self?.isSelected == true ? .black : .halo
+            self?.base.backgroundColor = self?.isSelected == true ? .halo : .black
+            self?.backgroundColor = self?.isSelected == true ? .dark : .clear
+        }
     }
 }

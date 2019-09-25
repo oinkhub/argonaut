@@ -56,7 +56,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     func mapView(_: MKMapView, annotationView: MKAnnotationView, didChange: MKAnnotationView.DragState, fromOldState: MKAnnotationView.DragState) {
         if didChange == .ending && fromOldState == .starting {
             if let mark = annotationView.annotation as? Mark {
-                refresh()
+                refreshSelecting()
                 locate(mark)
                 direct(mark)
             }
@@ -85,14 +85,14 @@ final class Map: MKMapView, MKMapViewDelegate {
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) {
         didDeselect.isSelected = false
         if let path = (didDeselect.annotation as? Mark)?.path {
-            selected?(path, false)
+            selected(path, false)
         }
     }
     
     func mapView(_: MKMapView, didSelect: MKAnnotationView) {
         didSelect.isSelected = true
         if let path = (didSelect.annotation as? Mark)?.path {
-            selected?(path, true)
+            selected(path, true)
         }
         if let coordinate = didSelect.annotation?.coordinate {
             setCenter(coordinate, animated: true)
@@ -123,7 +123,7 @@ final class Map: MKMapView, MKMapViewDelegate {
         }
         self.path.remove(at: index)
         line()
-        refresh()
+        refreshSelecting()
         annotations.compactMap { $0 as? Mark }.compactMap { view(for: $0) as? Marker }.forEach { marker in
             if let index = self.path.firstIndex(where: { $0 === (marker.annotation as? Mark)?.path }) {
                 marker.index = "\(index + 1)"
@@ -172,7 +172,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     @objc func pin() {
         let mark = add(centerCoordinate)
         selectAnnotation(mark, animated: true)
-        refresh()
+        refreshSelecting()
         locate(mark)
     }
     
@@ -229,7 +229,7 @@ final class Map: MKMapView, MKMapViewDelegate {
                 }
                 if app.session.settings.mode == mode {
                     self?.line()
-                    self?.refresh()
+                    self?.refreshSelecting()
                 }
             }
         }
@@ -243,7 +243,14 @@ final class Map: MKMapView, MKMapViewDelegate {
         path.options.append(option)
         if app.session.settings.mode == .flying {
             line()
-            refresh()
+            refreshSelecting()
+        }
+    }
+    
+    private func refreshSelecting() {
+        refresh()
+        if let current = selectedAnnotations.compactMap({ $0 as? Mark }).first?.path {
+            selected(current, true)
         }
     }
     

@@ -137,8 +137,13 @@ final class List: UIView {
     }
     
     func selected(_ path: Path, active: Bool) {
-        scroll.content.subviews.compactMap { $0 as? Item }.first(where: { $0.path === path })?.isSelected = active
+        if let item = scroll.content.subviews.compactMap({ $0 as? Item }).first(where: { $0.path === path }) {
+            item.isSelected = active
+            scroll(item)
+        }
     }
+    
+    private func scroll(_ to: Item) { scroll(max(to.frame.midY - 150, -to.bounds.midY)) }
     
     private func scroll(_ to: CGFloat) {
         var offset = to
@@ -155,7 +160,7 @@ final class List: UIView {
         if let mark = map?.annotations.first(where: { ($0 as? Mark)?.path === item.path }) {
             map?.selectAnnotation(mark, animated: true)
         }
-        scroll(max(item.frame.midY - 150, -item.bounds.midY))
+        scroll(item)
     }
     
     @objc private func remove(_ button: UIButton) {
