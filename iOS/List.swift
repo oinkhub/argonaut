@@ -20,7 +20,7 @@ final class List: UIView {
         
         heightAnchor.constraint(equalToConstant: 300).isActive = true
         
-        scroll.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        scroll.topAnchor.constraint(equalTo: topAnchor, constant: 1).isActive = true
         scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         if #available(iOS 11.0, *) {
@@ -120,13 +120,7 @@ final class List: UIView {
         } else {
             header.topAnchor.constraint(greaterThanOrEqualTo: previous!.bottomAnchor, constant: 15).isActive = true
             scroll.content.layoutIfNeeded()
-            var offset = scroll.content.frame.height - 300
-            if #available(iOS 11.0, *) {
-                offset += safeAreaInsets.bottom
-            }
-            UIView.animate(withDuration: 0.3) { [weak self] in
-                self?.scroll.contentOffset.y = offset
-            }
+            scroll(scroll.content.frame.height - 300)
         }
     }
     
@@ -142,11 +136,26 @@ final class List: UIView {
         scroll.content.subviews.compactMap { $0 as? Item }.first(where: { $0.path === path })?.name.text = path.name
     }
     
+    func selected(_ path: Path, active: Bool) {
+        scroll.content.subviews.compactMap { $0 as? Item }.first(where: { $0.path === path })?.isSelected = active
+    }
+    
+    private func scroll(_ to: CGFloat) {
+        var offset = to
+        if #available(iOS 11.0, *) {
+            offset += safeAreaInsets.bottom
+        }
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            self?.scroll.contentOffset.y = offset
+        }
+    }
+    
     @objc private func focus(_ item: Item) {
         map?.selectedAnnotations.forEach { map?.deselectAnnotation($0, animated: true) }
         if let mark = map?.annotations.first(where: { ($0 as? Mark)?.path === item.path }) {
             map?.selectAnnotation(mark, animated: true)
         }
+        scroll(max(item.frame.midY - 150, -item.bounds.midY))
     }
     
     @objc private func remove(_ button: UIButton) {

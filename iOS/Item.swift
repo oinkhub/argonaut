@@ -29,10 +29,13 @@ final class Item: UIControl {
         }
     }
     
+    override var isSelected: Bool { didSet { update() } }
     private(set) weak var path: Path?
     private(set) weak var delete: UIButton?
     private(set) weak var distance: UILabel!
     private(set) weak var name: UILabel!
+    private weak var index: UILabel!
+    private weak var base: UIView!
     
     required init?(coder: NSCoder) { nil }
     init(_ item: (Int, Path), deletable: Bool) {
@@ -61,11 +64,16 @@ final class Item: UIControl {
         addSubview(name)
         self.name = name
         
+        let base = UIView()
+        base.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(base)
+        self.base = base
+        
         let index = UILabel()
         index.translatesAutoresizingMaskIntoConstraints = false
         index.text = "\(item.0 + 1)"
-        index.textColor = .halo
         addSubview(index)
+        self.index = index
         
         let distance = UILabel()
         distance.translatesAutoresizingMaskIntoConstraints = false
@@ -76,6 +84,8 @@ final class Item: UIControl {
         
         if deletable {
             index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .bold)
+            
+            base.layer.cornerRadius = 15
             
             let delete = UIButton()
             delete.translatesAutoresizingMaskIntoConstraints = false
@@ -93,11 +103,19 @@ final class Item: UIControl {
             delete.widthAnchor.constraint(equalToConstant: 60).isActive = true
             delete.heightAnchor.constraint(equalToConstant: 60).isActive = true
             
-            index.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 10).isActive = true
+            index.rightAnchor.constraint(equalTo: delete.leftAnchor).isActive = true
+            
+            base.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            base.heightAnchor.constraint(equalToConstant: 30).isActive = true
         } else {
             index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .bold)
             
-            index.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
+            base.layer.cornerRadius = 18
+            
+            index.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
+            
+            base.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            base.heightAnchor.constraint(equalToConstant: 36).isActive = true
         }
         
         bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 25).isActive = true
@@ -111,13 +129,23 @@ final class Item: UIControl {
         name.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
         name.topAnchor.constraint(equalTo: topAnchor, constant: 25).isActive = true
         
+        base.centerXAnchor.constraint(equalTo: index.centerXAnchor).isActive = true
+        base.centerYAnchor.constraint(equalTo: index.centerYAnchor).isActive = true
+        
         index.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         distance.leftAnchor.constraint(equalTo: name.leftAnchor).isActive = true
         distance.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 2).isActive = true
         distance.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
+        
+        update()
     }
     
     @objc private func down() { backgroundColor = .dark }
     @objc private func up() { UIView.animate(withDuration: 0.3) { [weak self] in self?.backgroundColor = .clear } }
+    
+    private func update() {
+        index.textColor = isSelected ? .black : .halo
+        base.backgroundColor = isSelected ? .halo : .black
+    }
 }

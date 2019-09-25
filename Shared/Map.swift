@@ -4,6 +4,7 @@ import MapKit
 final class Map: MKMapView, MKMapViewDelegate {
     var refresh: (() -> Void)!
     var rename: ((Path) -> Void)!
+    var selected: ((Path, Bool) -> Void)!
     var user: ((CLLocation) -> Void)?
     var zoom: ((CGFloat) -> Void)?
     var drag = true
@@ -72,11 +73,27 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
         zoom?(.init(round(log2(360 * Double(frame.width) / Argonaut.tile / region.span.longitudeDelta))))
+        if let selected = selectedAnnotations.first(where: { !($0 is MKUserLocation) }) {
+            if !annotations(in: visibleMapRect).contains(selected as! AnyHashable) {
+                print("hidden")
+            } else {
+                print("visible")
+            }
+        }
     }
     
-    func mapView(_: MKMapView, didDeselect: MKAnnotationView) { didDeselect.isSelected = false }
+    func mapView(_: MKMapView, didDeselect: MKAnnotationView) {
+        didDeselect.isSelected = false
+        if let path = (didDeselect.annotation as? Mark)?.path {
+            selected?(path, false)
+        }
+    }
+    
     func mapView(_: MKMapView, didSelect: MKAnnotationView) {
         didSelect.isSelected = true
+        if let path = (didSelect.annotation as? Mark)?.path {
+            selected?(path, true)
+        }
         if let coordinate = didSelect.annotation?.coordinate {
             setCenter(coordinate, animated: true)
         }

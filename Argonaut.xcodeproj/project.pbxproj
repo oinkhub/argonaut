@@ -106,6 +106,7 @@
 		DAB929C1233781F00090648D /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C0233781F00090648D /* Main.swift */; };
 		DAB929C32337A7DF0090648D /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C22337A7DF0090648D /* Result.swift */; };
 		DAB929C52337A8280090648D /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C42337A8280090648D /* Result.swift */; };
+		DABB24F6233B6422001B32E5 /* Arrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABB24F5233B6422001B32E5 /* Arrow.swift */; };
 		DAC775652331153E00EF4724 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC775642331153E00EF4724 /* Menu.swift */; };
 		DAE82F9C2337C53F00408392 /* Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE82F9B2337C53F00408392 /* Create.swift */; };
 /* End PBXBuildFile section */
@@ -228,6 +229,7 @@
 		DAB929C0233781F00090648D /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		DAB929C22337A7DF0090648D /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		DAB929C42337A8280090648D /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		DABB24F5233B6422001B32E5 /* Arrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Arrow.swift; sourceTree = "<group>"; };
 		DAC775642331153E00EF4724 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		DAE82F9B2337C53F00408392 /* Create.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Create.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -324,6 +326,7 @@
 				CEE098302302E3E200321C07 /* About.swift */,
 				CEDB361F2302A5630078E521 /* Alert.swift */,
 				CEDE10FB22D71F2400DD796B /* App.swift */,
+				DABB24F5233B6422001B32E5 /* Arrow.swift */,
 				CE354513232D11B90022800F /* Bar.swift */,
 				CEDCC688230683C500AAF0C8 /* Button.swift */,
 				DA9EE21C233385CD00D83514 /* Control.swift */,
@@ -712,6 +715,7 @@
 				CECD5636231131AD0085E0C3 /* Load.swift in Sources */,
 				CEDE110922D71F5300DD796B /* Shared.swift in Sources */,
 				CEDB36202302A5630078E521 /* Alert.swift in Sources */,
+				DABB24F6233B6422001B32E5 /* Arrow.swift in Sources */,
 				DA9EE21D233385CD00D83514 /* Control.swift in Sources */,
 				CE0FE656230571D70058386B /* Field.swift in Sources */,
 				CEBB3A6423040F7200C5F61A /* Privacy.swift in Sources */,
