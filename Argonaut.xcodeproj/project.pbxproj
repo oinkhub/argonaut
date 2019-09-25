@@ -92,6 +92,7 @@
 		CEDE111822D7207800DD796B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CEDE111522D7207800DD796B /* Localizable.strings */; };
 		CEE098312302E3E200321C07 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE098302302E3E200321C07 /* About.swift */; };
 		CEF5514922F2F3D900A16265 /* TestPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF5514822F2F3D900A16265 /* TestPath.swift */; };
+		DA052B05233B361C006D6870 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA052B04233B361C006D6870 /* MapKit.framework */; };
 		DA0FBEAD2332815000D935A9 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEAC2332815000D935A9 /* List.swift */; };
 		DA0FBEAF2332832400D935A9 /* Scroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEAE2332832400D935A9 /* Scroll.swift */; };
 		DA0FBEB12332875C00D935A9 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEB02332875C00D935A9 /* Item.swift */; };
@@ -213,6 +214,7 @@
 		CEDE111A22D720A500DD796B /* Argonaut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argonaut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE098302302E3E200321C07 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		CEF5514822F2F3D900A16265 /* TestPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPath.swift; sourceTree = "<group>"; };
+		DA052B04233B361C006D6870 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		DA0FBEAC2332815000D935A9 /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		DA0FBEAE2332832400D935A9 /* Scroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scroll.swift; sourceTree = "<group>"; };
 		DA0FBEB02332875C00D935A9 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA052B05233B361C006D6870 /* MapKit.framework in Frameworks */,
 				CEC5A3C722EAFD9600CE3B07 /* libArgonaut.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -275,6 +278,7 @@
 		CEC5A3C622EAFD9600CE3B07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DA052B04233B361C006D6870 /* MapKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1165,7 +1169,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 356;
+				CURRENT_PROJECT_VERSION = 359;
 				DEVELOPMENT_TEAM = 7AMWG3RLHN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1188,7 +1192,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 356;
+				MARKETING_VERSION = 359;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1235,7 +1239,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 356;
+				CURRENT_PROJECT_VERSION = 359;
 				DEVELOPMENT_TEAM = 7AMWG3RLHN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1253,7 +1257,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 356;
+				MARKETING_VERSION = 359;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = argonaut.mac;
