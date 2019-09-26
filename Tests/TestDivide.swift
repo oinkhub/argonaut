@@ -145,4 +145,16 @@ final class TestDivide: XCTestCase {
         XCTAssertEqual(2, factory.shots[7].w)
         XCTAssertEqual(2, factory.shots[7].h)
     }
+    
+    func testMaxWorldAllowed() {
+        factory.rect.size.width = MKMapRect.world.width / 8
+        factory.rect.size.height = MKMapRect.world.width / 8
+        factory.range = (3 ... 3)
+        factory.divide()
+        XCTAssertEqual(4, factory.shots.count)
+        XCTAssertEqual(-3, factory.shots[0].x)
+        XCTAssertEqual(-2, factory.shots[0].y)
+        XCTAssertEqual(.init(pow(2.0, 2)), factory.shots[0].w)
+        XCTAssertEqual(.init(pow(2.0, 2)), factory.shots[0].h)
+    }
 }

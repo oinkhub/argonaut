@@ -15,14 +15,14 @@ final class Liner: MKOverlayRenderer {
             scale = 1
         case .flying:
             color = .flying
-            scale = 4
+            scale = 1.2
         }
         super.init(overlay: line)
         path.addLines(between: line.point.map(point(for:)))
     }
     
     override func draw(_: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
-        let size = MKRoadWidthAtZoomScale(zoomScale) * scale
+        let size = pow(MKRoadWidthAtZoomScale(zoomScale), scale)
         draw(size * 1.2, color: .black, context: context)
         draw(size, color: color, context: context)
     }
