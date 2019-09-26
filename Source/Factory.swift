@@ -34,7 +34,7 @@ public final class Factory {
     let item = Session.Item()
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
-    private let margin = 0.002
+    private let margin = 0.004
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
     private let out = OutputStream(url: Argonaut.temporal, append: false)!
@@ -54,9 +54,9 @@ public final class Factory {
     public func filter() {
         path.forEach { $0.options.removeAll { $0.mode != mode } }
         if mode == .flying {
-            range = (1 ... 7)
+            range = (1 ... 8)
         } else {
-            range = (12 ... 18)
+            range = (10 ... 18)
         }
     }
     
