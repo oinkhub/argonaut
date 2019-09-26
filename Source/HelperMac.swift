@@ -3,7 +3,7 @@ import MapKit
 extension NSImage {
     func split(_ shot: Factory.Shot) -> [Factory.Split] {
         var result = [Factory.Split]()
-        (0 ..< shot.w).forEach { x in
+        (1 ..< shot.w).forEach { x in
             (0 ..< shot.h).forEach { y in
                 let image = NSImage(size: .init(width: Argonaut.tile, height: Argonaut.tile))
                 image.lockFocus()

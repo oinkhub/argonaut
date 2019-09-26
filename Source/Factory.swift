@@ -34,7 +34,8 @@ public final class Factory {
     let item = Session.Item()
     private weak var shooter: MKMapSnapshotter?
     private var total = Float()
-    private let margin = 0.004
+    private let margin = 0.001
+    private let padding = 2
     private let queue = DispatchQueue(label: "", qos: .userInteractive, target: .global(qos: .userInteractive))
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
     private let out = OutputStream(url: Argonaut.temporal, append: false)!
@@ -54,9 +55,9 @@ public final class Factory {
     public func filter() {
         path.forEach { $0.options.removeAll { $0.mode != mode } }
         if mode == .flying {
-            range = (1 ... 9)
+            range = (2 ... 11)
         } else {
-            range = (10 ... 19)
+            range = (13 ... 19)
         }
     }
     
@@ -75,30 +76,37 @@ public final class Factory {
     
     public func divide() {
         range.forEach { z in
-            if z == 1 {
-                var shot = Shot()
-                shot.z = z
-                shot.w = 2
-                shot.h = 2
-                shot.update(MKMapRect.world.width / 2)
-                shots.append(shot)
+            if z == 2 {
+                (-1 ..< 3).forEach { x in
+                    (0 ..< 2).forEach { y in
+                        var shot = Shot()
+                        shot.x = x
+                        shot.y = y * 2
+                        shot.z = z
+                        shot.w = 2
+                        shot.h = 2
+                        shot.update(MKMapRect.world.width / 4)
+                        shots.append(shot)
+                    }
+                }
             } else {
+                let max = Int(min(pow(2, Double(z - 1)), 10))
                 let proportion = MKMapRect.world.width / pow(2, .init(z))
-                var minX = Int(rect.minX / proportion)
-                let minY = Int(rect.minY / proportion)
-                let maxX = Int(ceil(rect.maxX / proportion))
-                let maxY = Int(ceil(rect.maxY / proportion))
+                var minX = Int(rect.minX / proportion) - padding
+                let minY = Int(rect.minY / proportion) - padding
+                let maxX = Int(ceil(rect.maxX / proportion)) + padding
+                let maxY = Int(ceil(rect.maxY / proportion)) + padding
                 
                 while minX < maxX {
                     var y = minY
-                    let w = min(maxX - minX, 10)
+                    let w = min(maxX - minX, max - 1)
                     while y < maxY {
                         var shot = Shot()
-                        shot.x = minX
+                        shot.x = minX - 1
                         shot.y = y
                         shot.z = z
-                        shot.w = w
-                        shot.h = min(maxY - y, 10)
+                        shot.w = w + 1
+                        shot.h = min(maxY - y, max)
                         shot.update(proportion)
                         shots.append(shot)
                         y += shot.h

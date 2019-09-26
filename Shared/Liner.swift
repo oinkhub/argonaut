@@ -15,7 +15,7 @@ final class Liner: MKOverlayRenderer {
             scale = 1
         case .flying:
             color = .flying
-            scale = 6
+            scale = 4
         }
         super.init(overlay: line)
         path.addLines(between: line.point.map(point(for:)))

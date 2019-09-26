@@ -3,7 +3,7 @@ import MapKit
 extension UIImage {
     func split(_ shot: Factory.Shot) -> [Factory.Split] {
         var result = [Factory.Split]()
-        (0 ..< shot.w).forEach { x in
+        (1 ..< shot.w).forEach { x in
             (0 ..< shot.h).forEach { y in
                 UIGraphicsBeginImageContext(.init(width: Argonaut.tile * 2, height: Argonaut.tile * 2))
                 UIGraphicsGetCurrentContext()!.translateBy(x: 0, y: .init(Argonaut.tile) * 2)

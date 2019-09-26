@@ -40,7 +40,7 @@ final class User: MKAnnotationView {
         self.circle = circle
         
         heading.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        heading.heightAnchor.constraint(equalToConstant: 90).isActive = true
+        heading.heightAnchor.constraint(equalToConstant: 110).isActive = true
         heading.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         heading.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         

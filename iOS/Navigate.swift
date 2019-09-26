@@ -31,8 +31,7 @@ final class Navigate: World {
         
         _close.centerYAnchor.constraint(equalTo: map.topAnchor, constant: -22).isActive = true
         
-        zoom.topAnchor.constraint(equalTo: map.topAnchor, constant: 10).isActive = true
-        zoom.leftAnchor.constraint(equalTo: map.leftAnchor, constant: 10).isActive = true
+        zoom.topAnchor.constraint(equalTo: map.topAnchor, constant: 22).isActive = true
         
         title.centerYAnchor.constraint(equalTo: _close.centerYAnchor).isActive = true
         title.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -41,8 +40,10 @@ final class Navigate: World {
         
         if #available(iOS 11.0, *) {
             map.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 44).isActive = true
+            zoom.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 22).isActive = true
         } else {
             map.topAnchor.constraint(equalTo: topAnchor, constant: 44).isActive = true
+            zoom.leftAnchor.constraint(equalTo: map.leftAnchor, constant: 22).isActive = true
         }
         
         list.refresh()

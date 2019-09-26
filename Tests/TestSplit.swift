@@ -10,10 +10,10 @@ final class TestSplit: XCTestCase {
         shot = .init()
     }
     
-    func testDivideByOne() {
-        shot.x = 1
+    func testResultOne() {
+        shot.x = 0
         shot.y = 2
-        shot.w = 1
+        shot.w = 2
         shot.h = 1
         let split = image.split(shot)
         XCTAssertEqual(1, split.count)
@@ -22,10 +22,9 @@ final class TestSplit: XCTestCase {
         XCTAssertFalse(split[0].data.isEmpty)
     }
     
-    func testDivideWidthByTwo() {
-        shot.x = 1
+    func testResultTwo() {
         shot.y = 2
-        shot.w = 2
+        shot.w = 3
         shot.h = 1
         let split = image.split(shot)
         XCTAssertEqual(2, split.count)
@@ -38,15 +37,24 @@ final class TestSplit: XCTestCase {
     }
     
     func testInverseY() {
-        shot.w = 1
+        shot.w = 2
         shot.h = 3
         let split = image.split(shot)
         XCTAssertEqual(3, split.count)
-        XCTAssertEqual(0, split[0].x)
+        XCTAssertEqual(1, split[0].x)
         XCTAssertEqual(2, split[0].y)
-        XCTAssertEqual(0, split[1].x)
+        XCTAssertEqual(1, split[1].x)
         XCTAssertEqual(1, split[1].y)
-        XCTAssertEqual(0, split[2].x)
+        XCTAssertEqual(1, split[2].x)
         XCTAssertEqual(0, split[2].y)
+    }
+    
+    func testMargin() {
+        shot.w = 2
+        shot.h = 1
+        let split = image.split(shot)
+        XCTAssertEqual(1, split.count)
+        XCTAssertEqual(1, split[0].x)
+        XCTAssertEqual(0, split[0].y)
     }
 }

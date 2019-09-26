@@ -37,7 +37,7 @@ final class Zoom: UIView {
         addSubview(range)
         
         widthAnchor.constraint(equalToConstant: 12).isActive = true
-        heightAnchor.constraint(equalToConstant: 42).isActive = true
+        heightAnchor.constraint(equalToConstant: 46).isActive = true
         
         track.widthAnchor.constraint(equalToConstant: 4).isActive = true
         track.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -57,7 +57,6 @@ final class Zoom: UIView {
     }
     
     func update(_ value: CGFloat) {
-        print("zoom: \(value)")
         centre.constant = value * -2
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }

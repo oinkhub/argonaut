@@ -85,14 +85,14 @@ final class Map: MKMapView, MKMapViewDelegate {
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) {
         didDeselect.isSelected = false
         if let path = (didDeselect.annotation as? Mark)?.path {
-            selected(path, false)
+//            selected(path, false)
         }
     }
     
     func mapView(_: MKMapView, didSelect: MKAnnotationView) {
         didSelect.isSelected = true
         if let path = (didSelect.annotation as? Mark)?.path {
-            selected(path, true)
+//            selected(path, true)
         }
         if let coordinate = didSelect.annotation?.coordinate {
             setCenter(coordinate, animated: true)
@@ -250,7 +250,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     private func refreshSelecting() {
         refresh()
         if let current = selectedAnnotations.compactMap({ $0 as? Mark }).first?.path {
-            selected(current, true)
+//            selected(current, true)
         }
     }
     

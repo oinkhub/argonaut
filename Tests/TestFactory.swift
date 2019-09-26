@@ -23,10 +23,10 @@ final class TestFactory: XCTestCase {
         factory.path[0].options = [.init()]
         factory.path[0].options[0].points = [(-50, 60), (70, -80), (-30, 20), (82, -40)]
         factory.measure()
-        XCTAssertEqual(-80.004, factory.rect.origin.coordinate.longitude, accuracy: 0.00001)
-        XCTAssertEqual(82.004, factory.rect.origin.coordinate.latitude, accuracy: 0.00001)
-        XCTAssertEqual(60.004, MKMapPoint(x: factory.rect.maxX, y: 0).coordinate.longitude, accuracy: 0.00001)
-        XCTAssertEqual(-50.004, MKMapPoint(x: 0, y: factory.rect.maxY).coordinate.latitude, accuracy: 0.00001)
+        XCTAssertEqual(-80.001, factory.rect.origin.coordinate.longitude, accuracy: 0.00001)
+        XCTAssertEqual(82.001, factory.rect.origin.coordinate.latitude, accuracy: 0.00001)
+        XCTAssertEqual(60.001, MKMapPoint(x: factory.rect.maxX, y: 0).coordinate.longitude, accuracy: 0.00001)
+        XCTAssertEqual(-50.001, MKMapPoint(x: 0, y: factory.rect.maxY).coordinate.latitude, accuracy: 0.00001)
     }
     
     func testRegister() {
@@ -71,12 +71,12 @@ final class TestFactory: XCTestCase {
     func testRange() {
         factory.mode = .driving
         factory.filter()
-        XCTAssertEqual(10, factory.range.min()!)
+        XCTAssertEqual(13, factory.range.min()!)
         XCTAssertEqual(19, factory.range.max()!)
         
         factory.mode = .flying
         factory.filter()
-        XCTAssertEqual(1, factory.range.min()!)
-        XCTAssertEqual(9, factory.range.max()!)
+        XCTAssertEqual(2, factory.range.min()!)
+        XCTAssertEqual(11, factory.range.max()!)
     }
 }

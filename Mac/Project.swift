@@ -17,6 +17,7 @@ final class Project: NSView, NSTextViewDelegate {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         wantsLayer = true
+        layer!.backgroundColor = .clear
         setAccessibilityElement(true)
         setAccessibilityRole(.button)
         setAccessibilityLabel(item.name)
@@ -218,7 +219,7 @@ final class Project: NSView, NSTextViewDelegate {
     }
     
     @objc private func navigate() {
-        if app.main.bar._edit.enabled {
+        if layer!.backgroundColor == .clear && app.main.bar._edit.enabled {
             app.main.deselect()
             layer!.backgroundColor = .dark
             Load.navigate(item)
