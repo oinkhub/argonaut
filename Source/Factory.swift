@@ -54,9 +54,9 @@ public final class Factory {
     public func filter() {
         path.forEach { $0.options.removeAll { $0.mode != mode } }
         if mode == .flying {
-            range = (1 ... 8)
+            range = (1 ... 9)
         } else {
-            range = (10 ... 18)
+            range = (10 ... 19)
         }
     }
     
@@ -91,14 +91,14 @@ public final class Factory {
                 
                 while minX < maxX {
                     var y = minY
-                    let w = min(maxX - minX, 5)
+                    let w = min(maxX - minX, 10)
                     while y < maxY {
                         var shot = Shot()
                         shot.x = minX
                         shot.y = y
                         shot.z = z
                         shot.w = w
-                        shot.h = min(maxY - y, 5)
+                        shot.h = min(maxY - y, 10)
                         shot.update(proportion)
                         shots.append(shot)
                         y += shot.h

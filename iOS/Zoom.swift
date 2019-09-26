@@ -57,6 +57,7 @@ final class Zoom: UIView {
     }
     
     func update(_ value: CGFloat) {
+        print("zoom: \(value)")
         centre.constant = value * -2
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }

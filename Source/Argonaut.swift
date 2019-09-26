@@ -1,7 +1,7 @@
 import Foundation
 
 public final class Argonaut {
-    public static let tile = 512.0
+    public static let tile = 256.0
     static let size = 100_000
     static let root = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     static let url = root.appendingPathComponent("maps")
