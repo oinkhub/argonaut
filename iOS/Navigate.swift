@@ -2,6 +2,7 @@ import Argonaut
 import MapKit
 
 final class Navigate: World {
+    override var pinning: Bool { false }
     private weak var zoom: Zoom!
     
     required init?(coder: NSCoder) { nil }

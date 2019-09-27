@@ -113,7 +113,6 @@ final class Project: UIControl, UITextViewDelegate {
         field.leftAnchor.constraint(equalTo: base.rightAnchor).isActive = true
         field.rightAnchor.constraint(equalTo: delete.leftAnchor).isActive = true
         
-        base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         base.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
         base.widthAnchor.constraint(equalToConstant: 26).isActive = true
         base.heightAnchor.constraint(equalToConstant: 26).isActive = true
@@ -127,10 +126,19 @@ final class Project: UIControl, UITextViewDelegate {
         travel.leftAnchor.constraint(equalTo: field.leftAnchor, constant: 15).isActive = true
         travel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
-        left = delete.leftAnchor.constraint(equalTo: rightAnchor)
-        left.isActive = true
-        
         share.leftAnchor.constraint(equalTo: delete.rightAnchor).isActive = true
+        
+        if #available(iOS 11.0, *) {
+            base.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
+            
+            left = delete.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 100)
+        } else {
+            base.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+            
+            left = delete.leftAnchor.constraint(equalTo: rightAnchor, constant: 100)
+        }
+        
+        left.isActive = true
     }
     
     func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
@@ -161,7 +169,7 @@ final class Project: UIControl, UITextViewDelegate {
     
     func done() {
         field.isUserInteractionEnabled = false
-        left.constant = 0
+        left.constant = 100
         rename.isHidden = true
         base.isHidden = false
     }

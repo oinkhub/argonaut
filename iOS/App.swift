@@ -88,6 +88,13 @@ private(set) weak var app: App!
         }
     }
     
+    override func willTransition(to: UITraitCollection, with: UIViewControllerTransitionCoordinator) {
+        window!.endEditing(true)
+        if let world = view.subviews.compactMap({ $0 as? World }).first {
+            with.animate(alongsideTransition: { [weak world] _ in world?.rotate() })
+        }
+    }
+    
     func push(_ screen: UIView) {
         window!.endEditing(true)
         screen.alpha = 0

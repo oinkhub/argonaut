@@ -76,8 +76,8 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
             $0.accessibilityLabel = $0.label.text
             scroll.content.addSubview($0)
             
-            $0.leftAnchor.constraint(equalTo: scroll.content.leftAnchor, constant: 40).isActive = true
-            $0.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -80).isActive = true
+            $0.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+            $0.widthAnchor.constraint(equalToConstant: 300).isActive = true
         }
         
         [whySettings, whyRate, whyWrite].forEach {
@@ -86,7 +86,7 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
             $0.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .light)
             scroll.content.addSubview($0)
             
-            $0.leftAnchor.constraint(equalTo: scroll.content.leftAnchor, constant: 65).isActive = true
+            $0.leftAnchor.constraint(equalTo: centerXAnchor, constant: -125).isActive = true
         }
         
         bar.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -97,7 +97,6 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         scroll.topAnchor.constraint(equalTo: bar.bottomAnchor).isActive = true
         
         close.bottomAnchor.constraint(equalTo: bar.bottomAnchor).isActive = true
-        close.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         close.widthAnchor.constraint(equalToConstant: 60).isActive = true
         close.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
@@ -117,14 +116,16 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
         whyRate.topAnchor.constraint(equalTo: write.bottomAnchor, constant: 20).isActive = true
         rate.topAnchor.constraint(equalTo: whyRate.bottomAnchor).isActive = true
         
-        scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: rate.bottomAnchor, constant: 20).isActive = true
+        scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: rate.bottomAnchor, constant: 30).isActive = true
         
         if #available(iOS 11.0, *) {
             bar.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
             scroll.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
+            close.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
         } else {
             bar.topAnchor.constraint(equalTo: topAnchor).isActive = true
             scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            close.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         }
     }
     

@@ -112,7 +112,6 @@ final class Main: UIView {
         border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         border.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
-        _edit.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         _edit.bottomAnchor.constraint(equalTo: bar.bottomAnchor).isActive = true
         _edit.widthAnchor.constraint(equalToConstant: 68).isActive = true
         _edit.heightAnchor.constraint(equalToConstant: 80).isActive = true
@@ -128,14 +127,16 @@ final class Main: UIView {
         
         _new.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
-        _about.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        
         if #available(iOS 11.0, *) {
             bar.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
             border.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -80).isActive = true
+            _edit.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
+            _about.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
         } else {
             bar.topAnchor.constraint(equalTo: topAnchor).isActive = true
             border.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -80).isActive = true
+            _edit.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            _about.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         }
         
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) {

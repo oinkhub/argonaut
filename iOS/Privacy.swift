@@ -50,28 +50,30 @@ final class Privacy: UIView {
         scroll.topAnchor.constraint(equalTo: bar.bottomAnchor).isActive = true
         
         close.bottomAnchor.constraint(equalTo: bar.bottomAnchor).isActive = true
-        close.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         close.widthAnchor.constraint(equalToConstant: 60).isActive = true
         close.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
         label.topAnchor.constraint(equalTo: scroll.content.topAnchor, constant: 20).isActive = true
-        label.leftAnchor.constraint(equalTo: scroll.content.leftAnchor, constant: 20).isActive = true
         label.widthAnchor.constraint(lessThanOrEqualTo: scroll.widthAnchor, constant: -40).isActive = true
-        label.widthAnchor.constraint(lessThanOrEqualToConstant: 450).isActive = true
+        label.widthAnchor.constraint(lessThanOrEqualToConstant: 500).isActive = true
         
         image.topAnchor.constraint(equalTo: label.bottomAnchor).isActive = true
         image.widthAnchor.constraint(equalToConstant: 200).isActive = true
         image.heightAnchor.constraint(equalToConstant: 160).isActive = true
-        image.rightAnchor.constraint(equalTo: scroll.content.rightAnchor).isActive = true
+        image.leftAnchor.constraint(equalTo: label.leftAnchor, constant: -20).isActive = true
         
         scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: image.bottomAnchor).isActive = true
         
         if #available(iOS 11.0, *) {
             bar.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
             scroll.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).isActive = true
+            close.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
+            label.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
         } else {
             bar.topAnchor.constraint(equalTo: topAnchor).isActive = true
             scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            close.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            label.leftAnchor.constraint(equalTo: scroll.content.leftAnchor, constant: 20).isActive = true
         }
     }
     

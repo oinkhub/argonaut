@@ -116,8 +116,8 @@ final class Settings: UIView {
             update(button)
             
             button.topAnchor.constraint(equalTo: top, constant: $0 == .follow ? 30 : 0).isActive = true
-            button.leftAnchor.constraint(equalTo: scroll.content.leftAnchor, constant: 40).isActive = true
-            button.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -80).isActive = true
+            button.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+            button.widthAnchor.constraint(equalToConstant: 300).isActive = true
             top = button.bottomAnchor
         }
         scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: top).isActive = true

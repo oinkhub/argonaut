@@ -34,8 +34,14 @@ import MapKit
         bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 20).isActive = true
         
         label.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
-        label.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-        label.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+        
+        if #available(iOS 11.0, *) {
+            label.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
+            label.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -20).isActive = true
+        } else {
+            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+            label.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+        }
     }
     
     @objc private func down() { backgroundColor = .dark }

@@ -5,7 +5,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     override var style: Settings.Style { get { .new } }
     private weak var field: Field.Search!
     private weak var results: Scroll!
-    private weak var _pin: Button!
     private weak var _save: Control!
     private weak var resultsHeight: NSLayoutConstraint!
     private var completer: Any?
@@ -32,12 +31,6 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(_save)
         self._save = _save
         
-        let _pin = Button("pin")
-        _pin.accessibilityLabel = .key("New.pin")
-        _pin.addTarget(map, action: #selector(map.pin), for: .touchUpInside)
-        addSubview(_pin)
-        self._pin = _pin
-        
         let results = Scroll()
         results.backgroundColor = .black
         addSubview(results)
@@ -49,11 +42,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         
-        _pin.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
-        _pin.bottomAnchor.constraint(equalTo: _up.topAnchor).isActive = true
-        
         _save.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
-        _save.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         
         map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
         
@@ -64,8 +53,10 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         resultsHeight.isActive = true
         
         if #available(iOS 11.0, *) {
+            _save.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
             field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
         } else {
+            _save.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
             field.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
         }
     }
@@ -81,7 +72,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
     func textViewDidChange(_: UITextView) { query() }
     
     func textViewDidBeginEditing(_: UITextView) {
-        field.width.constant = bounds.width
+        field.width.constant = min(bounds.width, bounds.height)
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
             self?.field._cancel.alpha = 1
             self?._close.alpha = 0
@@ -89,9 +80,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             self?.layoutIfNeeded()
         }) { [weak self] _ in
             self?.query()
-            if self?._up.isHidden == true {
-                self?.down()
-            }
+            self?.down()
         }
     }
     

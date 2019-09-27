@@ -117,8 +117,6 @@ final class Item: UIControl {
             
             base.layer.cornerRadius = 18
             
-            index.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
-            
             base.widthAnchor.constraint(equalToConstant: 36).isActive = true
             base.heightAnchor.constraint(equalToConstant: 36).isActive = true
             
