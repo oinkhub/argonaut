@@ -172,7 +172,6 @@
 		CE9D6BB02328CD46001B4E87 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		CE9F3FED2323D11600F221D8 /* Zoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zoom.swift; sourceTree = "<group>"; };
 		CEA0D90F23002B4B001FD8B8 /* icons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icons.icns; sourceTree = "<group>"; };
-		CEAB0F0622D7396900320F4F /* Argonaut.sketch */ = {isa = PBXFileReference; lastKnownFileType = file; path = Argonaut.sketch; sourceTree = "<group>"; };
 		CEAB0F0922D742D900320F4F /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		CEABFA3622ED9401000ABB7E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CEACFC56230950A4008E76A9 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
@@ -302,7 +301,6 @@
 				CEBE55202312E8A70060B4BE /* icon_44x58.png */,
 				CEBE551F2312E8A70060B4BE /* icon_64x64.png */,
 				CEBE55212312E8A70060B4BE /* icon_320x320.png */,
-				CEAB0F0622D7396900320F4F /* Argonaut.sketch */,
 				CEDE10F922D71F2400DD796B /* iOS.storyboard */,
 				CEDE111222D71FD100DD796B /* Assets.xcassets */,
 				CEDE10FC22D71F2400DD796B /* iOS.xcassets */,
