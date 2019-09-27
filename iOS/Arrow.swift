@@ -3,6 +3,8 @@ import UIKit
 final class Arrow: UIView {
     private weak var pointer: UIImageView!
     private weak var index: UILabel!
+    private weak var horizontal: NSLayoutConstraint? { didSet { oldValue?.isActive = false; horizontal?.isActive = true } }
+    private weak var vertical: NSLayoutConstraint? { didSet { oldValue?.isActive = false; vertical?.isActive = true } }
     
     required init?(coder: NSCoder) { nil }
     init() {
@@ -20,28 +22,58 @@ final class Arrow: UIView {
         
         let index = UILabel()
         index.translatesAutoresizingMaskIntoConstraints = false
-        index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize - 2, weight: .bold)
-        index.textColor = .black
+        index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .bold)
+        index.textColor = .white
         addSubview(index)
         self.index = index
         
-        pointer.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        pointer.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        pointer.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        pointer.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        pointer.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        pointer.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
         index.centerXAnchor.constraint(equalTo: pointer.centerXAnchor).isActive = true
         index.centerYAnchor.constraint(equalTo: pointer.centerYAnchor).isActive = true
     }
     
     func update(_ marker: Marker?) {
-        UIView.animate(withDuration: 0.4) { [weak self] in
-            guard let self = self else { return }
-            self.alpha = marker == nil ? 0 : 1
-            if let marker = marker {
+        if let marker = marker {
+            if marker.center.x < 0 {
+                if #available(iOS 11.0, *) {
+                    horizontal = pointer.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor)
+                } else {
+                    horizontal = pointer.leftAnchor.constraint(equalTo: leftAnchor)
+                }
+            } else if marker.center.x > bounds.width {
+                if #available(iOS 11.0, *) {
+                    horizontal = pointer.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor)
+                } else {
+                    horizontal = pointer.rightAnchor.constraint(equalTo: rightAnchor)
+                }
+            } else {
+                horizontal = pointer.centerXAnchor.constraint(equalTo: leftAnchor, constant: marker.center.x)
+            }
+            if marker.center.y < 0 {
+                if #available(iOS 11.0, *) {
+                    vertical = pointer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+                } else {
+                    vertical = pointer.topAnchor.constraint(equalTo: topAnchor)
+                }
+            } else if marker.center.y > bounds.height {
+                if #available(iOS 11.0, *) {
+                    vertical = pointer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+                } else {
+                    vertical = pointer.bottomAnchor.constraint(equalTo: bottomAnchor)
+                }
+            } else {
+                vertical = pointer.topAnchor.constraint(equalTo: topAnchor, constant: marker.center.y)
+            }
+            UIView.animate(withDuration: 0.4) { [weak self] in
+                guard let self = self else { return }
+                self.alpha = 1
                 self.index.text = marker.index
                 self.pointer.transform = .init(rotationAngle: atan2(marker.center.x - self.center.x, self.center.y - marker.center.y))
             }
+        } else {
+            UIView.animate(withDuration: 0.3) { [weak self] in self?.alpha = 0 }
         }
     }
 }
