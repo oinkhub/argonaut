@@ -77,6 +77,6 @@ final class TestFactory: XCTestCase {
         factory.mode = .flying
         factory.filter()
         XCTAssertEqual(2, factory.range.min()!)
-        XCTAssertEqual(11, factory.range.max()!)
+        XCTAssertEqual(12, factory.range.max()!)
     }
 }
