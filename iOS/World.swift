@@ -92,7 +92,7 @@ class World: UIView, CLLocationManagerDelegate {
         bottom.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         bottom.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         
-        _up.bottomAnchor.constraint(lessThanOrEqualTo: list.topAnchor).isActive = true
+        _up.bottomAnchor.constraint(lessThanOrEqualTo: list.topAnchor, constant: -30).isActive = true
         
         _down.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
         _down.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true

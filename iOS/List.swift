@@ -88,7 +88,12 @@ final class List: UIView {
                     scroll.content.addSubview(travel)
                     
                     travel.centerYAnchor.constraint(equalTo: item.topAnchor).isActive = true
-                    travel.leftAnchor.constraint(equalTo: item.leftAnchor, constant: 20).isActive = true
+                    
+                    if #available(iOS 11.0, *) {
+                        travel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
+                    } else {
+                        travel.leftAnchor.constraint(equalTo: item.leftAnchor, constant: 20).isActive = true
+                    }
                 }
                 item.topAnchor.constraint(equalTo: previous!.bottomAnchor).isActive = true
             }
@@ -100,7 +105,6 @@ final class List: UIView {
         
         total.text = app.measure(distance, duration)
         
-        header.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: 20).isActive = true
         header.widthAnchor.constraint(equalToConstant: 26).isActive = true
         header.heightAnchor.constraint(equalToConstant: 26).isActive = true
         
@@ -112,6 +116,12 @@ final class List: UIView {
         total.centerYAnchor.constraint(equalTo: header.centerYAnchor).isActive = true
         total.leftAnchor.constraint(equalTo: header.rightAnchor, constant: 10).isActive = true
         total.rightAnchor.constraint(lessThanOrEqualTo: scroll.content.rightAnchor, constant: -20).isActive = true
+        
+        if #available(iOS 11.0, *) {
+            header.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
+        } else {
+            header.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        }
         
         scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: header.bottomAnchor, constant: 10).isActive = true
         
@@ -143,7 +153,7 @@ final class List: UIView {
         }
     }
     
-    private func scroll(_ to: Item) { scroll(max(to.frame.midY - 150, -to.bounds.midY)) }
+    private func scroll(_ to: Item) { scroll(max(to.frame.midY - 150, 7 - to.bounds.midY)) }
     
     private func scroll(_ to: CGFloat) {
         var offset = to

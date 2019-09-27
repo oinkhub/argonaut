@@ -8,6 +8,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     var user: ((CLLocation) -> Void)?
     var zoom: ((CGFloat) -> Void)?
     var drag = true
+    weak var arrow: Arrow?
     private(set) var path = [Path]()
     private var tiler: Tiler!
     private var first = true
@@ -73,11 +74,11 @@ final class Map: MKMapView, MKMapViewDelegate {
     
     func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
         zoom?(.init(round(log2(360 * Double(frame.width) / Argonaut.tile / region.span.longitudeDelta))))
-        if let selected = selectedAnnotations.first(where: { !($0 is MKUserLocation) }) {
-            if !annotations(in: visibleMapRect).contains(selected as! AnyHashable) {
-                print("hidden")
+        if let selected = selectedAnnotations.compactMap({ $0 as? Mark }).first {
+            if !annotations(in: visibleMapRect).contains(selected) {
+                arrow?.hidden()
             } else {
-                print("visible")
+                arrow?.visible(selected)
             }
         }
     }
@@ -85,14 +86,14 @@ final class Map: MKMapView, MKMapViewDelegate {
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) {
         didDeselect.isSelected = false
         if let path = (didDeselect.annotation as? Mark)?.path {
-//            selected(path, false)
+            selected(path, false)
         }
     }
     
     func mapView(_: MKMapView, didSelect: MKAnnotationView) {
         didSelect.isSelected = true
         if let path = (didSelect.annotation as? Mark)?.path {
-//            selected(path, true)
+            selected(path, true)
         }
         if let coordinate = didSelect.annotation?.coordinate {
             setCenter(coordinate, animated: true)
@@ -250,7 +251,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     private func refreshSelecting() {
         refresh()
         if let current = selectedAnnotations.compactMap({ $0 as? Mark }).first?.path {
-//            selected(current, true)
+            selected(current, true)
         }
     }
     

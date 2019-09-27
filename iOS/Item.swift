@@ -98,7 +98,6 @@ final class Item: UIControl {
             addSubview(delete)
             self.delete = delete
             
-            delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             delete.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
             delete.widthAnchor.constraint(equalToConstant: 60).isActive = true
             delete.heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -107,6 +106,12 @@ final class Item: UIControl {
             
             base.widthAnchor.constraint(equalToConstant: 30).isActive = true
             base.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            
+            if #available(iOS 11.0, *) {
+                delete.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor).isActive = true
+            } else {
+                delete.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            }
         } else {
             index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .bold)
             
@@ -116,13 +121,18 @@ final class Item: UIControl {
             
             base.widthAnchor.constraint(equalToConstant: 36).isActive = true
             base.heightAnchor.constraint(equalToConstant: 36).isActive = true
+            
+            if #available(iOS 11.0, *) {
+                index.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
+            } else {
+                index.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
+            }
         }
         
         bottomAnchor.constraint(equalTo: distance.bottomAnchor, constant: 25).isActive = true
         
         border.heightAnchor.constraint(equalToConstant: 1).isActive = true
         border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        border.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
         name.leftAnchor.constraint(equalTo: border.leftAnchor).isActive = true
@@ -137,6 +147,12 @@ final class Item: UIControl {
         distance.leftAnchor.constraint(equalTo: name.leftAnchor).isActive = true
         distance.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 2).isActive = true
         distance.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
+        
+        if #available(iOS 11.0, *) {
+            border.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
+        } else {
+            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        }
         
         update()
     }
