@@ -7,8 +7,8 @@ final class Map: MKMapView, MKMapViewDelegate {
     var selected: ((Path, Bool) -> Void)!
     var user: ((CLLocation) -> Void)?
     var zoom: ((CGFloat) -> Void)?
+    var arrow: ((Marker?) -> Void)?
     var drag = true
-    weak var arrow: Arrow?
     weak var top: NSLayoutConstraint! { didSet { top.isActive = true } }
     private(set) var path = [Path]()
     private var tiler: Tiler!
@@ -76,16 +76,13 @@ final class Map: MKMapView, MKMapViewDelegate {
     func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
         zoom?(.init(round(log2(360 * Double(frame.width) / Argonaut.tile / region.span.longitudeDelta))))
         if let selected = selectedAnnotations.compactMap({ $0 as? Mark }).first {
-            if !annotations(in: visibleMapRect).contains(selected) {
-                arrow?.hidden()
-            } else {
-                arrow?.visible(selected)
-            }
+            arrow?(annotations(in: visibleMapRect).contains(selected) ? nil : view(for: selected) as? Marker)
         }
     }
     
     func mapView(_: MKMapView, didDeselect: MKAnnotationView) {
         didDeselect.isSelected = false
+        arrow?(nil)
         if let path = (didDeselect.annotation as? Mark)?.path {
             selected(path, false)
         }
