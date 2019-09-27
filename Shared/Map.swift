@@ -9,6 +9,7 @@ final class Map: MKMapView, MKMapViewDelegate {
     var zoom: ((CGFloat) -> Void)?
     var drag = true
     weak var arrow: Arrow?
+    weak var top: NSLayoutConstraint! { didSet { top.isActive = true } }
     private(set) var path = [Path]()
     private var tiler: Tiler!
     private var first = true

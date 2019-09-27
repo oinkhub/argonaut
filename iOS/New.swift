@@ -31,22 +31,24 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         addSubview(_save)
         self._save = _save
         
+        let top = Gradient.Top()
+        addSubview(top)
+        
         let results = Scroll()
         results.backgroundColor = .black
         addSubview(results)
         self.results = results
         
         field.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        
-        top.topAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
-        
-        _close.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
+        field.bottomAnchor.constraint(equalTo: map.topAnchor).isActive = true
         
         _save.centerYAnchor.constraint(equalTo: field.centerYAnchor).isActive = true
         
-        map.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
+        top.topAnchor.constraint(equalTo: results.bottomAnchor).isActive = true
+        top.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        top.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         
-        results.topAnchor.constraint(equalTo: field.bottomAnchor).isActive = true
+        results.topAnchor.constraint(equalTo: map.topAnchor).isActive = true
         results.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         results.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         resultsHeight = results.heightAnchor.constraint(lessThanOrEqualToConstant: 0)
@@ -54,11 +56,11 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
         
         if #available(iOS 11.0, *) {
             _save.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
-            field.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
         } else {
             _save.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
-            field.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
         }
+        
+        refresh()
     }
     
     func textView(_: UITextView, shouldChangeTextIn: NSRange, replacementText: String) -> Bool {
@@ -78,10 +80,7 @@ final class New: World, UITextViewDelegate, MKLocalSearchCompleterDelegate {
             self?._close.alpha = 0
             self?._save.alpha = 0
             self?.layoutIfNeeded()
-        }) { [weak self] _ in
-            self?.query()
-            self?.down()
-        }
+        }) { [weak self] _ in self?.query() }
     }
     
     func textViewDidEndEditing(_: UITextView) {

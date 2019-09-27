@@ -13,6 +13,7 @@ final class List: UIView {
     init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .black
         
         let scroll = Scroll()
         addSubview(scroll)
@@ -28,8 +29,6 @@ final class List: UIView {
         } else {
             scroll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
-        
-        refresh()
     }
     
     func refresh() {

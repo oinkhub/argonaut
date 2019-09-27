@@ -15,24 +15,25 @@ final class Navigate: World {
         
         list.deletable = false
         
+        let top = Gradient.Top()
+        addSubview(top)
+        
         let zoom = Zoom(project.1.zoom)
-        addSubview(zoom)
+        insertSubview(zoom, belowSubview: list)
         self.zoom = zoom
         
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
         title.isAccessibilityElement = true
-        title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .bold)
+        title.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title2).pointSize, weight: .bold)
         title.textColor = .halo
         title.textAlignment = .center
         title.text = item.name.isEmpty ? .key("Navigate.title") : item.name
         insertSubview(title, belowSubview: _close)
         
+        top.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        top.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         top.topAnchor.constraint(equalTo: map.topAnchor).isActive = true
-        
-        _close.centerYAnchor.constraint(equalTo: map.topAnchor, constant: -22).isActive = true
-        
-        zoom.topAnchor.constraint(equalTo: map.topAnchor, constant: 22).isActive = true
         
         title.centerYAnchor.constraint(equalTo: _close.centerYAnchor).isActive = true
         title.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -40,13 +41,13 @@ final class Navigate: World {
         title.leftAnchor.constraint(greaterThanOrEqualTo: _close.rightAnchor).isActive = true
         
         if #available(iOS 11.0, *) {
-            map.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 44).isActive = true
+            zoom.topAnchor.constraint(equalTo: map.safeAreaLayoutGuide.topAnchor, constant: 22).isActive = true
             zoom.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 22).isActive = true
         } else {
-            map.topAnchor.constraint(equalTo: topAnchor, constant: 44).isActive = true
+            zoom.topAnchor.constraint(equalTo: map.topAnchor, constant: 22).isActive = true
             zoom.leftAnchor.constraint(equalTo: map.leftAnchor, constant: 22).isActive = true
         }
         
-        list.refresh()
+        refresh()
     }
 }

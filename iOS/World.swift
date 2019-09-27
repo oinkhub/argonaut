@@ -4,14 +4,10 @@ import CoreLocation
 class World: UIView, CLLocationManagerDelegate {
     var pinning: Bool { true }
     private(set) var style = Settings.Style.navigate
+    private(set) weak var _close: UIButton!
     private(set) weak var map: Map!
     private(set) weak var list: List!
-    private(set) weak var _close: UIButton!
-    private(set) weak var top: Gradient.Top!
-    private weak var upPortrait: Button!
-    private weak var upLandscape: Button!
-    private weak var downPortrait: Button!
-    private weak var downLandscape: Button!
+    private var showing = true
     private var portrait = [Button]()
     private var landscape = [Button]()
     private let manager = CLLocationManager()
@@ -36,10 +32,6 @@ class World: UIView, CLLocationManagerDelegate {
         addSubview(map)
         self.map = map
         
-        let top = Gradient.Top()
-        addSubview(top)
-        self.top = top
-        
         let bottom = Gradient.Bottom()
         addSubview(bottom)
         
@@ -59,10 +51,8 @@ class World: UIView, CLLocationManagerDelegate {
         addSubview(list)
         self.list = list
         
-        upPortrait = _up
-        upLandscape = _up
-        downPortrait = _down
-        downLandscape = _down
+        let framePortrait = _frame
+        let frameLandscape = _frame
         let settingsPortrait = _settings
         let settingsLandscape = _settings
         let userPortrait = _user
@@ -70,18 +60,17 @@ class World: UIView, CLLocationManagerDelegate {
         let pinPortrait = _pin
         let pinLandscape = _pin
         
-        portrait = [upPortrait, downPortrait, settingsPortrait, userPortrait, pinPortrait]
-        landscape = [upLandscape, downLandscape, settingsLandscape, userLandscape, pinLandscape]
+        portrait = [framePortrait, settingsPortrait, userPortrait, pinPortrait]
+        landscape = [frameLandscape, settingsLandscape, userLandscape, pinLandscape]
         
         map.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         map.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         map.bottomAnchor.constraint(equalTo: list.topAnchor).isActive = true
+        map.top = map.topAnchor.constraint(equalTo: topAnchor)
         
         _close.widthAnchor.constraint(equalToConstant: 60).isActive = true
         _close.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
-        top.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        top.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        _close.bottomAnchor.constraint(equalTo: map.topAnchor, constant: 2).isActive = true
         
         bottom.bottomAnchor.constraint(equalTo: list.topAnchor).isActive = true
         bottom.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -90,11 +79,8 @@ class World: UIView, CLLocationManagerDelegate {
         settingsPortrait.bottomAnchor.constraint(lessThanOrEqualTo: list.topAnchor).isActive = true
         settingsPortrait.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
-        upPortrait.centerYAnchor.constraint(equalTo: settingsPortrait.centerYAnchor).isActive = true
-        upPortrait.leftAnchor.constraint(equalTo: settingsPortrait.rightAnchor).isActive = true
-        
-        downPortrait.centerXAnchor.constraint(equalTo: upPortrait.centerXAnchor).isActive = true
-        downPortrait.centerYAnchor.constraint(equalTo: upPortrait.centerYAnchor).isActive = true
+        framePortrait.centerYAnchor.constraint(equalTo: settingsPortrait.centerYAnchor).isActive = true
+        framePortrait.leftAnchor.constraint(equalTo: settingsPortrait.rightAnchor).isActive = true
         
         userPortrait.centerYAnchor.constraint(equalTo: settingsPortrait.centerYAnchor).isActive = true
         userPortrait.rightAnchor.constraint(equalTo: settingsPortrait.leftAnchor).isActive = true
@@ -110,11 +96,8 @@ class World: UIView, CLLocationManagerDelegate {
         userLandscape.centerXAnchor.constraint(equalTo: settingsLandscape.centerXAnchor).isActive = true
         userLandscape.bottomAnchor.constraint(equalTo: settingsLandscape.topAnchor).isActive = true
         
-        upLandscape.centerXAnchor.constraint(equalTo: settingsLandscape.centerXAnchor).isActive = true
-        upLandscape.topAnchor.constraint(equalTo: settingsLandscape.bottomAnchor).isActive = true
-        
-        downLandscape.centerXAnchor.constraint(equalTo: upLandscape.centerXAnchor).isActive = true
-        downLandscape.centerYAnchor.constraint(equalTo: upLandscape.centerYAnchor).isActive = true
+        frameLandscape.centerXAnchor.constraint(equalTo: settingsLandscape.centerXAnchor).isActive = true
+        frameLandscape.topAnchor.constraint(equalTo: settingsLandscape.bottomAnchor).isActive = true
         
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -131,7 +114,8 @@ class World: UIView, CLLocationManagerDelegate {
             settingsLandscape.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         }
         
-        rotate()
+        buttons()
+        layoutIfNeeded()
     }
     
     override final func accessibilityPerformEscape() -> Bool {
@@ -160,15 +144,14 @@ class World: UIView, CLLocationManagerDelegate {
     
     final func refresh() {
         list.refresh()
-        if !map.path.isEmpty && list.top.constant == -70 || map.path.isEmpty && list.top.constant == -list.frame.height {
-            up()
-        }
+        animate()
     }
     
     final func rotate() {
-        portrait.forEach { $0.alpha = UIApplication.shared.statusBarOrientation.isLandscape ? 0 : 1 }
-        landscape.forEach { $0.alpha = UIApplication.shared.statusBarOrientation.isLandscape ? 1 : 0 }
-        down()
+        buttons()
+        if showing {
+            framing()
+        }
     }
     
     private var _settings: Button {
@@ -179,19 +162,10 @@ class World: UIView, CLLocationManagerDelegate {
         return button
     }
     
-    private var _up: Button {
-        let button = Button("up")
-        button.accessibilityLabel = .key("World.up")
-        button.addTarget(self, action: #selector(up), for: .touchUpInside)
-        addSubview(button)
-        return button
-    }
-    
-    private var _down: Button {
-        let button = Button("down")
-        button.accessibilityLabel = .key("World.down")
-        button.addTarget(self, action: #selector(down), for: .touchUpInside)
-        button.isHidden = true
+    private var _frame: Button {
+        let button = Button("frame")
+        button.accessibilityLabel = .key("World.frame")
+        button.addTarget(self, action: #selector(framing), for: .touchUpInside)
         addSubview(button)
         return button
     }
@@ -213,28 +187,25 @@ class World: UIView, CLLocationManagerDelegate {
         return button
     }
     
-    @objc final func down() {
-        list.top.constant = 0
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            self?.layoutIfNeeded()
-        }) { [weak self] _ in
-            self?.upPortrait.isHidden = false
-            self?.upLandscape.isHidden = false
-            self?.downPortrait.isHidden = true
-            self?.downLandscape.isHidden = true
+    private func animate() {
+        app.window!.endEditing(true)
+        list.top.constant = showing ? (map.path.isEmpty ? -100 : -list.frame.height) : 0
+        if #available(iOS 11.0, *) {
+            map.top.constant = showing ? app.view.safeAreaInsets.top + 60 : 0
+        } else {
+            map.top.constant = showing ? 60 : 0
         }
+        UIView.animate(withDuration: 0.4) { [weak self] in self?.layoutIfNeeded() }
     }
     
-    @objc private func up() {
-        list.top.constant = map.path.isEmpty ? -70 : -list.frame.height
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            self?.layoutIfNeeded()
-        }) { [weak self] _ in
-            self?.upPortrait.isHidden = true
-            self?.upLandscape.isHidden = true
-            self?.downPortrait.isHidden = false
-            self?.downLandscape.isHidden = false
-        }
+    private func buttons() {
+        portrait.forEach { $0.alpha = UIApplication.shared.statusBarOrientation.isLandscape ? 0 : 1 }
+        landscape.forEach { $0.alpha = UIApplication.shared.statusBarOrientation.isLandscape ? 1 : 0 }
+    }
+    
+    @objc private func framing() {
+        showing.toggle()
+        animate()
     }
     
     @objc private func settings() {
@@ -247,6 +218,5 @@ class World: UIView, CLLocationManagerDelegate {
         }
         app.view.addSubview(settings)
         settings.show()
-        down()
     }
 }

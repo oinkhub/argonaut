@@ -102,7 +102,7 @@ final class Item: UIControl {
             delete.widthAnchor.constraint(equalToConstant: 60).isActive = true
             delete.heightAnchor.constraint(equalToConstant: 60).isActive = true
             
-            index.rightAnchor.constraint(equalTo: delete.leftAnchor).isActive = true
+            index.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: -5).isActive = true
             
             base.widthAnchor.constraint(equalToConstant: 30).isActive = true
             base.heightAnchor.constraint(equalToConstant: 30).isActive = true
