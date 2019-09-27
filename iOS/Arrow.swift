@@ -3,8 +3,12 @@ import UIKit
 final class Arrow: UIView {
     private weak var pointer: UIImageView!
     private weak var index: UILabel!
-    private weak var horizontal: NSLayoutConstraint? { didSet { oldValue?.isActive = false; horizontal?.isActive = true } }
-    private weak var vertical: NSLayoutConstraint? { didSet { oldValue?.isActive = false; vertical?.isActive = true } }
+    private var left: NSLayoutConstraint!
+    private var right: NSLayoutConstraint!
+    private var horizontal: NSLayoutConstraint!
+    private var top: NSLayoutConstraint!
+    private var vertical: NSLayoutConstraint!
+    private var down: NSLayoutConstraint!
     
     required init?(coder: NSCoder) { nil }
     init() {
@@ -27,53 +31,66 @@ final class Arrow: UIView {
         addSubview(index)
         self.index = index
         
-        pointer.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        pointer.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        pointer.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        pointer.heightAnchor.constraint(equalToConstant: 120).isActive = true
         
         index.centerXAnchor.constraint(equalTo: pointer.centerXAnchor).isActive = true
         index.centerYAnchor.constraint(equalTo: pointer.centerYAnchor).isActive = true
+        
+        if #available(iOS 11.0, *) {
+            left = pointer.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor)
+            right = pointer.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor)
+            top = pointer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+            down = pointer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        } else {
+            left = pointer.leftAnchor.constraint(equalTo: leftAnchor)
+            right = pointer.rightAnchor.constraint(equalTo: rightAnchor)
+            top = pointer.topAnchor.constraint(equalTo: topAnchor)
+            down = pointer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        }
+        horizontal = pointer.leftAnchor.constraint(equalTo: leftAnchor)
+        vertical = pointer.topAnchor.constraint(equalTo: topAnchor)
     }
     
     func update(_ marker: Marker?) {
         if let marker = marker {
             if marker.center.x < 0 {
-                if #available(iOS 11.0, *) {
-                    horizontal = pointer.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor)
-                } else {
-                    horizontal = pointer.leftAnchor.constraint(equalTo: leftAnchor)
-                }
+                right.isActive = false
+                horizontal.isActive = false
+                left.isActive = true
             } else if marker.center.x > bounds.width {
-                if #available(iOS 11.0, *) {
-                    horizontal = pointer.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor)
-                } else {
-                    horizontal = pointer.rightAnchor.constraint(equalTo: rightAnchor)
-                }
+                left.isActive = false
+                horizontal.isActive = false
+                right.isActive = true
             } else {
-                horizontal = pointer.centerXAnchor.constraint(equalTo: leftAnchor, constant: marker.center.x)
+                left.isActive = false
+                right.isActive = false
+                horizontal.constant = marker.center.x
+                horizontal.isActive = true
             }
             if marker.center.y < 0 {
-                if #available(iOS 11.0, *) {
-                    vertical = pointer.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
-                } else {
-                    vertical = pointer.topAnchor.constraint(equalTo: topAnchor)
-                }
+                down.isActive = false
+                vertical.isActive = false
+                top.isActive = true
             } else if marker.center.y > bounds.height {
-                if #available(iOS 11.0, *) {
-                    vertical = pointer.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
-                } else {
-                    vertical = pointer.bottomAnchor.constraint(equalTo: bottomAnchor)
-                }
+                top.isActive = false
+                vertical.isActive = false
+                down.isActive = true
             } else {
-                vertical = pointer.topAnchor.constraint(equalTo: topAnchor, constant: marker.center.y)
+                top.isActive = false
+                down.isActive = false
+                vertical.constant = marker.center.y
+                vertical.isActive = true
             }
-            UIView.animate(withDuration: 0.4) { [weak self] in
+            UIView.animate(withDuration: 0.3) { [weak self] in
                 guard let self = self else { return }
                 self.alpha = 1
                 self.index.text = marker.index
                 self.pointer.transform = .init(rotationAngle: atan2(marker.center.x - self.center.x, self.center.y - marker.center.y))
+                self.layoutIfNeeded()
             }
         } else {
-            UIView.animate(withDuration: 0.3) { [weak self] in self?.alpha = 0 }
+            UIView.animate(withDuration: 0.2) { [weak self] in self?.alpha = 0 }
         }
     }
 }
