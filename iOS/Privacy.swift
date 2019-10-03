@@ -39,7 +39,7 @@ final class Privacy: UIView {
         let image = UIImageView(image: UIImage(named: "splash"))
         image.translatesAutoresizingMaskIntoConstraints = false
         image.clipsToBounds = true
-        image.contentMode = .center
+        image.contentMode = .scaleAspectFit
         scroll.content.addSubview(image)
         
         bar.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -58,9 +58,9 @@ final class Privacy: UIView {
         label.widthAnchor.constraint(lessThanOrEqualToConstant: 500).isActive = true
         
         image.topAnchor.constraint(equalTo: label.bottomAnchor).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 160).isActive = true
         image.heightAnchor.constraint(equalToConstant: 160).isActive = true
-        image.leftAnchor.constraint(equalTo: label.leftAnchor, constant: -20).isActive = true
+        image.leftAnchor.constraint(equalTo: label.leftAnchor).isActive = true
         
         scroll.content.bottomAnchor.constraint(greaterThanOrEqualTo: image.bottomAnchor).isActive = true
         

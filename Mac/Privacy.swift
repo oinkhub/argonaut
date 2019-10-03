@@ -18,7 +18,7 @@ final class Privacy: Window {
         let image = NSImageView()
         image.image = NSImage(named: "splash")
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.imageScaling = .scaleNone
+        image.imageScaling = .scaleProportionallyDown
         contentView!.addSubview(image)
         
         label.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 60).isActive = true
@@ -26,8 +26,8 @@ final class Privacy: Window {
         label.widthAnchor.constraint(lessThanOrEqualTo: contentView!.widthAnchor, constant: -80).isActive = true
         
         image.topAnchor.constraint(equalTo: label.bottomAnchor).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 160).isActive = true
         image.heightAnchor.constraint(equalToConstant: 160).isActive = true
-        image.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
+        image.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 40).isActive = true
     }
 }
