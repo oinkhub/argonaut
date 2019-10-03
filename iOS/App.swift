@@ -2,9 +2,10 @@ import Argonaut
 import UIKit
 import StoreKit
 import UserNotifications
+import WatchConnectivity
 
 private(set) weak var app: App!
-@UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+@UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UNUserNotificationCenterDelegate, WCSessionDelegate {
     var window: UIWindow?
     private(set) weak var main: Main!
     private(set) var session: Session!
@@ -38,6 +39,20 @@ private(set) weak var app: App!
         withCompletionHandler([.alert])
         UNUserNotificationCenter.current().getDeliveredNotifications { UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: $0.map { $0.request.identifier
         }.filter { $0 != willPresent.request.identifier }) }
+    }
+    
+    @available(iOS 9.3, *)
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        print("session error")
+        print(error)
+    }
+    
+    func sessionDidBecomeInactive(_ session: WCSession) {
+        print("session innactive")
+    }
+    
+    func sessionDidDeactivate(_ session: WCSession) {
+        print("session deactive")
     }
     
     override func viewDidLoad() {

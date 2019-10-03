@@ -1,5 +1,6 @@
 import Argonaut
 import UIKit
+import WatchConnectivity
 
 final class Load: UIView {
     private static weak var view: Load?
@@ -19,12 +20,21 @@ final class Load: UIView {
     
     class func share(_ item: Session.Item) {
         modal {
-            Argonaut.share(item) {
-                view?.removeFromSuperview()
-                let share = UIActivityViewController(activityItems: [$0], applicationActivities: nil)
-                share.popoverPresentationController?.sourceView = app.view
-                app.present(share, animated: true)
+            if WCSession.isSupported() {
+                let watchSession = WCSession.default
+                watchSession.delegate = app
+                watchSession.activate()
+                print("before")
+                if watchSession.isPaired && watchSession.isWatchAppInstalled {
+                    print("here")
+                }
             }
+//            Argonaut.share(item) {
+//                view?.removeFromSuperview()
+//                let share = UIActivityViewController(activityItems: [$0], applicationActivities: nil)
+//                share.popoverPresentationController?.sourceView = app.view
+//                app.present(share, animated: true)
+//            }
         }
     }
     
