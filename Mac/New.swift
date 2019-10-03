@@ -37,11 +37,6 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         top.addSubview(field)
         self.field = field
         
-        let _pin = Button.Map(self, action: #selector(pin))
-        _pin.image.image = NSImage(named: "pin")
-        _pin.setAccessibilityLabel(.key("New.pin"))
-        addSubview(_pin)
-        
         [left, right].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.wantsLayer = true
@@ -72,9 +67,6 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
         left.rightAnchor.constraint(equalTo: field.leftAnchor).isActive = true
         right.leftAnchor.constraint(equalTo: field.rightAnchor).isActive = true
         
-        _pin.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
-        _pin.bottomAnchor.constraint(equalTo: _up.topAnchor).isActive = true
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in self?.field.accepts = true }
     }
     
@@ -84,13 +76,7 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
     }
     
     func textDidChange(_: Notification) { query() }
-    
-    func textDidBeginEditing(_: Notification) {
-        query()
-        if _up.isHidden == true {
-            down()
-        }
-    }
+    func textDidBeginEditing(_: Notification) { query() }
     
     func textDidEndEditing(_: Notification) {
         if #available(OSX 10.11.4, *) {
@@ -165,11 +151,6 @@ final class New: World, NSTextViewDelegate, MKLocalSearchCompleterDelegate {
                 search(result)
             }
         }
-    }
-    
-    @objc func pin() {
-        app.main.makeFirstResponder(self)
-        map.pin()
     }
     
     @objc func search() { app.main.makeFirstResponder(field) }

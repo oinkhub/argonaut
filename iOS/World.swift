@@ -181,7 +181,7 @@ class World: UIView, CLLocationManagerDelegate {
     private var _pin: Button {
         let button = Button("pin")
         button.isHidden = !pinning
-        button.accessibilityLabel = .key("New.pin")
+        button.accessibilityLabel = .key("World.pin")
         button.addTarget(map, action: #selector(map.pin), for: .touchUpInside)
         addSubview(button)
         return button

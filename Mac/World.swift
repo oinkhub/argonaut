@@ -1,13 +1,13 @@
 import AppKit
 
 class World: NSView {
+    var pinning: Bool { true }
     override var acceptsFirstResponder: Bool { true }
     private(set) var style = Settings.Style.navigate
     private(set) weak var map: Map!
     private(set) weak var list: List!
     private(set) weak var top: NSView!
-    private(set) weak var _up: Button.Map!
-    private weak var _down: Button.Map!
+    private var showing = false
     
     required init?(coder: NSCoder) { nil }
     init() {
@@ -39,18 +39,16 @@ class World: NSView {
         close.setAccessibilityLabel(.key("Close"))
         top.addSubview(close)
         
-        let _down = Button.Map(self, action: #selector(down))
-        _down.image.image = NSImage(named: "down")
-        _down.setAccessibilityLabel(.key("World.down"))
-        _down.isHidden = true
-        addSubview(_down)
-        self._down = _down
+        let _pin = Button.Map(self, action: #selector(pin))
+        _pin.image.image = NSImage(named: "pin")
+        _pin.setAccessibilityLabel(.key("New.pin"))
+        _pin.isHidden = !pinning
+        addSubview(_pin)
         
-        let _up = Button.Map(self, action: #selector(up))
-        _up.image.image = NSImage(named: "up")
-        _up.setAccessibilityLabel(.key("World.up"))
-        addSubview(_up)
-        self._up = _up
+        let _frame = Button.Map(self, action: #selector(framing))
+        _frame.image.image = NSImage(named: "frame")
+        _frame.setAccessibilityLabel(.key("World.frame"))
+        addSubview(_frame)
         
         let _settings = Button.Map(self, action: #selector(settings))
         _settings.image.image = NSImage(named: "settings")
@@ -82,16 +80,16 @@ class World: NSView {
         close.bottomAnchor.constraint(equalTo: top.bottomAnchor).isActive = true
         close.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        _up.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        _up.bottomAnchor.constraint(equalTo: map.bottomAnchor).isActive = true
+        _frame.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        _frame.bottomAnchor.constraint(equalTo: map.bottomAnchor).isActive = true
         
-        _down.centerXAnchor.constraint(equalTo: _up.centerXAnchor).isActive = true
-        _down.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        _pin.centerXAnchor.constraint(equalTo: _frame.centerXAnchor).isActive = true
+        _pin.bottomAnchor.constraint(equalTo: _frame.topAnchor).isActive = true
         
-        _settings.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
-        _settings.rightAnchor.constraint(equalTo: _up.leftAnchor).isActive = true
+        _settings.centerYAnchor.constraint(equalTo: _frame.centerYAnchor).isActive = true
+        _settings.rightAnchor.constraint(equalTo: _frame.leftAnchor).isActive = true
         
-        _user.centerYAnchor.constraint(equalTo: _up.centerYAnchor).isActive = true
+        _user.centerYAnchor.constraint(equalTo: _frame.centerYAnchor).isActive = true
         _user.rightAnchor.constraint(equalTo: _settings.leftAnchor).isActive = true
         
         list.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -108,9 +106,17 @@ class World: NSView {
     
     final func refresh() {
         list.refresh()
-        if !map.path.isEmpty && list.top.constant == -56 || map.path.isEmpty && list.top.constant == -list.frame.height {
-            up()
-        }
+        animate()
+    }
+    
+    private func animate() {
+        app.main.makeFirstResponder(self)
+        list.top.constant = showing ? (map.path.isEmpty ? -56 : -list.frame.height) : 0
+        NSAnimationContext.runAnimationGroup({
+            $0.duration = 0.3
+            $0.allowsImplicitAnimation = true
+            layoutSubtreeIfNeeded()
+        }) { }
     }
     
     @objc func upwards() {
@@ -129,19 +135,6 @@ class World: NSView {
         map.setCenter(.init(latitude: map.centerCoordinate.latitude, longitude: min(map.centerCoordinate.longitude + map.region.span.longitudeDelta / 2, 180)), animated: true)
     }
     
-    @objc final func down() {
-        list.top.constant = 0
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.3
-            $0.allowsImplicitAnimation = true
-            layoutSubtreeIfNeeded()
-        }) { }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            self?._up.isHidden = false
-            self?._down.isHidden = true
-        }
-    }
-    
     @objc final func close() {
         app.main.deselect()
         app.main.makeFirstResponder(app.main.bar)
@@ -154,12 +147,9 @@ class World: NSView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in self?.removeFromSuperview() }
     }
     
-    @objc final func directions() {
-        if _up.isHidden {
-            down()
-        } else {
-            up()
-        }
+    @objc final func framing() {
+        showing.toggle()
+        animate()
     }
     
     @objc final func me() {
@@ -196,17 +186,8 @@ class World: NSView {
         settings.makeKeyAndOrderFront(nil)
     }
     
-    @objc private func up() {
+    @objc func pin() {
         app.main.makeFirstResponder(self)
-        list.top.constant = map.path.isEmpty ? -56 : -list.frame.height
-        NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.3
-            $0.allowsImplicitAnimation = true
-            layoutSubtreeIfNeeded()
-        }) { }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            self?._up.isHidden = true
-            self?._down.isHidden = false
-        }
+        map.pin()
     }
 }

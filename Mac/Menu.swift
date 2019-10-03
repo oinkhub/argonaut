@@ -92,7 +92,7 @@ final class Menu: NSMenu {
             $0.submenu!.items = [
                 { $0.keyEquivalentModifierMask = []
                     return $0
-                } (NSMenuItem(title: .key("Menu.pin"), action: #selector(New.pin), keyEquivalent: "p")),
+                } (NSMenuItem(title: .key("Menu.pin"), action: #selector(World.pin), keyEquivalent: "p")),
                 .init(title: .key("Menu.search"), action: #selector(New.search), keyEquivalent: "f"),
                 .separator(),
                 .init(title: .key("Menu.save"), action: #selector(New.save), keyEquivalent: "s")]
@@ -106,7 +106,7 @@ final class Menu: NSMenu {
             $0.submenu!.items = [
                 { $0.keyEquivalentModifierMask = []
                     return $0
-                } (NSMenuItem(title: .key("Menu.directions"), action: #selector(World.directions), keyEquivalent: "l")),
+                } (NSMenuItem(title: .key("Menu.directions"), action: #selector(World.framing), keyEquivalent: "l")),
                 { $0.keyEquivalentModifierMask = []
                     return $0
                 } (NSMenuItem(title: .key("Menu.settings"), action: #selector(World.settings), keyEquivalent: ",")),
