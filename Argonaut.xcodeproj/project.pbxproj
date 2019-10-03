@@ -61,12 +61,9 @@
 		CEBE55252312E8A70060B4BE /* icon_320x320.png in Resources */ = {isa = PBXBuildFile; fileRef = CEBE55212312E8A70060B4BE /* icon_320x320.png */; };
 		CEBE55262312E8A70060B4BE /* icon_22x28.png in Resources */ = {isa = PBXBuildFile; fileRef = CEBE55222312E8A70060B4BE /* icon_22x28.png */; };
 		CEC2BA5C230BC26900FB4BA1 /* Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC2BA5B230BC26900FB4BA1 /* Gradient.swift */; };
-		CEC5A3C722EAFD9600CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BD22D721C500EF2447 /* libArgonaut.a */; };
-		CEC5A3C822EAFD9D00CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BE22D721C500EF2447 /* libArgonaut.a */; };
 		CEC5A3CA22EAFE3200CE3B07 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5A3C922EAFE3200CE3B07 /* Factory.swift */; };
 		CEC5A3CB22EAFE3200CE3B07 /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5A3C922EAFE3200CE3B07 /* Factory.swift */; };
 		CEC5A3CD22EAFF7900CE3B07 /* TestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5A3CC22EAFF7900CE3B07 /* TestFactory.swift */; };
-		CEC5A3CE22EAFFAB00CE3B07 /* libArgonaut.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE58E9BD22D721C500EF2447 /* libArgonaut.a */; };
 		CECD5634231130490085E0C3 /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECD5633231130490085E0C3 /* Navigate.swift */; };
 		CECD5636231131AD0085E0C3 /* Load.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECD5635231131AD0085E0C3 /* Load.swift */; };
 		CECD6FE7232C048200656702 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECD6FE6232C048200656702 /* Item.swift */; };
@@ -102,11 +99,23 @@
 		DA7D3D8F2338E3280012F00B /* Zoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D3D8E2338E3280012F00B /* Zoom.swift */; };
 		DA98EEEE2338990200062F0E /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA98EEED2338990200062F0E /* Project.swift */; };
 		DA9EE21D233385CD00D83514 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9EE21C233385CD00D83514 /* Control.swift */; };
+		DAAC56362345F9FA008F4EC1 /* libArgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAC56352345F9F1008F4EC1 /* libArgo.a */; };
+		DAADC3BD2345FC2200FB5672 /* Argo.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DA008B852345ECB1001551CD /* Argo.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DAADC3C12345FCE400FB5672 /* Argo.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DA008B912345ECB3001551CD /* Argo.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DAB929C1233781F00090648D /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C0233781F00090648D /* Main.swift */; };
 		DAB929C32337A7DF0090648D /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C22337A7DF0090648D /* Result.swift */; };
 		DAB929C52337A8280090648D /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C42337A8280090648D /* Result.swift */; };
 		DABB24F6233B6422001B32E5 /* Arrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABB24F5233B6422001B32E5 /* Arrow.swift */; };
 		DAC775652331153E00EF4724 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC775642331153E00EF4724 /* Menu.swift */; };
+		DAD302A92345F06B0006E74F /* Watch.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAD302A72345F06A0006E74F /* Watch.xcassets */; };
+		DAD302AA2345F06B0006E74F /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAD302A82345F06A0006E74F /* Interface.storyboard */; };
+		DAD302B42345F0920006E74F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAD302AC2345F0910006E74F /* Localizable.strings */; };
+		DAD302B52345F0920006E74F /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD302AE2345F0920006E74F /* Session.swift */; };
+		DAD302B62345F0920006E74F /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD302AF2345F0920006E74F /* Controller.swift */; };
+		DAD302B72345F0920006E74F /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD302B02345F0920006E74F /* Navigate.swift */; };
+		DAD302B82345F0920006E74F /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD302B12345F0920006E74F /* Content.swift */; };
+		DAD302B92345F0920006E74F /* Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD302B22345F0920006E74F /* Create.swift */; };
+		DAD302BA2345F0920006E74F /* WatchExtension.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAD302B32345F0920006E74F /* WatchExtension.xcassets */; };
 		DAE82F9C2337C53F00408392 /* Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE82F9B2337C53F00408392 /* Create.swift */; };
 /* End PBXBuildFile section */
 
@@ -118,6 +127,41 @@
 			remoteGlobalIDString = CEDE10A222D7172100DD796B;
 			remoteInfo = Mac;
 		};
+		DAAC56372345F9FA008F4EC1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDE109922D714E100DD796B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CEDE10B022D7175500DD796B;
+			remoteInfo = iOS;
+		};
+		DAADC3B32345FB1F00FB5672 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDE109922D714E100DD796B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA008B842345ECB1001551CD;
+			remoteInfo = Watch;
+		};
+		DAADC3BA2345FBC900FB5672 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDE109922D714E100DD796B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA008B842345ECB1001551CD;
+			remoteInfo = Watch;
+		};
+		DAADC3BE2345FC2200FB5672 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDE109922D714E100DD796B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA008B842345ECB1001551CD;
+			remoteInfo = Watch;
+		};
+		DAADC3C22345FCE400FB5672 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDE109922D714E100DD796B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA008B902345ECB3001551CD;
+			remoteInfo = WatchExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -128,6 +172,28 @@
 			dstSubfolderSpec = 16;
 			files = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAADC3C02345FC2200FB5672 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				DAADC3BD2345FC2200FB5672 /* Argo.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAADC3C42345FCE400FB5672 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				DAADC3C12345FCE400FB5672 /* Argo.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -153,8 +219,6 @@
 		CE354513232D11B90022800F /* Bar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bar.swift; sourceTree = "<group>"; };
 		CE39789F22F5B1E60045E1D7 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 		CE4A547B22D85E1B00125A9C /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
-		CE58E9BD22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE58E9BE22D721C500EF2447 /* libArgonaut.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgonaut.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE633A2022FD525E00846455 /* TestArgonaut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestArgonaut.swift; sourceTree = "<group>"; };
 		CE633A2222FD791C00846455 /* Load.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Load.swift; sourceTree = "<group>"; };
 		CE6AE1F822F6BE5C0040B205 /* Cart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cart.swift; sourceTree = "<group>"; };
@@ -209,10 +273,14 @@
 		CEDE111022D71FB200DD796B /* TestSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSession.swift; sourceTree = "<group>"; };
 		CEDE111222D71FD100DD796B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEDE111622D7207800DD796B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		CEDE111922D7209F00DD796B /* Argonaut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argonaut.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CEDE111A22D720A500DD796B /* Argonaut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argonaut.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEDE111922D7209F00DD796B /* Argo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEDE111A22D720A500DD796B /* Argo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE098302302E3E200321C07 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		CEF5514822F2F3D900A16265 /* TestPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPath.swift; sourceTree = "<group>"; };
+		DA008B852345ECB1001551CD /* Argo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Argo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA008B8C2345ECB3001551CD /* Watch.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Watch.plist; sourceTree = "<group>"; };
+		DA008B912345ECB3001551CD /* Argo.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Argo.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA008BA12345ECB3001551CD /* WatchExtension.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = WatchExtension.plist; sourceTree = "<group>"; };
 		DA052B04233B361C006D6870 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		DA0FBEAC2332815000D935A9 /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		DA0FBEAE2332832400D935A9 /* Scroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scroll.swift; sourceTree = "<group>"; };
@@ -224,11 +292,22 @@
 		DA7D3D8E2338E3280012F00B /* Zoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zoom.swift; sourceTree = "<group>"; };
 		DA98EEED2338990200062F0E /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		DA9EE21C233385CD00D83514 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
+		DAAC56342345F9F1008F4EC1 /* libArgo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgo.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAAC56352345F9F1008F4EC1 /* libArgo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libArgo.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAB929C0233781F00090648D /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		DAB929C22337A7DF0090648D /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		DAB929C42337A8280090648D /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		DABB24F5233B6422001B32E5 /* Arrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Arrow.swift; sourceTree = "<group>"; };
 		DAC775642331153E00EF4724 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		DAD302A72345F06A0006E74F /* Watch.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Watch.xcassets; sourceTree = "<group>"; };
+		DAD302A82345F06A0006E74F /* Interface.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Interface.storyboard; sourceTree = "<group>"; };
+		DAD302AD2345F0910006E74F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DAD302AE2345F0920006E74F /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		DAD302AF2345F0920006E74F /* Controller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
+		DAD302B02345F0920006E74F /* Navigate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
+		DAD302B12345F0920006E74F /* Content.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
+		DAD302B22345F0920006E74F /* Create.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Create.swift; sourceTree = "<group>"; };
+		DAD302B32345F0920006E74F /* WatchExtension.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = WatchExtension.xcassets; sourceTree = "<group>"; };
 		DAE82F9B2337C53F00408392 /* Create.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Create.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -251,7 +330,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEC5A3CE22EAFFAB00CE3B07 /* libArgonaut.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,7 +337,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEC5A3C722EAFD9600CE3B07 /* libArgonaut.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,7 +344,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEC5A3C822EAFD9D00CE3B07 /* libArgonaut.a in Frameworks */,
+				DAAC56362345F9FA008F4EC1 /* libArgo.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA008B8E2345ECB3001551CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,24 +371,31 @@
 			children = (
 				CEDE10F522D71C2D00DD796B /* .gitignore */,
 				CEDE10F322D71C2D00DD796B /* LICENSE */,
-				CE58E9BE22D721C500EF2447 /* libArgonaut.a */,
-				CE58E9BD22D721C500EF2447 /* libArgonaut.a */,
-				CEDE111A22D720A500DD796B /* Argonaut.app */,
-				CEDE111922D7209F00DD796B /* Argonaut.app */,
+				DAAC56342345F9F1008F4EC1 /* libArgo.a */,
+				DAAC56352345F9F1008F4EC1 /* libArgo.a */,
+				DA008B852345ECB1001551CD /* Argo.app */,
+				CEDE111A22D720A500DD796B /* Argo.app */,
+				CEDE111922D7209F00DD796B /* Argo.app */,
+				DA008B912345ECB3001551CD /* Argo.appex */,
 				CEDE110022D71F3600DD796B /* Mac.entitlements */,
 				CEA0D90F23002B4B001FD8B8 /* icons.icns */,
 				CEDE10F422D71C2D00DD796B /* README.md */,
 				CEDE10F622D71CF500DD796B /* iOS.plist */,
 				CEDE10F722D71CF500DD796B /* Mac.plist */,
 				CEDE10F822D71CF600DD796B /* Tests.plist */,
+				DA008B8C2345ECB3001551CD /* Watch.plist */,
+				DA008BA12345ECB3001551CD /* WatchExtension.plist */,
 				CEBE55222312E8A70060B4BE /* icon_22x28.png */,
 				CEBE55202312E8A70060B4BE /* icon_44x58.png */,
 				CEBE551F2312E8A70060B4BE /* icon_64x64.png */,
 				CEBE55212312E8A70060B4BE /* icon_320x320.png */,
+				DAD302A82345F06A0006E74F /* Interface.storyboard */,
 				CEDE10F922D71F2400DD796B /* iOS.storyboard */,
 				CEDE111222D71FD100DD796B /* Assets.xcassets */,
 				CEDE10FC22D71F2400DD796B /* iOS.xcassets */,
 				CEDE110122D71F3600DD796B /* Mac.xcassets */,
+				DAD302A72345F06A0006E74F /* Watch.xcassets */,
+				DAD302B32345F0920006E74F /* WatchExtension.xcassets */,
 				CEDE110D22D71FA300DD796B /* Tests.xctest */,
 				CEC5A3C622EAFD9600CE3B07 /* Frameworks */,
 				CEDE10FA22D71F2400DD796B /* iOS */,
@@ -313,6 +404,7 @@
 				CEDE110622D71F5300DD796B /* Shared */,
 				CEDE110A22D71FA300DD796B /* Source */,
 				CEDE110F22D71FB200DD796B /* Tests */,
+				DAD302AB2345F0910006E74F /* Watch */,
 			);
 			sourceTree = "<group>";
 		};
@@ -425,6 +517,19 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		DAD302AB2345F0910006E74F /* Watch */ = {
+			isa = PBXGroup;
+			children = (
+				DAD302AC2345F0910006E74F /* Localizable.strings */,
+				DAD302AE2345F0920006E74F /* Session.swift */,
+				DAD302AF2345F0920006E74F /* Controller.swift */,
+				DAD302B02345F0920006E74F /* Navigate.swift */,
+				DAD302B12345F0920006E74F /* Content.swift */,
+				DAD302B22345F0920006E74F /* Create.swift */,
+			);
+			path = Watch;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -452,7 +557,7 @@
 			);
 			name = Mac;
 			productName = Mac;
-			productReference = CE58E9BD22D721C500EF2447 /* libArgonaut.a */;
+			productReference = DAAC56342345F9F1008F4EC1 /* libArgo.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		CEDE10B022D7175500DD796B /* iOS */ = {
@@ -469,7 +574,7 @@
 			);
 			name = iOS;
 			productName = iOS;
-			productReference = CE58E9BE22D721C500EF2447 /* libArgonaut.a */;
+			productReference = DAAC56352345F9F1008F4EC1 /* libArgo.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		CEDE10BB22D7176F00DD796B /* Tests */ = {
@@ -504,7 +609,7 @@
 			);
 			name = MacApp;
 			productName = MacApp;
-			productReference = CEDE111922D7209F00DD796B /* Argonaut.app */;
+			productReference = CEDE111922D7209F00DD796B /* Argo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		CEDE10DE22D7179E00DD796B /* iOSApp */ = {
@@ -514,15 +619,54 @@
 				CEDE10DB22D7179E00DD796B /* Sources */,
 				CEDE10DC22D7179E00DD796B /* Frameworks */,
 				CEDE10DD22D7179E00DD796B /* Resources */,
+				DAADC3C02345FC2200FB5672 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DAAC56382345F9FA008F4EC1 /* PBXTargetDependency */,
+				DAADC3B42345FB1F00FB5672 /* PBXTargetDependency */,
+				DAADC3BB2345FBC900FB5672 /* PBXTargetDependency */,
+				DAADC3BF2345FC2200FB5672 /* PBXTargetDependency */,
+			);
+			name = iOSApp;
+			productName = iOSApp;
+			productReference = CEDE111A22D720A500DD796B /* Argo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DA008B842345ECB1001551CD /* Watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA008BAC2345ECB3001551CD /* Build configuration list for PBXNativeTarget "Watch" */;
+			buildPhases = (
+				DA008B832345ECB1001551CD /* Resources */,
+				DAADC3C42345FCE400FB5672 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DAADC3C32345FCE400FB5672 /* PBXTargetDependency */,
+			);
+			name = Watch;
+			productName = Argo;
+			productReference = DA008B852345ECB1001551CD /* Argo.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		DA008B902345ECB3001551CD /* WatchExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA008BAB2345ECB3001551CD /* Build configuration list for PBXNativeTarget "WatchExtension" */;
+			buildPhases = (
+				DA008B8D2345ECB3001551CD /* Sources */,
+				DA008B8E2345ECB3001551CD /* Frameworks */,
+				DA008B8F2345ECB3001551CD /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = iOSApp;
-			productName = iOSApp;
-			productReference = CEDE111A22D720A500DD796B /* Argonaut.app */;
-			productType = "com.apple.product-type.application";
+			name = WatchExtension;
+			productName = "Argo Extension";
+			productReference = DA008B912345ECB3001551CD /* Argo.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -548,6 +692,12 @@
 					CEDE10DE22D7179E00DD796B = {
 						CreatedOnToolsVersion = 11.0;
 					};
+					DA008B842345ECB1001551CD = {
+						CreatedOnToolsVersion = 11.0;
+					};
+					DA008B902345ECB3001551CD = {
+						CreatedOnToolsVersion = 11.0;
+					};
 				};
 			};
 			buildConfigurationList = CEDE109C22D714E100DD796B /* Build configuration list for PBXProject "Argonaut" */;
@@ -556,6 +706,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = CEDE109822D714E100DD796B;
 			productRefGroup = CEDE109822D714E100DD796B;
@@ -567,6 +718,8 @@
 				CEDE10BB22D7176F00DD796B /* Tests */,
 				CEDE10CA22D7178900DD796B /* MacApp */,
 				CEDE10DE22D7179E00DD796B /* iOSApp */,
+				DA008B842345ECB1001551CD /* Watch */,
+				DA008B902345ECB3001551CD /* WatchExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -602,6 +755,24 @@
 				CEDE111422D71FD100DD796B /* Assets.xcassets in Resources */,
 				CEDE10FF22D71F2400DD796B /* iOS.xcassets in Resources */,
 				CEBE55262312E8A70060B4BE /* icon_22x28.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA008B832345ECB1001551CD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAD302AA2345F06B0006E74F /* Interface.storyboard in Resources */,
+				DAD302A92345F06B0006E74F /* Watch.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA008B8F2345ECB3001551CD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAD302B42345F0920006E74F /* Localizable.strings in Resources */,
+				DAD302BA2345F0920006E74F /* WatchExtension.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -729,6 +900,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DA008B8D2345ECB3001551CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAD302B72345F0920006E74F /* Navigate.swift in Sources */,
+				DAD302B52345F0920006E74F /* Session.swift in Sources */,
+				DAD302B62345F0920006E74F /* Controller.swift in Sources */,
+				DAD302B82345F0920006E74F /* Content.swift in Sources */,
+				DAD302B92345F0920006E74F /* Create.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -737,6 +920,31 @@
 			target = CEDE10A222D7172100DD796B /* Mac */;
 			targetProxy = CEDE10C222D7176F00DD796B /* PBXContainerItemProxy */;
 		};
+		DAAC56382345F9FA008F4EC1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CEDE10B022D7175500DD796B /* iOS */;
+			targetProxy = DAAC56372345F9FA008F4EC1 /* PBXContainerItemProxy */;
+		};
+		DAADC3B42345FB1F00FB5672 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA008B842345ECB1001551CD /* Watch */;
+			targetProxy = DAADC3B32345FB1F00FB5672 /* PBXContainerItemProxy */;
+		};
+		DAADC3BB2345FBC900FB5672 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA008B842345ECB1001551CD /* Watch */;
+			targetProxy = DAADC3BA2345FBC900FB5672 /* PBXContainerItemProxy */;
+		};
+		DAADC3BF2345FC2200FB5672 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA008B842345ECB1001551CD /* Watch */;
+			targetProxy = DAADC3BE2345FC2200FB5672 /* PBXContainerItemProxy */;
+		};
+		DAADC3C32345FCE400FB5672 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA008B902345ECB3001551CD /* WatchExtension */;
+			targetProxy = DAADC3C22345FCE400FB5672 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -744,6 +952,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				CEDE111622D7207800DD796B /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		DAD302AC2345F0910006E74F /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DAD302AD2345F0910006E74F /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -760,7 +976,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_NAME = Argonaut;
+				PRODUCT_NAME = Argo;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -776,7 +992,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_NAME = Argonaut;
+				PRODUCT_NAME = Argo;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_REFLECTION_METADATA_LEVEL = none;
@@ -1328,6 +1544,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = iturbide.Argonaut;
 				PRODUCT_MODULE_NAME = ArgonautiOS;
+				PRODUCT_NAME = Argo;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1390,9 +1607,276 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = iturbide.Argonaut;
 				PRODUCT_MODULE_NAME = ArgonautiOS;
+				PRODUCT_NAME = Argo;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DA008BA62345ECB3001551CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 336;
+				DEVELOPMENT_TEAM = 7AMWG3RLHN;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IBSC_MODULE = "$(PRODUCT_MODULE_NAME)Extension";
+				INFOPLIST_FILE = Watch.plist;
+				MARKETING_VERSION = 336;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = iturbide.Argonaut.watch;
+				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)Watch";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+			};
+			name = Debug;
+		};
+		DA008BA72345ECB3001551CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 336;
+				DEVELOPMENT_TEAM = 7AMWG3RLHN;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IBSC_MODULE = "$(PRODUCT_MODULE_NAME)Extension";
+				INFOPLIST_FILE = Watch.plist;
+				MARKETING_VERSION = 336;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = iturbide.Argonaut.watch;
+				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)Watch";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+			};
+			name = Release;
+		};
+		DA008BA92345ECB3001551CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 336;
+				DEVELOPMENT_TEAM = 7AMWG3RLHN;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = WatchExtension.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 336;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = iturbide.Argonaut.watch.extension;
+				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)WatchExtension";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
+			};
+			name = Debug;
+		};
+		DA008BAA2345ECB3001551CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 336;
+				DEVELOPMENT_TEAM = 7AMWG3RLHN;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = WatchExtension.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 336;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = iturbide.Argonaut.watch.extension;
+				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)WatchExtension";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 6.0;
 			};
 			name = Release;
 		};
@@ -1449,6 +1933,24 @@
 			buildConfigurations = (
 				CEDE10F122D7179E00DD796B /* Debug */,
 				CEDE10F222D7179E00DD796B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA008BAB2345ECB3001551CD /* Build configuration list for PBXNativeTarget "WatchExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA008BA92345ECB3001551CD /* Debug */,
+				DA008BAA2345ECB3001551CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA008BAC2345ECB3001551CD /* Build configuration list for PBXNativeTarget "Watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA008BA62345ECB3001551CD /* Debug */,
+				DA008BA72345ECB3001551CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

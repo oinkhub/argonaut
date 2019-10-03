@@ -1,4 +1,4 @@
-@testable import Argonaut
+@testable import Argo
 import XCTest
 
 final class TestCart: XCTestCase {

@@ -1,4 +1,4 @@
-import Argonaut
+import Argo
 import AppKit
 
 final class Settings: Window {

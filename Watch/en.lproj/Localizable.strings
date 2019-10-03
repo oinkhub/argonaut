@@ -1,0 +1,10 @@
+Main.add="Add place";
+Main.title="Navigate to";
+Main.header="Places";
+Main.noName="New place";
+Main.alert="Important";
+Main.continue="Continue";
+Create.title="Add current location";
+Create.new="Enter name";
+Create.add="Add";
+Error.noAuth="Argo does not have access to your location.";

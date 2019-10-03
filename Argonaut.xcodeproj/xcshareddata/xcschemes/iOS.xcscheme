@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CEDE10DE22D7179E00DD796B"
-               BuildableName = "Argonaut.app"
+               BuildableName = "Argo.app"
                BlueprintName = "iOSApp"
                ReferencedContainer = "container:Argonaut.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CEDE10DE22D7179E00DD796B"
-            BuildableName = "Argonaut.app"
+            BuildableName = "Argo.app"
             BlueprintName = "iOSApp"
             ReferencedContainer = "container:Argonaut.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CEDE10DE22D7179E00DD796B"
-            BuildableName = "Argonaut.app"
+            BuildableName = "Argo.app"
             BlueprintName = "iOSApp"
             ReferencedContainer = "container:Argonaut.xcodeproj">
          </BuildableReference>

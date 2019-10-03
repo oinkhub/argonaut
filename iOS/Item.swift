@@ -1,4 +1,4 @@
-import Argonaut
+import Argo
 import UIKit
 
 final class Item: UIControl {
