@@ -82,8 +82,10 @@ final class Delegate: NSObject, WKExtensionDelegate, CLLocationManagerDelegate, 
     func session(_: WCSession, activationDidCompleteWith: WCSessionActivationState, error: Error?) { }
     func session(_: WCSession, didReceiveApplicationContext: [String: Any]) {
         if let items = try? JSONDecoder().decode([Pointer].self, from: didReceiveApplicationContext[""] as? Data ?? .init()) {
-            places.session.items.insert(contentsOf: items, at: 0)
-            places.session.save()
+            DispatchQueue.main.async {
+                self.places.session.items.insert(contentsOf: items, at: 0)
+                self.places.session.save()
+            }
         }
     }
 }
