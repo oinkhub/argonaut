@@ -1,13 +1,6 @@
 import Foundation
 
 struct Session: Codable {
-    struct Item: Identifiable, Hashable, Codable {
-        var id = UUID()
-        var name = ""
-        var latitude = 0.0
-        var longitude = 0.0
-    }
-    
     static func load(_ result: @escaping((Session) -> Void)) {
         queue.async {
             let session = {
@@ -19,7 +12,7 @@ struct Session: Codable {
     
     private static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("Session.argo")
     private static let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
-    var items = [Item]()
+    var items = [Pointer]()
     
     func save() {
         Session.queue.async {

@@ -41,19 +41,9 @@ private(set) weak var app: App!
         }.filter { $0 != willPresent.request.identifier }) }
     }
     
-    @available(iOS 9.3, *)
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        print("session error")
-        print(error)
-    }
-    
-    func sessionDidBecomeInactive(_ session: WCSession) {
-        print("session innactive")
-    }
-    
-    func sessionDidDeactivate(_ session: WCSession) {
-        print("session deactive")
-    }
+    @available(iOS 9.3, *) func session(_: WCSession, activationDidCompleteWith: WCSessionActivationState, error: Error?) { }
+    func sessionDidBecomeInactive(_: WCSession) { }
+    func sessionDidDeactivate(_: WCSession) { }
     
     override func viewDidLoad() {
         super.viewDidLoad()

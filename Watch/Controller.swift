@@ -1,6 +1,7 @@
 import WatchKit
 import SwiftUI
 import CoreLocation
+import WatchConnectivity
 
 final class Places: ObservableObject {
     @Published var session = Session()
@@ -15,7 +16,7 @@ final class Controller: WKHostingController<Content> {
     
     override var body: Content {
         Content(places: places, add: {
-            var item = Session.Item()
+            var item = Pointer()
             item.name = $0.isEmpty ? NSLocalizedString("Main.noName", comment: ""): $0
             item.latitude = self.places.coordinate.0
             item.longitude = self.places.coordinate.1
@@ -27,11 +28,17 @@ final class Controller: WKHostingController<Content> {
         } }
 }
 
-final class Delegate: NSObject, WKExtensionDelegate, CLLocationManagerDelegate {
+final class Delegate: NSObject, WKExtensionDelegate, CLLocationManagerDelegate, WCSessionDelegate {
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        print("error: \(error)")
+    }
+    
     fileprivate let manager = CLLocationManager()
     private var places: Places { (WKExtension.shared().rootInterfaceController as! Controller).places }
     
     func applicationDidFinishLaunching() {
+        WCSession.default.delegate = self
+        WCSession.default.activate()
         Session.load {
             self.places.session = $0
 //            var item = Session.Item()

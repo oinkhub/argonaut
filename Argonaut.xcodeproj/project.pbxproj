@@ -94,13 +94,19 @@
 		DA0FBEB12332875C00D935A9 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEB02332875C00D935A9 /* Item.swift */; };
 		DA2A3087233A2A0B00B555A5 /* TestDivide.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2A3086233A2A0B00B555A5 /* TestDivide.swift */; };
 		DA2A3089233A384000B555A5 /* TestSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2A3088233A384000B555A5 /* TestSplit.swift */; };
+		DA2DA0A02346004C0063D13F /* Argo.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DA008B852345ECB1001551CD /* Argo.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DA2DA0A523460B8D0063D13F /* Pointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2DA0A423460B8D0063D13F /* Pointer.swift */; };
+		DA2DA0A623460B8D0063D13F /* Pointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2DA0A423460B8D0063D13F /* Pointer.swift */; };
+		DA2DA0A723460B8D0063D13F /* Pointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2DA0A423460B8D0063D13F /* Pointer.swift */; };
+		DA2DA0A823460FD80063D13F /* libArgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAC56342345F9F1008F4EC1 /* libArgo.a */; };
+		DA2DA0AC234610180063D13F /* libArgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAC56342345F9F1008F4EC1 /* libArgo.a */; };
+		DA2DA0AE234610520063D13F /* TestWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2DA0AD234610520063D13F /* TestWatch.swift */; };
 		DA6718092334CB3300883FA6 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6718082334CB3300883FA6 /* Control.swift */; };
 		DA7D3D8D2338E2E60012F00B /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D3D8B2338E15C0012F00B /* Navigate.swift */; };
 		DA7D3D8F2338E3280012F00B /* Zoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D3D8E2338E3280012F00B /* Zoom.swift */; };
 		DA98EEEE2338990200062F0E /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA98EEED2338990200062F0E /* Project.swift */; };
 		DA9EE21D233385CD00D83514 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9EE21C233385CD00D83514 /* Control.swift */; };
 		DAAC56362345F9FA008F4EC1 /* libArgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAC56352345F9F1008F4EC1 /* libArgo.a */; };
-		DAADC3BD2345FC2200FB5672 /* Argo.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DA008B852345ECB1001551CD /* Argo.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DAADC3C12345FCE400FB5672 /* Argo.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DA008B912345ECB3001551CD /* Argo.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DAB929C1233781F00090648D /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C0233781F00090648D /* Main.swift */; };
 		DAB929C32337A7DF0090648D /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB929C22337A7DF0090648D /* Result.swift */; };
@@ -127,19 +133,26 @@
 			remoteGlobalIDString = CEDE10A222D7172100DD796B;
 			remoteInfo = Mac;
 		};
+		DA2DA0A12346004C0063D13F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDE109922D714E100DD796B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA008B842345ECB1001551CD;
+			remoteInfo = Watch;
+		};
+		DA2DA0A923460FD80063D13F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDE109922D714E100DD796B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CEDE10A222D7172100DD796B;
+			remoteInfo = Mac;
+		};
 		DAAC56372345F9FA008F4EC1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CEDE109922D714E100DD796B /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = CEDE10B022D7175500DD796B;
 			remoteInfo = iOS;
-		};
-		DAADC3B32345FB1F00FB5672 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEDE109922D714E100DD796B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DA008B842345ECB1001551CD;
-			remoteInfo = Watch;
 		};
 		DAADC3BA2345FBC900FB5672 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -174,13 +187,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DAADC3C02345FC2200FB5672 /* Embed Watch Content */ = {
+		DA2DA0A32346004C0063D13F /* Embed Watch Content */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				DAADC3BD2345FC2200FB5672 /* Argo.app in Embed Watch Content */,
+				DA2DA0A02346004C0063D13F /* Argo.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,6 +300,8 @@
 		DA0FBEB02332875C00D935A9 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		DA2A3086233A2A0B00B555A5 /* TestDivide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDivide.swift; sourceTree = "<group>"; };
 		DA2A3088233A384000B555A5 /* TestSplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSplit.swift; sourceTree = "<group>"; };
+		DA2DA0A423460B8D0063D13F /* Pointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pointer.swift; sourceTree = "<group>"; };
+		DA2DA0AD234610520063D13F /* TestWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWatch.swift; sourceTree = "<group>"; };
 		DA6718082334CB3300883FA6 /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		DA7D3D8B2338E15C0012F00B /* Navigate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigate.swift; sourceTree = "<group>"; };
 		DA7D3D8E2338E3280012F00B /* Zoom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zoom.swift; sourceTree = "<group>"; };
@@ -330,6 +345,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA2DA0AC234610180063D13F /* libArgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,6 +353,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA2DA0A823460FD80063D13F /* libArgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -497,6 +514,7 @@
 				CE3256B723029C4200D95A31 /* HelperiOS.swift */,
 				CE3256B523029C2400D95A31 /* HelperMac.swift */,
 				CE734F7D22F1BDAF009799BE /* Path.swift */,
+				DA2DA0A423460B8D0063D13F /* Pointer.swift */,
 				CEDE110B22D71FA300DD796B /* Session.swift */,
 			);
 			path = Source;
@@ -513,6 +531,7 @@
 				CEF5514822F2F3D900A16265 /* TestPath.swift */,
 				CEDE111022D71FB200DD796B /* TestSession.swift */,
 				DA2A3088233A384000B555A5 /* TestSplit.swift */,
+				DA2DA0AD234610520063D13F /* TestWatch.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -520,12 +539,12 @@
 		DAD302AB2345F0910006E74F /* Watch */ = {
 			isa = PBXGroup;
 			children = (
-				DAD302AC2345F0910006E74F /* Localizable.strings */,
-				DAD302AE2345F0920006E74F /* Session.swift */,
-				DAD302AF2345F0920006E74F /* Controller.swift */,
-				DAD302B02345F0920006E74F /* Navigate.swift */,
 				DAD302B12345F0920006E74F /* Content.swift */,
+				DAD302AF2345F0920006E74F /* Controller.swift */,
 				DAD302B22345F0920006E74F /* Create.swift */,
+				DAD302B02345F0920006E74F /* Navigate.swift */,
+				DAD302AE2345F0920006E74F /* Session.swift */,
+				DAD302AC2345F0910006E74F /* Localizable.strings */,
 			);
 			path = Watch;
 			sourceTree = "<group>";
@@ -606,6 +625,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DA2DA0AA23460FD80063D13F /* PBXTargetDependency */,
 			);
 			name = MacApp;
 			productName = MacApp;
@@ -619,15 +639,15 @@
 				CEDE10DB22D7179E00DD796B /* Sources */,
 				CEDE10DC22D7179E00DD796B /* Frameworks */,
 				CEDE10DD22D7179E00DD796B /* Resources */,
-				DAADC3C02345FC2200FB5672 /* Embed Watch Content */,
+				DA2DA0A32346004C0063D13F /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				DAAC56382345F9FA008F4EC1 /* PBXTargetDependency */,
-				DAADC3B42345FB1F00FB5672 /* PBXTargetDependency */,
 				DAADC3BB2345FBC900FB5672 /* PBXTargetDependency */,
 				DAADC3BF2345FC2200FB5672 /* PBXTargetDependency */,
+				DA2DA0A22346004C0063D13F /* PBXTargetDependency */,
 			);
 			name = iOSApp;
 			productName = iOSApp;
@@ -784,6 +804,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEABFA3722ED9401000ABB7E /* Extensions.swift in Sources */,
+				DA2DA0A523460B8D0063D13F /* Pointer.swift in Sources */,
 				CE6AE1F922F6BE5C0040B205 /* Cart.swift in Sources */,
 				CE734F7E22F1BDAF009799BE /* Path.swift in Sources */,
 				CE2A863D22F7F7C000AC8190 /* Argonaut.swift in Sources */,
@@ -798,6 +819,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEABFA3822ED9401000ABB7E /* Extensions.swift in Sources */,
+				DA2DA0A623460B8D0063D13F /* Pointer.swift in Sources */,
 				CE6AE1FA22F6BE5C0040B205 /* Cart.swift in Sources */,
 				CE734F7F22F1BDAF009799BE /* Path.swift in Sources */,
 				CE2A863E22F7F7C000AC8190 /* Argonaut.swift in Sources */,
@@ -812,6 +834,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE734F8122F1BE24009799BE /* TestChunk.swift in Sources */,
+				DA2DA0AE234610520063D13F /* TestWatch.swift in Sources */,
 				CEC5A3CD22EAFF7900CE3B07 /* TestFactory.swift in Sources */,
 				CE6AE1FC22F6BEAE0040B205 /* TestCart.swift in Sources */,
 				CEDE111122D71FB200DD796B /* TestSession.swift in Sources */,
@@ -909,6 +932,7 @@
 				DAD302B62345F0920006E74F /* Controller.swift in Sources */,
 				DAD302B82345F0920006E74F /* Content.swift in Sources */,
 				DAD302B92345F0920006E74F /* Create.swift in Sources */,
+				DA2DA0A723460B8D0063D13F /* Pointer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -920,15 +944,20 @@
 			target = CEDE10A222D7172100DD796B /* Mac */;
 			targetProxy = CEDE10C222D7176F00DD796B /* PBXContainerItemProxy */;
 		};
+		DA2DA0A22346004C0063D13F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA008B842345ECB1001551CD /* Watch */;
+			targetProxy = DA2DA0A12346004C0063D13F /* PBXContainerItemProxy */;
+		};
+		DA2DA0AA23460FD80063D13F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CEDE10A222D7172100DD796B /* Mac */;
+			targetProxy = DA2DA0A923460FD80063D13F /* PBXContainerItemProxy */;
+		};
 		DAAC56382345F9FA008F4EC1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CEDE10B022D7175500DD796B /* iOS */;
 			targetProxy = DAAC56372345F9FA008F4EC1 /* PBXContainerItemProxy */;
-		};
-		DAADC3B42345FB1F00FB5672 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DA008B842345ECB1001551CD /* Watch */;
-			targetProxy = DAADC3B32345FB1F00FB5672 /* PBXContainerItemProxy */;
 		};
 		DAADC3BB2345FBC900FB5672 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

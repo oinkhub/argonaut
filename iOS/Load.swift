@@ -19,26 +19,45 @@ final class Load: UIView {
     }
     
     class func share(_ item: Session.Item) {
-        modal {
-            if WCSession.isSupported() {
-                let watchSession = WCSession.default
-                watchSession.delegate = app
-                watchSession.activate()
-                print("before")
-                if watchSession.isPaired && watchSession.isWatchAppInstalled {
-                    print("here")
-                }
-            }
-//            Argonaut.share(item) {
-//                view?.removeFromSuperview()
-//                let share = UIActivityViewController(activityItems: [$0], applicationActivities: nil)
-//                share.popoverPresentationController?.sourceView = app.view
-//                app.present(share, animated: true)
+        if WCSession.isSupported() {
+            let action = UIAlertController(title: .key("Load.share"), message: nil, preferredStyle: .actionSheet)
+            action.addAction(.init(title: .key("Load.watch"), style: .default) { _ in
+                
+            })
+            action.addAction(.init(title: .key("Load.export"), style: .default) { _ in
+                all(item)
+            })
+            action.addAction(.init(title: .key("Load.cancel"), style: .cancel))
+            action.popoverPresentationController?.sourceView = app.view
+            app.present(action, animated: true)
+        } else {
+            all(item)
+        }
+//        modal {
+//            if WCSession.isSupported() {
+//                WCSession.default.delegate = app
+//                WCSession.default.con
+//                print("before")
+//                print(WCSession.default.isWatchAppInstalled)
+//                if WCSession.default.isPaired && WCSession.default.isWatchAppInstalled {
+//                    print("here")
+//                }
 //            }
+//        }
+    }
+    
+    private class func all(_ item: Session.Item) {
+        modal {
+            Argonaut.share(item) {
+                view?.removeFromSuperview()
+                let share = UIActivityViewController(activityItems: [$0], applicationActivities: nil)
+                share.popoverPresentationController?.sourceView = app.view
+                app.present(share, animated: true)
+            }
         }
     }
     
-    private final class func modal(_ perform: @escaping(() -> Void)) {
+    private class func modal(_ perform: @escaping(() -> Void)) {
         guard view == nil else { return }
         let view = Load()
         self.view = view

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct Navigate: View {
     @ObservedObject var places: Places
-    var item: Session.Item
+    var item: Pointer
     private var formatter: MeasurementFormatter {
         let formatter = MeasurementFormatter()
         formatter.unitStyle = .short
