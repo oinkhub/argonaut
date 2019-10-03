@@ -12,9 +12,9 @@ private(set) weak var app: App!
     private var formatter: Any!
     private let dater = DateComponentsFormatter()
     
-    func application(_: UIApplication, willFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_: UIApplication, willFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         app = self
-
+        
         let window = UIWindow()
         window.rootViewController = self
         window.backgroundColor = .black
@@ -24,7 +24,7 @@ private(set) weak var app: App!
         return true
     }
     
-    func application(_: UIApplication, open: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+    func application(_: UIApplication, open: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         DispatchQueue.main.async {
             Argonaut.receive(open) {
                 self.session.update($0)

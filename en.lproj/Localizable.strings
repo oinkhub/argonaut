@@ -51,6 +51,7 @@ Load.share="Share";
 Load.watch="Send to watch";
 Load.export="Export";
 Load.cancel="Cancel";
+Load.watch.error="Watch app not installed or unreachable.\nIs your Bluetooth on?";
 Settings.done="Close";
 Settings.follow="Follow me";
 Settings.heading="Heading";

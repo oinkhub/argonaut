@@ -59,39 +59,44 @@ public final class Argonaut {
         return (path, cart)
     }
     
-    public class func watch(_ item: Session.Item) -> [Pointer] {
-        var pointers = [Pointer]()
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
-        let input = InputStream(url: url(item.id.uuidString))!
-        input.open()
-        input.read(buffer, maxLength: 3)
-        (0 ..< buffer.advanced(by: 2).pointee).forEach { _ in
-            var item = Pointer()
-            input.read(buffer, maxLength: 1)
-            let length = Int(buffer.pointee)
-            if length > 0 {
-                input.read(buffer, maxLength: length)
-                item.name = String(decoding: Data(bytes: buffer, count: length), as: UTF8.self)
-            }
-            input.read(buffer, maxLength: 16)
-            buffer.withMemoryRebound(to: Double.self, capacity: 2) {
-                item.latitude = $0[0]
-                item.longitude = $0[1]
-            }
-            input.read(buffer, maxLength: 1)
-            (0 ..< buffer.pointee).forEach { _ in
+    public class func watch(_ item: Session.Item, result: @escaping((Data) -> Void)) {
+        DispatchQueue.global(qos: .background).async {
+            var pointers = [Pointer]()
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
+            let input = InputStream(url: url(item.id.uuidString))!
+            input.open()
+            input.read(buffer, maxLength: 3)
+            (0 ..< buffer.advanced(by: 2).pointee).forEach { _ in
+                var item = Pointer()
                 input.read(buffer, maxLength: 1)
-                input.read(buffer, maxLength: 16)
-                input.read(buffer, maxLength: 2)
-                (0 ..< Int(buffer.withMemoryRebound(to: UInt16.self, capacity: 1) { $0[0] })).forEach { _ in
-                    input.read(buffer, maxLength: 16)
+                let length = Int(buffer.pointee)
+                if length > 0 {
+                    input.read(buffer, maxLength: length)
+                    item.name = String(decoding: Data(bytes: buffer, count: length), as: UTF8.self)
                 }
+                input.read(buffer, maxLength: 16)
+                buffer.withMemoryRebound(to: Double.self, capacity: 2) {
+                    item.latitude = $0[0]
+                    item.longitude = $0[1]
+                }
+                input.read(buffer, maxLength: 1)
+                (0 ..< buffer.pointee).forEach { _ in
+                    input.read(buffer, maxLength: 1)
+                    input.read(buffer, maxLength: 16)
+                    input.read(buffer, maxLength: 2)
+                    (0 ..< Int(buffer.withMemoryRebound(to: UInt16.self, capacity: 1) { $0[0] })).forEach { _ in
+                        input.read(buffer, maxLength: 16)
+                    }
+                }
+                pointers.append(item)
             }
-            pointers.append(item)
+            buffer.deallocate()
+            input.close()
+            let data = try! JSONEncoder().encode(pointers)
+            DispatchQueue.main.async {
+                result(data)
+            }
         }
-        buffer.deallocate()
-        input.close()
-        return pointers
     }
     
     public class func delete(_ item: Session.Item) {

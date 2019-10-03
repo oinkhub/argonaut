@@ -29,24 +29,14 @@ final class Controller: WKHostingController<Content> {
 }
 
 final class Delegate: NSObject, WKExtensionDelegate, CLLocationManagerDelegate, WCSessionDelegate {
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        print("error: \(error)")
-    }
-    
     fileprivate let manager = CLLocationManager()
     private var places: Places { (WKExtension.shared().rootInterfaceController as! Controller).places }
     
     func applicationDidFinishLaunching() {
-        WCSession.default.delegate = self
-        WCSession.default.activate()
         Session.load {
             self.places.session = $0
-//            var item = Session.Item()
-//            item.name = "Thessaloniki"
-//            item.longitude = 22.952548
-//            item.latitude = 40.617531
-//            self.places.session.items.insert(item, at: 0)
-//            self.places.session.save()
+            WCSession.default.delegate = self
+            WCSession.default.activate()
         }
     }
     
@@ -86,6 +76,14 @@ final class Delegate: NSObject, WKExtensionDelegate, CLLocationManagerDelegate, 
         case .notDetermined: manager.requestWhenInUseAuthorization()
         default:
             manager.startUpdatingLocation()
+        }
+    }
+    
+    func session(_: WCSession, activationDidCompleteWith: WCSessionActivationState, error: Error?) { }
+    func session(_: WCSession, didReceiveApplicationContext: [String: Any]) {
+        if let items = try? JSONDecoder().decode([Pointer].self, from: didReceiveApplicationContext[""] as? Data ?? .init()) {
+            places.session.items.insert(contentsOf: items, at: 0)
+            places.session.save()
         }
     }
 }

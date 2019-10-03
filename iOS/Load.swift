@@ -22,7 +22,7 @@ final class Load: UIView {
         if WCSession.isSupported() {
             let action = UIAlertController(title: .key("Load.share"), message: nil, preferredStyle: .actionSheet)
             action.addAction(.init(title: .key("Load.watch"), style: .default) { _ in
-                
+                watch(item)
             })
             action.addAction(.init(title: .key("Load.export"), style: .default) { _ in
                 all(item)
@@ -33,17 +33,6 @@ final class Load: UIView {
         } else {
             all(item)
         }
-//        modal {
-//            if WCSession.isSupported() {
-//                WCSession.default.delegate = app
-//                WCSession.default.con
-//                print("before")
-//                print(WCSession.default.isWatchAppInstalled)
-//                if WCSession.default.isPaired && WCSession.default.isWatchAppInstalled {
-//                    print("here")
-//                }
-//            }
-//        }
     }
     
     private class func all(_ item: Session.Item) {
@@ -53,6 +42,25 @@ final class Load: UIView {
                 let share = UIActivityViewController(activityItems: [$0], applicationActivities: nil)
                 share.popoverPresentationController?.sourceView = app.view
                 app.present(share, animated: true)
+            }
+        }
+    }
+    
+    private class func watch(_ item: Session.Item) {
+        WCSession.default.delegate = app
+        WCSession.default.activate()
+        modal {
+            Argonaut.watch(item) {
+                view?.removeFromSuperview()
+                if WCSession.default.isPaired && WCSession.default.isWatchAppInstalled {
+                    do {
+                        try WCSession.default.updateApplicationContext(["": $0])
+                    } catch {
+                        app.alert(.key("Error"), message: error.localizedDescription)
+                    }
+                } else {
+                    app.alert(.key("Error"), message: .key("Load.watch.error"))
+                }
             }
         }
     }
