@@ -2,7 +2,7 @@ import AppKit
 
 final class About: Window {
     init() {
-        super.init(300, 370, mask: [])
+        super.init(300, 410, mask: [])
         _minimise.isHidden = true
         _zoom.isHidden = true
         
@@ -63,10 +63,10 @@ final class About: Window {
         version.leftAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         
         privacy.topAnchor.constraint(equalTo: image.bottomAnchor, constant: 40).isActive = true
-        whyWrite.topAnchor.constraint(equalTo: privacy.bottomAnchor, constant: 20).isActive = true
-        write.topAnchor.constraint(equalTo: whyWrite.bottomAnchor).isActive = true
-        whyRate.topAnchor.constraint(equalTo: write.bottomAnchor, constant: 20).isActive = true
-        rate.topAnchor.constraint(equalTo: whyRate.bottomAnchor).isActive = true
+        whyWrite.topAnchor.constraint(equalTo: privacy.bottomAnchor, constant: 30).isActive = true
+        write.topAnchor.constraint(equalTo: whyWrite.bottomAnchor, constant: 10).isActive = true
+        whyRate.topAnchor.constraint(equalTo: write.bottomAnchor, constant: 30).isActive = true
+        rate.topAnchor.constraint(equalTo: whyRate.bottomAnchor, constant: 10).isActive = true
     }
     
     @objc private func rate() { NSWorkspace.shared.open(URL(string: "itms-apps://itunes.apple.com/\(Locale.current.regionCode!.lowercased())/app/Argonaut/id1472479862")!) }

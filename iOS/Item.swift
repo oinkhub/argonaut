@@ -66,6 +66,7 @@ final class Item: UIControl {
         
         let base = UIView()
         base.translatesAutoresizingMaskIntoConstraints = false
+        base.isUserInteractionEnabled = false
         addSubview(base)
         self.base = base
         
@@ -83,10 +84,6 @@ final class Item: UIControl {
         self.distance = distance
         
         if deletable {
-            index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .bold)
-            
-            base.layer.cornerRadius = 15
-            
             let delete = UIButton()
             delete.translatesAutoresizingMaskIntoConstraints = false
             delete.isAccessibilityElement = true
@@ -102,8 +99,10 @@ final class Item: UIControl {
             delete.widthAnchor.constraint(equalToConstant: 60).isActive = true
             delete.heightAnchor.constraint(equalToConstant: 60).isActive = true
             
+            index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .bold)
             index.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: -5).isActive = true
             
+            base.layer.cornerRadius = 15
             base.widthAnchor.constraint(equalToConstant: 30).isActive = true
             base.heightAnchor.constraint(equalToConstant: 30).isActive = true
             
@@ -116,7 +115,6 @@ final class Item: UIControl {
             index.font = .systemFont(ofSize: UIFont.preferredFont(forTextStyle: .title3).pointSize, weight: .bold)
             
             base.layer.cornerRadius = 18
-            
             base.widthAnchor.constraint(equalToConstant: 36).isActive = true
             base.heightAnchor.constraint(equalToConstant: 36).isActive = true
             

@@ -18,8 +18,8 @@ final class Navigate: World {
         addSubview(zoom)
         self.zoom = zoom
         
-        zoom.topAnchor.constraint(equalTo: top.bottomAnchor, constant: 12).isActive = true
-        zoom.leftAnchor.constraint(equalTo: top.leftAnchor, constant: 4).isActive = true
+        zoom.topAnchor.constraint(equalTo: top.bottomAnchor, constant: 20).isActive = true
+        zoom.leftAnchor.constraint(equalTo: top.leftAnchor, constant: 20).isActive = true
         
         list.refresh()
     }

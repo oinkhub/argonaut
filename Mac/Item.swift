@@ -8,7 +8,7 @@ final class Item: Button {
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             wantsLayer = true
-            layer!.backgroundColor = .shade
+            layer!.backgroundColor = .dark
             layer!.cornerRadius = 4
             
             let label = Label("+" + travel)
@@ -31,6 +31,8 @@ final class Item: Button {
     private(set) weak var path: Path?
     private(set) weak var delete: Button.Image?
     private(set) weak var title: Label!
+    private weak var index: Label!
+    private weak var base: NSView!
     
     required init?(coder: NSCoder) { nil }
     init(_ item: (Int, Path), deletable: Bool, target: AnyObject, action: Selector) {
@@ -38,12 +40,13 @@ final class Item: Button {
         setAccessibilityElement(true)
         setAccessibilityRole(.button)
         setAccessibilityLabel(item.1.name)
+        wantsLayer = true
         path = item.1
         
         let border = NSView()
         border.translatesAutoresizingMaskIntoConstraints = false
         border.wantsLayer = true
-        border.layer!.backgroundColor = .shade
+        border.layer!.backgroundColor = .dark
         addSubview(border)
         
         let title = Label()
@@ -52,13 +55,17 @@ final class Item: Button {
         self.title = title
         name = item.1.name
         
+        let base = NSView()
+        base.translatesAutoresizingMaskIntoConstraints = false
+        base.wantsLayer = true
+        addSubview(base)
+        self.base = base
+        
         let index = Label("\(item.0 + 1)")
-        index.textColor = .halo
         addSubview(index)
+        self.index = index
         
         if deletable {
-            index.font = .systemFont(ofSize: 16, weight: .bold)
-            
             let delete = Button.Image(nil, action: nil)
             delete.setAccessibilityElement(true)
             delete.setAccessibilityRole(.button)
@@ -72,11 +79,19 @@ final class Item: Button {
             delete.widthAnchor.constraint(equalToConstant: 60).isActive = true
             delete.heightAnchor.constraint(equalToConstant: 60).isActive = true
             
-            index.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: 10).isActive = true
-        } else {
-            index.font = .systemFont(ofSize: 16, weight: .bold)
+            index.font = .systemFont(ofSize: 14, weight: .bold)
+            index.rightAnchor.constraint(equalTo: delete.leftAnchor, constant: -10).isActive = true
             
-            index.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
+            base.layer!.cornerRadius = 15
+            base.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            base.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        } else {
+            index.font = .systemFont(ofSize: 14, weight: .bold)
+            index.rightAnchor.constraint(equalTo: rightAnchor, constant: -40).isActive = true
+            
+            base.layer!.cornerRadius = 18
+            base.widthAnchor.constraint(equalToConstant: 36).isActive = true
+            base.heightAnchor.constraint(equalToConstant: 36).isActive = true
         }
         
         bottomAnchor.constraint(equalTo: title.bottomAnchor, constant: 24).isActive = true
@@ -90,11 +105,27 @@ final class Item: Button {
         title.topAnchor.constraint(equalTo: topAnchor, constant: 24).isActive = true
         title.rightAnchor.constraint(lessThanOrEqualTo: index.leftAnchor, constant: -10).isActive = true
         
+        base.centerXAnchor.constraint(equalTo: index.centerXAnchor).isActive = true
+        base.centerYAnchor.constraint(equalTo: index.centerYAnchor).isActive = true
+        
         index.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         update()
+        hover()
     }
     
-    override func hover() { layer!.backgroundColor = selected ? .dark : .clear }
+    override func hover() {
+        index.textColor = selected ? .black : .halo
+        base.layer!.backgroundColor = selected ? .halo : .clear
+        layer!.backgroundColor = selected ? .dark : .clear
+    }
+    
+    override func mouseUp(with: NSEvent) {
+        if enabled {
+            if selected {
+                click()
+            }
+        }
+    }
     
     private func update() {
         title.attributedStringValue = {

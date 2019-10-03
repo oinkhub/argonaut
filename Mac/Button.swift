@@ -110,7 +110,7 @@ class Button: NSView {
     
     func hover() { }
     
-    fileprivate func click() {
+    final func click() {
         _ = target?.perform(action, with: self)
     }
 }

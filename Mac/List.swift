@@ -146,6 +146,17 @@ final class List: NSView {
         scroll.documentView!.subviews.compactMap { $0 as? Item }.first(where: { $0.path === path })?.name = path.name
     }
     
+    func selected(_ path: Path, active: Bool) {
+        if let item = scroll.documentView!.subviews.compactMap({ $0 as? Item }).first(where: { $0.path === path }) {
+            item.selected = active
+            NSAnimationContext.runAnimationGroup({
+                $0.duration = 0.5
+                $0.allowsImplicitAnimation = true
+                scroll.contentView.scroll(to: .init(x: 0, y: min(max(item.frame.midY - 105, 0), scroll.documentView!.frame.maxY - 210)))
+            }) { }
+        }
+    }
+    
     @objc private func focus(_ item: Item) {
         map?.selectedAnnotations.forEach { map?.deselectAnnotation($0, animated: true) }
         if let mark = map?.annotations.first(where: { ($0 as? Mark)?.path === item.path }) {

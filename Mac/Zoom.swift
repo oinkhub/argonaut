@@ -36,7 +36,7 @@ final class Zoom: NSView {
         addSubview(range)
         
         widthAnchor.constraint(equalToConstant: 12).isActive = true
-        heightAnchor.constraint(equalToConstant: 42).isActive = true
+        heightAnchor.constraint(equalToConstant: 46).isActive = true
         
         track.widthAnchor.constraint(equalToConstant: 4).isActive = true
         track.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
