@@ -35,8 +35,10 @@ final class Delegate: NSObject, WKExtensionDelegate, CLLocationManagerDelegate, 
     func applicationDidFinishLaunching() {
         Session.load {
             self.places.session = $0
-            WCSession.default.delegate = self
-            WCSession.default.activate()
+            if WCSession.isSupported() {
+                WCSession.default.delegate = self
+                WCSession.default.activate()
+            }
         }
     }
     
@@ -83,6 +85,7 @@ final class Delegate: NSObject, WKExtensionDelegate, CLLocationManagerDelegate, 
     func session(_: WCSession, didReceiveApplicationContext: [String: Any]) {
         if let items = try? JSONDecoder().decode([Pointer].self, from: didReceiveApplicationContext[""] as? Data ?? .init()) {
             DispatchQueue.main.async {
+                WKExtension.shared().rootInterfaceController!.popToRootController()
                 self.places.session.items.insert(contentsOf: items, at: 0)
                 self.places.session.save()
             }
