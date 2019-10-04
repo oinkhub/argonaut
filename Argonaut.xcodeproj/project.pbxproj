@@ -1024,7 +1024,6 @@
 				PRODUCT_NAME = Argo;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_REFLECTION_METADATA_LEVEL = none;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

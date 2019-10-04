@@ -17,7 +17,7 @@ struct Content: View {
                     .padding(.leading, 2)
             }
             .onTapGesture {
-                self.creating = true
+                self.creating.toggle()
             }
             
             Section(header: Text(.init("Main.header"))) {
@@ -28,19 +28,19 @@ struct Content: View {
                 }.onDelete(perform: delete)
             }
         }
-        .navigationBarTitle("Main.title")
         .sheet(isPresented: $creating) {
             Create {
                 self.add($0)
-                self.creating = false
+                self.creating.toggle()
             }
         }
-        .alert(isPresented: self.$places.error) {
+        .alert(isPresented: $places.error) {
             Alert(title: Text("Main.alert"), message: Text(self.places.message), dismissButton:
                 .default(Text("Main.continue")) {
                     self.places.error = false
                 }
             )
         }
+        .navigationBarTitle("Main.title")
     }
 }
