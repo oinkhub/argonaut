@@ -20,7 +20,7 @@ final class Load: UIView {
     
     class func share(_ item: Session.Item) {
         if WCSession.isSupported() {
-            let action = UIAlertController(title: .key("Load.share"), message: nil, preferredStyle: .actionSheet)
+            let action = UIAlertController(title: .key("Load.share"), message: .key("Load.share.message"), preferredStyle: .actionSheet)
             action.addAction(.init(title: .key("Load.watch"), style: .default) { _ in
                 watch(item)
             })
@@ -55,6 +55,7 @@ final class Load: UIView {
                 if WCSession.default.isPaired && WCSession.default.isWatchAppInstalled {
                     do {
                         try WCSession.default.updateApplicationContext(["": $0])
+                        app.alert(.key("Success"), message: .key("Load.watch.success"))
                     } catch {
                         app.alert(.key("Error"), message: error.localizedDescription)
                     }
