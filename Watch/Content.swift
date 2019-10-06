@@ -21,7 +21,7 @@ struct Content: View {
             }
             
             Section(header: Text(.init("Main.header"))) {
-                ForEach(places.session.items, id: \.self) { item in
+                ForEach(places.session?.items ?? [], id: \.self) { item in
                     NavigationLink(destination: Navigate(places: self.places, item: item)) {
                         Text(item.name)
                     }
