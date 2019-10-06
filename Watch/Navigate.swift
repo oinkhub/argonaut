@@ -34,7 +34,7 @@ struct Navigate: View {
                         let x = CGFloat(self.item.longitude - self.places.coordinate.1)
                         let y = CGFloat(self.places.coordinate.0 - self.item.latitude)
                         let side = max(min(geo.size.width, geo.size.height), 1) * 0.27
-                        let rate = max(abs(x), abs(y)) / side
+                        let rate = max(max(abs(x), abs(y)), 1) / side
                         $0.move(to: .init(x: geo.size.width / 2, y: geo.size.height / 2))
                         $0.addLine(to: .init(x: (geo.size.width / 2) + (x / rate), y: (geo.size.height / 2) + (y / rate)))
                     }
@@ -44,7 +44,7 @@ struct Navigate: View {
                         let x = CGFloat(self.item.longitude - self.places.coordinate.1)
                         let y = CGFloat(self.places.coordinate.0 - self.item.latitude)
                         let side = max(min(geo.size.width, geo.size.height), 1) * 0.27
-                        let rate = max(abs(x), abs(y)) / side
+                        let rate = max(max(abs(x), abs(y)), 1) / side
                         $0.addArc(center: .init(x: (geo.size.width / 2) + (x / rate), y: (geo.size.height / 2) + (y / rate)), radius: 8, startAngle: .degrees(0), endAngle: .degrees(360), clockwise: true)
                     }
                     .fill(Color("halo"))
