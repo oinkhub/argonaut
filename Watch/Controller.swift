@@ -49,10 +49,7 @@ final class Controller: WKHostingController<Content>, WCSessionDelegate, CLLocat
     func session(_: WCSession, didReceiveApplicationContext: [String: Any]) {
         if let items = try? JSONDecoder().decode([Pointer].self, from: didReceiveApplicationContext[""] as? Data ?? .init()) {
             pointers = items
-            if WKExtension.shared().applicationState == .active,
-                WKExtension.shared().visibleInterfaceController == self {
-                update()
-            }
+            update()
         }
     }
     
@@ -81,10 +78,13 @@ final class Controller: WKHostingController<Content>, WCSessionDelegate, CLLocat
     
     fileprivate func update() {
         DispatchQueue.main.async {
-            guard self.places.session != nil, !self.pointers.isEmpty else { return }
-            self.places.session!.items.insert(contentsOf: self.pointers, at: 0)
-            self.pointers = []
-            self.places.session!.save()
+            if WKExtension.shared().applicationState == .active,
+                WKExtension.shared().visibleInterfaceController == self {
+                guard self.places.session != nil, !self.pointers.isEmpty else { return }
+                self.places.session!.items.insert(contentsOf: self.pointers, at: 0)
+                self.pointers = []
+                self.places.session!.save()
+            }
         }
     }
 }
@@ -93,7 +93,6 @@ final class Delegate: NSObject, WKExtensionDelegate {
     private let manager = CLLocationManager()
     
     func applicationDidBecomeActive() {
-        (WKExtension.shared().rootInterfaceController as! Controller).update()
         manager.delegate = WKExtension.shared().rootInterfaceController as! Controller
         manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         manager.startUpdatingHeading()
@@ -101,6 +100,7 @@ final class Delegate: NSObject, WKExtensionDelegate {
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
             manager.startUpdatingLocation()
         }
+        (WKExtension.shared().rootInterfaceController as! Controller).update()
     }
 
     func applicationWillResignActive() {
