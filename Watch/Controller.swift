@@ -30,6 +30,7 @@ final class Controller: WKHostingController<Content>, WCSessionDelegate, CLLocat
     
     override func awake(withContext: Any?) {
         super.awake(withContext: withContext)
+        WKExtension.shared().isFrontmostTimeoutExtended = true
         Session.load {
             self.places.session = $0
             self.update()
