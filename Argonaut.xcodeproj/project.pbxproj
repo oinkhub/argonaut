@@ -94,6 +94,7 @@
 		DA0FBEB12332875C00D935A9 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FBEB02332875C00D935A9 /* Item.swift */; };
 		DA2A3087233A2A0B00B555A5 /* TestDivide.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2A3086233A2A0B00B555A5 /* TestDivide.swift */; };
 		DA2A3089233A384000B555A5 /* TestSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2A3088233A384000B555A5 /* TestSplit.swift */; };
+		DA2D5DEA234E752A00B42949 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA052B04233B361C006D6870 /* MapKit.framework */; };
 		DA2DA0A02346004C0063D13F /* Argo.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = DA008B852345ECB1001551CD /* Argo.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DA2DA0A523460B8D0063D13F /* Pointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2DA0A423460B8D0063D13F /* Pointer.swift */; };
 		DA2DA0A623460B8D0063D13F /* Pointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2DA0A423460B8D0063D13F /* Pointer.swift */; };
@@ -102,7 +103,6 @@
 		DA2DA0AC234610180063D13F /* libArgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAC56342345F9F1008F4EC1 /* libArgo.a */; };
 		DA2DA0AE234610520063D13F /* TestWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2DA0AD234610520063D13F /* TestWatch.swift */; };
 		DA6718092334CB3300883FA6 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6718082334CB3300883FA6 /* Control.swift */; };
-		DA70E7CF234DAD7900D2D8BE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA052B04233B361C006D6870 /* MapKit.framework */; };
 		DA7D3D8D2338E2E60012F00B /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D3D8B2338E15C0012F00B /* Navigate.swift */; };
 		DA7D3D8F2338E3280012F00B /* Zoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D3D8E2338E3280012F00B /* Zoom.swift */; };
 		DA98EEEE2338990200062F0E /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA98EEED2338990200062F0E /* Project.swift */; };
@@ -354,7 +354,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA70E7CF234DAD7900D2D8BE /* MapKit.framework in Frameworks */,
+				DA2D5DEA234E752A00B42949 /* MapKit.framework in Frameworks */,
 				DA2DA0A823460FD80063D13F /* libArgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
