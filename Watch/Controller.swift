@@ -77,13 +77,14 @@ final class Controller: WKHostingController<Content>, WCSessionDelegate, CLLocat
     }
     
     fileprivate func update() {
-        DispatchQueue.main.async {
-            if WKExtension.shared().applicationState == .active,
-                WKExtension.shared().visibleInterfaceController == self {
-                guard self.places.session != nil, !self.pointers.isEmpty else { return }
-                self.places.session!.items.insert(contentsOf: self.pointers, at: 0)
-                self.pointers = []
-                self.places.session!.save()
+        if WKExtension.shared().applicationState == .active && WKExtension.shared().visibleInterfaceController == self {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                if WKExtension.shared().applicationState == .active && WKExtension.shared().visibleInterfaceController == self {
+                    guard self.places.session != nil, !self.pointers.isEmpty else { return }
+                    self.places.session!.items.insert(contentsOf: self.pointers, at: 0)
+                    self.pointers = []
+                    self.places.session!.save()
+                }
             }
         }
     }
