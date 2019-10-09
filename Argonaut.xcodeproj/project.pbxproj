@@ -102,6 +102,7 @@
 		DA2DA0AC234610180063D13F /* libArgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAAC56342345F9F1008F4EC1 /* libArgo.a */; };
 		DA2DA0AE234610520063D13F /* TestWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2DA0AD234610520063D13F /* TestWatch.swift */; };
 		DA6718092334CB3300883FA6 /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6718082334CB3300883FA6 /* Control.swift */; };
+		DA70E7CF234DAD7900D2D8BE /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA052B04233B361C006D6870 /* MapKit.framework */; };
 		DA7D3D8D2338E2E60012F00B /* Navigate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D3D8B2338E15C0012F00B /* Navigate.swift */; };
 		DA7D3D8F2338E3280012F00B /* Zoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7D3D8E2338E3280012F00B /* Zoom.swift */; };
 		DA98EEEE2338990200062F0E /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA98EEED2338990200062F0E /* Project.swift */; };
@@ -353,6 +354,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA70E7CF234DAD7900D2D8BE /* MapKit.framework in Frameworks */,
 				DA2DA0A823460FD80063D13F /* libArgo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1412,7 +1414,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 399;
 				DEVELOPMENT_TEAM = 7AMWG3RLHN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1435,7 +1437,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 398;
+				MARKETING_VERSION = 399;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1482,7 +1484,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 398;
+				CURRENT_PROJECT_VERSION = 399;
 				DEVELOPMENT_TEAM = 7AMWG3RLHN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1500,7 +1502,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 398;
+				MARKETING_VERSION = 399;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = argonaut.mac;
