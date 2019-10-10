@@ -81,8 +81,11 @@ final class Controller: WKHostingController<Content>, WCSessionDelegate, CLLocat
         DispatchQueue.main.async {
             if WKExtension.shared().applicationState == .active && WKExtension.shared().visibleInterfaceController == self {
                 guard self.places.session != nil, !self.pointers.isEmpty else { return }
-                self.pointers.append(contentsOf: self.places.session!.items)
-                self.places.session!.items = self.pointers
+                self.pointers.reversed().forEach { pointer in
+                    if !self.places.session!.items.contains(where: { $0.id == pointer.id }) {
+                        self.places.session!.items.insert(pointer, at: 0)
+                    }
+                }
                 self.pointers = []
                 self.places.session!.save()
             }
