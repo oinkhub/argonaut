@@ -96,6 +96,10 @@ class World: NSView {
         list.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         list.top = list.topAnchor.constraint(equalTo: bottomAnchor)
         list.top.isActive = true
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.framing()
+        }
     }
     
     deinit {
