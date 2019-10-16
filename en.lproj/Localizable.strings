@@ -107,7 +107,6 @@ Menu.zoom="Zoom";
 Menu.bringAllToFront="Bring all to front";
 Menu.close="Close";
 Menu.window="Window";
-Menu.showHelp="Show help";
 Menu.help="Help";
 Success="Success";
 Error="Error";
