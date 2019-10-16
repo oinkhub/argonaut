@@ -9,7 +9,7 @@ final class Menu: NSMenu {
         {
             $0.submenu = .init(title: .key("Menu.argonaut"))
             $0.submenu!.items = [
-                .init(title: .key("Menu.about"), action: #selector(app.about), keyEquivalent: ""),
+                .init(title: .key("Menu.about"), action: #selector(app.about), keyEquivalent: ","),
                 .separator(),
                 .init(title: .key("Menu.hide"), action: #selector(app.hide(_:)), keyEquivalent: "h"),
                 { $0.keyEquivalentModifierMask = [.option, .command]
@@ -68,7 +68,6 @@ final class Menu: NSMenu {
     private var help: NSMenuItem {
         {
             $0.submenu = .init(title: .key("Menu.help"))
-            $0.submenu!.items = [.init(title: .key("Menu.showHelp"), action: #selector(app.about), keyEquivalent: "/")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: ""))
     }
@@ -79,9 +78,7 @@ final class Menu: NSMenu {
             $0.submenu!.items = [
                 .init(title: .key("Menu.new"), action: #selector(Bar.new), keyEquivalent: "n"),
                 .separator(),
-                .init(title: .key("Menu.edit"), action: #selector(Bar.edit), keyEquivalent: "e"),
-                .separator(),
-                .init(title: .key("Menu.options"), action: #selector(app.about), keyEquivalent: ",")]
+                .init(title: .key("Menu.edit"), action: #selector(Bar.edit), keyEquivalent: "e")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: ""))
     }
