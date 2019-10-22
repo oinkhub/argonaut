@@ -69,7 +69,7 @@ final class About: Window {
         rate.topAnchor.constraint(equalTo: whyRate.bottomAnchor, constant: 10).isActive = true
     }
     
-    @objc private func rate() { NSWorkspace.shared.open(URL(string: "itms-apps://itunes.apple.com/\(Locale.current.regionCode!.lowercased())/app/Argonaut/id1472479862")!) }
+    @objc private func rate() { NSWorkspace.shared.open(URL(string: "itms-apps://itunes.apple.com/\(Locale.current.regionCode!.lowercased())/app/argo/id1472479862")!) }
     @objc private func write() {
         let service = NSSharingService(named: NSSharingService.Name.composeEmail)
         service?.recipients = ["argonaut@iturbi.de"]
