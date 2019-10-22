@@ -71,10 +71,10 @@ final class About: Window {
     
     @objc private func rate() { NSWorkspace.shared.open(URL(string: "itms-apps://itunes.apple.com/\(Locale.current.regionCode!.lowercased())/app/argo/id1472479862")!) }
     @objc private func write() {
-        let service = NSSharingService(named: NSSharingService.Name.composeEmail)
-        service?.recipients = ["argonaut@iturbi.de"]
-        service?.subject = .key("About.subject")
-        service?.perform(withItems: [String.key("About.body")])
+        let service = NSSharingService(named: .composeEmail)
+        service!.recipients = ["argonaut@iturbi.de"]
+        service!.subject = .key("About.subject")
+        service!.perform(withItems: [String.key("About.body")])
     }
     
     @objc private func privacy() {
