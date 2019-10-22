@@ -137,7 +137,7 @@ final class About: UIView, MFMailComposeViewControllerDelegate {
     func mailComposeController(_: MFMailComposeViewController, didFinishWith: MFMailComposeResult, error: Error?) { app.dismiss(animated: true) }
     @objc private func privacy() { app.push(Privacy()) }
     @objc private func settings() { UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!) }
-    @objc private func rate() { UIApplication.shared.openURL(URL(string: "itms-apps://itunes.apple.com/\(Locale.current.regionCode!.lowercased())/app/Argonaut/id1436394937")!) }
+    @objc private func rate() { UIApplication.shared.openURL(URL(string: "itms-apps://itunes.apple.com/\(Locale.current.regionCode!.lowercased())/app/argo/id1436394937")!) }
     
     @objc private func write() {
         if MFMailComposeViewController.canSendMail() {
