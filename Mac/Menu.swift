@@ -9,8 +9,6 @@ final class Menu: NSMenu {
         {
             $0.submenu = .init(title: .key("Menu.argonaut"))
             $0.submenu!.items = [
-                .init(title: .key("Menu.about"), action: #selector(app.about), keyEquivalent: ","),
-                .separator(),
                 .init(title: .key("Menu.hide"), action: #selector(app.hide(_:)), keyEquivalent: "h"),
                 { $0.keyEquivalentModifierMask = [.option, .command]
                     return $0
